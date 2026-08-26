@@ -28,7 +28,7 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="produce an explicitly incomplete solid-tide-only result",
     )
-    parser.add_argument("--ephemeris", type=Path, help="local JPL SPK file (default: DE440s)")
+    parser.add_argument("--ephemeris", type=Path, help="local JPL SPK file (default: DE421)")
     parser.add_argument(
         "--cache",
         type=Path,
@@ -85,10 +85,19 @@ def main(argv: list[str] | None = None) -> int:
     wuhan_blq = shanghai_blq = None
     if args.blq is not None:
         stations = read_blq(args.blq)
-        missing = [code for code in (WUHAN.code, SHANGHAI.code) if code not in stations]
+
+        def find_station(code):
+            return next((station for key, station in stations.items() if key.startswith(code)), None)
+
+        wuhan_blq = find_station(WUHAN.code)
+        shanghai_blq = find_station(SHANGHAI.code)
+        missing = [
+            site.code
+            for site, station in ((WUHAN, wuhan_blq), (SHANGHAI, shanghai_blq))
+            if station is None
+        ]
         if missing:
             raise SystemExit(f"BLQ file is missing station(s): {', '.join(missing)}")
-        wuhan_blq, shanghai_blq = stations[WUHAN.code], stations[SHANGHAI.code]
 
     ephemeris = load_ephemeris(args.ephemeris, args.cache)
     timescale = Loader(str(args.cache)).timescale()

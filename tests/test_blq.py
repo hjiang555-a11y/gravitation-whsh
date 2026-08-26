@@ -48,6 +48,16 @@ class BlqTests(unittest.TestCase):
         self.assertEqual(values.shape, (1, 6))
         self.assertTrue(np.all((values >= 0.0) & (values < 360.0)))
 
+    def test_diurnal_tide_includes_doodson_warburg_phase(self):
+        epoch = datetime(2026, 6, 20, tzinfo=timezone.utc)
+        amplitudes = np.zeros((3, 11))
+        amplitudes[0, 4] = 1.0
+        station = BlqStation("K1", amplitudes, np.zeros((3, 11)))
+        arguments = astronomical_arguments([epoch])
+        k1_argument = float(arguments[0] @ np.asarray([1, 1, 0, 0, 0, 0]))
+        expected = np.cos(np.deg2rad(k1_argument + 90.0))
+        self.assertAlmostEqual(float(radial_displacement(station, [epoch])[0]), expected)
+
 
 if __name__ == "__main__":
     unittest.main()

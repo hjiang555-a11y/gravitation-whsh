@@ -29,6 +29,9 @@ DOODSON = np.asarray(
     ],
     dtype=float,
 )
+DOODSON_WARBURG_DEG = np.where(
+    DOODSON[:, 0] == 0.0, 180.0, np.where(DOODSON[:, 0] == 1.0, 90.0, 0.0)
+)
 
 
 @dataclass(frozen=True)
@@ -108,48 +111,75 @@ def _julian_dates(datetimes: Iterable[datetime]) -> np.ndarray:
 
 
 def astronomical_arguments(datetimes: Iterable[datetime]) -> np.ndarray:
-    """Return Doodson fundamental arguments in degrees.
+    """Return IERS HARDISP Doodson fundamental arguments in degrees.
 
-    UT1 is approximated by UTC; the resulting phase error is below 0.01 degrees
-    for the requested dates.
+    TT is approximated by UTC when evaluating the slowly varying Delaunay
+    arguments. The sub-minute offset has a negligible effect here.
     """
     jd = _julian_dates(datetimes)
     centuries = (jd - 2451545.0) / 36525.0
-
-    gmst = (
-        280.46061837
-        + 360.98564736629 * (jd - 2451545.0)
-        + 0.000387933 * centuries**2
-        - centuries**3 / 38710000.0
+    lunar_anomaly = (
+        134.96340251
+        + centuries
+        * (
+            477198.8675605
+            + centuries
+            * (0.0088553333 + centuries * (0.0000143431 - centuries * 0.000000068))
+        )
     )
-    moon = (
-        218.31664563
-        + 481267.88194 * centuries
-        - 0.0014663889 * centuries**2
-        + centuries**3 / 540000.0
+    solar_anomaly = (
+        357.5291091806
+        + centuries
+        * (
+            35999.0502911389
+            + centuries
+            * (-0.0001536667 + centuries * (0.0000000378 - centuries * 0.0000000032))
+        )
     )
-    sun = 280.46645 + 36000.7697489 * centuries + 0.00030322222 * centuries**2
-    perigee = (
-        83.35324312
-        + 4069.01363525 * centuries
-        - 0.01032172222 * centuries**2
-        - centuries**3 / 80053.0
+    lunar_latitude = (
+        93.27209062
+        + centuries
+        * (
+            483202.0174577222
+            + centuries
+            * (-0.003542 + centuries * (-0.0000002881 + centuries * 0.0000000012))
+        )
+    )
+    lunar_elongation = (
+        297.8501954694
+        + centuries
+        * (
+            445267.1114469445
+            + centuries
+            * (-0.0017696111 + centuries * (0.0000018314 - centuries * 0.0000000088))
+        )
     )
     ascending_node = (
         125.04455501
-        - 1934.13626197 * centuries
-        + 0.00207561111 * centuries**2
-        + centuries**3 / 467441.0
+        + centuries
+        * (
+            -1934.1362619722
+            + centuries
+            * (0.0020756111 + centuries * (0.0000021394 - centuries * 0.0000000165))
+        )
     )
-    solar_perigee = 282.93734098 + 1.71945766667 * centuries + 0.00045688889 * centuries**2
-    tau = gmst + 180.0 - moon
-    return np.column_stack((tau, moon, sun, perigee, -ascending_node, solar_perigee)) % 360.0
+    utc_day_fraction = (jd + 0.5) % 1.0
+
+    doodson_1 = 360.0 * utc_day_fraction - lunar_elongation
+    doodson_2 = lunar_latitude + ascending_node
+    doodson_3 = doodson_2 - lunar_elongation
+    doodson_4 = doodson_2 - lunar_anomaly
+    doodson_5 = -ascending_node
+    doodson_6 = doodson_3 - solar_anomaly
+    return np.column_stack(
+        (doodson_1, doodson_2, doodson_3, doodson_4, doodson_5, doodson_6)
+    ) % 360.0
 
 
 def radial_displacement(station: BlqStation, datetimes: Iterable[datetime]) -> np.ndarray:
     """Predict radial loading displacement from the 11 principal BLQ tides."""
     arguments = astronomical_arguments(datetimes)
-    constituent_phase = arguments @ DOODSON.T
+    constituent_phase = arguments @ DOODSON.T + DOODSON_WARBURG_DEG
     lag = station.radial_phases_deg[np.newaxis, :]
     amplitude = station.radial_amplitudes_m[np.newaxis, :]
     return np.sum(amplitude * np.cos(np.deg2rad(constituent_phase - lag)), axis=1)
