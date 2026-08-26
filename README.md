@@ -54,12 +54,15 @@ python -m pip install -e .
 ```bash
 gravitation-whsh \
   --blq data/wuhn_shao.blq \
-  --output results/wuhan_shanghai_20260620_20260826.csv
+  --output results/wuhan_shanghai_20260620_20260826.csv \
+  --plot results/wuhan_shanghai_20260620_20260826.svg
 ```
 
 默认安装包含 `de421.bsp`，可完全离线运行；也可用
 `--ephemeris /path/to/de440s.bsp` 指定更高版本 JPL 星历。日期范围按两个日期都
 完整包含，共 68 天、97,920 个分钟历元。
+程序同时生成 SVG 折线图；横轴为从起始时刻算起的分钟数，纵轴为
+`SHAO − WUHN` 潮汐重力势差（m²/s²）。CSV 的 `elapsed_minutes` 列与图的横轴一致。
 
 CSV 的关键列：
 
