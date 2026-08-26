@@ -1,3 +1,11 @@
+Metadata-Version: 2.4
+Name: gravitation-whsh
+Version: 0.1.0
+Summary: Minute-resolution tidal geopotential difference between Wuhan and Shanghai
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: skyfield==1.55
+
 # 武汉—上海潮汐引力势差
 
 本项目计算 2026-06-20 00:00 至 2026-08-26 23:59（UTC）期间，武汉
@@ -13,9 +21,8 @@ EGM2008 静态重力场，因此不会把与潮汐无关的高程/纬度静态�
 
 ## 数据来源与模型
 
-* 日月星历：NASA/JPL 公共 `DE421` 星历，由
-  [skyfield-data](https://pypi.org/project/skyfield-data/) 随安装包提供，并由
-  [Skyfield](https://rhodesmill.org/skyfield/) 读取。
+* 日月星历：NASA/JPL 公共 `DE440s` 星历，由
+  [Skyfield](https://rhodesmill.org/skyfield/) 下载并读取。
 * 固体潮：用 JPL 日月地心矢量计算二、三阶潮汐生成势，并采用 IERS Conventions
   (2010) 的名义 Love 数。输出同时给出潮汐生成势、地球诱导势，以及地表随形点
   的有效势 `(1 + kₙ - hₙ)Vₙ`。
@@ -57,9 +64,9 @@ gravitation-whsh \
   --output results/wuhan_shanghai_20260620_20260826.csv
 ```
 
-默认安装包含 `de421.bsp`，可完全离线运行；也可用
-`--ephemeris /path/to/de440s.bsp` 指定更高版本 JPL 星历。日期范围按两个日期都
-完整包含，共 68 天、97,920 个分钟历元。
+首次运行会从 JPL 下载约 32 MB 的 `de440s.bsp` 到用户缓存。若已下载，可用
+`--ephemeris /path/to/de440s.bsp` 离线运行。日期范围按两个日期都完整包含，共
+68 天、97,920 个分钟历元。
 
 CSV 的关键列：
 

@@ -9,6 +9,7 @@ from typing import Sequence
 
 import numpy as np
 from skyfield.api import Loader, load_file, wgs84
+from skyfield_data import get_skyfield_data_path
 
 from .blq import BlqStation, normal_gravity, radial_displacement
 
@@ -109,11 +110,11 @@ def _station_components(site: Site, times, earth, moon, sun) -> tuple[np.ndarray
 
 
 def load_ephemeris(path: str | Path | None, cache_directory: str | Path):
-    """Load a local SPK file or download public JPL DE440s into the cache."""
+    """Load a local SPK file or the packaged public JPL DE421 ephemeris."""
     if path is not None:
         return load_file(str(path))
-    loader = Loader(str(Path(cache_directory).expanduser()))
-    return loader("de440s.bsp")
+    del cache_directory
+    return Loader(get_skyfield_data_path())("de421.bsp")
 
 
 def calculate(
