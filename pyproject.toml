@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gravitation-whsh"
+version = "0.1.0"
+description = "Minute-resolution tidal geopotential difference between Wuhan and Shanghai"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "skyfield==1.55",
+    "skyfield-data==7.0.0",
+]
+
+[project.scripts]
+gravitation-whsh = "gravitation_whsh.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
