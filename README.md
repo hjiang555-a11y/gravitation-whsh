@@ -19,15 +19,16 @@ EGM2008 静态重力场，因此不会把与潮汐无关的高程/纬度静态�
 * 固体潮：用 JPL 日月地心矢量计算二、三阶潮汐生成势，并采用 IERS Conventions
   (2010) 的名义 Love 数。输出同时给出潮汐生成势、地球诱导势，以及地表随形点
   的有效势 `(1 + kₙ - hₙ)Vₙ`。
-* 海潮负荷：读取 [Onsala Ocean Tide Loading Provider](https://barre.oso.chalmers.se/loading/)
-  生成的 BLQ 系数。程序重建 11 个主要分潮的径向位移，并以一阶关系
-  `δW = -γ δh` 转换为站点随形势变化。
+* 海潮负荷：读取 [International Mass Loading Service](https://massloading.net/)
+  预计算的站点海潮负荷位移（HARPOS 格式，FES2014b 模型，44 个分潮）。程序重建
+  径向位移时间序列，并以一阶关系 `δW = -γ δh` 转换为站点随形势变化。
+  也支持 [Onsala Ocean Tide Loading Provider](https://barre.oso.chalmers.se/loading/)
+  生成的 BLQ 系数（11 个主分潮）。
 * 站点坐标：[IGS Network](https://network.igs.org/) 的 WUHN00CHN 与
   SHAO00CHN 坐标。
 
-海潮部分是基于 11 个主分潮的工程近似，不是完整 342 分潮 HARDISP 卷积；未包含
-大气负荷、极潮和静态重力场。BLQ 相位采用 Scherneck/Onsala 约定，当前实现未施加
-分潮交点调制，适合研究潮汐变化趋势，不应替代毫米级大地测量产品。
+海潮负荷位移由 massloading.net 基于 FES2014b 潮汐模型预计算；未包含大气负荷、
+极潮和静态重力场。结果适合研究潮汐变化趋势，不应替代毫米级大地测量产品。
 
 ## 安装
 
@@ -37,23 +38,28 @@ EGM2008 静态重力场，因此不会把与潮汐无关的高程/纬度静态�
 python -m pip install -e .
 ```
 
-## 获取 BLQ 数据
+## 获取海潮负荷数据
 
-在 Onsala 服务中选择同一个海潮模型（推荐 FES2014b），提交以下坐标，并将两个站
-的结果合并保存为一个 BLQ 文件：
+仓库已内置两个站的 FES2014b 海潮负荷系数
+（`data/wuhn_shao_fes2014b.harpos`，HARPOS 格式，来自
+[International Mass Loading Service](https://massloading.net/)，44 个分潮）。
+
+也可从 Onsala 服务获取 BLQ 系数：选择同一个海潮模型（推荐 FES2014b），提交以下
+坐标，并将两个站的结果合并保存为一个 BLQ 文件：
 
 | 站点 | 纬度 | 经度 | 椭球高 |
 |---|---:|---:|---:|
 | WUHN | 30.531653°N | 114.357261°E | 28.2 m |
 | SHAO | 31.099370°N | 121.200250°E | 26.0 m |
 
-服务可能要求通过电子邮件交付结果，所以仓库不伪造或内置模型系数。
+Onsala 服务要求通过电子邮件交付结果，因此内置的 HARPOS 文件取自可公开下载的
+massloading.net 预计算数据集。
 
 ## 计算
 
 ```bash
 gravitation-whsh \
-  --blq data/wuhn_shao.blq \
+  --harpos data/wuhn_shao_fes2014b.harpos \
   --output results/wuhan_shanghai_20260620_20260826.csv \
   --plot results/wuhan_shanghai_20260620_20260826.svg
 ```
@@ -61,8 +67,9 @@ gravitation-whsh \
 默认安装包含 `de421.bsp`，可完全离线运行；也可用
 `--ephemeris /path/to/de440s.bsp` 指定更高版本 JPL 星历。日期范围按两个日期都
 完整包含，共 68 天、97,920 个分钟历元。
-程序同时生成 SVG 折线图；横轴为从起始时刻算起的分钟数，纵轴为
-`SHAO − WUHN` 潮汐重力势差（m²/s²）。CSV 的 `elapsed_minutes` 列与图的横轴一致。
+程序同时生成 SVG 折线图；横轴为日期与时刻（`YYYY-MM-DD` / `HH:MM`，UTC），纵轴为
+`SHAO − WUHN` 潮汐重力势差（m²/s²）。CSV 的 `elapsed_minutes` 列仍给出从起始时刻
+算起的分钟数，便于与时间轴对应。
 
 CSV 的关键列：
 

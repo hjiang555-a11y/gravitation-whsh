@@ -12,6 +12,7 @@ from skyfield.api import Loader, load_file, wgs84
 from skyfield_data import get_skyfield_data_path
 
 from .blq import BlqStation, normal_gravity, radial_displacement
+from .harpos import HarposStation, radial_displacement as harpos_radial_displacement
 
 GM_MOON = 4.902800118e12
 GM_SUN = 1.327124400419394e20
@@ -117,6 +118,15 @@ def load_ephemeris(path: str | Path | None, cache_directory: str | Path):
     return Loader(get_skyfield_data_path())("de421.bsp")
 
 
+def _ocean_delta(
+    wuhan: Site, shanghai: Site, wuh_up: np.ndarray, sha_up: np.ndarray
+) -> np.ndarray:
+    """Convert radial loading displacements to the SHAO-minus-WUHN geopotential."""
+    wuh_potential = -normal_gravity(wuhan.latitude_deg, wuhan.height_m) * wuh_up
+    sha_potential = -normal_gravity(shanghai.latitude_deg, shanghai.height_m) * sha_up
+    return sha_potential - wuh_potential
+
+
 def calculate(
     start: datetime,
     end: datetime,
@@ -126,6 +136,8 @@ def calculate(
     timescale,
     wuhan_blq: BlqStation | None = None,
     shanghai_blq: BlqStation | None = None,
+    wuhan_harpos: HarposStation | None = None,
+    shanghai_harpos: HarposStation | None = None,
 ) -> Calculation:
     """Calculate Shanghai-minus-Wuhan tidal geopotential components."""
     timestamps = minute_epochs(start, end)
@@ -141,9 +153,14 @@ def calculate(
     if wuhan_blq is not None and shanghai_blq is not None:
         wuh_up = radial_displacement(wuhan_blq, timestamps)
         sha_up = radial_displacement(shanghai_blq, timestamps)
-        wuh_potential = -normal_gravity(wuhan.latitude_deg, wuhan.height_m) * wuh_up
-        sha_potential = -normal_gravity(shanghai.latitude_deg, shanghai.height_m) * sha_up
-        ocean_delta = sha_potential - wuh_potential
+        ocean_delta = _ocean_delta(wuhan, shanghai, wuh_up, sha_up)
+
+    if wuhan_harpos is not None or shanghai_harpos is not None:
+        if wuhan_harpos is None or shanghai_harpos is None:
+            raise ValueError("HARPOS coefficients must be supplied for both stations")
+        wuh_up = harpos_radial_displacement(wuhan_harpos, timestamps, timescale)
+        sha_up = harpos_radial_displacement(shanghai_harpos, timestamps, timescale)
+        ocean_delta = _ocean_delta(wuhan, shanghai, wuh_up, sha_up)
 
     return Calculation(
         timestamps=timestamps,

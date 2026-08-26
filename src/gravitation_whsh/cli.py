@@ -12,6 +12,7 @@ from skyfield.api import Loader
 
 from .blq import read_blq
 from .calculator import Site, calculate, load_ephemeris
+from .harpos import read_harpos
 
 WUHAN = Site("WUHN", 30.531653, 114.357261, 28.2)
 SHANGHAI = Site("SHAO", 31.099370, 121.200250, 26.0)
@@ -24,6 +25,11 @@ def _parser() -> argparse.ArgumentParser:
         description="Calculate minute tidal geopotential difference: SHAO minus WUHN"
     )
     parser.add_argument("--blq", type=Path, help="BLQ file containing WUHN and SHAO")
+    parser.add_argument(
+        "--harpos",
+        type=Path,
+        help="HARPOS file containing WUHN and SHAO ocean-loading coefficients",
+    )
     parser.add_argument(
         "--allow-no-ocean",
         action="store_true",
@@ -87,7 +93,7 @@ def _write_csv(path: Path, result) -> None:
 
 def _write_svg(path: Path, result) -> None:
     width, height = 1200, 700
-    left, right, top, bottom = 100, 30, 55, 85
+    left, right, top, bottom = 100, 50, 55, 85
     plot_width = width - left - right
     plot_height = height - top - bottom
     values = result.total_delta
@@ -116,12 +122,16 @@ def _write_svg(path: Path, result) -> None:
 
     x_ticks = []
     for tick in range(0, 6):
-        minute = round((len(values) - 1) * tick / 5)
-        x = x_position(minute)
+        index = round((len(values) - 1) * tick / 5)
+        x = x_position(index)
+        stamp = result.timestamps[index]
         x_ticks.append(
             f'<line x1="{x:.2f}" y1="{height-bottom}" x2="{x:.2f}" '
             f'y2="{height-bottom+6}" stroke="black"/>'
-            f'<text x="{x:.2f}" y="{height-bottom+25}" text-anchor="middle">{minute}</text>'
+            f'<text x="{x:.2f}" y="{height-bottom+24}" text-anchor="middle" '
+            f'font-size="12">{stamp.strftime("%Y-%m-%d")}</text>'
+            f'<text x="{x:.2f}" y="{height-bottom+40}" text-anchor="middle" '
+            f'font-size="12">{stamp.strftime("%H:%M")}</text>'
         )
     y_ticks = []
     for tick in range(0, 6):
@@ -143,7 +153,7 @@ def _write_svg(path: Path, result) -> None:
 <line x1="{left}" y1="{height-bottom}" x2="{width-right}" y2="{height-bottom}" stroke="black"/>
 {''.join(x_ticks)}
 <polyline points="{polyline}" fill="none" stroke="#0969da" stroke-width="1.3"/>
-<text x="{left+plot_width/2}" y="{height-20}" text-anchor="middle">Time (minutes)</text>
+<text x="{left+plot_width/2}" y="{height-20}" text-anchor="middle">Time (UTC)</text>
 <text x="22" y="{top+plot_height/2}" text-anchor="middle" transform="rotate(-90 22 {top+plot_height/2})">SHAO − WUHN geopotential difference (m²/s²)</text>
 </g>
 </svg>
@@ -154,18 +164,19 @@ def _write_svg(path: Path, result) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    if args.blq is None and not args.allow_no_ocean:
-        _parser().error("--blq is required unless --allow-no-ocean is explicitly set")
+    if args.blq is None and args.harpos is None and not args.allow_no_ocean:
+        _parser().error(
+            "--blq or --harpos is required unless --allow-no-ocean is explicitly set"
+        )
+
+    def find_station(stations, code):
+        return next((station for key, station in stations.items() if key.startswith(code)), None)
 
     wuhan_blq = shanghai_blq = None
     if args.blq is not None:
         stations = read_blq(args.blq)
-
-        def find_station(code):
-            return next((station for key, station in stations.items() if key.startswith(code)), None)
-
-        wuhan_blq = find_station(WUHAN.code)
-        shanghai_blq = find_station(SHANGHAI.code)
+        wuhan_blq = find_station(stations, WUHAN.code)
+        shanghai_blq = find_station(stations, SHANGHAI.code)
         missing = [
             site.code
             for site, station in ((WUHAN, wuhan_blq), (SHANGHAI, shanghai_blq))
@@ -173,6 +184,19 @@ def main(argv: list[str] | None = None) -> int:
         ]
         if missing:
             raise SystemExit(f"BLQ file is missing station(s): {', '.join(missing)}")
+
+    wuhan_harpos = shanghai_harpos = None
+    if args.harpos is not None:
+        stations = read_harpos(args.harpos)
+        wuhan_harpos = find_station(stations, WUHAN.code)
+        shanghai_harpos = find_station(stations, SHANGHAI.code)
+        missing = [
+            site.code
+            for site, station in ((WUHAN, wuhan_harpos), (SHANGHAI, shanghai_harpos))
+            if station is None
+        ]
+        if missing:
+            raise SystemExit(f"HARPOS file is missing station(s): {', '.join(missing)}")
 
     ephemeris = load_ephemeris(args.ephemeris, args.cache)
     timescale = Loader(str(args.cache)).timescale()
@@ -185,6 +209,8 @@ def main(argv: list[str] | None = None) -> int:
         timescale,
         wuhan_blq,
         shanghai_blq,
+        wuhan_harpos,
+        shanghai_harpos,
     )
     _write_csv(args.output, result)
     plot_path = args.plot or args.output.with_suffix(".svg")

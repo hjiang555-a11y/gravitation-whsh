@@ -1,0 +1,425 @@
+HARPOS  Format version of 2005.03.28
+#
+# Created by loading_spl_heb_to_eph version 3.0 of 2017.06.01
+#       run by Leonid ( lpetrov@localhost )
+#           on gs61a-geodev-a at 2020.03.02-15:25:11 local time
+#
+#
+#============================ Beginning of description: ========================
+#
+# Data source:
+#  
+# 1) Ocean tidal model FES2014b. It defines height of 34 tidal constituents
+#    at the uniform grid with resolution 0.0625 x 0.0625 degrees.
+#  
+#    See project web pages about more information about FES2014b
+#  
+#    https://www.aviso.altimetry.fr/en/data/products/auxiliary-products/
+#    global-tide-fes/description-fes2014.html
+#  
+#    Carrere L., F. Lyard, M. Cancet, A. Guillot, N. Picot, Finite Element
+#    Solution FES2014, a new tidal model - Validation results and
+#    perspectives for improvements, presentation to ESA Living Planet
+#    Conference, Prague 2016.
+#  
+#    In addition, 10 sidelobes of the main tidal constituents
+#    MF+, MTM+, Q1-, O1-, K1-, K1+, J1+, N2-, M2-, K2+ were added.
+#    Their frequencies differ from the frequencies of the main tides by
+#    -+ 1.06D-8 rad/sec. The complex amplitudes of water height of sidelobe
+#    (H') and the main tide (H) are related to the complex amplitudes of
+#    their tide generating potentials A and A' via the admittance
+#    relationship:
+#  
+#    H'c + i H's     A'c + A's
+#    ----------- = -----------
+#    Hc  + i Hs      Ac  + i As
+#  
+#    Here Hc denotes the cosine term in harmonic constituent and Hs
+#    denotes the sine term of the harmonic constituent.
+#  
+#    In total, 44 tidal constituents are considered.
+#  
+#    The original FES2014b model was extrapolated inland up to 6 cells.
+#    Extrapolation was performed by convolution with the exponential
+#    kernel. The inland extrapolation was done to avoid Gibbs phenomena
+#    when windowed land-sea mask is applied before spherical harmonics
+#    transform.
+#  
+#  
+# 2) The Love numbers have been computed using REAR software,
+#    Melini  D.,  Gegout  P.,  Spada  G,  King  M.  (2014), "REAR --
+#    a regional  Elastic  Rebound  calculator. User manual for version 1.0",
+#    available on-line at  http://hpc.rm.ingv.it/rear.
+#    Earth reference model STW105 (Kustowski et al., 2007), which is an update
+#    of PREM (Dziewonski and Anderson, 1981) was used. The elastic rheology
+#    of the Earth derives from the waves speed and the density, with the top
+#    three kilometers of oceanic water replaced by underneath rock materials.
+#    The model defines the Earth (hydrostatic) equilibrium, the pressure and
+#    the gravity inside the Earth; numerical computations allow to take
+#    compressibility into account. The Love numbers are computed in the
+#    coordinate system with the centrum at the center of mass of the total
+#    Earth: solid Earth, ocean, and the atmosphere. Therefore, loading
+#    displacements computed with using such Love numbers are the displacements
+#    with respect to the center of mass of the total Earth that includes
+#    the ocean.
+#  
+#  
+#
+#============================ End of description: ==============================
+#
+#
+#============================ Beginning of comments: ===========================
+#
+# Loading computation.
+#  
+#    Displacements are computed in frequency domain. The original data are
+#    re-gridded to the uniform equiangular grid D2699 (10800x5401) with
+#    refined land-sea mask. The land/water mask was derived from the MOD44W
+#    model using the following procedure: a) original MOD4WW mask was
+#    re-sampled to resolution 86400x43000 over longitude and latitude;
+#    b) spherical harmonics transform of degree/order 21,599 was performed;
+#    c) the spherical harmonics transform of the mask was multiplied
+#    by Blackman window of degree/order 2,699; d) the inverse spherical
+#    harmonics transform of degree/order 2,699 was performed over the
+#    results to for, the final bandlimited land-sea mask with resolution
+#    10800x5401 over longitude and latitude (2'x2'or ~3.7 km).
+#    The land-sea mask at a given cell is a number in a range -0.0004 to
+#    1.0006 that is equal to the ratio of the area covered by land (i.e.
+#    non-ocean in this context) to the total area of the cell.
+#  
+#    Then for every tide, cosine and sine components of ocean tide heights
+#    is expanded into spherical harmonic of degree/order 2699. The harmonics
+#    are scaled by factors that depends on loading Love numbers. These scaled
+#    spherical harmonics are used for computing 3D tidal displacement:
+#    up, east, and north components. The up component is defined
+#    as a displacement towards direction orthogonal to the reference ellipsoid.
+#  
+#    Adopted density of sea water: 1025 kg/meter^3.
+#  
+#    The displacement is computed with respect to the center of the total
+#    Earth's mass, including the mass of the ocean.
+#  
+#
+#============================ End of comments: =================================
+#
+#
+#============================ Beginning of format description: =================
+#
+#    Specifications of HARPOS format version of 2005.03.28
+#    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  
+#    HARPOS format is for describing site displacements which can
+# be represented by a finite set of harmonic components.
+#  
+#    A file in HARPOS format consists of records of variable length in
+# ASCII coding. The records are separated by a character with decimal
+# code 13. The records of the following types are supported:
+#  
+# 1) Header record;
+# 2) Harmonic definition records;
+# 3) The radius of the area of applicability;
+# 4) Site definition records;
+# 5) Displacement definition records;
+# 6) Trailer record.
+#  
+#    Records which start from # character are considered as comments.
+#  
+#    Each valid file in HARPOS format has the first header record, one
+# or more harmonic definition records, one or more site definition
+# records and one or more displacement definition records. The last
+# record is a trailer record. All harmonic definition records should
+# precede site definition records. All site definition records should
+# precede displacement definition records.
+#  
+#    Records format:
+#  
+# 1) A header record contains the string
+#    "HARPOS Format version of 2005.03.28"
+#  
+#    The header record allows to distinguish the valid file in the
+#    HARPOS format from files in other formats.
+#  
+# 2) A harmonic definition record defines the argument of the harmonic in
+#    the form {phase + freq*(t-t0) + 1/2*accel*(t-t0)**2}  where t is
+#    time in TDT time scale and t0 is the reference epoch J2000.0,
+#    01 January 2000, 12 hours TDT. The file cannot contain more than one
+#    definition of the same harmonic.
+#  
+# Format of an H-record:
+# ----------------------
+#  
+# Field  1:1   A1     -- Records ID: letter H (decimal code 72).
+# field  2:3   a2     -- delimiters: blanks.
+# Field  4:11  A8     -- 8-letter long harmonic name. May contain any
+#                        characters with decimal codes 32-255, but blanks
+#                        are allowed only at the end of the harmonic name.
+#                        This field should not necessarily have a special
+#                        meaning. Parsing software should not try to
+#                        interpret this name.
+# field 12:13  a2     -- delimiters: blanks.
+# Field 14:26  D13.6  -- Phase of the harmonic in float format.
+#                        Units: rad.
+# field 27:28  a2     -- delimiters: blanks.
+# Field 29:47  D19.12 -- Frequency of the harmonic in float format.
+#                        Units: rad/sec.
+# field 48:49  a2     -- delimiters: blanks.
+# Field 50:59  D10.3  -- Acceleration of the harmonic in float format.
+#                        Units: rad/sec**2.
+# field 60:80  a21    -- delimiters: blanks.
+#  
+# 3) An applicability record defines the radius of the area for which
+#    information about displacements is valid. D-record defines displacement
+#    for the area around a station. This area is called "site". Displacement
+#    for the site is applicable to any point (station) located within
+#    a disk around the site with the radius specified in this record
+#  
+# Format of an A-record:
+# ----------------------
+#  
+# Field  1:1   A1     -- Record ID: letter A (decimal code 65).
+# field  2:3   a2     -- delimiters: blanks.
+# Field  4:17  F14.6  -- Radius of the site area in meters
+#  
+# 4) A site definition record defines the site identifier and site
+#    coordinates in a crust-fixed reference frame. The file cannot
+#    contain more than one definition of the same site.
+#  
+# Format of an S-record:
+# ----------------------
+#  
+# Field  1:1   A1     -- Record ID. Should be letter S (decimal code 83)
+# Field  2:3   A2     -- Delimiters: blanks.
+# Field  4:11  A8     -- 8-letter long site identifier. May contain
+#                        any characters with decimal codes 32-255, but
+#                        blanks are allowed only at the end of the site
+#                        identifier. This site identifier should be
+#                        unique among S-records. This field should not
+#                        necessarily have a special meaning. Parsing
+#                        software should not try to interpret it.
+# field 12:13  a2     -- delimiters: blanks.
+# Field 14:26  F13.4  -- Site X coordinate in a crust fixed reference
+#                        frame. Units: meters.
+# field 27:27  a1     -- delimiters: blanks.
+# Field 28:40  F13.4  -- Site Y coordinate in a crust fixed reference
+#                        frame. Units: meters.
+# field 41:41  a1     -- delimiters: blanks.
+# Field 42:54  F13.4  -- Site Z coordinate in a crust fixed reference
+#                        frame. Units: meters.
+# field 55:56  a2     -- delimiters: blanks.
+# Field 57:64  F8.4   -- Site geocentric latitude, positive to north,
+#                        in degrees. This field is for information only.
+#                        Parsing software MUST ignore it.
+# field 65:65  a1     -- delimiters: blanks.
+# Field 66:73  F8.4   -- Site longitude, positive towards east,
+#                        in degrees. This field is for information only.
+#                        Parsing software MUST ignore it.
+# field 74:74  a1     -- delimiters: blanks.
+# Field 75:80  F6.1   -- Site height above the reference ellipsoid
+#                        in meters. This field is for information only.
+#                        Parsing software MUST ignore it.
+#  
+# 5) A data record specifies the site, the harmonic and 6 amplitudes of
+#    displacements: Up cosine, East cosine, North cosine, Up sine,
+#    East sine, North sine. A file cannot contain more than one data
+#    record for the same harmonic, the same site. The site and the
+#    harmonic referred in a data record must be defined in the preceding
+#    site and harmonic definition records.
+#  
+#    Notation "Up cosine" and "Up sine" amplitudes of the displacement
+#    means that the radial component of the topocentric vector of the
+#    displacement, which is parallel to the vector from the geocenter to
+#    the site, depends on time in the following way:
+#  
+#    D_up= Ampl_cos_up * cos {phase + freq*(t-t0) + 1/2*accel*(t-t0)**2} +
+#          Ampl_sin_up * sin {phase + freq*(t-t0) + 1/2*accel*(t-t0)**2}
+#  
+#    Analogously, "East cosine", "East sine" amplitudes define time
+#    dependence of the east component of the displacement vector, and
+#    "North cosine", "North sine" define time dependence of the north
+#    component.
+#  
+# Format of a D-record:
+# ---------------------
+#  
+# Field  1:1   A1     -- Record ID: letter D (decimal code 68).
+# field  2:3   a2     -- delimiters: blanks.
+# Field  4:11  A8     -- 8-letter long harmonic name. The harmonic name
+#                        must be defined in a preceding H-record.
+# field 12:13  a2     -- delimiters: blanks.
+# Field 14:21  A8     -- 8-letter long site identifier. The site
+#                        identifier must be defined in a preceding
+#                        S-record.
+# field 22:24  a3     -- delimiters: blanks.
+# Field 25:32  F8.5   -- Cosine amplitude of the Up component of the
+#                        displacement vector. Up direction is along the
+#                        vector from the geocenter to the site.
+#                        Units: meters.
+# field 33:33  A1     -- delimiter: blank.
+# Field 34:41  F8.5   -- Cosine amplitude of the East component of the
+#                        displacement vector. Units: meters.
+# field 42:42  a1     -- delimiter: blank.
+# Field 43:50  F8.5   -- Cosine amplitude of the North component of the
+#                        displacement vector. Units: meters.
+# field 51:53  a3     -- delimiter: blanks.
+# Field 54:61  F8.5   -- Sine amplitude of the Up component of the
+#                        displacement vector. Up direction is along the
+#                        vector from the geocenter to the site.
+#                        Units: meters.
+# field 62:62  a1     -- delimiter: blank.
+# Field 63:70  F8.5   -- Sine amplitude of the East component of the
+#                        displacement vector. Units: meters.
+# field 71:71  a1     -- delimiter: blank.
+# Field 72:79  F8.5   -- Sine amplitude of the North component of the
+#                        displacement vector. Units: meters.
+# field 80:80  a1     -- delimiter: blank.
+#  
+#  
+# 6) Trailer record is the same as the header record.
+#
+#============================ End of format description: =======================
+#
+#
+#  Radius of validity area (in meters)
+#
+A     3000.000000                                                               
+#
+#  Harmonic   Phase          Frequency           Acceleration
+#
+H  2N2        3.741511D+00   1.352404965989D-04  -4.970D-23                     
+H  EPS2       1.983319D+00   1.329544980231D-04  -6.230D-24                     
+H  J1         5.679822D+00   7.556036160412D-05   3.210D-23                     
+H  J1+        3.497383D+00   7.557105856649D-05   2.480D-23                     
+H  K1         3.324267D+00   7.292115855138D-05   1.060D-24                     
+H  K1-        2.365113D+00   7.291046158901D-05   8.340D-24                     
+H  K1+        1.141827D+00   7.293185551375D-05  -6.210D-24                     
+H  K2         3.506941D+00   1.458423171028D-04   2.130D-24                     
+H  K2+        1.324501D+00   1.458530140651D-04  -5.150D-24                     
+H  L2         1.383401D+00   1.431581057571D-04   4.340D-23                     
+H  LA2        7.860370D-01   1.428049012801D-04  -3.100D-23                     
+H  M2         2.169437D+00   1.405189027044D-04   1.240D-23                     
+H  M2-        1.210284D+00   1.405082057420D-04   1.970D-23                     
+H  M3         3.138148D+00   2.108008582030D-04  -1.760D-23                     
+H  M4         4.338874D+00   2.810378054088D-04   2.480D-23                     
+H  M6         2.251260D-01   4.215567081132D-04   3.720D-23                     
+H  M8         2.394563D+00   5.620756108176D-04   4.960D-23                     
+H  MF         4.479096D+00   5.323414398410D-06  -1.030D-23                     
+H  MF+        2.296657D+00   5.334111360775D-06  -1.760D-23                     
+H  MKS2       5.676378D+00   1.409171154743D-04   1.450D-23                     
+H  MM         5.497148D+00   2.639203052741D-06   3.100D-23                     
+H  MN4        1.983319D+00   2.783986023560D-04  -6.200D-24                     
+H  MS4        2.169437D+00   2.859630070373D-04   1.240D-23                     
+H  MSF        9.721550D-01   4.925201628510D-06  -1.240D-23                     
+H  MSQM       2.309658D+00   1.024861602692D-05  -2.270D-23                     
+H  MTM        5.514660D-01   7.962617451151D-06   2.080D-23                     
+H  MTM+       4.652212D+00   7.973314413516D-06   1.350D-23                     
+H  MU2        4.338875D+00   1.355937010758D-04   2.480D-23                     
+H  N2         6.097067D+00   1.378796996516D-04  -1.860D-23                     
+H  N2-        5.137914D+00   1.378690026892D-04  -1.140D-23                     
+H  N4         5.910949D+00   2.757593993032D-04  -3.720D-23                     
+H  NU2        4.112450D-01   1.382329041286D-04   5.580D-23                     
+H  O1         5.128356D+00   6.759774415297D-05   1.130D-23                     
+H  O1-        1.027610D+00   6.758704719061D-05   1.860D-23                     
+H  P1         2.958919D+00   7.252294578148D-05  -1.060D-24                     
+H  Q1         2.772800D+00   6.495854110023D-05  -1.970D-23                     
+H  Q1-        4.955240D+00   6.494784413786D-05  -1.240D-23                     
+H  R2         3.098467D+00   1.456432012082D-04  -5.390D-25                     
+H  S1         1.570796D+00   7.272205216643D-05   0.000D+00                     
+H  S2         6.283185D+00   1.454441043329D-04   0.000D+00                     
+H  S4         6.283185D+00   2.908882086658D-04   0.000D+00                     
+H  SA         3.098467D+00   1.990968752920D-07  -5.390D-25                     
+H  SSA        3.653480D-01   3.982127698995D-07   2.130D-24                     
+H  T2         4.312500D-02   1.452450074576D-04   5.390D-25                     
+#
+#  Site ID    X-coord.      Y-coord.      Z-coord.     phi-geoc. longit.  height
+#
+S  SHAO      -2831733.3570  4675666.0060  3275369.4810   30.9297 121.2004   22.1
+S  WUHN      -2267749.2540  5009154.2950  3221290.7230   30.3635 114.3573   25.8
+D  2N2       SHAO       -0.00030  0.00008 -0.00010    0.00001 -0.00004  0.00006 
+D  EPS2      SHAO       -0.00006  0.00006 -0.00004    0.00004 -0.00003  0.00002 
+D  J1        SHAO       -0.00020  0.00033 -0.00003   -0.00027  0.00022  0.00021 
+D  J1+       SHAO       -0.00002 -0.00000  0.00004    0.00006 -0.00008 -0.00002 
+D  K1        SHAO       -0.00136  0.00377 -0.00029   -0.00545  0.00430  0.00359 
+D  K1-       SHAO       -0.00010  0.00011  0.00005   -0.00004 -0.00001  0.00005 
+D  K1+       SHAO       -0.00050  0.00018  0.00042    0.00058 -0.00075 -0.00025 
+D  K2        SHAO       -0.00032  0.00038 -0.00041   -0.00064  0.00019 -0.00021 
+D  K2+       SHAO       -0.00010 -0.00002  0.00002    0.00019 -0.00012  0.00014 
+D  L2        SHAO       -0.00010  0.00009 -0.00012   -0.00019 -0.00001 -0.00003 
+D  LA2       SHAO       -0.00007  0.00007 -0.00005   -0.00009 -0.00002  0.00000 
+D  M2        SHAO       -0.00552  0.00281 -0.00484   -0.00583 -0.00027  0.00004 
+D  M2-       SHAO       -0.00030  0.00005 -0.00010    0.00004 -0.00009  0.00015 
+D  M3        SHAO       -0.00001  0.00000  0.00000   -0.00000 -0.00000  0.00000 
+D  M4        SHAO        0.00003  0.00000 -0.00002   -0.00006  0.00003 -0.00001 
+D  M6        SHAO        0.00002  0.00000  0.00000   -0.00003  0.00001  0.00000 
+D  M8        SHAO       -0.00000 -0.00000  0.00000    0.00000  0.00000  0.00000 
+D  MF        SHAO        0.00029 -0.00022  0.00048    0.00022  0.00033  0.00001 
+D  MF+       SHAO        0.00001  0.00017 -0.00011   -0.00015 -0.00000 -0.00016 
+D  MKS2      SHAO        0.00001 -0.00001  0.00001    0.00006 -0.00000 -0.00000 
+D  MM        SHAO        0.00030  0.00003  0.00022    0.00013  0.00015 -0.00004 
+D  MN4       SHAO        0.00002  0.00000 -0.00001   -0.00002  0.00001  0.00000 
+D  MS4       SHAO        0.00004 -0.00002 -0.00001    0.00001  0.00001 -0.00001 
+D  MSF       SHAO        0.00008 -0.00001 -0.00001    0.00005 -0.00001  0.00000 
+D  MSQM      SHAO       -0.00000  0.00000  0.00001   -0.00001  0.00000  0.00000 
+D  MTM       SHAO        0.00003 -0.00007  0.00008    0.00002  0.00003  0.00001 
+D  MTM+      SHAO       -0.00000  0.00003 -0.00002   -0.00001  0.00002 -0.00003 
+D  MU2       SHAO       -0.00011  0.00008 -0.00010    0.00003  0.00003  0.00004 
+D  N2        SHAO       -0.00169  0.00060 -0.00095   -0.00074 -0.00011  0.00027 
+D  N2-       SHAO       -0.00006  0.00001 -0.00001    0.00004 -0.00002  0.00003 
+D  N4        SHAO       -0.00000  0.00000 -0.00000   -0.00000  0.00000  0.00000 
+D  NU2       SHAO       -0.00038  0.00012 -0.00019   -0.00017 -0.00001  0.00003 
+D  O1        SHAO       -0.00268  0.00319  0.00006   -0.00355  0.00182  0.00197 
+D  O1-       SHAO        0.00084 -0.00063 -0.00031   -0.00003  0.00030 -0.00020 
+D  P1        SHAO       -0.00047  0.00122 -0.00006   -0.00176  0.00129  0.00112 
+D  Q1        SHAO       -0.00071  0.00066 -0.00003   -0.00063  0.00020  0.00029 
+D  Q1-       SHAO        0.00017 -0.00010 -0.00004   -0.00004  0.00008 -0.00004 
+D  R2        SHAO       -0.00001  0.00001 -0.00001   -0.00001  0.00000 -0.00001 
+D  S1        SHAO       -0.00009 -0.00003  0.00009   -0.00004  0.00016 -0.00015 
+D  S2        SHAO       -0.00036  0.00113 -0.00161   -0.00235  0.00056 -0.00083 
+D  S4        SHAO        0.00000 -0.00000 -0.00000   -0.00000  0.00000 -0.00000 
+D  SA        SHAO        0.00001 -0.00000  0.00000    0.00000 -0.00000  0.00000 
+D  SSA       SHAO        0.00030  0.00015  0.00016    0.00001  0.00002  0.00000 
+D  T2        SHAO       -0.00005  0.00007 -0.00010   -0.00009  0.00002 -0.00004 
+D  2N2       WUHN       -0.00009  0.00002 -0.00008    0.00007 -0.00007 -0.00001 
+D  EPS2      WUHN       -0.00003  0.00004 -0.00004    0.00006 -0.00004  0.00001 
+D  J1        WUHN       -0.00009  0.00027  0.00001   -0.00011  0.00018  0.00025 
+D  J1+       WUHN       -0.00001 -0.00000  0.00004    0.00003 -0.00006 -0.00003 
+D  K1        WUHN       -0.00032  0.00296 -0.00020   -0.00207  0.00317  0.00455 
+D  K1-       WUHN       -0.00004  0.00009  0.00007   -0.00002 -0.00001  0.00006 
+D  K1+       WUHN       -0.00021  0.00012  0.00052    0.00020 -0.00058 -0.00033 
+D  K2        WUHN       -0.00026  0.00034 -0.00016    0.00022 -0.00004 -0.00024 
+D  K2+       WUHN        0.00010 -0.00007 -0.00003    0.00003 -0.00007  0.00008 
+D  L2        WUHN       -0.00003  0.00006 -0.00006    0.00005 -0.00005 -0.00006 
+D  LA2       WUHN       -0.00001  0.00005 -0.00003    0.00002 -0.00004 -0.00001 
+D  M2        WUHN       -0.00195  0.00193 -0.00282    0.00081 -0.00185 -0.00125 
+D  M2-       WUHN       -0.00002 -0.00002 -0.00010    0.00008 -0.00010  0.00006 
+D  M3        WUHN       -0.00000  0.00000 -0.00000   -0.00000  0.00000 -0.00000 
+D  M4        WUHN        0.00001 -0.00001 -0.00000   -0.00001 -0.00000 -0.00001 
+D  M6        WUHN        0.00000  0.00000 -0.00000   -0.00000 -0.00000  0.00000 
+D  M8        WUHN        0.00000 -0.00000  0.00000   -0.00000 -0.00000  0.00000 
+D  MF        WUHN        0.00034 -0.00023  0.00044    0.00015  0.00035  0.00003 
+D  MF+       WUHN       -0.00003  0.00017 -0.00009   -0.00015 -0.00001 -0.00016 
+D  MKS2      WUHN       -0.00001  0.00001  0.00000    0.00001  0.00001  0.00000 
+D  MM        WUHN        0.00029  0.00003  0.00021    0.00009  0.00016 -0.00003 
+D  MN4       WUHN        0.00000 -0.00000  0.00000    0.00000  0.00000  0.00000 
+D  MS4       WUHN       -0.00000 -0.00000 -0.00000    0.00001 -0.00000  0.00000 
+D  MSF       WUHN        0.00004 -0.00001 -0.00001    0.00002 -0.00001  0.00000 
+D  MSQM      WUHN        0.00000 -0.00000  0.00001   -0.00000  0.00000  0.00000 
+D  MTM       WUHN        0.00004 -0.00008  0.00008    0.00002  0.00003  0.00001 
+D  MTM+      WUHN       -0.00000  0.00003 -0.00001   -0.00002  0.00002 -0.00003 
+D  MU2       WUHN       -0.00009  0.00004 -0.00008    0.00008 -0.00003  0.00002 
+D  N2        WUHN       -0.00061  0.00034 -0.00064    0.00021 -0.00038 -0.00010 
+D  N2-       WUHN       -0.00001 -0.00000 -0.00002    0.00002 -0.00002  0.00002 
+D  N4        WUHN        0.00000 -0.00000 -0.00000    0.00000 -0.00000  0.00000 
+D  NU2       WUHN       -0.00012  0.00006 -0.00013    0.00001 -0.00005 -0.00003 
+D  O1        WUHN       -0.00100  0.00229  0.00046   -0.00185  0.00145  0.00258 
+D  O1-       WUHN        0.00039 -0.00047 -0.00045    0.00005  0.00020 -0.00021 
+D  P1        WUHN       -0.00009  0.00096 -0.00000   -0.00071  0.00096  0.00141 
+D  Q1        WUHN       -0.00034  0.00048  0.00008   -0.00039  0.00018  0.00037 
+D  Q1-       WUHN        0.00010 -0.00008 -0.00007   -0.00001  0.00005 -0.00003 
+D  R2        WUHN       -0.00001  0.00001 -0.00001    0.00001 -0.00000 -0.00001 
+D  S1        WUHN       -0.00005 -0.00005  0.00009   -0.00002  0.00016 -0.00013 
+D  S2        WUHN       -0.00069  0.00116 -0.00069    0.00063 -0.00027 -0.00090 
+D  S4        WUHN       -0.00000  0.00000 -0.00000   -0.00000  0.00000  0.00000 
+D  SA        WUHN        0.00000 -0.00000  0.00000    0.00000 -0.00000  0.00000 
+D  SSA       WUHN        0.00026  0.00016  0.00016    0.00000  0.00002  0.00000 
+D  T2        WUHN       -0.00004  0.00007 -0.00005    0.00004 -0.00002 -0.00005 
+HARPOS  Format version of 2005.03.28
