@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 from datetime import datetime, timezone
+import math
 from pathlib import Path
 
 from skyfield.api import Loader
@@ -40,6 +41,11 @@ def _parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("wuhan_shanghai_20260620_20260826.csv"),
     )
+    parser.add_argument(
+        "--plot",
+        type=Path,
+        help="SVG plot path (default: the output CSV path with an .svg suffix)",
+    )
     return parser
 
 
@@ -49,6 +55,7 @@ def _write_csv(path: Path, result) -> None:
         writer = csv.writer(output)
         writer.writerow(
             (
+                "elapsed_minutes",
                 "timestamp_utc",
                 "tide_generating_delta_m2_s2",
                 "solid_induced_delta_m2_s2",
@@ -66,6 +73,7 @@ def _write_csv(path: Path, result) -> None:
             )
             writer.writerow(
                 (
+                    index,
                     timestamp.isoformat().replace("+00:00", "Z"),
                     f"{result.generating_delta[index]:.9f}",
                     f"{result.induced_delta[index]:.9f}",
@@ -75,6 +83,73 @@ def _write_csv(path: Path, result) -> None:
                     f"{result.total_delta[index]:.9f}",
                 )
             )
+
+
+def _write_svg(path: Path, result) -> None:
+    width, height = 1200, 700
+    left, right, top, bottom = 100, 30, 55, 85
+    plot_width = width - left - right
+    plot_height = height - top - bottom
+    values = result.total_delta
+    minimum = float(values.min())
+    maximum = float(values.max())
+    padding = max((maximum - minimum) * 0.05, 1e-9)
+    y_min, y_max = minimum - padding, maximum + padding
+
+    def x_position(index: int) -> float:
+        return left + plot_width * index / (len(values) - 1)
+
+    def y_position(value: float) -> float:
+        return top + plot_height * (y_max - value) / (y_max - y_min)
+
+    bucket_size = max(1, math.ceil(len(values) / plot_width))
+    points: list[tuple[int, float]] = []
+    for start in range(0, len(values), bucket_size):
+        stop = min(start + bucket_size, len(values))
+        bucket = values[start:stop]
+        low = start + int(bucket.argmin())
+        high = start + int(bucket.argmax())
+        for index in sorted((low, high)):
+            if not points or points[-1][0] != index:
+                points.append((index, float(values[index])))
+    polyline = " ".join(f"{x_position(i):.2f},{y_position(v):.2f}" for i, v in points)
+
+    x_ticks = []
+    for tick in range(0, 6):
+        minute = round((len(values) - 1) * tick / 5)
+        x = x_position(minute)
+        x_ticks.append(
+            f'<line x1="{x:.2f}" y1="{height-bottom}" x2="{x:.2f}" '
+            f'y2="{height-bottom+6}" stroke="black"/>'
+            f'<text x="{x:.2f}" y="{height-bottom+25}" text-anchor="middle">{minute}</text>'
+        )
+    y_ticks = []
+    for tick in range(0, 6):
+        value = y_min + (y_max - y_min) * tick / 5
+        y = y_position(value)
+        y_ticks.append(
+            f'<line x1="{left-6}" y1="{y:.2f}" x2="{width-right}" '
+            f'y2="{y:.2f}" stroke="#dddddd"/>'
+            f'<text x="{left-10}" y="{y+4:.2f}" text-anchor="end">{value:.4f}</text>'
+        )
+
+    ocean_note = "" if result.ocean_loading_delta is not None else " (solid tide only)"
+    svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
+<rect width="100%" height="100%" fill="white"/>
+<text x="{width/2}" y="30" text-anchor="middle" font-size="20">Wuhan–Shanghai tidal geopotential difference{ocean_note}</text>
+<g font-family="sans-serif" font-size="13">
+{''.join(y_ticks)}
+<line x1="{left}" y1="{top}" x2="{left}" y2="{height-bottom}" stroke="black"/>
+<line x1="{left}" y1="{height-bottom}" x2="{width-right}" y2="{height-bottom}" stroke="black"/>
+{''.join(x_ticks)}
+<polyline points="{polyline}" fill="none" stroke="#0969da" stroke-width="1.3"/>
+<text x="{left+plot_width/2}" y="{height-20}" text-anchor="middle">Time (minutes)</text>
+<text x="22" y="{top+plot_height/2}" text-anchor="middle" transform="rotate(-90 22 {top+plot_height/2})">SHAO − WUHN geopotential difference (m²/s²)</text>
+</g>
+</svg>
+"""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(svg, encoding="utf-8")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -112,7 +187,10 @@ def main(argv: list[str] | None = None) -> int:
         shanghai_blq,
     )
     _write_csv(args.output, result)
+    plot_path = args.plot or args.output.with_suffix(".svg")
+    _write_svg(plot_path, result)
     print(f"Wrote {len(result.timestamps):,} epochs to {args.output}")
+    print(f"Wrote plot to {plot_path}")
     return 0
 
 
