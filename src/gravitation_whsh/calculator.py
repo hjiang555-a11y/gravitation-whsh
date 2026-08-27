@@ -8,16 +8,23 @@ from pathlib import Path
 from typing import Sequence
 
 import numpy as np
-from skyfield.api import Loader, load_file, wgs84
-from skyfield_data import get_skyfield_data_path
+from skyfield.api import load_file, wgs84
 
 from .blq import BlqStation, normal_gravity, radial_displacement
 from .harpos import HarposStation, radial_displacement as harpos_radial_displacement
 
 GM_MOON = 4.902800118e12
 GM_SUN = 1.327124400419394e20
-LOVE_K = {2: 0.30190, 3: 0.093}
-LOVE_H = {2: 0.6078, 3: 0.292}
+
+# IERS Conventions (2010), Table 6.3: the degree-2 potential Love number k2 is
+# order-dependent (m=0 zonal, m=1 diurnal, m=2 semidiurnal). Values are the
+# anelastic real parts.
+K2_ORDER = {0: 0.30190, 1: 0.29830, 2: 0.30102}
+K3 = 0.093
+H2 = 0.6078
+H3 = 0.292
+
+DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 
 
 @dataclass(frozen=True)
@@ -88,34 +95,77 @@ def _body_potential(
     )
 
 
+def _degree2_order_potential(
+    station_xyz: np.ndarray,
+    body_xyz: np.ndarray,
+    gm: float,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Degree-2 tidal potential split into zonal/diurnal/sectorial orders.
+
+    Evaluated in the terrestrial frame via the spherical-harmonic addition
+    theorem so each order m receives its own Love number k2m.
+    """
+    station_radius = np.linalg.norm(station_xyz, axis=0)
+    body_radius = np.linalg.norm(body_xyz, axis=0)
+    sin_station = station_xyz[2] / station_radius
+    sin_body = body_xyz[2] / body_radius
+    dlon = np.arctan2(station_xyz[1], station_xyz[0]) - np.arctan2(
+        body_xyz[1], body_xyz[0]
+    )
+    factor = gm / body_radius * (station_radius / body_radius) ** 2
+
+    p2_station = 0.5 * (3.0 * sin_station**2 - 1.0)
+    p2_body = 0.5 * (3.0 * sin_body**2 - 1.0)
+    p21_station = 3.0 * sin_station * np.sqrt(1.0 - sin_station**2)
+    p21_body = 3.0 * sin_body * np.sqrt(1.0 - sin_body**2)
+    p22_station = 3.0 * (1.0 - sin_station**2)
+    p22_body = 3.0 * (1.0 - sin_body**2)
+
+    m0 = factor * p2_station * p2_body
+    m1 = factor * 2.0 * (1.0 / 6.0) * p21_station * p21_body * np.cos(dlon)
+    m2 = factor * 2.0 * (1.0 / 24.0) * p22_station * p22_body * np.cos(2.0 * dlon)
+    return m0, m1, m2
+
+
 def _station_components(site: Site, times, earth, moon, sun) -> tuple[np.ndarray, ...]:
     station = wgs84.latlon(
         latitude_degrees=site.latitude_deg,
         longitude_degrees=site.longitude_deg,
         elevation_m=site.height_m,
     )
-    station_position = station.at(times).position.m
-    moon_position = (moon - earth).at(times).position.m
-    sun_position = (sun - earth).at(times).position.m
+    station_xyz = station.at(times).itrf_xyz().m
+    moon_xyz = (moon - earth).at(times).itrf_xyz().m
+    sun_xyz = (sun - earth).at(times).itrf_xyz().m
 
     generating = np.zeros(times.shape)
     induced = np.zeros(times.shape)
     effective = np.zeros(times.shape)
-    for degree in (2, 3):
-        external = _body_potential(station_position, moon_position, GM_MOON, degree)
-        external += _body_potential(station_position, sun_position, GM_SUN, degree)
+
+    for body_xyz, gm in ((moon_xyz, GM_MOON), (sun_xyz, GM_SUN)):
+        m0, m1, m2 = _degree2_order_potential(station_xyz, body_xyz, gm)
+        generating += m0 + m1 + m2
+        induced += K2_ORDER[0] * m0 + K2_ORDER[1] * m1 + K2_ORDER[2] * m2
+        effective += (
+            (1.0 + K2_ORDER[0] - H2) * m0
+            + (1.0 + K2_ORDER[1] - H2) * m1
+            + (1.0 + K2_ORDER[2] - H2) * m2
+        )
+
+    for body_xyz, gm in ((moon_xyz, GM_MOON), (sun_xyz, GM_SUN)):
+        external = _body_potential(station_xyz, body_xyz, gm, 3)
         generating += external
-        induced += LOVE_K[degree] * external
-        effective += (1.0 + LOVE_K[degree] - LOVE_H[degree]) * external
+        induced += K3 * external
+        effective += (1.0 + K3 - H3) * external
+
     return generating, induced, effective
 
 
 def load_ephemeris(path: str | Path | None, cache_directory: str | Path):
-    """Load a local SPK file or the packaged public JPL DE421 ephemeris."""
+    """Load a local SPK file or the bundled JPL DE440s ephemeris."""
     if path is not None:
         return load_file(str(path))
     del cache_directory
-    return Loader(get_skyfield_data_path())("de421.bsp")
+    return load_file(str(DATA_DIR / "de440s.bsp"))
 
 
 def _ocean_delta(
