@@ -123,6 +123,14 @@ M2 差距 +0.68% 正是 IERS 2010 名义 Love 数与 DDW99 非流体静力平衡
 
 ![68 天全程](report/fig3_full_68d.png)
 
+**钟频差变化（广义相对论引力红移效应，Δf/f = ΔW/c²，无量纲）**（[fig4_frequency_shift.png](report/fig4_frequency_shift.png)）：
+
+![钟频差变化](report/fig4_frequency_shift.png)
+
+> 潮汐引力势差 ΔW 通过广义相对论效应引起两地钟的频率差：
+> `Δf/f = ΔW/c²`。峰峰值约 1.6×10⁻¹⁷，峰值 8.5×10⁻¹⁸ @ 2026-07-14T07:29 UTC——
+> 正是当前最先进光学钟（精度 ~10⁻¹⁸）可分辨的量级。
+
 ### 4.3 数据文件
 
 - `results/wuhan_shanghai_20260620_20260826.csv` — 97,920 行 × 8 列（完整时间序列）

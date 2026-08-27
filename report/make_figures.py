@@ -2,9 +2,9 @@
 """Generate the report figures with datetime x-axes.
 
 Reads results/wuhan_shanghai_20260620_20260826.csv and writes
-report/fig1_timeseries_7d.png, report/fig2_spectrum.png and
-report/fig3_full_68d.png. Time-domain x-axes are real datetimes formatted
-as ``YYYY-MM-DD HH:MM`` (UTC).
+report/fig1_timeseries_7d.png, report/fig2_spectrum.png,
+report/fig3_full_68d.png and report/fig4_frequency_shift.png.
+Time-domain x-axes are real datetimes formatted as ``YYYY-MM-DD HH:MM`` (UTC).
 """
 
 from __future__ import annotations
@@ -21,6 +21,8 @@ import numpy as np
 
 CSV_PATH = Path(__file__).resolve().parents[1] / "results" / "wuhan_shanghai_20260620_20260826.csv"
 OUT_DIR = Path(__file__).resolve().parent
+
+C = 299792458.0  # speed of light (m/s)
 
 # Dominant tidal constituents (frequency in Hz) for the spectrum annotations.
 TIDES = {
@@ -144,12 +146,37 @@ def fig3(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
     plt.close(fig)
 
 
+def fig4(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
+    total = data["total_tidal_delta_m2_s2"]
+    frequency_shift = total / C**2  # Δf/f = ΔW/c² (dimensionless)
+
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.plot(timestamps, frequency_shift, lw=0.2, color="#0969da", alpha=0.8)
+    _style_time_axis(ax)
+    ax.set_xlabel("Time (UTC)")
+    ax.set_ylabel("Δf / f")
+    ax.set_title(
+        "Clock frequency shift from tidal geopotential difference "
+        "(general relativity, Δf/f = ΔW/c²)",
+        fontweight="bold",
+    )
+    ax.grid(alpha=0.25)
+    ax.ticklabel_format(style="sci", axis="y", scilimits=(-2, 2))
+    fig.tight_layout()
+    fig.savefig(OUT_DIR / "fig4_frequency_shift.png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> int:
     timestamps, data = load()
     fig1(timestamps, data)
     fig2(data)
     fig3(timestamps, data)
-    print("Wrote fig1_timeseries_7d.png, fig2_spectrum.png, fig3_full_68d.png")
+    fig4(timestamps, data)
+    print(
+        "Wrote fig1_timeseries_7d.png, fig2_spectrum.png, "
+        "fig3_full_68d.png, fig4_frequency_shift.png"
+    )
     return 0
 
 
