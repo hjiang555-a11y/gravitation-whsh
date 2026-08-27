@@ -20,9 +20,10 @@ EGM2008 静态重力场，因此不会把与潮汐无关的高程/纬度静态�
   并由 [Skyfield](https://rhodesmill.org/skyfield/) 读取。
 * 固体潮：在地固系中按球谐加法定理将二、三阶潮汐生成势展开，采用 IERS
   Conventions (2010) 表 6.3 的**阶相关** Love 数（k₂ 分 m=0/1/2：
-  `0.30190`/`0.29830`/`0.30102`；k₃=`0.093`）。输出同时给出潮汐生成势、地球
-  诱导势，以及地表随形点的有效势 `(1 + kₙ - hₙ)Vₙ`。当前未含表 6.5 的频率相关
-  δk 改正（Step 2），量级约 10⁻⁶ 相对，见 [CREDIBILITY_PLAN.md](CREDIBILITY_PLAN.md)。
+  `0.30190`/`0.29830`/`0.30102`；k₃=`0.093`），并对主导分潮叠加表 6.4/6.5c/7.1
+  与式 6.12/7.4a 的**频率相关** Love 数改正（Step 2，含日潮 FCN 共振与长周期
+  滞弹性）。输出同时给出潮汐生成势、地球诱导势，以及地表随形点的有效势
+  `(1 + kₙ - hₙ)Vₙ`。见 [CREDIBILITY_PLAN.md](CREDIBILITY_PLAN.md)。
 * 海潮负荷：读取 [International Mass Loading Service](https://massloading.net/)
   预计算的站点海潮负荷位移（HARPOS 格式，FES2014b 模型，44 条谐波）。程序重建
   径向位移时间序列，并以一阶关系 `δW = -γ δh` 转换为站点随形势变化。
