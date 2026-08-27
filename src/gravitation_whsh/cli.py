@@ -14,8 +14,11 @@ from .blq import read_blq
 from .calculator import Site, calculate, load_ephemeris
 from .harpos import read_harpos
 
+# Station coordinates from IGS20 SINEX (epoch 2015.0, ITRF2020) and IGS site logs.
+# Source: https://files.igs.org/pub/station/general/igs.snx
+#         https://files.igs.org/pub/station/log/shao00chn_20230306.log
 WUHAN = Site("WUHN", 30.531653, 114.357261, 28.2)
-SHANGHAI = Site("SHAO", 31.099370, 121.200250, 26.0)
+SHANGHAI = Site("SHAO", 31.099642, 121.200445, 22.09)
 DEFAULT_START = datetime(2026, 6, 20, tzinfo=timezone.utc)
 DEFAULT_END = datetime(2026, 8, 26, 23, 59, tzinfo=timezone.utc)
 
@@ -35,7 +38,7 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="produce an explicitly incomplete solid-tide-only result",
     )
-    parser.add_argument("--ephemeris", type=Path, help="local JPL SPK file (default: DE421)")
+    parser.add_argument("--ephemeris", type=Path, help="local JPL SPK file (default: bundled DE440s)")
     parser.add_argument(
         "--cache",
         type=Path,
