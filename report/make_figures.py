@@ -167,15 +167,38 @@ def fig4(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
     plt.close(fig)
 
 
+def fig5(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
+    total = data["total_tidal_delta_m2_s2"]
+    frequency_shift = total / C**2  # Δf/f (dimensionless)
+    clock_offset = np.cumsum(frequency_shift) * 60.0  # Δτ = ∫(Δf/f)dt, seconds
+    clock_offset_ps = clock_offset * 1e12  # picoseconds
+
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.plot(timestamps, clock_offset_ps, lw=0.3, color="#0969da")
+    _style_time_axis(ax)
+    ax.set_xlabel("Time (UTC)")
+    ax.set_ylabel("Clock offset Δτ (ps)")
+    ax.set_title(
+        "Clock offset from tidal geopotential difference "
+        "(general relativity, Δτ = ∫ΔW/c² dt)",
+        fontweight="bold",
+    )
+    ax.grid(alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(OUT_DIR / "fig5_clock_offset.png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> int:
     timestamps, data = load()
     fig1(timestamps, data)
     fig2(data)
     fig3(timestamps, data)
     fig4(timestamps, data)
+    fig5(timestamps, data)
     print(
         "Wrote fig1_timeseries_7d.png, fig2_spectrum.png, "
-        "fig3_full_68d.png, fig4_frequency_shift.png"
+        "fig3_full_68d.png, fig4_frequency_shift.png, fig5_clock_offset.png"
     )
     return 0
 
