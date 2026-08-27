@@ -124,17 +124,18 @@ def _write_svg(path: Path, result) -> None:
     polyline = " ".join(f"{x_position(i):.2f},{y_position(v):.2f}" for i, v in points)
 
     x_ticks = []
-    for tick in range(0, 6):
-        index = round((len(values) - 1) * tick / 5)
+    total_days = (len(values) - 1) // 1440
+    target_ticks = 7
+    step_days = max(1, total_days // (target_ticks - 1))
+    for day in range(0, total_days + 1, step_days):
+        index = min(day * 1440, len(values) - 1)
         x = x_position(index)
         stamp = result.timestamps[index]
         x_ticks.append(
             f'<line x1="{x:.2f}" y1="{height-bottom}" x2="{x:.2f}" '
             f'y2="{height-bottom+6}" stroke="black"/>'
             f'<text x="{x:.2f}" y="{height-bottom+24}" text-anchor="middle" '
-            f'font-size="12">{stamp.strftime("%Y-%m-%d")}</text>'
-            f'<text x="{x:.2f}" y="{height-bottom+40}" text-anchor="middle" '
-            f'font-size="12">{stamp.strftime("%H:%M")}</text>'
+            f'font-size="12">{stamp.strftime("%Y-%m-%d %H:%M")}</text>'
         )
     y_ticks = []
     for tick in range(0, 6):
