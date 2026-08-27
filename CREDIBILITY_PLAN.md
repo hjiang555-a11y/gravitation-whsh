@@ -88,7 +88,7 @@
 
 1. **阶段 1（正确性修复）**：修 SHAO 坐标 + README 同步。✅ 已完成
 2. **阶段 2（可信度升级）**：de440 星历 ✅ + IERS2010 Step1 阶相关 Love 数 ✅ + Step2 频率相关 δk 改正 ✅（全部完成）。
-3. **阶段 3（验证）**：pyTMD 交叉验证 ✅（见 §5）；DEHANTTIDEINEL 基准 / 武汉半日潮基准 ⏳ 未做。
+3. **阶段 3（验证）**：pyTMD 交叉验证 ✅（见 §5）；DEHANTTIDEINEL 位移基准 ✅（见 §6）；武汉 2000 半日潮重力基准 ⏳ 未做。
 4. **阶段 4（文档对齐）**：`.gitignore` + README 数据溯源与优先级说明。✅ 已完成
 
 ## 5. 交叉验证结果（pyTMD，已执行）
@@ -107,3 +107,30 @@
 谐波截断（l≤3）相对精确点质量星历的**已知截断误差**，属于参考实现侧的近似，非本实现误差。
 
 可复现脚本：[validation/cross_validate_pytmd.py](validation/cross_validate_pytmd.py)（需 `pip install pyTMD`）。
+
+## 6. DEHANTTIDEINEL 位移基准（已执行）
+
+IERS 2010 Chapter 7 的 DEHANTTIDEINEL（Mathews, Dehant & Gipson 1997）计算固体潮
+**站点位移**（位移 Love/Shida 数 h₂/l₂），与本项目的**引力势**（势 Love 数 k₂/h₂）
+是不同物理量。本基准验证的是两者**共享的天文学与 IERS 位移公式约定**。
+
+用精确测试向量复现 DEHANTTIDEINEL.F 的 Step 1（名义 Love/Shida 数）位移公式，与
+IERS 源文件头注释的 3 组权威期望值比对：
+
+| 用例 | Step-1 复现 vs 权威值 | 残余（mm） |
+|---|---|---|
+| Case 1 (2009-04-13) | +0.0723/+0.0616/+0.0496 vs +0.0770/+0.0630/+0.0552 | 4.7 / 1.5 / 5.6 |
+| Case 2 (2012-07-13) | −0.0210/+0.0626/−0.0809 vs −0.0204/+0.0566/−0.0760 | 0.6 / 6.0 / 4.9 |
+| Case 3 (2015-07-15) | +0.0048/+0.0869/−0.0674 vs +0.0051/+0.0829/−0.0637 | 0.3 / 4.0 / 3.7 |
+
+**结论**：Step-1 位移复现到权威值 0.3–6 mm 以内，残余正是 Step-2 频率相关改正的
+贡献量级（K1 日潮 h₂ 偏离名义值 ~13%，与 §5 对势的量化一致），验证了共享天文学
+与 IERS 位移约定的正确性。
+
+**源数据发现**（诚实记录）：
+- IERS 源文件头注释 **Case 4 的太阳矢量已损坏**（`|XSUN|=0.097 AU`，应为 ~1 AU），
+  且期望输出与 Case 3 逐字节重复——属于 IERS 文档的数据录入错误，本基准排除 Case 4。
+- pyTMD 3.0.9 的 `solid_earth_tide` 未能复现这组权威值（Case 1–3 误差 1.6–48 mm），
+  说明其位移实现与 DEHANTTIDEINEL 存在偏差；本项目不依赖该路径。
+
+可复现脚本：[validation/dehanttideinel_benchmark.py](validation/dehanttideinel_benchmark.py)。
