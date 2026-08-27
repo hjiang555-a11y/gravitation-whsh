@@ -10,7 +10,8 @@ from typing import Sequence
 import numpy as np
 from skyfield.api import load_file, wgs84
 
-from .blq import BlqStation, normal_gravity, radial_displacement
+from .blq import BlqStation, astronomical_arguments, normal_gravity, radial_displacement
+from .frequency_dependence import frequency_correction
 from .harpos import HarposStation, radial_displacement as harpos_radial_displacement
 
 GM_MOON = 4.902800118e12
@@ -157,7 +158,37 @@ def _station_components(site: Site, times, earth, moon, sun) -> tuple[np.ndarray
         induced += K3 * external
         effective += (1.0 + K3 - H3) * external
 
+    datetimes = times.utc_datetime()
+    arguments = astronomical_arguments(datetimes)
+    longitude = np.radians(site.longitude_deg)
+    m0_total, m1_total, m2_total = _degree2_orders(station_xyz, moon_xyz, sun_xyz)
+    for order, potential, k2_nominal in (
+        (0, m0_total, K2_ORDER[0]),
+        (1, m1_total, K2_ORDER[1]),
+        (2, m2_total, K2_ORDER[2]),
+    ):
+        d_induced, d_effective = frequency_correction(
+            potential, arguments, longitude, order, k2_nominal, H2
+        )
+        induced += d_induced
+        effective += d_effective
+
     return generating, induced, effective
+
+
+def _degree2_orders(
+    station_xyz: np.ndarray, moon_xyz: np.ndarray, sun_xyz: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Sum the degree-2 order potential over the Moon and Sun."""
+    m0 = np.zeros(station_xyz.shape[1])
+    m1 = np.zeros(station_xyz.shape[1])
+    m2 = np.zeros(station_xyz.shape[1])
+    for body_xyz, gm in ((moon_xyz, GM_MOON), (sun_xyz, GM_SUN)):
+        a0, a1, a2 = _degree2_order_potential(station_xyz, body_xyz, gm)
+        m0 += a0
+        m1 += a1
+        m2 += a2
+    return m0, m1, m2
 
 
 def load_ephemeris(path: str | Path | None, cache_directory: str | Path):
