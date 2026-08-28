@@ -31,7 +31,12 @@ OUT_DIR = Path(__file__).resolve().parent
 
 C = 299792458.0  # speed of light (m/s)
 
-# 14 experimental sessions (start, end), UTC, 2026 — table 1 of the PDF.
+# Table 1 of the PDF lists session times in Beijing time (UTC+8), matching the
+# acquisition PCs ("PC time, time zone local"). The tidal CSV is UTC, so the
+# session windows are shifted back 8 h before masking. (China has no DST.)
+UTC_OFFSET = np.timedelta64(8, "h")
+
+# 14 experimental sessions (start, end), Beijing time (UTC+8), 2026 — table 1.
 GROUPS = [
     ("2026-06-29 10:06:28", "2026-06-30 04:59:59"),
     ("2026-06-30 12:00:00", "2026-06-30 20:11:31"),
@@ -64,8 +69,8 @@ def main() -> int:
 
     records = []
     for index, (start, end) in enumerate(GROUPS, 1):
-        s = np.datetime64(start)
-        e = np.datetime64(end)
+        s = np.datetime64(start) - UTC_OFFSET  # Beijing -> UTC
+        e = np.datetime64(end) - UTC_OFFSET    # Beijing -> UTC
         mask = (timestamps >= s) & (timestamps <= e)
         count = int(mask.sum())
         mean_w = float(total[mask].mean())
@@ -75,8 +80,8 @@ def main() -> int:
         records.append(
             {
                 "session": index,
-                "start": start,
-                "end": end,
+                "start": str(s).replace("T", " "),
+                "end": str(e).replace("T", " "),
                 "midpoint": midpoint,
                 "count_minutes": count,
                 "mean_delta_w_m2_s2": mean_w,

@@ -31,10 +31,15 @@ RESULTS_CSV = (
 )
 
 C = 299792458.0  # m/s
-F_BEAT = 33623140.934  # Hz, nominal 1550 nm link beat
+# beat[Hz] -> clock fractional frequency Δf/f (from the MATLAB Dr formula).
+COEF = 4.282082163269648e-15
 
-SEGMENT_START = np.datetime64("2026-08-11 05:30:00")
-SEGMENT_END = np.datetime64("2026-08-13 00:00:00")
+# Beat timestamps are Beijing time (UTC+8, "PC time, time zone local"); the
+# tidal CSV is UTC, so the 8 h offset is removed before interpolation.
+UTC_OFFSET = np.timedelta64(8, "h")
+
+SEGMENT_START = np.datetime64("2026-08-11 05:30:00")  # Beijing time
+SEGMENT_END = np.datetime64("2026-08-13 00:00:00")    # Beijing time
 
 
 def read_beat(path: Path) -> tuple[np.ndarray, np.ndarray]:
@@ -66,11 +71,11 @@ def tidal_beat(t_stamps: np.ndarray) -> np.ndarray:
     rows = list(csv.DictReader(open(RESULTS_CSV)))
     ts = np.array([r["timestamp_utc"].replace("Z", "") for r in rows], dtype="datetime64[s]")
     tot = np.array([float(r["total_tidal_delta_m2_s2"]) for r in rows])
-    mask = (ts >= SEGMENT_START) & (ts < SEGMENT_END)
-    t_sec = (ts[mask] - np.datetime64("1970-01-01")).astype(int)
-    s_sec = (t_stamps - np.datetime64("1970-01-01")).astype(int)
-    interp = np.interp(s_sec, t_sec, tot[mask])
-    return interp / C**2 * F_BEAT  # Hz, beat-frequency tidal displacement
+    t_sec = (ts - np.datetime64("1970-01-01")).astype(int)
+    s_utc = t_stamps - UTC_OFFSET  # Beijing -> UTC
+    s_sec = (s_utc - np.datetime64("1970-01-01")).astype(int)
+    interp = np.interp(s_sec, t_sec, tot)
+    return interp / C**2 / COEF  # Hz, beat-frequency tidal displacement
 
 
 def triangular_integrate(x: np.ndarray, tau: int) -> np.ndarray:
