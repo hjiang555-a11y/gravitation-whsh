@@ -120,15 +120,16 @@ def load_all_beat() -> tuple[np.ndarray, np.ndarray]:
 
 
 def longest_valid_span(valid: np.ndarray) -> tuple[int, int] | None:
-    """Return (start, stop) of the longest run of True in `valid`."""
+    """Return (start, stop) inclusive indices of the longest run of True."""
     if not valid.any():
         return None
-    idx = np.where(~valid)[0]
-    starts = np.concatenate([[0], idx + 1])
-    stops = np.concatenate([idx, [len(valid) - 1]])
-    lengths = stops - starts + 1
+    padded = np.concatenate([[False], valid, [False]])
+    diff = np.diff(padded.astype(int))
+    starts = np.where(diff == 1)[0]
+    stops = np.where(diff == -1)[0]  # exclusive (index after last True)
+    lengths = stops - starts
     i = int(np.argmax(lengths))
-    return int(starts[i]), int(stops[i])
+    return int(starts[i]), int(stops[i] - 1)
 
 
 def triangular_window(x: np.ndarray, window: int, stride: int) -> np.ndarray:
