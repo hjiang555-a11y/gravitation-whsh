@@ -93,6 +93,37 @@ CSV 的关键列：
 python -m unittest discover -s tests -v
 ```
 
+## 光钟比对潮汐分析
+
+潮汐引力势差 ΔW 通过广义相对论引力红移（`Δf/f = ΔW/c²`）影响武汉—上海两地
+光钟（Yb/Sr）比对的频率差。`clock/` 目录记录了把理论潮汐势差与实测 1550 nm
+环外链路拍频（FXE_B8）及 `atomic-clock-comp.pdf` 的 14 组实验记录比对的分析，
+完整报告见 [clock/ANALYSIS.md](clock/ANALYSIS.md)。
+
+关键结果：
+
+- **时区与系数修正**：拍频时间戳为北京时间（UTC+8），潮汐 CSV 为 UTC，比对前
+  须 `−8 h` 对齐；拍频→钟频分差的换算系数 `COEF = 4.282082163269648e-15`（由
+  MATLAB `Dr` 公式推导），而非早期脚本误用的 `×F_BEAT`。
+- **无跳点段幅度拟合**：第 13 组（42.5 h，0 跳点）潮汐幅度拟合
+  `A = −0.39 ± 0.23`，离理论值 +1 约 6.1σ；第 6 组（10 h 可用，0 跳点）
+  `A = −0.26 ± 0.50`。两组均未检出潮汐引力红移——信号（Δf/f ~1e-18）被链路
+  噪声（积分后仍 ~1.7e-17）淹没约一个量级。
+- **14 组会话均值相关性**：Pearson r = +0.355（p = 0.213），方向为正但不显著。
+- **未决符号问题**：Yb/Sr 钟的部署站点未在现有材料中明确，潮汐模板的正负号
+  尚未定死，最终判定暂以「当前符号假设下不可检出」为准。
+
+```bash
+python clock/clock_tidal_shift.py            # 14 组会话平均潮汐频差
+python clock/correlation_analysis.py         # 14 组会话相关性（y_i 数字化）
+python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度拟合
+python clock/segment_analysis/segment13_triangular.py   # 第 13 组共享轴图
+python clock/segment_analysis/segment6_triangular.py    # 第 6 组共享轴图
+```
+
+> 原始实验数据与 MATLAB 处理程序位于 `clock/data/`，已由 `.gitignore` 排除，
+> 不上传 GitHub。
+
 ## 参考资料
 
 1. Petit, G. & Luzum, B. (eds.), *IERS Conventions (2010)*, TN 36,
