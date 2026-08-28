@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Segment 13 (jump-free) — data selection, normalization, 600-s triangular integration.
+"""Segment 13 (jump-free) — 1200-s triangular window, one point every 600 s.
 
 Follows the analysis protocol:
 1. Select the jump-free segment 13 window (2026-08-11 05:30 ~ 2026-08-13 00:00)
    from the out-of-loop 1550 nm link beat frequency (FXE_B8, 8th data column).
 2. Normalize: subtract the single-session mean (only the variation matters).
-3. Produce one point per 600 s using triangular (Bartlett) integration, so every
-   1-s sample contributes.
+3. Produce one point every 600 s using a sliding triangular (Bartlett) window of
+   1200 s full width (50% overlap), so every 1-s sample contributes.
 Then plot the 600-s points and the tidal gravitational prediction on a shared
 time axis (both converted to the same units via the program's Dr coefficient).
 """
@@ -43,7 +43,8 @@ UTC_OFFSET = np.timedelta64(8, "h")
 SEG_START = np.datetime64("2026-08-11 05:30:00")  # Beijing time
 SEG_END = np.datetime64("2026-08-13 00:00:00")    # Beijing time
 
-TAU = 600  # seconds per point
+WINDOW = 1200  # triangular window full width (s)
+STRIDE = 600   # one point every 600 s (50% overlap)
 
 
 def read_beat(path: Path) -> tuple[np.ndarray, np.ndarray]:
@@ -60,14 +61,17 @@ def read_beat(path: Path) -> tuple[np.ndarray, np.ndarray]:
     return np.array(stamps, dtype="datetime64[s]"), data[:, 2]
 
 
-def triangular_segment(x: np.ndarray, tau: int) -> np.ndarray:
-    """Non-overlapping triangular (Bartlett) weighted means, one point per tau samples."""
-    n_seg = len(x) // tau
-    x = x[: n_seg * tau]
-    k = np.arange(tau)
-    tri = 1.0 - np.abs(2 * k - (tau - 1)) / (tau + 1)
+def triangular_window(x: np.ndarray, window: int, stride: int) -> np.ndarray:
+    """Sliding triangular (Bartlett) weighted mean; one point per stride."""
+    k = np.arange(window)
+    tri = 1.0 - np.abs(2 * k - (window - 1)) / (window + 1)
     tri = tri / tri.sum()
-    return (x.reshape(n_seg, tau) * tri).sum(axis=1)
+    n_out = (len(x) - window) // stride + 1
+    out = np.empty(n_out)
+    for i in range(n_out):
+        start = i * stride
+        out[i] = float(np.dot(tri, x[start : start + window]))
+    return out
 
 
 def tidal_prediction(t_stamps: np.ndarray) -> np.ndarray:
@@ -105,11 +109,11 @@ def main() -> int:
     print(f"session mean beat: {b.mean():.4f} Hz (subtracted)")
     print(f"normalized beat: mean={beat_norm.mean():.2e} Hz, std={beat_norm.std():.4f} Hz")
 
-    # 3. 600-s triangular integration
-    beat_tri = triangular_segment(beat_norm, TAU)
-    t_tri = t[TAU // 2 :: TAU][: len(beat_tri)]
-    print("\n=== Step 3: 600-s triangular integration ===")
-    print(f"points after integration: {len(beat_tri)} ({len(beat_tri)*TAU/3600:.1f} h)")
+    # 3. 1200-s triangular window, one point every 600 s
+    beat_tri = triangular_window(beat_norm, WINDOW, STRIDE)
+    t_tri = t[WINDOW // 2 :: STRIDE][: len(beat_tri)]
+    print("\n=== Step 3: 1200-s triangular window (600-s stride) ===")
+    print(f"points after integration: {len(beat_tri)} ({len(beat_tri)*STRIDE/3600:.1f} h span)")
     print(f"integrated beat std: {beat_tri.std():.5f} Hz")
 
     # tidal prediction on the same 600-s grid, same units (beat Hz)
@@ -127,7 +131,7 @@ def main() -> int:
 
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(t_tri, beat_ff, "o-", ms=4, lw=1.0, color="#0969da",
-            label="measured beat (600-s triangular)")
+            label="measured beat (1200-s triangular, 600-s points)")
     ax.plot(t_tri, tide_ff, lw=1.6, color="#d62728",
             label="tidal prediction (A = +1)")
     ax.plot(t_tri, A * tide_ff, lw=1.4, color="#2ca02c", ls="--",
@@ -136,7 +140,7 @@ def main() -> int:
     ax.set_ylabel("Δf/f (×10⁻¹⁸)")
     ax.set_xlabel("Time (Beijing, UTC+8)")
     ax.set_title(
-        f"Segment 13 — 600-s beat vs tidal redshift (shared axis, "
+        f"Segment 13 — 1200-s triangular beat vs tidal redshift (shared axis, "
         f"A = {A:+.2f} ± {u_A:.2f})",
         fontweight="bold",
     )
