@@ -104,21 +104,24 @@ python -m unittest discover -s tests -v
 
 - **时区与系数修正**：拍频时间戳为北京时间（UTC+8），潮汐 CSV 为 UTC，比对前
   须 `−8 h` 对齐；拍频→钟频分差的换算系数 `COEF = 4.282082163269648e-15`（由
-  MATLAB `Dr` 公式推导），而非早期脚本误用的 `×F_BEAT`。
-- **无跳点段幅度拟合**：第 13 组（42.5 h，0 跳点）潮汐幅度拟合
-  `A = −0.39 ± 0.23`，离理论值 +1 约 6.1σ；第 6 组（10 h 可用，0 跳点）
-  `A = −0.26 ± 0.50`。两组均未检出潮汐引力红移——信号（Δf/f ~1e-18）被链路
-  噪声（积分后仍 ~1.7e-17）淹没约一个量级。
-- **14 组会话均值相关性**：Pearson r = +0.355（p = 0.213），方向为正但不显著。
-- **未决符号问题**：Yb/Sr 钟的部署站点未在现有材料中明确，潮汐模板的正负号
-  尚未定死，最终判定暂以「当前符号假设下不可检出」为准。
+  MATLAB `Dr` 公式推导），而非早期脚本误用的 `×F_BEAT`。另发现时间戳 ±1 s 抖动
+  （数据本质为均匀 1-s 采样），已按 MATLAB 约定重建均匀时间轴。
+- **14 段无跳点批量分析**：9 段有数据（组 1–5 缺 7 月数据文件），逐段 1200-s
+  三角窗 + 幅度拟合。单段均不显著，但 **8/9 段相关系数为负，跨段合并后显著负
+  相关**（Stouffer z = −4.2，p < 0.001，加权 r ≈ −0.16）。
+- **关键发现**：这一致负向最可能是潮汐模板符号方向相反所致；若方向取反
+  （`−ΔW/c²`），则潮汐引力红移以**正确方向、部分幅度**被检出。确认需 Yb/Sr 钟
+  部署站点与拍频符号约定。
+- **信号被链路噪声淹没**：潮汐信号（Δf/f rms ~4.8e-18）比 1200-s 积分后的链路
+  噪声（~1.7e-17）小约 3.6 倍，故单段必然不显著，仅跨段合并能累加出符号趋势。
+- **14 组会话均值相关性**：Pearson r = +0.355（p = 0.213），方向为正但不显著
+  （y_i 为 PDF 散点图数字化近似值）。
 
 ```bash
 python clock/clock_tidal_shift.py            # 14 组会话平均潮汐频差
 python clock/correlation_analysis.py         # 14 组会话相关性（y_i 数字化）
+python clock/segment_analysis/batch_analysis.py   # 14 段批量分析（核心）
 python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度拟合
-python clock/segment_analysis/segment13_triangular.py   # 第 13 组共享轴图
-python clock/segment_analysis/segment6_triangular.py    # 第 6 组共享轴图
 ```
 
 > 原始实验数据与 MATLAB 处理程序位于 `clock/data/`，已由 `.gitignore` 排除，
