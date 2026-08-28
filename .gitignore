@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 *.egg-info/
+
+# 实验原始数据与处理程序（禁止上传 GitHub）
+clock/data/
