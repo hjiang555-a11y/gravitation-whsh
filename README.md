@@ -11,6 +11,13 @@
 变化为 `m × ΔW` J。结果只包含随时间变化的固体潮和海洋潮汐负荷项，不包含
 EGM2008 静态重力场，因此不会把与潮汐无关的高程/纬度静态势差混入结果。
 
+> **方向约定说明**：本项目数值序列经专业人士提供的 30 秒间隔潮汐数据
+> （`clock/武汉-上海潮汐结果（0620-0910）-30秒间隔数据.xlsx`，“综合差”
+> = 固体潮之差 + 海潮之差，方向 CAS−SHA = 武汉−上海）交叉验证——各分量均与该
+> 专业数据的符号**一致**（相关系数 +0.6~+1.0）。因此应以专业数据的站名约定
+> （CAS=武汉、SHA=上海）为准理解差值方向，详见
+> [clock/PROFESSIONAL_CORRECTION_REPORT.md](clock/PROFESSIONAL_CORRECTION_REPORT.md)。
+
 ## 数据来源与模型
 
 * 日月星历：NASA/JPL `DE440s` 星历（Park et al. 2021, DOI
@@ -126,6 +133,20 @@ python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度�
 
 > 原始实验数据与 MATLAB 处理程序位于 `clock/data/`，已由 `.gitignore` 排除，
 > 不上传 GitHub。
+
+## 专业数据交叉验证
+
+专业人士提供了 30 秒间隔的武汉—上海潮汐结果（2026-06-20 ~ 09-10），并对本项目
+结果做了差异评估。对比结论见
+[clock/PROFESSIONAL_CORRECTION_REPORT.md](clock/PROFESSIONAL_CORRECTION_REPORT.md)：
+
+- **固体潮**：波形完全一致（r=1.0000），幅度差 ~17% 来自本项目采用的 IERS 2010
+  阶相关 + 频率相关 Love 数改正（比专业数据用的名义 h₂/k₂ 更完整，非错误）。
+- **海潮负荷**：波形一致（r≈+0.78）但幅度偏低约 4 倍——本项目 HARPOS FES2014b
+  的 SHAO 海潮负荷 M₂ 仅 ~8 mm，专业数据约 30 mm。这是需要后续比对的模型系统性
+  差异，主导了「综合差」的幅度偏差。
+- 专业数据换算序列 `ΔW = g·(综合差 mm)/1000` 已存为
+  `results/professional_tidal_delta_30s.csv`，供下游钟比对分析复用。
 
 ## 参考资料
 

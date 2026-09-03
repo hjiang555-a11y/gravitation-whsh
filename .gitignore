@@ -4,3 +4,7 @@ __pycache__/
 
 # 实验原始数据与处理程序（禁止上传 GitHub）
 clock/data/
+
+# 专业提供的原始 EOP/潮汐 Excel（大文件，不上传；其换算序列见
+# results/professional_tidal_delta_30s.csv）
+clock/武汉-上海潮汐结果（0620-0910）-30秒间隔数据.xlsx
