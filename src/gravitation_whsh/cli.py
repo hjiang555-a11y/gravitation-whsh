@@ -34,6 +34,14 @@ def _parser() -> argparse.ArgumentParser:
         help="HARPOS file containing WUHN and SHAO ocean-loading coefficients",
     )
     parser.add_argument(
+        "--professional-ocean",
+        type=Path,
+        help=(
+            "authoritative ocean-loading ΔW series (CSV, 30-s UTC grid, from the "
+            "professionally supplied Wuhan-Shanghai 海潮之差) — overrides --harpos/--blq"
+        ),
+    )
+    parser.add_argument(
         "--allow-no-ocean",
         action="store_true",
         help="produce an explicitly incomplete solid-tide-only result",
@@ -168,9 +176,15 @@ def _write_svg(path: Path, result) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    if args.blq is None and args.harpos is None and not args.allow_no_ocean:
+    if (
+        args.blq is None
+        and args.harpos is None
+        and args.professional_ocean is None
+        and not args.allow_no_ocean
+    ):
         _parser().error(
-            "--blq or --harpos is required unless --allow-no-ocean is explicitly set"
+            "--blq, --harpos, or --professional-ocean is required unless "
+            "--allow-no-ocean is explicitly set"
         )
 
     def find_station(stations, code):
@@ -215,6 +229,7 @@ def main(argv: list[str] | None = None) -> int:
         shanghai_blq,
         wuhan_harpos,
         shanghai_harpos,
+        professional_ocean_csv=args.professional_ocean,
     )
     _write_csv(args.output, result)
     plot_path = args.plot or args.output.with_suffix(".svg")

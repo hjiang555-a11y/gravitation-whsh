@@ -103,9 +103,9 @@ def first_stamp(path: Path) -> np.datetime64:
 
 def load_all_beat() -> tuple[np.ndarray, np.ndarray]:
     """Uniform 1-s axis from each file's first stamp + row index (ignores jitter)."""
-    files = sorted(DATA_DIR.glob("Freq_B_2_2607*.txt")) + sorted(
-        DATA_DIR.glob("Freq_B_2_2608*.txt")
-    )
+    files = sorted(DATA_DIR.glob("Freq_B_2_2606*.txt")) + sorted(
+        DATA_DIR.glob("Freq_B_2_2607*.txt")
+    ) + sorted(DATA_DIR.glob("Freq_B_2_2608*.txt"))
     t_all, b_all = [], []
     for f in files:
         b = np.loadtxt(f, usecols=(10,))

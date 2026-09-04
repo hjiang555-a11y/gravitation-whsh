@@ -202,10 +202,42 @@ def load_ephemeris(path: str | Path | None, cache_directory: str | Path):
 def _ocean_delta(
     wuhan: Site, shanghai: Site, wuh_up: np.ndarray, sha_up: np.ndarray
 ) -> np.ndarray:
-    """Convert radial loading displacements to the SHAO-minus-WUHN geopotential."""
+    """Convert radial loading displacements to the loading geopotential difference.
+
+    A positive radial loading displacement ``up`` raises the surface, so the
+    geopotential change is ``delta_W = -g * up``. The returned difference is
+    ``sha_potential - wuh_potential = -g_sha*sha_up + g_wuh*wuh_up``, i.e. the
+    Shanghai-minus-Wuhan (SHAO − WUHN) convention, consistent with the solid-tide
+    output and with the numerical direction of the professionally supplied
+    "海潮之差" column (whose xlsx label "CAS − SHA" is a sign-convention artifact;
+    the values are empirically Shanghai-minus-Wuhan — Shanghai's coastal loading
+    far exceeds inland Wuhan's).
+    """
     wuh_potential = -normal_gravity(wuhan.latitude_deg, wuhan.height_m) * wuh_up
     sha_potential = -normal_gravity(shanghai.latitude_deg, shanghai.height_m) * sha_up
     return sha_potential - wuh_potential
+
+
+def load_professional_ocean(path: str | Path) -> tuple[np.ndarray, np.ndarray]:
+    """Load an authoritative ocean-loading ΔW series (30-second UTC grid).
+
+    The file is a CSV with ``timestamp_utc`` and ``ocean_loading_delta_m2_s2``
+    columns, derived from the professionally supplied Wuhan–Shanghai tidal
+    results (海潮之差 column). Returns ``(epoch_seconds, delta_W)`` where
+    ``epoch_seconds`` is seconds since the Unix epoch (UTC, float).
+    """
+    import csv as _csv
+
+    with Path(path).open(encoding="utf-8") as handle:
+        rows = list(_csv.DictReader(handle))
+    epochs = np.array(
+        [
+            datetime.fromisoformat(r["timestamp_utc"].replace("Z", "+00:00")).timestamp()
+            for r in rows
+        ]
+    )
+    delta_w = np.array([float(r["ocean_loading_delta_m2_s2"]) for r in rows])
+    return epochs, delta_w
 
 
 def calculate(
@@ -219,8 +251,14 @@ def calculate(
     shanghai_blq: BlqStation | None = None,
     wuhan_harpos: HarposStation | None = None,
     shanghai_harpos: HarposStation | None = None,
+    professional_ocean_csv: str | Path | None = None,
 ) -> Calculation:
-    """Calculate Shanghai-minus-Wuhan tidal geopotential components."""
+    """Calculate Shanghai-minus-Wuhan tidal geopotential components.
+
+    The ocean-loading term may be supplied from three sources. When more than
+    one is given the priority is: ``professional_ocean_csv`` (authoritative
+    interpolated series) > ``*_harpos`` > ``*_blq``.
+    """
     timestamps = minute_epochs(start, end)
     times = timescale.from_datetimes(timestamps)
     earth, moon, sun = ephemeris["earth"], ephemeris["moon"], ephemeris["sun"]
@@ -229,14 +267,20 @@ def calculate(
     sha = _station_components(shanghai, times, earth, moon, sun)
 
     ocean_delta = None
-    if (wuhan_blq is None) != (shanghai_blq is None):
+    if professional_ocean_csv is not None:
+        prof_epochs, prof_dw = load_professional_ocean(professional_ocean_csv)
+        minute_epoch_values = np.array(
+            [ts.replace(tzinfo=timezone.utc).timestamp() for ts in timestamps]
+        )
+        ocean_delta = np.interp(minute_epoch_values, prof_epochs, prof_dw)
+    elif (wuhan_blq is None) != (shanghai_blq is None):
         raise ValueError("BLQ coefficients must be supplied for both stations")
-    if wuhan_blq is not None and shanghai_blq is not None:
+    elif wuhan_blq is not None and shanghai_blq is not None:
         wuh_up = radial_displacement(wuhan_blq, timestamps)
         sha_up = radial_displacement(shanghai_blq, timestamps)
         ocean_delta = _ocean_delta(wuhan, shanghai, wuh_up, sha_up)
 
-    if wuhan_harpos is not None or shanghai_harpos is not None:
+    if ocean_delta is None and (wuhan_harpos is not None or shanghai_harpos is not None):
         if wuhan_harpos is None or shanghai_harpos is None:
             raise ValueError("HARPOS coefficients must be supplied for both stations")
         wuh_up = harpos_radial_displacement(wuhan_harpos, timestamps, timescale)

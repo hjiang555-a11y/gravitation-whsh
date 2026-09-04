@@ -12,10 +12,11 @@
 EGM2008 静态重力场，因此不会把与潮汐无关的高程/纬度静态势差混入结果。
 
 > **方向约定说明**：本项目数值序列经专业人士提供的 30 秒间隔潮汐数据
-> （`clock/武汉-上海潮汐结果（0620-0910）-30秒间隔数据.xlsx`，“综合差”
-> = 固体潮之差 + 海潮之差，方向 CAS−SHA = 武汉−上海）交叉验证——各分量均与该
-> 专业数据的符号**一致**（相关系数 +0.6~+1.0）。因此应以专业数据的站名约定
-> （CAS=武汉、SHA=上海）为准理解差值方向，详见
+> （`clock/武汉-上海潮汐结果（0620-0910）-30秒间隔数据.xlsx`，UTC，“综合差”
+> = 固体潮之差 + 海潮之差）交叉验证——各分量均与该专业数据的数值方向**一致**
+> （相关系数 +0.6~+1.0）。该专业数据的「之差」列数值方向实为**上海−武汉**（与
+> 本项目 `SHAO − WUHN` 约定一致；xlsx 表头「CAS−SHA」仅为按列公式的标签）。
+> 因此应按上海−武汉方向理解差值方向，详见
 > [clock/PROFESSIONAL_CORRECTION_REPORT.md](clock/PROFESSIONAL_CORRECTION_REPORT.md)。
 
 ## 数据来源与模型
@@ -31,11 +32,13 @@ EGM2008 静态重力场，因此不会把与潮汐无关的高程/纬度静态�
   与式 6.12/7.4a 的**频率相关** Love 数改正（Step 2，含日潮 FCN 共振与长周期
   滞弹性）。输出同时给出潮汐生成势、地球诱导势，以及地表随形点的有效势
   `(1 + kₙ - hₙ)Vₙ`。见 [CREDIBILITY_PLAN.md](CREDIBILITY_PLAN.md)。
-* 海潮负荷：读取 [International Mass Loading Service](https://massloading.net/)
+* 海潮负荷：默认读取 [International Mass Loading Service](https://massloading.net/)
   预计算的站点海潮负荷位移（HARPOS 格式，FES2014b 模型，44 条谐波）。程序重建
   径向位移时间序列，并以一阶关系 `δW = -γ δh` 转换为站点随形势变化。
   也可用 `--blq` 指定 [Onsala Ocean Tide Loading Provider](https://barre.oso.chalmers.se/loading/)
   生成的 BLQ 系数（11 个主分潮）；同时给出 `--harpos` 与 `--blq` 时 HARPOS 优先。
+  完整结果推荐用 `--professional-ocean` 指定专业提供的权威海潮负荷序列（30 秒
+  网格，覆盖 HARPOS/BLQ），详见 `PROFESSIONAL_CORRECTION_REPORT.md`。
 * 站点坐标：IGS20 框架（epoch 2015.0，ITRF2020），取自
   [IGS 站点日志](https://files.igs.org/pub/station/log/) 与
   [igs.snx](https://files.igs.org/pub/station/general/igs.snx)。
@@ -71,11 +74,23 @@ massloading.net 预计算数据集。
 ## 计算
 
 ```bash
+# 权威海潮负荷（推荐）：用专业提供的 30 秒海潮之差序列替换 HARPOS
+gravitation-whsh \
+  --professional-ocean data/professional_ocean_loading_30s.csv \
+  --output results/wuhan_shanghai_20260620_20260826.csv \
+  --plot results/wuhan_shanghai_20260620_20260826.svg
+
+# 或不含专业数据、纯模型计算：
 gravitation-whsh \
   --harpos data/wuhn_shao_fes2014b.harpos \
   --output results/wuhan_shanghai_20260620_20260826.csv \
   --plot results/wuhan_shanghai_20260620_20260826.svg
 ```
+
+海潮负荷项有三个来源，优先级从高到低：
+`--professional-ocean`（专业权威序列，覆盖海潮负荷）> `--harpos` > `--blq`。
+HARPOS FES2014b 的海潮负荷幅度相对专业数据偏低约 3.9 倍（SHAO M₂ ~8 mm vs
+专业 ~30 mm），故完整结果推荐用 `--professional-ocean`。
 
 仓库内置 `data/de440s.bsp`，默认即可完全离线运行；也可用
 `--ephemeris /path/to/de440.bsp` 指定完整版 JPL 星历。日期范围按两个日期都
@@ -113,16 +128,17 @@ python -m unittest discover -s tests -v
   须 `−8 h` 对齐；拍频→钟频分差的换算系数 `COEF = 4.282082163269648e-15`（由
   MATLAB `Dr` 公式推导），而非早期脚本误用的 `×F_BEAT`。另发现时间戳 ±1 s 抖动
   （数据本质为均匀 1-s 采样），已按 MATLAB 约定重建均匀时间轴。
-- **14 段无跳点批量分析**：9 段有数据（组 1–5 缺 7 月数据文件），逐段 1200-s
-  三角窗 + 幅度拟合。单段均不显著，但 **8/9 段相关系数为负，跨段合并后显著负
-  相关**（Stouffer z = −4.2，p < 0.001，加权 r ≈ −0.16）。
+- **14 段无跳点批量分析**：14 段全部有数据（已修复漏加载 6 月 `2606*.txt` 后
+  组 1–5 恢复），逐段 1200-s 三角窗 + 幅度拟合。单段大多不显著，但 **12/14 段
+  相关系数为负，跨段合并后显著负相关**（Stouffer |z| = 6.33，p = 2.5e-10，
+  加权 r ≈ −0.17，A = −0.52±0.08/6.8σ）。
 - **关键发现**：这一致负向最可能是潮汐模板符号方向相反所致；若方向取反
   （`−ΔW/c²`），则潮汐引力红移以**正确方向、部分幅度**被检出。确认需 Yb/Sr 钟
   部署站点与拍频符号约定。
 - **信号被链路噪声淹没**：潮汐信号（Δf/f rms ~4.8e-18）比 1200-s 积分后的链路
   噪声（~1.7e-17）小约 3.6 倍，故单段必然不显著，仅跨段合并能累加出符号趋势。
-- **14 组会话均值相关性**：Pearson r = +0.355（p = 0.213），方向为正但不显著
-  （y_i 为 PDF 散点图数字化近似值）。
+- **14 组会话均值相关性**：Pearson r = +0.472（p = 0.088），方向为正、较旧模板
+  提升但仍不显著（y_i 为 PDF 散点图数字化近似值）。
 
 ```bash
 python clock/clock_tidal_shift.py            # 14 组会话平均潮汐频差
@@ -140,13 +156,14 @@ python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度�
 结果做了差异评估。对比结论见
 [clock/PROFESSIONAL_CORRECTION_REPORT.md](clock/PROFESSIONAL_CORRECTION_REPORT.md)：
 
-- **固体潮**：波形完全一致（r=1.0000），幅度差 ~17% 来自本项目采用的 IERS 2010
+- **固体潮**：波形完全一致（r=1.0000），幅度差 ~5.2% 来自本项目采用的 IERS 2010
   阶相关 + 频率相关 Love 数改正（比专业数据用的名义 h₂/k₂ 更完整，非错误）。
-- **海潮负荷**：波形一致（r≈+0.78）但幅度偏低约 4 倍——本项目 HARPOS FES2014b
-  的 SHAO 海潮负荷 M₂ 仅 ~8 mm，专业数据约 30 mm。这是需要后续比对的模型系统性
-  差异，主导了「综合差」的幅度偏差。
-- 专业数据换算序列 `ΔW = g·(综合差 mm)/1000` 已存为
-  `results/professional_tidal_delta_30s.csv`，供下游钟比对分析复用。
+- **海潮负荷**：波形一致（r≈+0.78）但幅度偏低约 3.9 倍——本项目 HARPOS FES2014b
+  的 SHAO 海潮负荷 M₂ 仅 ~8 mm，专业数据约 30 mm。已用专业权威序列替换并固化
+  （`--professional-ocean`），见
+  [clock/PROFESSIONAL_CORRECTION_REPORT.md](clock/PROFESSIONAL_CORRECTION_REPORT.md)。
+- 专业数据换算序列已存为 `data/professional_ocean_loading_30s.csv`（海潮之差）与
+  `results/professional_tidal_delta_30s.csv`（综合差），供下游钟比对分析复用。
 
 ## 参考资料
 
