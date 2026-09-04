@@ -165,6 +165,21 @@ python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度�
 - 专业数据换算序列已存为 `data/professional_ocean_loading_30s.csv`（海潮之差）与
   `results/professional_tidal_delta_30s.csv`（综合差），供下游钟比对分析复用。
 
+## 光纤链路环外数据与温度影响
+
+1550 nm 传递链路 **武汉 → 合肥 → 上海**。此前未分析的环外数据
+（`clock/data/光纤环外（第二列数据）/Freq_A_2_*.txt`，计数器 4 通道 FXE_B1~B4）
+与三站逐小时气温（Meteostat，`clock/temperature/`）的完整分析见
+[clock/temperature/ANALYSIS.md](clock/temperature/ANALYSIS.md)：
+
+- **环外 10 MHz 信号（FXE_B2）**约半数日子锁定、半数日子偶发失锁/跳变（非温度）；
+  唯一超稳的是 FXE_B4 环外参考（std ~0.2 Hz）。
+- **天周期温度影响不可检出**：三站气温有明确日周期（上海日峰峰 4.6 °C、武汉
+  5.6 °C，峰值 14–15 时），但环外参考/信号/1550 nm 链路拍频在锁定状态的日周期
+  分量均远小于各自测量噪声（FXE_B8 鲁棒日峰峰仅 0.008 Hz）。
+- 温度主要通过**链路时延/相位噪声**起作用，需专门的链路双向时延或机架温度日志
+  才可量化，当前拍频数据不承载该信息。
+
 ## 参考资料
 
 1. Petit, G. & Luzum, B. (eds.), *IERS Conventions (2010)*, TN 36,
