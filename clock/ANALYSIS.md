@@ -136,8 +136,10 @@ CSV 由主程序以 UTC 生成。早期脚本把两者直接比对，错位 8 �
 
 ## 4. 14 组会话均值相关性
 
-用 `clock_tidal_shift.py` 计算 14 组会话窗口内的平均潮汐频差 Δf/f，与 PDF 散点图
-数字化得到的会话比值偏差 y_i 做相关：
+用 `clock_tidal_shift.py` 计算 14 组会话窗口内的平均潮汐频差 Δf/f，与会话比值
+偏差 y_i（`y_i = R_i/R_ref − 1`，由 MATLAB 处理程序
+`YbSr_NISTstyle_14bin_full_analysis_20260824.m` 精确计算，`atomic-clock-comp.pdf`
+即其输出）做相关：
 
 | 统计量 | 数值 |
 |---|---|
@@ -145,8 +147,9 @@ CSV 由主程序以 UTC 生成。早期脚本把两者直接比对，错位 8 �
 | Spearman ρ | +0.459，p = 0.099 |
 | n | 14 |
 
-**结论**：方向为正、相关性较旧模板（+0.355）提升，但**仍未达 0.05 显著**。y_i 是
-从 PDF 散点图数字化的近似值，仅作定性参考。注意：此处 y_i 的方向约定可能与拍频
+**结论**：方向为正、相关性较旧模板（+0.355）提升，但**仍未达 0.05 显著**。此处
+`correlation_analysis.py` 里存放的是低精度（两位小数）读数，仅作快速定性检查；
+y_i 本身由 MATLAB 以 80 位精度定义。注意：此处 y_i 的方向约定可能与拍频
 段的符号方向相反（会话比值是 Yb/Sr 频率比，拍频是传递链路量），故本节的 +r 与
 §3 的 −r 不矛盾。
 
@@ -205,7 +208,7 @@ CSV 由主程序以 UTC 生成。早期脚本把两者直接比对，错位 8 �
 # 14 组会话潮汐频差（改正后）
 python clock/clock_tidal_shift.py
 
-# 14 组会话相关性（y_i 为数字化近似值）
+# 14 组会话相关性（y_i 由 MATLAB 精确计算，此处为低精度读数）
 python clock/correlation_analysis.py
 
 # 14 段无跳点批量分析（核心：逐段 A±u_A + 跨段合并 + 森林图 + 多面板图）
@@ -229,7 +232,7 @@ python clock/segment_analysis/segment6_triangular.py
 | 文件 | 作用 |
 |---|---|
 | `clock_tidal_shift.py` | 14 组会话平均潮汐频差 Δf/f（时区已改正） |
-| `correlation_analysis.py` | 14 组会话 y_i vs 潮汐频差的相关（y_i 数字化） |
+| `correlation_analysis.py` | 14 组会话 y_i vs 潮汐频差的相关（y_i 由 MATLAB 精确计算） |
 | `segment13_correlation.py` | 第 13 组多 τ 相关 + 幅度拟合 A±u_A + 滞后扫描 |
 | `segment_analysis/batch_analysis.py` | **14 段批量分析**（逐段 A±u_A + 跨段合并统计） |
 | `segment_analysis/segment13_triangular.py` | 第 13 组 1200-s 三角窗共享轴图 |

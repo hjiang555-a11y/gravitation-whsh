@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Correlation analysis: clock-comparison result vs tidal gravitational-redshift shift.
 
-The 14 per-session clock-comparison values y_i = R_i/R_ref - 1 (in 1e-18)
-are APPROXIMATE, digitized from the scatter plot in clock/atomic-clock-comp.pdf
-("Yb/Sr: 14 longest continuous runs"). The tidal shifts are exact (computed by
-clock_tidal_shift.py).
+The 14 per-session clock-comparison values y_i = R_i/R_ref - 1 are OUTPUT BY THE
+MATLAB processing program (clock/data/代码/YbSr_NISTstyle_14bin_full_analysis_20260824.m,
+which computes y_i = R_bin_YbSr_sm(i)/R_ref_NIST_sm - 1 at full 80-digit precision);
+atomic-clock-comp.pdf is that program's output. The tidal shifts are exact
+(computed by clock_tidal_shift.py).
 
-Pearson r is invariant under affine rescaling, so the correlation computed from
-pixel coordinates is exact even though the absolute y_i values are approximate.
+The values held here are the low-precision (2-decimal) reading used for a quick
+session-level check; Pearson r is invariant under affine rescaling so the sign
+and correlation are robust even though these stored values are rounded.
 """
 
 from __future__ import annotations
@@ -25,8 +27,9 @@ from scipy import stats
 CLOCK_DIR = Path(__file__).resolve().parent
 TIDAL_CSV = CLOCK_DIR / "clock_tidal_shift.csv"
 
-# Digitized per-session clock-comparison values y_i (×1e-18), approximate.
-# Source: scatter plot "Yb/Sr: 14 longest continuous runs", img-008.
+# Per-session y_i = R_i/R_ref - 1 (×1e-18), defined at 80-digit precision by the
+# MATLAB program YbSr_NISTstyle_14bin_full_analysis_20260824.m (lines 2404-2408);
+# these stored values are a low-precision (2-decimal) reading for a quick check.
 Y_I = np.array(
     [
         -0.07, -3.41, 1.86, -4.63, -3.31, -1.24, 5.26, 1.49,

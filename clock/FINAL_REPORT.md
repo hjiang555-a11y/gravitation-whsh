@@ -189,7 +189,8 @@ A = −0.53±0.08（6.8σ）。
 ## 7. 待补充（不影响以上结论）
 
 1. **梳尺 vs 本振频率高低**（s_beat）：确定潮汐效应物理方向（正/反）。
-2. **14 组会话精确比值数据**：替换数字化 y_i，得到可信的会话层相关性。
+2. **14 组会话精确比值数据**：把 MATLAB 输出的逐组 y_i 精确值换进
+   `correlation_analysis.py`（当前是低精度读数），得到可信的会话层相关性。
 
 ---
 
@@ -198,7 +199,7 @@ A = −0.53±0.08（6.8σ）。
 ```bash
 python clock/segment_analysis/batch_analysis.py   # 14 段批量分析（核心）
 python clock/clock_tidal_shift.py                 # 14 组会话平均潮汐频差
-python clock/correlation_analysis.py              # 14 组会话相关性（y_i 数字化）
+python clock/correlation_analysis.py              # 14 组会话相关性（y_i 由 MATLAB 精确计算）
 ```
 
 相关文档：[ANALYSIS.md](ANALYSIS.md)、[CORRELATION_REPORT.md](CORRELATION_REPORT.md)、

@@ -138,11 +138,12 @@ python -m unittest discover -s tests -v
 - **信号被链路噪声淹没**：潮汐信号（Δf/f rms ~4.8e-18）比 1200-s 积分后的链路
   噪声（~1.7e-17）小约 3.6 倍，故单段必然不显著，仅跨段合并能累加出符号趋势。
 - **14 组会话均值相关性**：Pearson r = +0.472（p = 0.088），方向为正、较旧模板
-  提升但仍不显著（y_i 为 PDF 散点图数字化近似值）。
+  提升但仍不显著（y_i = R_i/R_ref − 1 由 MATLAB 处理程序精确计算，
+  `correlation_analysis.py` 里为低精度读数）。
 
 ```bash
 python clock/clock_tidal_shift.py            # 14 组会话平均潮汐频差
-python clock/correlation_analysis.py         # 14 组会话相关性（y_i 数字化）
+python clock/correlation_analysis.py         # 14 组会话相关性（y_i 由 MATLAB 精确计算）
 python clock/segment_analysis/batch_analysis.py   # 14 段批量分析（核心）
 python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度拟合
 ```

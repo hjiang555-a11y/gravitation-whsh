@@ -148,7 +148,8 @@ A = −0.52 ± 0.08
 
 - **Yb/Sr 钟部署站点**（武汉 WUHN / 上海 SHAO）与**拍频符号约定**：这决定
   潮汐模板的正负号，即「同号相关」应解读为「正相关还是负相关」。
-- **14 组会话精确比值数据**：替换现有数字化 y_i，得到可信的会话层相关性。
+- **14 组会话精确比值数据**：把 MATLAB 输出的逐组 y_i 精确值换进
+  `correlation_analysis.py`（当前是低精度读数），得到可信的会话层相关性。
 - 相关性强度 |r|、显著性 p、符号一致性等**均不随符号约定改变**，故本报告
   的结论在符号补充后依然成立。
 
@@ -159,7 +160,7 @@ A = −0.52 ± 0.08
 ```bash
 python clock/segment_analysis/batch_analysis.py   # 14 段批量分析（核心）
 python clock/clock_tidal_shift.py                 # 14 组会话平均潮汐频差
-python clock/correlation_analysis.py              # 14 组会话相关性（y_i 数字化）
+python clock/correlation_analysis.py              # 14 组会话相关性（y_i 由 MATLAB 精确计算）
 ```
 
 > 原始实验数据与 MATLAB 处理程序位于 `clock/data/`，已由 `.gitignore` 排除，
