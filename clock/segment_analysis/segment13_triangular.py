@@ -27,7 +27,7 @@ DATA_DIR = (
     Path(__file__).resolve().parents[1] / "data" / "环外数据（第八列数据）"
 )
 RESULTS_CSV = (
-    Path(__file__).resolve().parents[2] / "results" / "wuhan_shanghai_20260620_20260826.csv"
+    Path(__file__).resolve().parents[2] / "results" / "professional_tidal_delta_30s.csv"
 )
 OUT_DIR = Path(__file__).resolve().parent
 
@@ -78,7 +78,7 @@ def tidal_prediction(t_stamps: np.ndarray) -> np.ndarray:
     """Tidal Δf/f = ΔW/c² interpolated to the given timestamps, then to beat Hz."""
     rows = list(csv.DictReader(open(RESULTS_CSV)))
     ts = np.array([r["timestamp_utc"].replace("Z", "") for r in rows], dtype="datetime64[s]")
-    tot = np.array([float(r["total_tidal_delta_m2_s2"]) for r in rows])
+    tot = np.array([float(r["total_tidal_delta_m2_s2_surface"]) for r in rows])
     t_sec = (ts - np.datetime64("1970-01-01")).astype(int)
     s_utc = t_stamps - UTC_OFFSET  # Beijing -> UTC
     s_sec = (s_utc - np.datetime64("1970-01-01")).astype(int)
@@ -116,8 +116,12 @@ def main() -> int:
     print(f"points after integration: {len(beat_tri)} ({len(beat_tri)*STRIDE/3600:.1f} h span)")
     print(f"integrated beat std: {beat_tri.std():.5f} Hz")
 
-    # tidal prediction on the same 600-s grid, same units (beat Hz)
-    tide = tidal_prediction(t_tri)
+    # Tidal template projected through the SAME 1200-s triangular window as the
+    # beat (build 1-s tide over the full run, then integrate), so the tidal
+    # "measurement" shares the beat's windowing (fair comparison, not point
+    # sampling at window centres).
+    tide_1s = tidal_prediction(t)
+    tide = triangular_window(tide_1s - tide_1s.mean(), WINDOW, STRIDE)[: len(beat_tri)]
     print(f"tidal prediction (beat Hz): rms {tide.std():.3e}, peak-peak {tide.max()-tide.min():.3e}")
 
     # amplitude fit beat = A * tide (least squares through origin)

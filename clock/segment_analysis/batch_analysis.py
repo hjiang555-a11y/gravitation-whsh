@@ -11,9 +11,12 @@ Replicates the MATLAB processing convention (YbSr_NISTstyle_14bin_full_analysis)
 - Points deviating >10 Hz from the median are dropped (jump removal).
 - Within the remaining valid, 1-s continuous data, the LONGEST continuous run
   is kept (the "jump-free" trace the MATLAB code uses).
-- A 1200-s triangular (Bartlett) window with 600-s stride integrates the beat.
-- The tidal prediction (ΔW/c² from the project CSV, UTC) is interpolated to the
-  same grid (Beijing -> UTC, −8 h) and converted to beat Hz via COEF.
+- A 1200-s triangular (Bartlett) window with 600-s stride integrates BOTH the
+  beat AND the tidal prediction through the SAME window, so the two are projected
+  onto a common time/scale grid (fair correlation; the tidal template is not
+  point-sampled at window centres while the beat is window-averaged).
+- The tidal prediction is the expert "综合差" (ΔW/c², UTC) interpolated to the
+  1-s grid (Beijing -> UTC, −8 h) and converted to beat Hz via COEF.
 - The amplitude A in  beat = A * tide + noise  is fitted (A=+1 means the tidal
   redshift appears at full expected amplitude).
 
@@ -35,11 +38,16 @@ from scipy import stats
 
 CLOCK_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = CLOCK_DIR / "data" / "环外数据（第八列数据）"
+# Tidal template = the EXPERT-provided full tidal "综合差" (solid + ocean), on a
+# 30-s grid (2026-06-20 .. 09-10 UTC). This is the authoritative sequence the
+# professional supplied directly (results/professional_tidal_delta_30s.csv), NOT
+# the mixed "project solid + expert ocean" series in wuhan_shanghai_*.csv.
 RESULTS_CSV = (
     Path(__file__).resolve().parents[2]
     / "results"
-    / "wuhan_shanghai_20260620_20260826.csv"
+    / "professional_tidal_delta_30s.csv"
 )
+TIDAL_COLUMN = "total_tidal_delta_m2_s2_surface"
 OUT_DIR = Path(__file__).resolve().parent
 
 C = 299792458.0
@@ -174,7 +182,7 @@ def main() -> int:
     T, B = load_all_beat()
     rows = list(csv.DictReader(open(RESULTS_CSV)))
     t_tide = np.array([r["timestamp_utc"].replace("Z", "") for r in rows], dtype="datetime64[s]")
-    tot = np.array([float(r["total_tidal_delta_m2_s2"]) for r in rows])
+    tot = np.array([float(r[TIDAL_COLUMN]) for r in rows])
 
     excl = np.zeros(len(T), dtype=bool)
     for s, e in EXCLUDE_RANGES:
@@ -225,8 +233,15 @@ def main() -> int:
                   f"{n_jump:>5} {'(过短)':>8}")
             continue
 
+        # Tidal template projected through the SAME 1200-s triangular window as
+        # the beat: build the 1-s tidal series over the same run, then integrate
+        # with triangular_window so the tidal "measurement" shares the beat's
+        # windowing (fair amplitude/r comparison, not centre-point sampling).
+        tide_1s = tidal_beat(t_run - UTC_OFFSET, t_tide, tot)
+        tide_tri = triangular_window(tide_1s - tide_1s.mean(), WINDOW, STRIDE)
+        tide_tri = tide_tri[: len(beat_tri)]
         t_tri = t_run[WINDOW // 2 :: STRIDE][: len(beat_tri)]
-        tide = tidal_beat(t_tri - UTC_OFFSET, t_tide, tot)
+        tide = tide_tri
         fit = fit_amplitude(beat_tri, tide)
 
         results.append({
@@ -326,6 +341,42 @@ def main() -> int:
     print(f"\nWrote {csv_path}")
     print(f"Wrote {OUT_DIR / 'batch_forest.png'}")
     print(f"Wrote {OUT_DIR / 'batch_shared_axis.png'}")
+
+    # ---- cross-segment aggregation (reproducible headline statistics) ----
+    # Combine the 14 per-segment results into the sign-agnostic significance
+    # figures cited throughout the reports: negative-segment count + binomial
+    # test, Stouffer / Fisher combined p-values, Fisher-z weighted mean r, and
+    # precision-weighted amplitude ratio A.
+    _ok = [r for r in results if "r" in r and not np.isnan(r["r"])]
+    _rs = np.array([r["r"] for r in _ok])
+    _ps = np.array([r["p"] for r in _ok])
+    _As = np.array([r["A"] for r in _ok])
+    _uAs = np.array([r["u_A"] for r in _ok])
+    _ns = np.array([r["n_pts"] for r in _ok])
+    _p_eps = np.clip(_ps, 1e-14, None)  # guard log(0) for Fisher
+    _neg = int((_rs < 0).sum())
+    _binom_p = stats.binomtest(_neg, len(_rs), 0.5).pvalue
+    _z_sign = np.array([stats.norm.ppf(1 - pp / 2) * np.sign(rr)
+                        for rr, pp in zip(_rs, _ps)])
+    # Sign-agnostic Stouffer: combine the two-sided |z| scores of each segment
+    # (z_i = ppf(1 - p_i/2), always positive), summed and renormed by 1/sqrt(n).
+    _z_agn = np.sum(stats.norm.ppf(1 - _ps / 2)) / np.sqrt(len(_rs))
+    _chi2 = -2.0 * np.sum(np.log(_p_eps))
+    _fisher_p = stats.chi2.sf(_chi2, 2 * len(_rs))
+    _w = _ns - 3.0
+    _rbar = float(np.tanh(np.sum(_w * np.arctanh(_rs)) / np.sum(_w)))
+    _wg = 1.0 / _uAs**2
+    _Abar = float(np.sum(_As * _wg) / np.sum(_wg))
+    _uAbar = float(1.0 / np.sqrt(np.sum(_wg)))
+    print("\n=== cross-segment aggregation (14 segments) ===")
+    print(f"negative r segments : {_neg}/{len(_rs)}  (binomial two-sided p = {_binom_p:.4f})")
+    print(f"Stouffer (sign)     : z = {np.sum(_z_sign)/np.sqrt(len(_rs)):+.2f}  "
+          f"(p = {2*stats.norm.cdf(-abs(np.sum(_z_sign)/np.sqrt(len(_rs)))):.2e})")
+    print(f"Stouffer (|z|)      : |z| = {_z_agn:.2f}  (p = {2*stats.norm.cdf(-_z_agn):.2e})")
+    print(f"Fisher              : chi2 = {_chi2:.1f} (df={2*len(_rs)})  p = {_fisher_p:.2e}")
+    print(f"Fisher-z weighted r : {_rbar:+.4f}")
+    print(f"amplitude A (1/uA^2) : {_Abar:+.4f} +/- {_uAbar:.4f}  ({abs(_Abar)/_uAbar:.2f} sigma)")
+
     return 0
 
 

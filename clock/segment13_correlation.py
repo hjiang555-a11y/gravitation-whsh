@@ -55,7 +55,7 @@ DATA_DIR = CLOCK_DIR / "data" / "环外数据（第八列数据）"
 RESULTS_CSV = (
     Path(__file__).resolve().parents[1]
     / "results"
-    / "wuhan_shanghai_20260620_20260826.csv"
+    / "professional_tidal_delta_30s.csv"
 )
 OUT_DIR = CLOCK_DIR
 
@@ -100,7 +100,7 @@ def load_tidal() -> tuple[np.ndarray, np.ndarray]:
     """Tidal total ΔW (m²/s²) on UTC datetime64[s] grid."""
     rows = list(csv.DictReader(open(RESULTS_CSV)))
     ts = np.array([r["timestamp_utc"].replace("Z", "") for r in rows], dtype="datetime64[s]")
-    tot = np.array([float(r["total_tidal_delta_m2_s2"]) for r in rows])
+    tot = np.array([float(r["total_tidal_delta_m2_s2_surface"]) for r in rows])
     return ts, tot
 
 
@@ -147,17 +147,20 @@ def amplitude_fit(beat: np.ndarray, tide: np.ndarray) -> dict[str, float]:
 
 
 def lag_sweep(beat_utc: np.ndarray, dm: np.ndarray, t_tide: np.ndarray, tot: np.ndarray):
-    """Sweep a tidal time shift to confirm the time base; A≈1 marks the true lag."""
+    """Sweep a tidal time shift to confirm the time base; A≈1 marks the true lag.
+
+    The tide is shifted on its full 1-s grid then projected through the same
+    tau triangular window as the beat, so amplitude/correlation are fair."""
     tau = TAU_PLOT
     d_sm = triangular_segment(dm, tau)
-    t_sm = beat_utc[tau // 2 :: tau][: len(d_sm)]
-    s_base = (t_sm - np.datetime64("1970-01-01")).astype(int)
     t_sec = (t_tide - np.datetime64("1970-01-01")).astype(int)
+    t_utc_sec = (beat_utc - np.datetime64("1970-01-01")).astype(int)
     print("\nLag sweep (tau=600 s) — A ≈ +1 at the correct time base:")
     print(f"{'lag_h':>6} {'A':>9} {'u_A':>8} {'r':>8} {'rho':>8}")
     for lag in range(-12, 1):
-        s = (t_sm + np.timedelta64(lag * 3600, "s") - np.datetime64("1970-01-01")).astype(int)
-        tide = np.interp(s, t_sec, tot) / C**2 / COEF
+        tide_1s = np.interp(t_utc_sec + lag * 3600, t_sec, tot) / C**2 / COEF
+        tide = triangular_segment(tide_1s, tau)
+        tide = tide[: len(d_sm)]
         r = float(np.corrcoef(d_sm, tide)[0, 1])
         rho = float(stats.spearmanr(d_sm, tide).statistic)
         fit = amplitude_fit(d_sm, tide)
@@ -191,7 +194,7 @@ def main() -> int:
     for tau in TAU_LIST:
         d_sm = triangular_segment(dm, tau)
         t_sm = t_utc[tau // 2 :: tau][: len(d_sm)]
-        tide = tidal_beat(t_sm, t_tide, tot)
+        tide = triangular_segment(tide_1s, tau)[: len(d_sm)]
         r, p = stats.pearsonr(d_sm, tide)
         rho, prho = stats.spearmanr(d_sm, tide)
         fit = amplitude_fit(d_sm, tide)
@@ -206,7 +209,7 @@ def main() -> int:
     tau = TAU_PLOT
     d_sm = triangular_segment(dm, tau)
     t_sm = t_utc[tau // 2 :: tau][: len(d_sm)]
-    tide = tidal_beat(t_sm, t_tide, tot)
+    tide = triangular_segment(tide_1s, tau)[: len(d_sm)]
     fit = amplitude_fit(d_sm, tide)
 
     fig, axes = plt.subplots(3, 1, figsize=(12, 10))

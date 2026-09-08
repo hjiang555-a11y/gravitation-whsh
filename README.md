@@ -130,21 +130,21 @@ python -m unittest discover -s tests -v
   （数据本质为均匀 1-s 采样），已按 MATLAB 约定重建均匀时间轴。
 - **14 段无跳点批量分析**：14 段全部有数据（已修复漏加载 6 月 `2606*.txt` 后
   组 1–5 恢复），逐段 1200-s 三角窗 + 幅度拟合。单段大多不显著，但 **12/14 段
-  相关系数为负，跨段合并后显著负相关**（Stouffer |z| = 6.33，p = 2.5e-10，
+  相关系数为负，跨段合并后显著负相关**（Stouffer |z| = 6.34，p = 2.4e-10，
   加权 r ≈ −0.17，A = −0.52±0.08/6.8σ）。
 - **关键发现**：这一致负向最可能是潮汐模板符号方向相反所致；若方向取反
   （`−ΔW/c²`），则潮汐引力红移以**正确方向、部分幅度**被检出。确认需 Yb/Sr 钟
   部署站点与拍频符号约定。
 - **信号被链路噪声淹没**：潮汐信号（Δf/f rms ~4.8e-18）比 1200-s 积分后的链路
   噪声（~1.7e-17）小约 3.6 倍，故单段必然不显著，仅跨段合并能累加出符号趋势。
-- **14 组会话均值相关性**：Pearson r = +0.472（p = 0.088），方向为正、较旧模板
+- **14 组会话均值相关性**：Pearson r = +0.468（p = 0.091），方向为正、较旧模板
   提升但仍不显著（y_i = R_i/R_ref − 1 由 MATLAB 处理程序精确计算，
   `correlation_analysis.py` 里为低精度读数）。
 
 ```bash
 python clock/clock_tidal_shift.py            # 14 组会话平均潮汐频差
 python clock/correlation_analysis.py         # 14 组会话相关性（y_i 由 MATLAB 精确计算）
-python clock/segment_analysis/batch_analysis.py   # 14 段批量分析（核心）
+python clock/segment_analysis/batch_analysis.py   # 14 段批量分析 + 跨段合并统计（核心）
 python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度拟合
 ```
 

@@ -22,11 +22,13 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Expert-provided full tidal "综合差" (solid + ocean), 30-s grid (UTC).
 RESULTS_CSV = (
     Path(__file__).resolve().parents[1]
     / "results"
-    / "wuhan_shanghai_20260620_20260826.csv"
+    / "professional_tidal_delta_30s.csv"
 )
+TIDAL_COLUMN = "total_tidal_delta_m2_s2_surface"
 OUT_DIR = Path(__file__).resolve().parent
 
 C = 299792458.0  # speed of light (m/s)
@@ -60,7 +62,7 @@ def load_series() -> tuple[np.ndarray, np.ndarray]:
     timestamps = np.array(
         [r["timestamp_utc"].replace("Z", "") for r in rows], dtype="datetime64[s]"
     )
-    total = np.array([float(r["total_tidal_delta_m2_s2"]) for r in rows])
+    total = np.array([float(r[TIDAL_COLUMN]) for r in rows])
     return timestamps, total
 
 
