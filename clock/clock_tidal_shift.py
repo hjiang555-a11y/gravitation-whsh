@@ -75,19 +75,22 @@ def main() -> int:
 
     records = []
     for index, (start, end) in enumerate(GROUPS, 1):
-        s = np.datetime64(start) - UTC_OFFSET  # Beijing -> UTC
-        e = np.datetime64(end) - UTC_OFFSET    # Beijing -> UTC
-        mask = (timestamps >= s) & (timestamps <= e)
+        start_beijing = np.datetime64(start)
+        end_beijing = np.datetime64(end)
+        # 潮汐 CSV 是 UTC，把北京时窗口减 8h 对齐到 UTC 后再取潮汐均值。
+        s_utc = start_beijing - UTC_OFFSET
+        e_utc = end_beijing - UTC_OFFSET
+        mask = (timestamps >= s_utc) & (timestamps <= e_utc)
         count = int(mask.sum())
         mean_w = float(total[mask].mean())
         frequency_shift = mean_w / C**2  # Δf/f (dimensionless)
-        mid = int((int(s.astype("int64")) + int(e.astype("int64"))) // 2)
+        mid = int((int(start_beijing.astype("int64")) + int(end_beijing.astype("int64"))) // 2)
         midpoint = np.datetime64(mid, "s")
         records.append(
             {
                 "session": index,
-                "start": str(s).replace("T", " "),
-                "end": str(e).replace("T", " "),
+                "start": str(start_beijing).replace("T", " "),
+                "end": str(end_beijing).replace("T", " "),
                 "midpoint": midpoint,
                 "count_minutes": count,
                 "mean_delta_w_m2_s2": mean_w,
@@ -95,7 +98,7 @@ def main() -> int:
             }
         )
 
-    # Write CSV
+    # Write CSV（时间统一按北京时间 UTC+8 呈现）
     OUT_DIR.mkdir(exist_ok=True)
     csv_path = OUT_DIR / "clock_tidal_shift.csv"
     with csv_path.open("w", newline="") as f:
@@ -103,9 +106,9 @@ def main() -> int:
         writer.writerow(
             [
                 "session",
-                "start_utc",
-                "end_utc",
-                "midpoint_utc",
+                "start_beijing_utc8",
+                "end_beijing_utc8",
+                "midpoint_beijing_utc8",
                 "count_minutes",
                 "mean_delta_w_m2_s2",
                 "frequency_shift_dff",
@@ -149,7 +152,7 @@ def main() -> int:
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
     ax.xaxis.set_major_locator(mdates.AutoDateLocator(minticks=4, maxticks=10))
     plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
-    ax.set_xlabel("Date (UTC)")
+    ax.set_xlabel("Date (Beijing, UTC+8)")
     ax.set_ylabel("Tidal clock-comparison shift  Δf/f  (×10⁻¹⁸)")
     ax.set_title(
         "Tidal gravitational-redshift shift of the Yb/Sr clock comparison "

@@ -338,6 +338,7 @@ def main() -> int:
             ax.set_visible(False)
         fig.suptitle("1200-s triangular beat vs tidal redshift (Δf/f ×10⁻¹⁸), all segments",
                      fontweight="bold")
+        fig.text(0.5, 0.01, "Time (Beijing, UTC+8)", ha="center", fontsize=9)
         fig.tight_layout(rect=[0, 0, 1, 0.97])
         fig.savefig(OUT_DIR / "batch_shared_axis.png", dpi=150, bbox_inches="tight")
         plt.close(fig)
