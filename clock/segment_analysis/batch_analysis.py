@@ -12,11 +12,12 @@ Replicates the MATLAB processing convention (YbSr_NISTstyle_14bin_full_analysis)
 - Within the remaining valid, 1-s continuous data, the LONGEST continuous run
   is kept (the "jump-free" trace the MATLAB code uses).
 - A 1200-s triangular (Bartlett) window with 600-s stride integrates BOTH the
-  beat AND the tidal prediction through the SAME window, so the two are projected
-  onto a common time/scale grid (fair correlation; the tidal template is not
+  beat AND the tidal data through the SAME window, so the two are projected
+  onto a common time/scale grid (fair correlation; the tidal data is not
   point-sampled at window centres while the beat is window-averaged).
-- The tidal prediction is the expert "综合差" (ΔW/c², UTC) interpolated to the
-  1-s grid (Beijing -> UTC, −8 h) and converted to beat Hz via COEF.
+- The tidal data is the professionally supplied 30-s "综合差" (ΔW, UTC)
+  interpolated to the 1-s grid (Beijing -> UTC, −8 h) and converted to beat Hz
+  via COEF.
 - The amplitude A in  beat = A * tide + noise  is fitted (A=+1 means the tidal
   redshift appears at full expected amplitude).
 
@@ -38,10 +39,9 @@ from scipy import stats
 
 CLOCK_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = CLOCK_DIR / "data" / "环外数据（第八列数据）"
-# Tidal template = the EXPERT-provided full tidal "综合差" (solid + ocean), on a
-# 30-s grid (2026-06-20 .. 09-10 UTC). This is the authoritative sequence the
-# professional supplied directly (results/professional_tidal_delta_30s.csv), NOT
-# the mixed "project solid + expert ocean" series in wuhan_shanghai_*.csv.
+# Tidal data = professionally supplied 30-s "综合差" (solid-tide diff + ocean-loading
+# diff), on a 30-s grid (2026-06-20 .. 09-10 UTC), direction Wuhan-minus-Shanghai
+# (CAS - SHA). Read from results/professional_tidal_delta_30s.csv.
 RESULTS_CSV = (
     Path(__file__).resolve().parents[2]
     / "results"
@@ -166,7 +166,7 @@ def tidal_beat(t_stamps_utc: np.ndarray, t_tide: np.ndarray, tot: np.ndarray) ->
 
 
 def fit_amplitude(beat: np.ndarray, tide: np.ndarray) -> dict[str, float]:
-    # Demean BOTH: the beat is already mean-subtracted, and the tidal template
+    # Demean BOTH: the beat is already mean-subtracted, and the tidal data
     # carries a non-zero session-mean (DC) that must be excluded too. Fitting
     # the demeaned pair is equivalent to fitting beat = A*tide + intercept, and
     # yields A = r * sigma_beat / sigma_tide (sign consistent with r).
@@ -237,7 +237,7 @@ def main() -> int:
                   f"{n_jump:>5} {'(过短)':>8}")
             continue
 
-        # Tidal template projected through the SAME 1200-s triangular window as
+        # Tidal data projected through the SAME 1200-s triangular window as
         # the beat: build the 1-s tidal series over the same run, then integrate
         # with triangular_window so the tidal "measurement" shares the beat's
         # windowing (fair amplitude/r comparison, not centre-point sampling).

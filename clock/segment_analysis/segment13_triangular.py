@@ -116,7 +116,7 @@ def main() -> int:
     print(f"points after integration: {len(beat_tri)} ({len(beat_tri)*STRIDE/3600:.1f} h span)")
     print(f"integrated beat std: {beat_tri.std():.5f} Hz")
 
-    # Tidal template projected through the SAME 1200-s triangular window as the
+    # Tidal data projected through the SAME 1200-s triangular window as the
     # beat (build 1-s tide over the full run, then integrate), so the tidal
     # "measurement" shares the beat's windowing (fair comparison, not point
     # sampling at window centres).

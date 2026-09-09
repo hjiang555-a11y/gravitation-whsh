@@ -181,9 +181,9 @@ def main() -> int:
     print(f"Jump check (>10 Hz from median): {jump} points (none removed)")
     print(f"Raw 1-s noise std: {dm.std():.4f} Hz")
 
-    # Correct-alignment tidal template on the full 1-s grid.
+    # Correct-alignment tidal data on the full 1-s grid.
     tide_1s = tidal_beat(t_utc, t_tide, tot)
-    print(f"Tidal template: rms {tide_1s.std():.3e} Hz, "
+    print(f"Tidal data: rms {tide_1s.std():.3e} Hz, "
           f"peak-peak {(tide_1s.max()-tide_1s.min()):.3e} Hz")
 
     # Correlation + amplitude fit at several integration times.

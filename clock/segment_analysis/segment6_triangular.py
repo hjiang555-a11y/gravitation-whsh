@@ -107,7 +107,7 @@ def main() -> int:
     print(f"\n1200-s triangular window (600-s stride): {len(beat_tri)} points")
     print(f"Integrated beat std: {beat_tri.std():.5f} Hz")
 
-    # Tidal template projected through the SAME 1200-s triangular window as the
+    # Tidal data projected through the SAME 1200-s triangular window as the
     # beat (build 1-s tide over the full run, then integrate) — fair comparison.
     tide_1s = tidal_prediction(t)
     tide = triangular_window(tide_1s - tide_1s.mean(), WINDOW, STRIDE)[: len(beat_tri)]

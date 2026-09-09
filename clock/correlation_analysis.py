@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """Correlation analysis: clock-comparison result vs tidal gravitational-redshift shift.
 
-The 14 per-session clock-comparison values y_i = R_i/R_ref - 1 are OUTPUT BY THE
+The per-session clock-comparison values y_i = R_i/R_ref - 1 are OUTPUT BY the
 MATLAB processing program (clock/data/代码/YbSr_NISTstyle_14bin_full_analysis_20260824.m,
-which computes y_i = R_bin_YbSr_sm(i)/R_ref_NIST_sm - 1 at full 80-digit precision);
-atomic-clock-comp.pdf is that program's output. The tidal shifts are exact
-(computed by clock_tidal_shift.py).
+which computes y_i = R_bin_YbSr_sm(i)/R_ref_NIST_sm - 1 at full 80-digit precision).
+The tidal shifts are exact (computed by clock_tidal_shift.py, using the
+professionally supplied 30-s 综合差 data, direction Wuhan-minus-Shanghai).
 
 The values held here are the low-precision (2-decimal) reading used for a quick
 session-level check; Pearson r is invariant under affine rescaling so the sign
 and correlation are robust even though these stored values are rounded.
+
+Only 14 of the 17 segments have per-segment y_i (the 17-segment revision reports
+only aggregate Yb/Sr statistics, not per-segment y_i for segments 15/16/17).
 """
 
 from __future__ import annotations
