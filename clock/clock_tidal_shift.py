@@ -129,30 +129,27 @@ def main() -> int:
 
     midpoints = np.array([r["midpoint"] for r in records])
     frequency_shift = np.array([r["frequency_shift"] for r in records]) * 1e18
-    starts = np.array([np.datetime64(r["start"]) for r in records])
-    ends = np.array([np.datetime64(r["end"]) for r in records])
-    mid_num = mdates.date2num(midpoints)
-    left_days = mid_num - mdates.date2num(starts)
-    right_days = mdates.date2num(ends) - mid_num
 
-    fig, ax = plt.subplots(figsize=(11, 4.5))
+    # x 轴用等间距段索引，避免 7月→8月 约 31 天空档把前后段挤在两端、
+    # 使序号标注重叠。每段的实际日期标作刻度，保留时间信息。
+    seg_index = np.arange(1, len(records) + 1, dtype=float)
+    xtick_dates = [
+        np.datetime_as_string(m.astype("datetime64[s]"), unit="D")
+        for m in midpoints
+    ]
+
+    fig, ax = plt.subplots(figsize=(13, 5))
     ax.axhline(0.0, color="gray", lw=0.8, ls="--")
-    ax.plot(mid_num, frequency_shift, "o-", color="#0969da", ms=5, lw=1.4)
-    ax.errorbar(
-        mid_num,
-        frequency_shift,
-        xerr=[left_days, right_days],
-        fmt="none", ecolor="#0969da", alpha=0.4, capsize=0,
-    )
-    for i, (x, y) in enumerate(zip(mid_num, frequency_shift), 1):
+    ax.plot(seg_index, frequency_shift, "o-", color="#0969da", ms=6, lw=1.4)
+    for i in range(len(seg_index)):
         ax.annotate(
-            f"{i}", (x, y), textcoords="offset points", xytext=(0, 7),
-            ha="center", fontsize=8, color="#333333",
+            f"{i + 1}", (seg_index[i], frequency_shift[i]),
+            textcoords="offset points", xytext=(0, 9),
+            ha="center", fontsize=8, color="#d62728", fontweight="bold",
         )
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
-    ax.xaxis.set_major_locator(mdates.AutoDateLocator(minticks=4, maxticks=10))
-    plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
-    ax.set_xlabel("Date (Beijing, UTC+8)")
+    ax.set_xticks(seg_index)
+    ax.set_xticklabels(xtick_dates, rotation=45, ha="right", fontsize=8)
+    ax.set_xlabel("Segment midpoint date (Beijing, UTC+8)")
     ax.set_ylabel("Tidal clock-comparison shift  Δf/f  (×10⁻¹⁸)")
     ax.set_title(
         "Tidal gravitational-redshift shift of the Yb/Sr clock comparison "
