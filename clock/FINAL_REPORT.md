@@ -9,19 +9,16 @@
 > 潮汐数据（不再用项目自算的固体潮+海潮混合序列），实验段数由 14 增至 **17 段
 > 无跳点**（第 15/16/17 段为 8 月 21–26 日新增，时间见
 > [潮汐修正后的比值计算.pdf](潮汐修正后的比值计算.pdf)）。权威结论见
-> [PROFESSIONAL_CORRECTION_REPORT.md](PROFESSIONAL_CORRECTION_REPORT.md)：
+> [PROFESSIONAL_TIDAL_DATA.md](PROFESSIONAL_TIDAL_DATA.md)：
 >
-> - **方向一致**：专业数据数值方向 = 上海−武汉（与项目 SHAO−WUHN 一致，综合差
->   corr=+0.9997），无系统性符号错误（xlsx「CAS−SHA」仅为表头标签）。
-> - **主计算链固化**：新增 `--professional-tidal` 入口，直接以专业综合差为权威
->   总势差；海潮负荷 HARPOS FES2014b 幅度偏低 ~3.9× 的历史问题已由权威序列绕过。
+> - **方向一致**：专业数据数值方向 = 武汉−上海（CAS − SHA），无系统性符号错误。
+> - **数据来源**：下游分析以专业提供的 30 秒「综合差」为唯一潮汐数据源
+>   （`results/professional_tidal_delta_30s.csv`）。
 > - **17 段跨段合并（14/17 同号）**：负相关段 14/17（二项 p=0.0127），符号无关
 >   Stouffer |z|=5.91（p=3.4e-9），Fisher p=1.8e-6，加权 r=−0.129，
 >   A=−0.46±0.07（6.5σ）。
 > - **会话层 y_i 相关性**：Pearson r = +0.468（p=0.091，原 +0.355/p=0.213）；
 >   暂以 14 段计算，17 段逐段 y_i 待实验方导出后补齐。
->
-> 本页下方为**原（项目自身模板）**分析，保留作历史对照；权威结论请以更新报告为准。
 
 ---
 
@@ -41,7 +38,7 @@
 
 ## 1. 物理链路与符号系数
 
-潮汐引力势差 ΔW = W(SHAO) − W(WUHN) 通过广义相对论引力红移改变两地钟频率差：
+潮汐引力势差 ΔW = W(WUHN) − W(SHAO) 通过广义相对论引力红移改变两地钟频率差：
 
 ```text
 Δf/f = ΔW / c²
@@ -75,11 +72,12 @@ delta_g = −3.116e-15
 
 ### 1.3 潮汐数据符号
 
-潮汐时变下 Sr/Yb 比值偏移：
+潮汐时变下 Sr/Yb 比值偏移（Sr 在上海 SHAO、Yb 在武汉 WUHN）：
 
 ```text
-δ(Sr/Yb) = (δW_Sr − δW_Yb)/c² = (W_SHAO − W_WUHN)/c² = ΔW/c²
-拍频潮汐数据 = +ΔW/c² / COEF
+δ(Sr/Yb) = (δW_Sr − δW_Yb)/c² = (W_SHAO − W_WUHN)/c²
+专业「综合差」方向 = 武汉 − 上海，即 ΔW = W_WUHN − W_SHAO，故 δ(Sr/Yb) = −ΔW/c²
+拍频潮汐数据 = −ΔW/c² / COEF
 ```
 
 符号约定详见 [SIGN_COEFFICIENT_ANALYSIS.md](SIGN_COEFFICIENT_ANALYSIS.md)。

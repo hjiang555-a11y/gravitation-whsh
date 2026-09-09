@@ -10,7 +10,7 @@
 > 段为 8 月 21–26 日新增）。
 > 最终数字：负相关段 14/17（二项双侧 p=0.0127），符号无关 Stouffer |z| = 5.91
 > （p=3.4e-9），加权 r = −0.129，A = −0.46±0.07（6.5σ）。详见
-> [PROFESSIONAL_CORRECTION_REPORT.md](PROFESSIONAL_CORRECTION_REPORT.md)。
+> [PROFESSIONAL_TIDAL_DATA.md](PROFESSIONAL_TIDAL_DATA.md)。
 
 ---
 

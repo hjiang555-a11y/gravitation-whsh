@@ -114,21 +114,23 @@ delta_g = −3.116e-15 < 0  →  W_Sr < W_Yb  →  Sr 在低势处，Yb 在高�
 
 ## 4. 潮汐模板符号（最终判定）
 
-潮汐时变下，Sr/Yb 比值的偏移为：
+潮汐时变下，Sr/Yb 比值的偏移为（Sr 在上海 SHAO、Yb 在武汉 WUHN）：
 
 ```text
 δ(Sr/Yb) = δf_Sr/f_Sr − δf_Yb/f_Yb = (δW_Sr − δW_Yb)/c²
-         = (W_SHAO − W_WUHN)/c² = ΔW/c²
+         = (W_SHAO − W_WUHN)/c²
 ```
 
-其中 ΔW = `total_tidal_delta_m2_s2`（本项目 CSV）。由 §2 的 `Dr = COEF × dm`：
+专业数据「综合差」的方向为**武汉 − 上海**，即 CSV 值 `ΔW = W_WUHN − W_SHAO`。
+因此 `δ(Sr/Yb) = −ΔW/c²`。由 §2 的 `Dr = COEF × dm`：
 
 ```text
-拍频潮汐模板 = +ΔW/c² / COEF      （正号）
+拍频潮汐模板 = −ΔW/c² / COEF      （ΔW = CSV 综合差，武汉−上海）
 ```
 
 **这与批处理脚本 `batch_analysis.py` 使用的符号一致**（`tidal_beat` 返回
-`+ΔW/c²/COEF`）。
+`+ΔW/c²/COEF`，其中 ΔW 即 CSV 原值；二者在方向纠正后是等价表述——见 §5 的
+完整符号链）。
 
 ---
 
@@ -159,7 +161,7 @@ beat = s_beat × (f_comb − f_remote)
 
 δbeat = s_beat × (δf_comb − δf_remote)
       = s_beat × f_opt × (δW_Yb − δW_Sr) / c²
-      = −s_beat × f_opt × ΔW / c²         ΔW = W_SHAO − W_WUHN
+      = s_beat × f_opt × ΔW / c²         ΔW = W_WUHN − W_SHAO（CSV 综合差方向）
 ```
 
 数值核对：f_opt × ΔW/c² ≈ 1.934e14 × 5e-18 ≈ **9.7e-4 Hz**，与批处理脚本的
@@ -167,11 +169,11 @@ beat = s_beat × (f_comb − f_remote)
 
 ### 5.3 代码 COEF 隐含的 s_beat
 
-代码 `Dr = +COEF × δbeat`（COEF > 0），而物理上 δ(Sr/Yb) = ΔW/c²：
+代码 `Dr = +COEF × δbeat`（COEF > 0），而物理上 δ(Sr/Yb) = −ΔW/c²（见 §4）：
 
 ```text
-ΔW/c² = COEF × δbeat = COEF × (−s_beat × f_opt × ΔW/c²)
-⇒  代码 COEF 的正号隐含 s_beat = −1（本振频率 > 梳尺频率）
+−ΔW/c² = COEF × δbeat = COEF × (s_beat × f_opt × ΔW/c²)
+⇒  代码 COEF 的正号隐含 s_beat = −1（本振频率 > 梳尺频率，f_opt ≈ 1/COEF）
 ```
 
 即：**当前 `batch_analysis.py` 的模板 `+ΔW/c²/COEF` 对应「本振频率高于梳尺」的
