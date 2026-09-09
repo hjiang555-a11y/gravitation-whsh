@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate the report figures with datetime x-axes.
 
-Reads results/wuhan_shanghai_20260620_20260826.csv and writes
-report/fig1_timeseries_7d.png, report/fig2_spectrum.png,
+Reads results/professional_tidal_delta_30s.csv (the authoritative full tidal
+"综合差" data) and writes report/fig1_timeseries_7d.png, report/fig2_spectrum.png,
 report/fig3_full_68d.png and report/fig4_frequency_shift.png.
 Time-domain x-axes are real datetimes formatted as ``YYYY-MM-DD HH:MM`` (UTC).
 """
@@ -19,8 +19,14 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 
-CSV_PATH = Path(__file__).resolve().parents[1] / "results" / "wuhan_shanghai_20260620_20260826.csv"
+CSV_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "results"
+    / "professional_tidal_delta_30s.csv"
+)
 OUT_DIR = Path(__file__).resolve().parent
+
+TIDAL_COLUMN = "total_tidal_delta_m2_s2_surface"
 
 C = 299792458.0  # speed of light (m/s)
 
@@ -35,20 +41,13 @@ TIDES = {
 }
 
 
-def load() -> tuple[np.ndarray, dict[str, np.ndarray]]:
+def load() -> tuple[np.ndarray, np.ndarray]:
     rows = list(csv.DictReader(open(CSV_PATH)))
     timestamps = np.array(
         [r["timestamp_utc"].replace("Z", "") for r in rows], dtype="datetime64[s]"
     )
-    columns = (
-        "tide_generating_delta_m2_s2",
-        "solid_induced_delta_m2_s2",
-        "solid_effective_delta_m2_s2",
-        "ocean_loading_delta_m2_s2",
-        "total_tidal_delta_m2_s2",
-    )
-    data = {c: np.array([float(r[c]) for r in rows]) for c in columns}
-    return timestamps, data
+    total = np.array([float(r[TIDAL_COLUMN]) for r in rows])
+    return timestamps, total
 
 
 def _style_time_axis(ax):
@@ -57,33 +56,24 @@ def _style_time_axis(ax):
     plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
 
 
-def fig1(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
+def fig1(timestamps: np.ndarray, total: np.ndarray) -> None:
     mask = timestamps < timestamps[0] + np.timedelta64(7, "D")
-    panels = (
-        ("tide_generating_delta_m2_s2", "Tide-generating potential difference"),
-        ("solid_induced_delta_m2_s2", "Solid induced potential (k·V)"),
-        ("solid_effective_delta_m2_s2", "Solid effective potential ((1+k-h)·V)"),
-        ("ocean_loading_delta_m2_s2", "Ocean-loading potential (-γ·δh)"),
-        ("total_tidal_delta_m2_s2", "Total tidal potential difference"),
+    fig, ax = plt.subplots(figsize=(10, 4.5))
+    ax.plot(timestamps[mask], total[mask], lw=0.4, color="#0969da")
+    ax.set_ylabel("m²/s²")
+    ax.set_title(
+        "SHAO − WUHN full tidal difference (first 7 days)", fontweight="bold"
     )
-    fig, axes = plt.subplots(5, 1, figsize=(10, 9), sharex=True)
-    for ax, (column, label) in zip(axes, panels):
-        ax.plot(timestamps[mask], data[column][mask], lw=0.4, color="#0969da")
-        ax.set_ylabel("m²/s²")
-        ax.set_title(label, loc="left", fontsize=9)
-        ax.grid(alpha=0.25)
-    _style_time_axis(axes[-1])
-    axes[-1].set_xlabel("Time (UTC)")
-    axes[0].set_title(
-        "SHAO − WUHN tidal geopotential difference (first 7 days)", fontweight="bold"
-    )
+    ax.grid(alpha=0.25)
+    _style_time_axis(ax)
+    ax.set_xlabel("Time (UTC)")
     fig.tight_layout()
     fig.savefig(OUT_DIR / "fig1_timeseries_7d.png", dpi=160, bbox_inches="tight")
     plt.close(fig)
 
 
-def fig2(data: dict[str, np.ndarray]) -> None:
-    dt = 60.0  # seconds, 1-minute sampling
+def fig2(total: np.ndarray) -> None:
+    dt = 30.0  # seconds, 30-second sampling
 
     def psd(y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         y = y - y.mean()
@@ -93,25 +83,20 @@ def fig2(data: dict[str, np.ndarray]) -> None:
         return freq, power
 
     fig, ax = plt.subplots(figsize=(10, 4.5))
-    series = (
-        ("tide_generating_delta_m2_s2", "generating", "#888888"),
-        ("solid_effective_delta_m2_s2", "solid effective", "#0969da"),
-        ("ocean_loading_delta_m2_s2", "ocean loading", "#e07b00"),
-        ("total_tidal_delta_m2_s2", "total", "#d62728"),
-    )
-    for column, label, color in series:
-        freq, power = psd(data[column])
-        sel = freq < 5e-4
-        ax.semilogy(freq[sel], power[sel], lw=0.8, label=label, color=color, alpha=0.9)
-    for name, freq in TIDES.items():
-        ax.axvline(freq, color="gray", ls=":", lw=0.6, alpha=0.5)
+    freq, power = psd(total)
+    sel = freq < 5e-4
+    ax.semilogy(freq[sel], power[sel], lw=0.8, label="total tidal difference", color="#d62728")
+    for name, freq_tide in TIDES.items():
+        ax.axvline(freq_tide, color="gray", ls=":", lw=0.6, alpha=0.5)
         ax.text(
-            freq, ax.get_ylim()[1] * 0.5, name, fontsize=7, rotation=90,
+            freq_tide, ax.get_ylim()[1] * 0.5, name, fontsize=7, rotation=90,
             va="top", color="gray",
         )
     ax.set_xlabel("Frequency (Hz)")
     ax.set_ylabel("Power (a.u.)")
-    ax.set_title("Spectrum of SHAO − WUHN tidal geopotential difference", fontweight="bold")
+    ax.set_title(
+        "Spectrum of SHAO − WUHN full tidal difference", fontweight="bold"
+    )
     ax.legend(fontsize=8)
     ax.grid(alpha=0.25, which="both")
     fig.tight_layout()
@@ -119,11 +104,10 @@ def fig2(data: dict[str, np.ndarray]) -> None:
     plt.close(fig)
 
 
-def fig3(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
-    total = data["total_tidal_delta_m2_s2"]
-    days = len(total) // 1440
-    daily = total[: days * 1440].reshape(days, 1440)
-    day_starts = timestamps[: days * 1440 : 1440]
+def fig3(timestamps: np.ndarray, total: np.ndarray) -> None:
+    days = len(total) // 2880  # 30-s samples per day
+    daily = total[: days * 2880].reshape(days, 2880)
+    day_starts = timestamps[: days * 2880 : 2880]
 
     fig, ax = plt.subplots(figsize=(10, 3.5))
     ax.plot(timestamps, total, lw=0.1, color="#0969da", alpha=0.7)
@@ -132,13 +116,13 @@ def fig3(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
         alpha=0.25, color="#0969da", label="daily min–max",
         step="mid",
     )
-    ax.plot(
-        day_starts, daily.mean(axis=1), lw=1.2, color="#d62728", label="daily mean"
-    )
+    ax.plot(day_starts, daily.mean(axis=1), lw=1.2, color="#d62728", label="daily mean")
     _style_time_axis(ax)
     ax.set_xlabel("Time (UTC)")
     ax.set_ylabel("m²/s²")
-    ax.set_title("Total tidal potential difference — full 68 days", fontweight="bold")
+    ax.set_title(
+        "Full tidal difference — 83 days", fontweight="bold"
+    )
     ax.legend(fontsize=8)
     ax.grid(alpha=0.25)
     fig.tight_layout()
@@ -146,8 +130,7 @@ def fig3(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
     plt.close(fig)
 
 
-def fig4(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
-    total = data["total_tidal_delta_m2_s2"]
+def fig4(timestamps: np.ndarray, total: np.ndarray) -> None:
     frequency_shift = total / C**2  # Δf/f = ΔW/c² (dimensionless)
 
     fig, ax = plt.subplots(figsize=(10, 4))
@@ -167,10 +150,9 @@ def fig4(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
     plt.close(fig)
 
 
-def fig5(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
-    total = data["total_tidal_delta_m2_s2"]
+def fig5(timestamps: np.ndarray, total: np.ndarray) -> None:
     frequency_shift = total / C**2  # Δf/f (dimensionless)
-    clock_offset = np.cumsum(frequency_shift) * 60.0  # Δτ = ∫(Δf/f)dt, seconds
+    clock_offset = np.cumsum(frequency_shift) * 30.0  # Δτ = ∫(Δf/f)dt, seconds
     clock_offset_ps = clock_offset * 1e12  # picoseconds
 
     fig, ax = plt.subplots(figsize=(10, 4))
@@ -190,12 +172,12 @@ def fig5(timestamps: np.ndarray, data: dict[str, np.ndarray]) -> None:
 
 
 def main() -> int:
-    timestamps, data = load()
-    fig1(timestamps, data)
-    fig2(data)
-    fig3(timestamps, data)
-    fig4(timestamps, data)
-    fig5(timestamps, data)
+    timestamps, total = load()
+    fig1(timestamps, total)
+    fig2(total)
+    fig3(timestamps, total)
+    fig4(timestamps, total)
+    fig5(timestamps, total)
     print(
         "Wrote fig1_timeseries_7d.png, fig2_spectrum.png, "
         "fig3_full_68d.png, fig4_frequency_shift.png, fig5_clock_offset.png"

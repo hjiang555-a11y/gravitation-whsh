@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Compute tidal clock-comparison shifts for the 14 experimental sessions.
+"""Compute tidal clock-comparison shifts for the experimental sessions.
 
-Reads the 14 session time windows (from clock/atomic-clock-comp.pdf, table 1),
+Reads the session time windows (from clock/潮汐修正后的比值计算.pdf, 17 segments),
 averages the tidal geopotential difference ΔW over each session, and converts
 it to the fractional frequency shift Δf/f = ΔW/c² induced by the tidal
 gravitational redshift (general relativity).
@@ -38,7 +38,8 @@ C = 299792458.0  # speed of light (m/s)
 # session windows are shifted back 8 h before masking. (China has no DST.)
 UTC_OFFSET = np.timedelta64(8, "h")
 
-# 14 experimental sessions (start, end), Beijing time (UTC+8), 2026 — table 1.
+# 17 experimental sessions (start, end), Beijing time (UTC+8), 2026 — tables of
+# clock/潮汐修正后的比值计算.pdf (17-jump-free-segment revision).
 GROUPS = [
     ("2026-06-29 10:06:28", "2026-06-30 04:59:59"),
     ("2026-06-30 12:00:00", "2026-06-30 20:11:31"),
@@ -54,6 +55,9 @@ GROUPS = [
     ("2026-08-10 12:47:06", "2026-08-11 00:00:00"),
     ("2026-08-11 05:30:00", "2026-08-13 00:00:00"),
     ("2026-08-13 18:56:58", "2026-08-15 14:00:41"),
+    ("2026-08-21 00:40:03", "2026-08-21 16:40:56"),
+    ("2026-08-21 23:20:01", "2026-08-23 16:20:51"),
+    ("2026-08-25 15:09:41", "2026-08-26 09:29:54"),
 ]
 
 
@@ -149,7 +153,7 @@ def main() -> int:
     ax.set_ylabel("Tidal clock-comparison shift  Δf/f  (×10⁻¹⁸)")
     ax.set_title(
         "Tidal gravitational-redshift shift of the Yb/Sr clock comparison "
-        "per session (14 sessions)",
+        f"per session ({len(records)} sessions)",
         fontweight="bold",
     )
     ax.grid(alpha=0.25)

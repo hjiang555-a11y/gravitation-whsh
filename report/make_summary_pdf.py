@@ -47,14 +47,14 @@ def figpage():
 
 # 关键图列表（一页一张）
 FIGS = [
-    ('report/fig1_timeseries_7d.png', '前 7 天五分量时域：固体潮(生成/诱导/有效) + 海潮负荷 + 总势差'),
+    ('report/fig1_timeseries_7d.png', '前 7 天总潮汐势差（专业 30 秒综合差）时域'),
     ('report/fig2_spectrum.png', '潮汐势差频谱（M2/S2/N2/K1/O1/P1 谱线）'),
-    ('report/fig3_full_68d.png', '68 天总潮汐势差全程 + 日 min–max 包络 + 日平均'),
-    ('report/fig4_frequency_shift.png', '钟频差 Δf/f = ΔW/c²（引力红移），峰峰值 ~1.6e-17'),
-    ('clock/segment_analysis/batch_forest.png', '14 段幅度比 A ± u_A（森林图）：12/14 段为负'),
-    ('clock/segment_analysis/batch_shared_axis.png', '逐段拍频 vs 潮汐模板（1200-s 三角窗）'),
-    ('clock/correlation.png', '14 组会话宏观正相关：Pearson r = +0.472'),
-    ('clock/clock_tidal_shift.png', '14 组会话平均潮汐频差 Δf/f（×1e-18）'),
+    ('report/fig3_full_68d.png', '总潮汐势差全程（83 天）+ 日 min–max 包络 + 日平均'),
+    ('report/fig4_frequency_shift.png', '钟频差 Δf/f = ΔW/c²（引力红移）'),
+    ('clock/segment_analysis/batch_forest.png', '17 段幅度比 A ± u_A（森林图）：14/17 段为负'),
+    ('clock/segment_analysis/batch_shared_axis.png', '逐段拍频 vs 潮汐数据（1200-s 三角窗）'),
+    ('clock/correlation.png', '会话级相关性（y_i 仍 14 段，待实验方 17 段导出）'),
+    ('clock/clock_tidal_shift.png', '17 组会话平均潮汐频差 Δf/f（×1e-18）'),
     ('clock/temperature/temperature_diurnal.png', '三站气温日周期轮廓（上海/武汉/合肥）'),
     ('clock/temperature/fx_b2_lock_fraction.png', '环外 10MHz 信号(FXE_B2)逐日锁定比例'),
     ('clock/temperature/fx_b4_vs_temperature.png', '超稳参考 FXE_B4 vs 温度（无耦合）'),
@@ -70,7 +70,7 @@ with PdfPages('/tmp/opencode/ppt_build/final_big.pdf') as pdf:
             color=DARKBLUE, ha='center', fontproperties=zh)
     ax.text(0.5, 0.52, '引力潮汐引力红移效应分析 · 总结报告', fontsize=16, color=NAVY, ha='center', fontproperties=zh)
     ax.text(0.5, 0.44, '潮汐势差计算 · 光纤链路 · 实验数据处理', fontsize=12, color=GRAY, ha='center', fontproperties=zh)
-    ax.text(0.5, 0.28, '2026 年 6 月—8 月 · 14 段无跳点实验\n1550 nm 传递链路（武汉 → 合肥 → 上海）',
+    ax.text(0.5, 0.28, '2026 年 6 月—8 月 · 17 段无跳点实验\n1550 nm 传递链路（武汉 → 合肥 → 上海）',
             fontsize=11, color=GRAY, ha='center', fontproperties=zh, linespacing=1.8)
     pdf.savefig(fig); plt.close(fig)
 
@@ -85,8 +85,8 @@ with PdfPages('/tmp/opencode/ppt_build/final_big.pdf') as pdf:
     fig = figpage()
     bar(fig, '结论')
     fig.text(0.08, 0.10, 
-        '1. 潮汐引力红移被检出：段级 12/14 负相关，|z|=6.33（p=2.5e-10），A=−0.52±0.08（6.8σ）\n\n'
-        '2. 会话级宏观正相关 r=+0.472（10/14 同号）— 与理论方向一致、更鲁棒\n\n'
+        '1. 潮汐引力红移被检出：段级 14/17 负相关，|z|=5.91（p=3.4e-9），A=−0.46±0.07（6.5σ）\n\n'
+        '2. 会话级相关性：y_i 仍 14 段，待实验方 17 段逐段导出后补齐\n\n'
         '3. 海潮负荷修正 3.9 倍（专业序列），固体潮波形完全一致\n\n'
         '4. 噪声本底 = 钟白频率噪声(1/√τ)，链路白相位(1/τ) 不影响潮汐检测\n\n'
         '5. 温度影响不可检出，不改变潮汐结论',

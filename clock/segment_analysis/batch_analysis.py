@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Batch tidal-gravitational-redshift analysis over all 14 jump-free segments.
+"""Batch tidal-gravitational-redshift analysis over all jump-free segments.
 
 Replicates the MATLAB processing convention (YbSr_NISTstyle_14bin_full_analysis):
 - The acquisition PC records "PC time, time zone local" (Beijing, UTC+8), but
@@ -58,7 +58,8 @@ WINDOW = 1200  # triangular window full width (s)
 STRIDE = 600   # one point every 600 s (50% overlap)
 JUMP_THRESHOLD = 10.0  # Hz
 
-# 14 experimental sessions (Beijing time, UTC+8) — table 1 of the PDF.
+# 17 experimental sessions (Beijing time, UTC+8) — tables of
+# clock/潮汐修正后的比值计算.pdf (the 17-jump-free-segment revision).
 GROUPS = [
     ("2026-06-29 10:06:28", "2026-06-30 04:59:59"),
     ("2026-06-30 12:00:00", "2026-06-30 20:11:31"),
@@ -74,6 +75,9 @@ GROUPS = [
     ("2026-08-10 12:47:06", "2026-08-11 00:00:00"),
     ("2026-08-11 05:30:00", "2026-08-13 00:00:00"),
     ("2026-08-13 18:56:58", "2026-08-15 14:00:41"),
+    ("2026-08-21 00:40:03", "2026-08-21 16:40:56"),
+    ("2026-08-21 23:20:01", "2026-08-23 16:20:51"),
+    ("2026-08-25 15:09:41", "2026-08-26 09:29:54"),
 ]
 
 # Manual exclusion windows (Beijing time), copied from the MATLAB exclude_ranges.
@@ -300,7 +304,7 @@ def main() -> int:
         ax.axhline(1.0, color="#d62728", lw=1.0, ls="--", label="A = +1 (full tidal)")
         ax.set_xlabel("Segment index")
         ax.set_ylabel("Amplitude fit A")
-        ax.set_title("Tidal amplitude fit A ± u_A across 14 segments", fontweight="bold")
+        ax.set_title(f"Tidal amplitude fit A ± u_A across {len(valid)} segments", fontweight="bold")
         ax.set_xticks(gs)
         ax.set_xticklabels([f"{int(g)}" for g in gs])
         ax.legend(fontsize=9)
@@ -343,7 +347,7 @@ def main() -> int:
     print(f"Wrote {OUT_DIR / 'batch_shared_axis.png'}")
 
     # ---- cross-segment aggregation (reproducible headline statistics) ----
-    # Combine the 14 per-segment results into the sign-agnostic significance
+    # Combine the per-segment results into the sign-agnostic significance
     # figures cited throughout the reports: negative-segment count + binomial
     # test, Stouffer / Fisher combined p-values, Fisher-z weighted mean r, and
     # precision-weighted amplitude ratio A.
@@ -368,7 +372,7 @@ def main() -> int:
     _wg = 1.0 / _uAs**2
     _Abar = float(np.sum(_As * _wg) / np.sum(_wg))
     _uAbar = float(1.0 / np.sqrt(np.sum(_wg)))
-    print("\n=== cross-segment aggregation (14 segments) ===")
+    print(f"\n=== cross-segment aggregation ({len(_rs)} segments) ===")
     print(f"negative r segments : {_neg}/{len(_rs)}  (binomial two-sided p = {_binom_p:.4f})")
     print(f"Stouffer (sign)     : z = {np.sum(_z_sign)/np.sqrt(len(_rs)):+.2f}  "
           f"(p = {2*stats.norm.cdf(-abs(np.sum(_z_sign)/np.sqrt(len(_rs)))):.2e})")

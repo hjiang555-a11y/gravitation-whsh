@@ -43,9 +43,12 @@ class Calculation:
     induced_delta: np.ndarray
     solid_effective_delta: np.ndarray
     ocean_loading_delta: np.ndarray | None
+    authoritative_total_delta: np.ndarray | None = None
 
     @property
     def total_delta(self) -> np.ndarray:
+        if self.authoritative_total_delta is not None:
+            return self.authoritative_total_delta
         if self.ocean_loading_delta is None:
             return self.solid_effective_delta.copy()
         return self.solid_effective_delta + self.ocean_loading_delta
@@ -240,6 +243,36 @@ def load_professional_ocean(path: str | Path) -> tuple[np.ndarray, np.ndarray]:
     return epochs, delta_w
 
 
+def load_professional_tidal(path: str | Path) -> tuple[np.ndarray, np.ndarray]:
+    """Load the authoritative full tidal "综合差" ΔW series (30-second UTC grid).
+
+    This is the professionally supplied total tidal geopotential difference
+    (solid tide 之差 + ocean loading 之差), i.e. the complete "综合潮汐" data
+    that supersedes the project's own solid-tide + ocean-loading model output.
+    The file is a CSV with a ``timestamp_utc`` column and a single value column
+    (``total_tidal_delta_m2_s2_surface``). Returns ``(epoch_seconds, delta_W)``
+    in the Shanghai-minus-Wuhan convention, consumed verbatim (no sign flip).
+    """
+    import csv as _csv
+
+    with Path(path).open(encoding="utf-8") as handle:
+        rows = list(_csv.DictReader(handle))
+    epochs = np.array(
+        [
+            datetime.fromisoformat(r["timestamp_utc"].replace("Z", "+00:00")).timestamp()
+            for r in rows
+        ]
+    )
+    # Accept either column name; the authoritative series uses the surface value.
+    column = (
+        "total_tidal_delta_m2_s2_surface"
+        if "total_tidal_delta_m2_s2_surface" in rows[0]
+        else "total_tidal_delta_m2_s2"
+    )
+    delta_w = np.array([float(r[column]) for r in rows])
+    return epochs, delta_w
+
+
 def calculate(
     start: datetime,
     end: datetime,
@@ -252,14 +285,34 @@ def calculate(
     wuhan_harpos: HarposStation | None = None,
     shanghai_harpos: HarposStation | None = None,
     professional_ocean_csv: str | Path | None = None,
+    professional_tidal_csv: str | Path | None = None,
 ) -> Calculation:
     """Calculate Shanghai-minus-Wuhan tidal geopotential components.
 
-    The ocean-loading term may be supplied from three sources. When more than
-    one is given the priority is: ``professional_ocean_csv`` (authoritative
-    interpolated series) > ``*_harpos`` > ``*_blq``.
+    The authoritative full tidal "综合差" (``professional_tidal_csv``) may be
+    supplied and then overrides the entire model output, so the solid-tide and
+    ocean-loading terms become empty and only ``total_delta`` carries the
+    professionally supplied series. Otherwise, the ocean-loading term may come
+    from three sources with priority ``professional_ocean_csv`` (authoritative
+    interpolated ocean series) > ``*_harpos`` > ``*_blq``.
     """
     timestamps = minute_epochs(start, end)
+
+    if professional_tidal_csv is not None:
+        prof_epochs, prof_dw = load_professional_tidal(professional_tidal_csv)
+        minute_epoch_values = np.array(
+            [ts.replace(tzinfo=timezone.utc).timestamp() for ts in timestamps]
+        )
+        total = np.interp(minute_epoch_values, prof_epochs, prof_dw)
+        return Calculation(
+            timestamps=timestamps,
+            generating_delta=np.full_like(total, np.nan),
+            induced_delta=np.full_like(total, np.nan),
+            solid_effective_delta=np.full_like(total, np.nan),
+            ocean_loading_delta=None,
+            authoritative_total_delta=total,
+        )
+
     times = timescale.from_datetimes(timestamps)
     earth, moon, sun = ephemeris["earth"], ephemeris["moon"], ephemeris["sun"]
 

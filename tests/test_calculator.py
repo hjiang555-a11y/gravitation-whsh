@@ -8,6 +8,7 @@ import numpy as np
 from gravitation_whsh.calculator import (
     _body_potential,
     load_professional_ocean,
+    load_professional_tidal,
     minute_epochs,
 )
 
@@ -77,6 +78,37 @@ class CalculatorTests(unittest.TestCase):
         expected = datetime(2026, 6, 20, tzinfo=timezone.utc).timestamp()
         self.assertAlmostEqual(float(epochs[0]), expected)
         self.assertAlmostEqual(float(delta_w[0]), -0.1)
+
+    def test_load_professional_tidal_preserves_sign_and_epochs(self):
+        # The authoritative full tidal "综合差" ΔW series is consumed verbatim
+        # (no sign flip) in the SHAO − WUHN convention, exactly like the ocean
+        # series. This locks the epoch and column parsing against regression.
+        content = (
+            "timestamp_utc,total_tidal_delta_m2_s2_surface\n"
+            "2026-06-20T00:00:00Z,-0.309279816\n"
+            "2026-06-20T00:00:30Z,-0.309718579\n"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "prof_tidal.csv"
+            path.write_text(content, encoding="utf-8")
+            epochs, delta_w = load_professional_tidal(path)
+
+        self.assertEqual(len(epochs), 2)
+        expected_t0 = datetime(2026, 6, 20, tzinfo=timezone.utc).timestamp()
+        self.assertAlmostEqual(float(epochs[0]), expected_t0)
+        self.assertAlmostEqual(float(epochs[1] - epochs[0]), 30.0)
+        np.testing.assert_allclose(delta_w, [-0.309279816, -0.309718579])
+
+    def test_load_professional_tidal_accepts_total_column_name(self):
+        content = (
+            "timestamp_utc,total_tidal_delta_m2_s2\n"
+            "2026-06-20T00:00:00Z,0.42\n"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "prof_tidal.csv"
+            path.write_text(content, encoding="utf-8")
+            epochs, delta_w = load_professional_tidal(path)
+        self.assertAlmostEqual(float(delta_w[0]), 0.42)
 
 
 if __name__ == "__main__":

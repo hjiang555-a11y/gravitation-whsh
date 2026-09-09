@@ -20,7 +20,7 @@ from .harpos import read_harpos
 WUHAN = Site("WUHN", 30.531653, 114.357261, 28.2)
 SHANGHAI = Site("SHAO", 31.099642, 121.200445, 22.09)
 DEFAULT_START = datetime(2026, 6, 20, tzinfo=timezone.utc)
-DEFAULT_END = datetime(2026, 8, 26, 23, 59, tzinfo=timezone.utc)
+DEFAULT_END = datetime(2026, 9, 10, 23, 59, tzinfo=timezone.utc)
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -39,6 +39,16 @@ def _parser() -> argparse.ArgumentParser:
         help=(
             "authoritative ocean-loading ΔW series (CSV, 30-s UTC grid, from the "
             "professionally supplied Wuhan-Shanghai 海潮之差) — overrides --harpos/--blq"
+        ),
+    )
+    parser.add_argument(
+        "--professional-tidal",
+        type=Path,
+        help=(
+            "authoritative full tidal '综合差' ΔW series (CSV, 30-s UTC grid, from the "
+            "professionally supplied Wuhan-Shanghai tidal results) — overrides the "
+            "entire model output and becomes the authoritative total geopotential "
+            "difference (this is the DATA, not a template)"
         ),
     )
     parser.add_argument(
@@ -88,13 +98,16 @@ def _write_csv(path: Path, result) -> None:
                 if result.ocean_loading_delta is None
                 else f"{result.ocean_loading_delta[index]:.9f}"
             )
+            generating = result.generating_delta[index]
+            induced = result.induced_delta[index]
+            solid = result.solid_effective_delta[index]
             writer.writerow(
                 (
                     index,
                     timestamp.isoformat().replace("+00:00", "Z"),
-                    f"{result.generating_delta[index]:.9f}",
-                    f"{result.induced_delta[index]:.9f}",
-                    f"{result.solid_effective_delta[index]:.9f}",
+                    "" if math.isnan(float(generating)) else f"{generating:.9f}",
+                    "" if math.isnan(float(induced)) else f"{induced:.9f}",
+                    "" if math.isnan(float(solid)) else f"{solid:.9f}",
                     ocean,
                     f"{result.total_delta[index]:.9f}",
                     f"{result.total_delta[index]:.9f}",
@@ -180,11 +193,12 @@ def main(argv: list[str] | None = None) -> int:
         args.blq is None
         and args.harpos is None
         and args.professional_ocean is None
+        and args.professional_tidal is None
         and not args.allow_no_ocean
     ):
         _parser().error(
-            "--blq, --harpos, or --professional-ocean is required unless "
-            "--allow-no-ocean is explicitly set"
+            "--blq, --harpos, --professional-ocean, or --professional-tidal is "
+            "required unless --allow-no-ocean is explicitly set"
         )
 
     def find_station(stations, code):
@@ -230,6 +244,7 @@ def main(argv: list[str] | None = None) -> int:
         wuhan_harpos,
         shanghai_harpos,
         professional_ocean_csv=args.professional_ocean,
+        professional_tidal_csv=args.professional_tidal,
     )
     _write_csv(args.output, result)
     plot_path = args.plot or args.output.with_suffix(".svg")

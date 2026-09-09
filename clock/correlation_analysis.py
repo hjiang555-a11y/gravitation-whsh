@@ -27,9 +27,14 @@ from scipy import stats
 CLOCK_DIR = Path(__file__).resolve().parent
 TIDAL_CSV = CLOCK_DIR / "clock_tidal_shift.csv"
 
+# Total number of jump-free segments (the 17-segment revision).
+N_SEGMENTS = 17
+
 # Per-session y_i = R_i/R_ref - 1 (×1e-18), defined at 80-digit precision by the
 # MATLAB program YbSr_NISTstyle_14bin_full_analysis_20260824.m (lines 2404-2408);
 # these stored values are a low-precision (2-decimal) reading for a quick check.
+# The 17-segment revision only reports aggregate Yb/Sr statistics, not the
+# per-segment y_i for segments 15/16/17, so fewer y_i values than N_SEGMENTS.
 Y_I = np.array(
     [
         -0.07, -3.41, 1.86, -4.63, -3.31, -1.24, 5.26, 1.49,
@@ -45,7 +50,9 @@ def load_tidal() -> np.ndarray:
 
 def main() -> int:
     tidal = load_tidal()
-    assert len(tidal) == len(Y_I) == 14
+    assert len(tidal) == N_SEGMENTS
+    n_y = len(Y_I)
+    tidal = tidal[:n_y]
 
     r, p_r = stats.pearsonr(Y_I, tidal)
     rho, p_rho = stats.spearmanr(Y_I, tidal)
@@ -58,7 +65,7 @@ def main() -> int:
     print(f"Spearman ρ = {rho:+.4f}   p = {p_rho:.4f}")
     print(f"OLS slope = {slope:+.4f}  intercept = {intercept:+.4f}")
     print(f"R² = {r**2:.4f}")
-    print(f"n = 14")
+    print(f"n = {n_y}")
     print()
     print("y_i (×1e-18, approximate):", np.round(Y_I, 2))
     print("tidal (×1e-18, exact):   ", np.round(tidal, 2))
@@ -66,7 +73,7 @@ def main() -> int:
     # Scatter plot
     fig, ax = plt.subplots(figsize=(8, 6))
     ax.scatter(tidal, Y_I, color="#0969da", s=50, zorder=3)
-    for i in range(14):
+    for i in range(n_y):
         ax.annotate(
             f"{i+1}", (tidal[i], Y_I[i]), textcoords="offset points",
             xytext=(5, 5), fontsize=8, color="#555555",
