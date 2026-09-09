@@ -382,6 +382,44 @@ def main() -> int:
     print(f"Fisher-z weighted r : {_rbar:+.4f}")
     print(f"amplitude A (1/uA^2) : {_Abar:+.4f} +/- {_uAbar:.4f}  ({abs(_Abar)/_uAbar:.2f} sigma)")
 
+    # ---- robustness / additional dimensions ----
+    _okd = [r for r in results if "r" in r and not np.isnan(r["r"])]
+    _groups = np.array([r["group"] for r in _okd])
+    _snr = np.array([r["tide_rms"] / r["noise_std"] for r in _okd])
+    print(f"\n=== per-segment SNR (tide_rms / noise_std) ===")
+    print(f"median SNR = {np.median(_snr):.3f}   range = [{_snr.min():.3f}, {_snr.max():.3f}]")
+
+    def _summarize(subset, label):
+        rs = np.array([r["r"] for r in subset])
+        ps = np.array([r["p"] for r in subset])
+        As = np.array([r["A"] for r in subset])
+        uAs = np.array([r["u_A"] for r in subset])
+        neg = int((rs < 0).sum())
+        peps = np.clip(ps, 1e-14, None)
+        zagn = np.sum(stats.norm.ppf(1 - peps / 2)) / np.sqrt(len(rs))
+        wg = 1.0 / uAs**2
+        abar = float(np.sum(As * wg) / np.sum(wg))
+        uabar = float(1.0 / np.sqrt(np.sum(wg)))
+        binom = stats.binomtest(neg, len(rs), 0.5).pvalue
+        print(f"{label:24s} n={len(rs):2d}  neg={neg}/{len(rs)}  |z|={zagn:.2f}  "
+              f"A={abar:+.2f}±{uabar:.2f}  二项p={binom:.4f}")
+
+    print("\n=== robustness: subset sensitivity (符号无关 |z| & 精度加权 A) ===")
+    # 全 17 段
+    _summarize(_okd, "全部 17 段")
+    # 去掉组 9（短窗口离群）
+    _no9 = [r for r in _okd if r["group"] != 9]
+    _summarize(_no9, "去组9(短窗离群)")
+    # 去掉新增 3 段（15/16/17）
+    _no_new = [r for r in _okd if r["group"] <= 14]
+    _summarize(_no_new, "仅14段(去15/16/17)")
+    # 第一轮（6-7月，组1~8）
+    _round1 = [r for r in _okd if r["group"] <= 8]
+    _summarize(_round1, "第一轮 组1-8")
+    # 第二轮（8月，组9~17）
+    _round2 = [r for r in _okd if r["group"] >= 9]
+    _summarize(_round2, "第二轮 组9-17")
+
     return 0
 
 
