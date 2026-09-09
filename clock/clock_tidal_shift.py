@@ -131,12 +131,10 @@ def main() -> int:
     frequency_shift = np.array([r["frequency_shift"] for r in records]) * 1e18
 
     # x 轴用等间距段索引，避免 7月→8月 约 31 天空档把前后段挤在两端、
-    # 使序号标注重叠。每段的实际日期标作刻度，保留时间信息。
+    # 使序号标注重叠。每段中点日期用「月-日」短格式标作刻度，避免 17 个
+    # 完整日期标签（YYYY-MM-DD）在横轴上挤成一团。
     seg_index = np.arange(1, len(records) + 1, dtype=float)
-    xtick_dates = [
-        np.datetime_as_string(m.astype("datetime64[s]"), unit="D")
-        for m in midpoints
-    ]
+    xtick_dates = [str(m)[5:10] for m in midpoints]
 
     fig, ax = plt.subplots(figsize=(13, 5))
     ax.axhline(0.0, color="gray", lw=0.8, ls="--")
