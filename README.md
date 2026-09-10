@@ -46,7 +46,7 @@
 
 ```bash
 python clock/clock_tidal_shift.py            # 17 组会话平均潮汐频差
-python clock/correlation_analysis.py         # 会话相关性（y_i 暂 14 段）
+python clock/correlation_analysis.py         # 17 段幅度比 A vs 会话潮汐频差（17 点）
 python clock/segment_analysis/batch_analysis.py   # 17 段批量分析 + 跨段合并统计（核心）
 python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度拟合
 
