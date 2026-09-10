@@ -1,0 +1,13 @@
+metric,value
+pearson_r,0.514804
+pearson_p,0.034467
+spearman_rho,0.509804
+spearman_p,0.036568
+weighted_pearson_r,0.362795
+ols_slope,0.785970
+ols_intercept,0.611472
+weighted_mean_yi_1e18,-0.408115
+arith_mean_yi_1e18,0.146313
+weighted_mean_dff_1e18,-0.365165
+arith_mean_dff_1e18,-0.591828
+total_test_time_s,1009161
