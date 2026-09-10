@@ -23,26 +23,38 @@ Outputs: clock_ratio/ratio_17seg.csv, clock_ratio/ratio_17seg_summary.csv
 from __future__ import annotations
 
 import csv
+from decimal import Decimal, getcontext
 from pathlib import Path
 
 import numpy as np
+
+# The ratio R ~ 1.2 and the segment-to-segment differences are ~1-5e-18, i.e. at
+# the 16th-18th significant digit. float64 (eps ~2.2e-16, ~260e-18 absolute on
+# R~1.2) destroys that signal, which the MATLAB source avoids via vpa(...,80).
+# We mirror that with decimal arithmetic at 80 significant digits.
+getcontext().prec = 80
 
 CLOCK_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = CLOCK_DIR / "clock" / "data" / "环外数据（第八列数据）"
 OUT_DIR = Path(__file__).resolve().parent
 
 C = 299792458.0
-N1156 = 1295739
-N1397 = 858456
-N1550 = 773598
-N1550_WH = 966996
-FREF = 1e7
-DIV20 = 20
-B_YB = (5.3e-18) - (7e-18)  # -1.7e-18
-DELTA_G = -3.116e-15
 JUMP_THRESHOLD = 10.0
 
-COEF1156 = (1.0 + B_YB) / 2.0
+# Ratio-formula constants, held in decimal (80-digit) arithmetic to match the
+# MATLAB vpa(...,80) precision; the E-20-level segment differences survive only
+# if every step of the chain stays above ~20 significant digits.
+N1156 = Decimal(1295739)
+N1397 = Decimal(858456)
+N1550 = Decimal(773598)
+N1550_WH = Decimal(966996)
+FREF = Decimal("1e7")
+DIV20 = Decimal(20)
+B_YB = Decimal("5.3e-18") - Decimal("7e-18")  # -1.7e-18
+DELTA_G = Decimal("-3.116e-15")
+COEF1156 = (Decimal(1) + B_YB) / Decimal(2)
+D_7_25 = Decimal(7) / Decimal(25)
+D_1_25 = Decimal(1) / Decimal(25)
 
 GROUPS = [
     ("2026-06-29 10:06:28", "2026-06-30 04:59:59"),
@@ -143,11 +155,20 @@ def load_all_beat():
     return t[order], b[order]
 
 
-def clock_ratio(mean_dm, shift_a):
-    coef1397 = (1.0 + shift_a) / 2.0
-    den = coef1397 / N1397 * (N1550 + 7.0 / 25.0 + 1.0 / 25.0)
-    dr = COEF1156 / N1156 * (mean_dm / FREF / DIV20) / den
-    return dr
+def to_dec(x):
+    return Decimal(repr(float(x)))
+
+
+def full_ratio(mean_dm_dec, shift_dec, m_dec):
+    coef1397 = (Decimal(1) + shift_dec) / Decimal(2)
+    den = coef1397 / N1397 * (N1550 + D_7_25 + D_1_25)
+    dr = COEF1156 / N1156 * (mean_dm_dec / FREF / DIV20) / den
+    NN = N1550_WH + Decimal(26) / Decimal(20) + m_dec / FREF / DIV20
+    NN2 = N1550 + Decimal(8) / Decimal(25)
+    ratio_base = COEF1156 / N1156 * NN / (coef1397 / N1397 * NN2)
+    sryb_raw = ratio_base + dr
+    ybsr_raw = Decimal(1) / sryb_raw
+    return ybsr_raw * (Decimal(1) + DELTA_G)
 
 
 def main():
@@ -161,10 +182,8 @@ def main():
     data_clean = B.copy()
     data_clean[excl] = np.nan
     pl = (data_clean > 3e7) & (data_clean < 4e7)
-    m = np.nanmedian(data_clean[pl])
-
-    NN = N1550_WH + 26.0 / 20.0 + m / FREF / DIV20
-    NN2 = N1550 + 8.0 / 25.0
+    m = float(np.nanmedian(data_clean[pl]))
+    m_dec = to_dec(m)
 
     results = []
     for kk, (s, e) in enumerate(GROUPS):
@@ -176,29 +195,25 @@ def main():
         ex_seg = excl[in_win]
 
         if len(b_seg) == 0:
-            results.append({"group": kk + 1, "R": np.nan})
+            results.append({"group": kk + 1, "R": None, "R_str": "nan"})
             continue
         plausible = (b_seg > 3e7) & (b_seg < 4e7) & ~ex_seg
         if not plausible.any():
-            results.append({"group": kk + 1, "R": np.nan})
+            results.append({"group": kk + 1, "R": None, "R_str": "nan"})
             continue
-        med = np.median(b_seg[plausible])
+        med = float(np.median(b_seg[plausible]))
         valid = plausible & (np.abs(b_seg - med) < JUMP_THRESHOLD)
         span = longest_valid_span(valid)
         if span is None:
-            results.append({"group": kk + 1, "R": np.nan})
+            results.append({"group": kk + 1, "R": None, "R_str": "nan"})
             continue
         d_long = b_seg[span[0]: span[1] + 1]
 
-        mean_dm = d_long.mean() - m
+        mean_dm = float(d_long.mean() - m)
         shift_k = SHIFT_A[kk]
-        coef1397 = (1.0 + shift_k) / 2.0
-        den = coef1397 / N1397 * (N1550 + 7.0 / 25.0 + 1.0 / 25.0)
-        dr = COEF1156 / N1156 * (mean_dm / FREF / DIV20) / den
-        ratio_base = COEF1156 / N1156 * NN / (coef1397 / N1397 * NN2)
-        sryb_raw = ratio_base + dr
-        ybsr_raw = 1.0 / sryb_raw
-        R = ybsr_raw * (1.0 + DELTA_G)
+        mean_dm_dec = to_dec(d_long.mean()) - m_dec
+        shift_dec = to_dec(shift_k)
+        R = full_ratio(mean_dm_dec, shift_dec, m_dec)
 
         results.append({
             "group": kk + 1,
@@ -206,15 +221,15 @@ def main():
             "t_end": str(t_seg[span[1]]),
             "n_valid": len(d_long),
             "mean_dm_hz": mean_dm,
-            "dr": dr,
             "shift_a": shift_k,
             "R": R,
+            "R_str": str(R),
         })
 
-    R_arr = np.array([r["R"] for r in results])
-    ok = ~np.isnan(R_arr)
-    R_ref = R_arr[ok][0]
-    y_i = (R_arr / R_ref - 1.0) * 1e18
+    valid_R = [r["R"] for r in results if r["R"] is not None]
+    R_ref = valid_R[0]
+    y_i = [(r["R"] / R_ref - Decimal(1)) * Decimal("1e18")
+           if r["R"] is not None else None for r in results]
 
     csv_path = OUT_DIR / "ratio_17seg.csv"
     with csv_path.open("w", newline="") as f:
@@ -224,37 +239,35 @@ def main():
             "mean_dm_hz", "shift_a", "YbSr_R", "y_i_1e18",
         ])
         for i, r in enumerate(results):
-            if np.isnan(r["R"]):
+            if r["R"] is None:
                 w.writerow([r["group"], "", "", "", "", "", "", ""])
             else:
                 w.writerow([
                     r["group"], r["t_start"], r["t_end"], r["n_valid"],
                     f"{r['mean_dm_hz']:.6f}", f"{r['shift_a']:.6e}",
-                    f"{r['R']:.20f}", f"{y_i[i]:.6f}",
+                    r["R_str"], format(y_i[i], ".7f"),
                 ])
 
     print(f"{'组':>3} {'有效点':>7} {'mean_dm[Hz]':>13} {'shift_a':>12} "
           f"{'Yb/Sr R':>24} {'y_i(×1e-18)':>12}")
     for i, r in enumerate(results):
-        if np.isnan(r["R"]):
+        if r["R"] is None:
             print(f"{r['group']:>3} (无数据)")
         else:
             print(f"{r['group']:>3} {r['n_valid']:>7} {r['mean_dm_hz']:>+13.4f} "
-                  f"{r['shift_a']:>+12.3e} {r['R']:>24.18f} {y_i[i]:>+12.4f}")
+                  f"{r['shift_a']:>+12.3e} {r['R_str'][:24]:>24} {y_i[i]:>+12.5f}")
 
-    # summary CSV: R_ref, per-segment y_i, and the 14-segment cross-check against
-    # the experiment's low-precision y_i (reference only, not used in the ratio).
     summary_path = OUT_DIR / "ratio_17seg_summary.csv"
     with summary_path.open("w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["field", "value"])
-        w.writerow(["R_ref", f"{R_ref:.20f}"])
+        w.writerow(["R_ref", str(R_ref)])
         w.writerow(["WLS_YbSr_experiment", "1.2075070393433377213"])
-        w.writerow(["note", "segment 9 y_i ~ -222e-18 due to a_SM=-8.925e-17 (MATLAB-source flagged placeholder)"])
+        w.writerow(["note", "computed with decimal 80-digit arithmetic to preserve e-20 level segment differences"])
 
     print(f"\nWrote {csv_path}")
     print(f"Wrote {summary_path}")
-    print(f"R_ref (段1 Yb/Sr) = {R_ref:.20f}")
+    print(f"R_ref (段1 Yb/Sr) = {R_ref}")
     return 0
 
 

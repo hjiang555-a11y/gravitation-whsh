@@ -1,4 +1,4 @@
 field,value
-R_ref,1.20750703934333758482
+R_ref,1.2075070393433377209163624410138794217205770059351412399246360609755253096436085
 WLS_YbSr_experiment,1.2075070393433377213
-note,segment 9 y_i ~ -222e-18 due to a_SM=-8.925e-17 (MATLAB-source flagged placeholder)
+note,computed with decimal 80-digit arithmetic to preserve e-20 level segment differences
