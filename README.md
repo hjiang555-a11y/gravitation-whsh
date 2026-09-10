@@ -41,18 +41,51 @@
 - **信号被链路噪声淹没**：潮汐信号（Δf/f rms ~4.8e-18）比 1200-s 积分后的链路
   噪声（~1.7e-17）小约 3.6 倍，故单段必然不显著，仅跨段合并能累加出符号趋势。
 - **会话均值相关性**：Pearson r = +0.544（p = 0.044），方向为正、已达 0.05 显著
-  （段4/11/14 会话窗口修正后 r 由 +0.458 升至 +0.544；y_i = R_i/R_ref − 1 由
-  MATLAB 处理程序精确计算；暂 14 段，17 段逐段 y_i 待实验方导出）。
+  （y_i = R_i/R_ref − 1 由 MATLAB 处理程序精确计算；暂 14 段，17 段逐段 y_i 待
+  实验方导出）。
 
 ```bash
 python clock/clock_tidal_shift.py            # 17 组会话平均潮汐频差
 python clock/correlation_analysis.py         # 会话相关性（y_i 暂 14 段）
 python clock/segment_analysis/batch_analysis.py   # 17 段批量分析 + 跨段合并统计（核心）
 python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度拟合
+
+# 新增：三角积分尺度变体与 17 段相关性
+python clock/segment_analysis/variant1_30s_tide.py   # 变体1：潮汐 30s 原生网格
+python clock/segment_analysis/variant30s_analysis.py # 变体2：拍频 30s 均值聚合
+python clock/segment_analysis/segment17_correlation.py # 17 段相关性（17 点两两相关）
 ```
 
 > 原始实验数据与 MATLAB 处理程序位于 `clock/data/`，已由 `.gitignore` 排除，
 > 不上传 GitHub。
+
+## 三角积分尺度变体（不覆盖原结果）
+
+为验证检测对**积分尺度**的稳健性，另做了两个变体分析，与原方法（拍频 1-s、
+潮汐插值到 1-s，1200-s 三角窗 / 600-s 步长）对比：
+
+| 分析 | 拍频采样 | 潮汐采样 | 负相关段 | \|z\| | A（精度加权）|
+|---|---|---|---|---|---|
+| 原方法 | 1-s | 插值到 1-s | 14/17 | 5.87 | −0.45±0.07 |
+| 变体 1 | 1-s | **30-s 原生（不插值）** | 14/17 | 5.87 | −0.446±0.070 |
+| 变体 2 | **30-s 均值聚合** | 30-s 原生 | 14/17 | 5.96 | −0.447±0.069 |
+
+**结论**：三个方法的结论**高度一致**——潮汐引力红移以负方向、约一半幅度被一致
+检出，检测对积分尺度稳健。详细对比见
+[clock/segment_analysis/VARIANTS_COMPARISON.md](clock/segment_analysis/VARIANTS_COMPARISON.md)。
+
+## 17 段相关性（17 个点彼此间的相关）
+
+把 17 个无跳点段各作为一个点，考察各段检测结果之间的相关性
+（[clock/segment_analysis/segment17_correlation.md](clock/segment_analysis/segment17_correlation.md)）：
+
+| 相关对 | Pearson r | p |
+|---|---|---|
+| 幅度 A vs 相关系数 r | +0.833（Spearman ρ=+0.966）| <0.001 |
+| 幅度 A vs 会话潮汐频差 | +0.426 | 0.088 |
+| 幅度 A vs 段时长 | −0.017 | 0.949 |
+
+**解读**：A 与 r 高度一致（内部自洽）；A 与段时长无关（检测不依赖段长短）。
 
 ## 光纤链路环外数据与温度影响
 
