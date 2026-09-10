@@ -138,6 +138,29 @@ def longest_valid_span(valid):
     return int(starts[i]), int(stops[i] - 1)
 
 
+def endpoint_screen(x):
+    """Trim both ends of a jump-free run per the PDF rule.
+
+    A point is dropped when its distance from the run's centre exceeds 1% of
+    the run's peak-to-peak; the check then continues to the next/previous
+    point. Returns (trimmed_x, n_removed_start, n_removed_end).
+    """
+    center = np.median(x)
+    peak2peak = x.max() - x.min()
+    thr = peak2peak * 0.01
+
+    lo, hi = 0, len(x) - 1
+    n_start = 0
+    while lo <= hi and abs(x[lo] - center) > thr:
+        lo += 1
+        n_start += 1
+    n_end = 0
+    while hi >= lo and abs(x[hi] - center) > thr:
+        hi -= 1
+        n_end += 1
+    return x[lo: hi + 1], n_start, n_end
+
+
 def load_all_beat():
     files = sorted(DATA_DIR.glob("Freq_B_2_2606*.txt")) + sorted(
         DATA_DIR.glob("Freq_B_2_2607*.txt")
@@ -209,6 +232,11 @@ def main():
             continue
         d_long = b_seg[span[0]: span[1] + 1]
 
+        d_long, rem_start, rem_end = endpoint_screen(d_long)
+        if len(d_long) == 0:
+            results.append({"group": kk + 1, "R": None, "R_str": "nan"})
+            continue
+
         mean_dm = float(d_long.mean() - m)
         shift_k = SHIFT_A[kk]
         mean_dm_dec = to_dec(d_long.mean()) - m_dec
@@ -220,6 +248,8 @@ def main():
             "t_start": str(t_seg[span[0]]),
             "t_end": str(t_seg[span[1]]),
             "n_valid": len(d_long),
+            "rem_start": rem_start,
+            "rem_end": rem_end,
             "mean_dm_hz": mean_dm,
             "shift_a": shift_k,
             "R": R,
@@ -236,25 +266,27 @@ def main():
         w = csv.writer(f)
         w.writerow([
             "group", "t_start_beijing", "t_end_beijing", "n_valid",
-            "mean_dm_hz", "shift_a", "YbSr_R", "y_i_1e18",
+            "rem_start", "rem_end", "mean_dm_hz", "shift_a", "YbSr_R", "y_i_1e18",
         ])
         for i, r in enumerate(results):
             if r["R"] is None:
-                w.writerow([r["group"], "", "", "", "", "", "", ""])
+                w.writerow([r["group"], "", "", "", "", "", "", "", "", ""])
             else:
                 w.writerow([
                     r["group"], r["t_start"], r["t_end"], r["n_valid"],
+                    r["rem_start"], r["rem_end"],
                     f"{r['mean_dm_hz']:.6f}", f"{r['shift_a']:.6e}",
                     r["R_str"], format(y_i[i], ".7f"),
                 ])
 
-    print(f"{'组':>3} {'有效点':>7} {'mean_dm[Hz]':>13} {'shift_a':>12} "
+    print(f"{'组':>3} {'有效点':>7} {'削起/终':>9} {'mean_dm[Hz]':>13} {'shift_a':>12} "
           f"{'Yb/Sr R':>24} {'y_i(×1e-18)':>12}")
     for i, r in enumerate(results):
         if r["R"] is None:
             print(f"{r['group']:>3} (无数据)")
         else:
-            print(f"{r['group']:>3} {r['n_valid']:>7} {r['mean_dm_hz']:>+13.4f} "
+            print(f"{r['group']:>3} {r['n_valid']:>7} "
+                  f"{r['rem_start']},{r['rem_end']:>2} {r['mean_dm_hz']:>+13.4f} "
                   f"{r['shift_a']:>+12.3e} {r['R_str'][:24]:>24} {y_i[i]:>+12.5f}")
 
     summary_path = OUT_DIR / "ratio_17seg_summary.csv"
@@ -263,7 +295,7 @@ def main():
         w.writerow(["field", "value"])
         w.writerow(["R_ref", str(R_ref)])
         w.writerow(["WLS_YbSr_experiment", "1.2075070393433377213"])
-        w.writerow(["note", "computed with decimal 80-digit arithmetic to preserve e-20 level segment differences"])
+        w.writerow(["note", "endpoint screening (1% peak-to-peak) applied; decimal 80-digit arithmetic"])
 
     print(f"\nWrote {csv_path}")
     print(f"Wrote {summary_path}")
