@@ -60,6 +60,15 @@ GROUPS = [
     ("2026-08-25 15:09:41", "2026-08-26 09:29:54"),
 ]
 
+# 无跳点有效时长（秒），PDF 起止点筛选后的 trimmed N，用于按测试时间加权。
+TRIMMED_N = np.array(
+    [
+        68004, 29488, 42896, 64280, 19533, 52140, 39526, 43602,
+        22499, 57943, 35824, 40372, 152989, 68623, 57649, 147640, 66014,
+    ],
+    dtype=float,
+)
+
 
 def load_series() -> tuple[np.ndarray, np.ndarray]:
     rows = list(csv.DictReader(open(RESULTS_CSV)))
@@ -169,6 +178,18 @@ def main() -> int:
             f"{np.datetime_as_string(r['midpoint'], unit='D'):>17} "
             f"{r['frequency_shift'] * 1e18:>+12.4f}"
         )
+
+    dff_all = np.array([r["frequency_shift"] for r in records])
+    mean_w_all = np.array([r["mean_delta_w_m2_s2"] for r in records])
+    weights = TRIMMED_N / TRIMMED_N.sum()
+    total_dff = float(np.sum(dff_all * weights))
+    total_w = float(np.sum(mean_w_all * weights))
+    print()
+    print("=== total tidal correction (weighted by jump-free test time) ===")
+    print(f"total test time = {TRIMMED_N.sum():.0f} s "
+          f"= {TRIMMED_N.sum()/3600:.2f} h")
+    print(f"total ΔW        = {total_w:.6f} m²/s²")
+    print(f"total Δf/f      = {total_dff:.6e}")
     return 0
 
 
