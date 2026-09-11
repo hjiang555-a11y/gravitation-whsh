@@ -1,7 +1,7 @@
 field,value
-R_ref_segment1,1.2075070393433377209510767983938767322329599117406331324301043402646553171998745
-R_wls_17seg_weighted,1.2075070393433377203695609768033054790406356472332098683511270165437806214827708
-y_wls_1e18,-0.4815838
+R_seg1,1.2075070393433377209510767983938767322329599117406331324301043402646553171998745
+R_duration,1.2075070393433377203695609768033054790406356472332098683511270165437806214827708
+y_duration_1e18,-0.4815838
 NIST_reference,1.2075070393433377230
 WLS_experiment,1.2075070393433377213
-note,R_ref is segment 1 (y_i baseline only); R_wls is the 17-segment duration-weighted experiment value; endpoint screening (1% peak-to-peak) applied; decimal 80-digit arithmetic
+note,R_seg1 = segment-1 ratio (y_i baseline only); R_duration = 17-segment duration-weighted center; endpoint screening (1% peak-to-peak) applied; decimal 80-digit arithmetic

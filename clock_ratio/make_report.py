@@ -51,18 +51,18 @@ def main() -> int:
     corr = _table([], CORR_CSV)
     stat = json.load(open(STAT_JSON)) if STAT_JSON.exists() else None
 
-    # headline numbers: segment-1 baseline vs whole-experiment weighted value
+    # headline numbers: segment-1 baseline vs duration-weighted experiment value
     ratio_sum_map = {r["field"]: r["value"] for r in ratio_sum}
-    R_ref = ratio_sum_map["R_ref_segment1"]
-    R_wls = ratio_sum_map["R_wls_17seg_weighted"]
-    y_wls = float(ratio_sum_map["y_wls_1e18"])
-    R_ref_dec = Decimal(R_ref)
-    R_wls_dec = Decimal(R_wls)
-    R_wls_18 = str(R_wls_dec)[:20]  # ~1.20750703934333772
+    R_seg1 = ratio_sum_map["R_seg1"]
+    R_duration = ratio_sum_map["R_duration"]
+    y_duration = float(ratio_sum_map["y_duration_1e18"])
+    R_seg1_dec = Decimal(R_seg1)
+    R_duration_dec = Decimal(R_duration)
+    R_duration_18 = str(R_duration_dec)[:20]  # ~1.20750703934333772
     NIST = Decimal(ratio_sum_map["NIST_reference"])
     WLS = "1.2075070393433377213"
-    d_wls_nist = (R_wls_dec - NIST) * Decimal("1e18")
-    d_wls_wls = (R_wls_dec - Decimal(WLS)) * Decimal("1e18")
+    d_dur_nist = (R_duration_dec - NIST) * Decimal("1e18")
+    d_dur_wls = (R_duration_dec - Decimal(WLS)) * Decimal("1e18")
 
     agg = {r["metric"]: r["value"] for r in agg}
     corr = {r["metric"]: r["value"] for r in corr}
@@ -91,10 +91,11 @@ def main() -> int:
     L.append("")
     L.append("> **Yb/Sr 钟比值计算 · 潮汐修正 · 相关性分析**（自动生成）")
     L.append(">")
-    L.append(f"> **整个实验的 Yb/Sr 值**：**{R_wls_18}**（17 段时长加权中心值 R_wls = `{R_wls}`）。")
-    L.append(f"> 与 NIST 参考 `{ratio_sum_map['NIST_reference']}(37)` 差 {d_wls_nist:+.3f}×10⁻¹⁸，")
-    L.append(f"> 与实验方 WLS `{WLS}(23)` 差 {d_wls_wls:+.3f}×10⁻¹⁸。")
-    L.append(f"> （注：R_ref = 段 1 的值 `{R_ref}`，仅作 y_i 相对基准，非整个实验值。）")
+    L.append(f"> **整个实验的 Yb/Sr 值（时长加权中心值）**：**{R_duration_18}**"
+             f"（R_duration = `{R_duration}`）。")
+    L.append(f"> 与 NIST 参考 `{ratio_sum_map['NIST_reference']}(37)` 差 {d_dur_nist:+.3f}×10⁻¹⁸，")
+    L.append(f"> 与实验方 WLS `{WLS}(23)` 差 {d_dur_wls:+.3f}×10⁻¹⁸。")
+    L.append(f"> （注：R_seg1 = 段 1 的值 `{R_seg1}`，仅作 y_i 相对基准，非整个实验值。）")
     L.append(">")
     L.append(f"> 数据时间跨度：{ratio[0]['t_start_beijing'][:16]} 至 "
              f"{ratio[-1]['t_end_beijing'][:16]}（北京时间 UTC+8），共 {n} 段无跳点数据，")
@@ -104,9 +105,9 @@ def main() -> int:
     L.append("")
     L.append("## 摘要")
     L.append("")
-    L.append(f"1. **整个实验的钟比值**：R_wls = `{R_wls_18}`（17 段时长加权中心值），与 NIST "
-             f"`{ratio_sum_map['NIST_reference']}(37)` 差 {d_wls_nist:+.2f}×10⁻¹⁸，与实验方 WLS "
-             f"`{WLS}(23)` 差 {d_wls_wls:+.2f}×10⁻¹⁸。逐段 y_i ∈ [{y_min:.1f}, {y_max:.1f}]×10⁻¹⁸。")
+    L.append(f"1. **整个实验的钟比值（时长加权中心值）**：R_duration = `{R_duration_18}`，与 NIST "
+             f"`{ratio_sum_map['NIST_reference']}(37)` 差 {d_dur_nist:+.2f}×10⁻¹⁸，与实验方 WLS "
+             f"`{WLS}(23)` 差 {d_dur_wls:+.2f}×10⁻¹⁸。逐段 y_i ∈ [{y_min:.1f}, {y_max:.1f}]×10⁻¹⁸。")
     L.append(f"2. **段内分析跨段合并（核心检出）**：{neg}/17 段同号，符号无关 Stouffer "
              f"|z| = **{zagn:.2f}**（p = {p_agn:.1e}），幅度比 **A = {A:+.2f}±{uA:.2f}**"
              f"（{abs(A)/uA:.1f}σ），潮汐以正确方向、约一半幅度被检出。")
@@ -148,9 +149,9 @@ def main() -> int:
     L.append("")
     L.append("## 2. 钟比值计算结果")
     L.append("")
-    L.append(f"整个实验的 Yb/Sr 值（17 段时长加权中心值）：R_wls = `{R_wls}`")
+    L.append(f"整个实验的 Yb/Sr 值（17 段时长加权中心值）：R_duration = `{R_duration}`")
     L.append("")
-    L.append(f"第 1 段钟比值（仅作 y_i 相对基准）：R_ref = `{R_ref}`")
+    L.append(f"第 1 段钟比值（仅作 y_i 相对基准）：R_seg1 = `{R_seg1}`")
     L.append("")
     L.append("![17 段钟比值偏差](ratio_segments.png)")
     L.append("")
@@ -205,7 +206,7 @@ def main() -> int:
     L.append("")
     L.append("| 维度 | 结果 |")
     L.append("|---|---|")
-    L.append(f"| 整个实验 Yb/Sr 值 | R_wls = {R_wls_18}，与实验方 WLS 差 {d_wls_wls:+.2f}×10⁻¹⁸ |")
+    L.append(f"| 整个实验 Yb/Sr 值 | R_duration = {R_duration_18}，与实验方 WLS 差 {d_dur_wls:+.2f}×10⁻¹⁸ |")
     L.append(f"| 段内跨段合并 | {neg}/17 同号，Stouffer \\|z\\|={zagn:.2f}（p={p_agn:.1e}），A={A:+.2f}±{uA:.2f} |")
     L.append(f"| 段均值相关性 | Pearson r = {pear_r:+.3f}（p={pear_p:.3f}） |")
     L.append(f"| 整体修正量 | Δf/f = {w_mean_dff:+.3f}×10⁻¹⁸ |")
@@ -248,8 +249,8 @@ def main() -> int:
         L.append("")
         L.append("| 方法 | Yb/Sr 中心值 | 统计不确定度 u | 引力（潮汐）修正量 Δf/f |")
         L.append("|---|---|---|---|")
-        L.append(f"| WLS（1/u_i²） | {stat['R_wls_precision'][:20]} | {stat['u_wls']:.3e} | {stat['grav_wls']:+.3e} |")
-        L.append(f"| Birge（B={stat['birge_ratio']:.3f}，1/u_i²） | {stat['R_wls_precision'][:20]} | {stat['u_birge']:.3e} | {stat['grav_birge']:+.3e} |")
+        L.append(f"| WLS（1/u_i²） | {stat['R_wls'][:20]} | {stat['u_wls']:.3e} | {stat['grav_wls']:+.3e} |")
+        L.append(f"| Birge（B={stat['birge_ratio']:.3f}，1/u_i²） | {stat['R_wls'][:20]} | {stat['u_birge']:.3e} | {stat['grav_birge']:+.3e} |")
         L.append(f"| Mandel-Paule（ξ={stat['xi_mp']:.3e}，1/(u_i²+ξ²)） | {stat['R_mp'][:20]} | {stat['u_mp']:.3e} | {stat['grav_mp']:+.3e} |")
         L.append(f"| 贝叶斯（ξ={stat['xi_bayes']:.3e}） | {stat['R_bayes'][:20]} | {stat['u_stat_bayes']:.3e} | {stat['grav_bayes']:+.3e} |")
         L.append("")

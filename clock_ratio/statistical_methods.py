@@ -258,7 +258,7 @@ def main() -> int:
     y_mp_d = Decimal(repr(float(y_mp)))
     mu_d = Decimal(repr(float(mu_post_mean)))
     result = {
-        "R_wls_precision": str(R0 * (Decimal(1) + y_wls_d)),
+        "R_wls": str(R0 * (Decimal(1) + y_wls_d)),
         "u_wls": float(u_wls),
         "chi2": float(chi2),
         "dof": int(dof),
@@ -300,7 +300,7 @@ def main() -> int:
     for r in rows:
         print(f"  seg {r['group']:>2}: T={r['T_s']:>6}s  sigma_y(T)={r['u_frac']:.3e}  u_i={r['u_i']:.3e}")
     print("\n=== combined values ===")
-    print(f"WLS      : R = {result['R_wls_precision'][:22]}  u = {result['u_wls']:.3e}")
+    print(f"WLS      : R = {result['R_wls'][:22]}  u = {result['u_wls']:.3e}")
     print(f"  chi2 = {chi2:.3f} (dof={dof}, chi2_red={chi2_red:.3f}, p={p_chi2:.3f})")
     print(f"Birge    : ratio = {birge:.3f}  u = {u_birge:.3e}")
     print(f"Mandel-P : xi = {xi_mp:.3e}  u = {u_mp:.3e}  R = {result['R_mp'][:22]}")

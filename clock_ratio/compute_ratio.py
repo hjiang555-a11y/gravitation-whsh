@@ -185,17 +185,17 @@ def main():
     with summary_path.open("w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["field", "value"])
-        w.writerow(["R_ref_segment1", str(R_ref)])
-        w.writerow(["R_wls_17seg_weighted", str(R_wls)])
-        w.writerow(["y_wls_1e18", format(y_wls, ".7f")])
+        w.writerow(["R_seg1", str(R_ref)])
+        w.writerow(["R_duration", str(R_wls)])
+        w.writerow(["y_duration_1e18", format(y_wls, ".7f")])
         w.writerow(["NIST_reference", "1.2075070393433377230"])
         w.writerow(["WLS_experiment", "1.2075070393433377213"])
-        w.writerow(["note", "R_ref is segment 1 (y_i baseline only); R_wls is the 17-segment duration-weighted experiment value; endpoint screening (1% peak-to-peak) applied; decimal 80-digit arithmetic"])
+        w.writerow(["note", "R_seg1 = segment-1 ratio (y_i baseline only); R_duration = 17-segment duration-weighted center; endpoint screening (1% peak-to-peak) applied; decimal 80-digit arithmetic"])
 
     print(f"\nWrote {csv_path}")
     print(f"Wrote {summary_path}")
-    print(f"R_ref (段1，仅作 y_i 基准) = {R_ref}")
-    print(f"R_wls (17段时长加权，整个实验值) = {R_wls}")
+    print(f"R_seg1 (段1，仅作 y_i 基准) = {R_ref}")
+    print(f"R_duration (17段时长加权中心值) = {R_wls}")
     return 0
 
 
