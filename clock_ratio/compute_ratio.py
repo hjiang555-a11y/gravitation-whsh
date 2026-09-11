@@ -145,6 +145,14 @@ def main():
     y_i = [(r["R"] / R_ref - Decimal(1)) * Decimal("1e18")
            if r["R"] is not None else None for r in results]
 
+    # Whole-experiment value (distinct from R_ref = segment 1): the 17-segment
+    # duration-weighted mean, R_wls = Σ(n_valid_i · R_i) / Σ n_valid_i.
+    ns = [Decimal(r["n_valid"]) for r in results if r["R"] is not None]
+    total_n = sum(ns)
+    R_wls = sum((n_i * r["R"]) for n_i, r in
+                ((Decimal(r["n_valid"]), r) for r in results if r["R"] is not None)) / total_n
+    y_wls = (R_wls / R_ref - Decimal(1)) * Decimal("1e18")
+
     csv_path = OUT_DIR / "ratio_17seg.csv"
     with csv_path.open("w", newline="") as f:
         w = csv.writer(f)
@@ -177,13 +185,17 @@ def main():
     with summary_path.open("w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["field", "value"])
-        w.writerow(["R_ref", str(R_ref)])
-        w.writerow(["WLS_YbSr_experiment", "1.2075070393433377213"])
-        w.writerow(["note", "endpoint screening (1% peak-to-peak) applied; decimal 80-digit arithmetic"])
+        w.writerow(["R_ref_segment1", str(R_ref)])
+        w.writerow(["R_wls_17seg_weighted", str(R_wls)])
+        w.writerow(["y_wls_1e18", format(y_wls, ".7f")])
+        w.writerow(["NIST_reference", "1.2075070393433377230"])
+        w.writerow(["WLS_experiment", "1.2075070393433377213"])
+        w.writerow(["note", "R_ref is segment 1 (y_i baseline only); R_wls is the 17-segment duration-weighted experiment value; endpoint screening (1% peak-to-peak) applied; decimal 80-digit arithmetic"])
 
     print(f"\nWrote {csv_path}")
     print(f"Wrote {summary_path}")
-    print(f"R_ref (段1 Yb/Sr) = {R_ref}")
+    print(f"R_ref (段1，仅作 y_i 基准) = {R_ref}")
+    print(f"R_wls (17段时长加权，整个实验值) = {R_wls}")
     return 0
 
 
