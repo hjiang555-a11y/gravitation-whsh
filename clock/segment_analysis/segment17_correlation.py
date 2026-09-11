@@ -4,17 +4,18 @@
 Treats each of the 17 jump-free segments as one point. For each segment we have:
   - session tidal shift (Δf/f, ×1e-18): the segment-mean tidal gravitational
     redshift expected from the professional 综合差;
-  - amplitude ratio A: the fitted beat = A·tide amplitude;
+  - clock-ratio deviation y_i = R_i/R_ref − 1 (×1e-18): the physically-primary
+    segment-level quantity (dimensionless, normalized to 1, the tidal effect on
+    the clock);
+  - amplitude ratio A: the fitted beat = A·tide amplitude (a dimensionless
+    within-segment fit slope — diagnostic, NOT interchangeable with y_i);
   - correlation r, p: segment-level correlation;
   - hours / n_pts: segment duration.
 
-This script reports the pairwise correlations among these 17-point vectors:
-  1. A  vs  session tidal shift   (does a larger tidal mean imply a larger fit?)
-  2. r  vs  session tidal shift
-  3. A  vs  r                     (internal consistency)
-  4. A  vs  hours / n_pts         (duration dependence)
-
-Outputs: segment17_correlation.md
+The physically-coherent segment-level correlation is y_i vs Δf/f (both are
+dimensionless quantities normalized to 1). A vs Δf/f is physically incoherent
+(A is a within-segment fit slope, Δf/f is a between-segment mean) and is kept
+only as a diagnostic. Outputs: segment17_correlation.md
 """
 
 from __future__ import annotations
@@ -38,7 +39,10 @@ def load():
     n_pts = np.array([int(r["n_pts"]) for r in rows])
     tr = list(csv.DictReader(open(OUT_DIR.parent / "clock_tidal_shift.csv")))
     dff = np.array([float(x["frequency_shift_dff"]) for x in tr]) * 1e18
-    return A, uA, r, p, hours, n_pts, dff
+    ratio_rows = list(csv.DictReader(
+        open(Path(__file__).resolve().parents[2] / "clock_ratio" / "ratio_17seg.csv")))
+    y_i = np.array([float(rr["y_i_1e18"]) for rr in ratio_rows])
+    return A, uA, r, p, hours, n_pts, dff, y_i
 
 
 def pearson(x, y):
@@ -50,7 +54,7 @@ def spear(x, y):
 
 
 def main():
-    A, uA, r, p, hours, n_pts, dff = load()
+    A, uA, r, p, hours, n_pts, dff, y_i = load()
     n = len(A)
 
     lines = []
@@ -58,15 +62,20 @@ def main():
     lines.append("")
     lines.append("每个无跳点段作为一个点，考察以下 17 点向量之间的相关性：")
     lines.append("- 会话潮汐频差 Δf/f（×1e-18）：该段潮汐引力红移的段均值（专业综合差 → ΔW/c²）")
-    lines.append("- 幅度比 A：段内拍频 = A·潮汐 的最小二乘幅度")
+    lines.append("- 钟比值偏差 y_i（×1e-18）：R_i/R_ref − 1，**物理主要段级量**（无量纲、归一化到 1）")
+    lines.append("- 幅度比 A：段内拍频 = A·潮汐 的最小二乘幅度（诊断量，与 y_i 不可互相替代）")
     lines.append("- 段相关系数 r、p：段内相关性")
     lines.append("- 段时长 hours、积分点数 n_pts")
+    lines.append("")
+    lines.append("> 物理量对应说明：**y_i 与 Δf/f 是物理上正确的段级配对**（两者都是归一化到 1 的")
+    lines.append("> 无量纲量，表征潮汐对钟的影响）。A 与 Δf/f 物理量不对应（A 是段内拟合斜率、")
+    lines.append("> Δf/f 是段间均值），其相关仅作诊断参考。")
     lines.append("")
     lines.append("## 1. 17 点两两相关矩阵（Pearson r，括号 p 值）")
     lines.append("")
 
-    vec = {"会话潮汐频差Δf/f": dff, "幅度A": A, "相关系数r": r,
-           "时长hours": hours, "积分点数": n_pts, "A不确定度u_A": uA}
+    vec = {"会话潮汐频差Δf/f": dff, "钟比值偏差y_i": y_i, "幅度A": A,
+           "相关系数r": r, "时长hours": hours, "积分点数": n_pts, "A不确定度u_A": uA}
     keys = list(vec.keys())
     lines.append("| | " + " | ".join(k for k in keys) + " |")
     lines.append("|---|" + "|".join("---:" for _ in keys) + "|")
@@ -84,8 +93,10 @@ def main():
     lines.append("## 2. 关键单对相关（详细）")
     lines.append("")
     pairs = [
+        ("钟比值偏差y_i vs 会话潮汐频差", y_i, dff),
         ("幅度A vs 会话潮汐频差", A, dff),
         ("相关系数r vs 会话潮汐频差", r, dff),
+        ("钟比值偏差y_i vs 幅度A", y_i, A),
         ("幅度A vs 相关系数r", A, r),
         ("幅度A vs 时长", A, hours),
         ("幅度A vs 积分点数", A, n_pts),
@@ -96,22 +107,16 @@ def main():
         lines.append(f"- **{name}**：Pearson r = {rr:+.3f}（p={pp:.3f}），"
                      f" Spearman ρ = {rho:+.3f}（p={prho:.3f}）")
 
-    # 会话潮汐频差 vs A 的 OLS
-    slope, intercept, rv, pv, se = stats.linregress(dff, A)
+    # 会话潮汐频差 vs y_i 的 OLS（物理正确的段级回归）
+    slope, intercept, rv, pv, se = stats.linregress(dff, y_i)
     lines.append("")
-    lines.append("## 3. 幅度 A ~ 会话潮汐频差 的线性回归")
+    lines.append("## 3. 钟比值偏差 y_i ~ 会话潮汐频差 的线性回归（物理正确）")
     lines.append("")
-    lines.append(f"最小二乘：A = {slope:+.3f} × (会话潮汐频差) {intercept:+.3f}，"
+    lines.append(f"最小二乘：y_i = {slope:+.3f} × (会话潮汐频差) {intercept:+.3f}，"
                  f" r={rv:+.3f}，p={pv:.3f}，std_err={se:.3f}")
-    # 精度加权回归 (1/uA^2)
-    w = 1.0 / uA**2
-    wbar = np.sum(w * dff) / np.sum(w)
-    slope_w = np.sum(w * (dff - wbar) * A) / np.sum(w * (dff - wbar) ** 2)
-    lines.append(f"精度加权(1/u_A²)回归斜率 = {slope_w:+.3f}")
     lines.append("")
-    lines.append("""> 注：会话潮汐频差的正负反映该段潮汐段均值的符号；幅度 A 的正负反映
-> 段内拍频随潮汐起伏的方向。两者符号一致（同为负段多）说明段内拟合方向与会话
-> 段均值方向一致。""")
+    lines.append("""> 注：这是物理上正确的段级回归——y_i 与 Δf/f 都是归一化到 1 的无量纲量，
+> 表征潮汐对钟的影响；斜率物理上应趋近 1（若钟无其他漂移）。""")
 
     out = OUT_DIR / "segment17_correlation.md"
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
