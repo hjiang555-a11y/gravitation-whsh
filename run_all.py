@@ -13,7 +13,8 @@ Steps (all in the repo, run via subprocess so each keeps its own main):
   4. clock_ratio/correlation_reanalysis.py -> correlation_reanalysis.csv (seg-mean corr)
   5. clock/correlation_analysis.py         -> correlation.png (y_i vs Δf/f)
   6. clock_ratio/make_report_figures.py    -> ratio_segments.png (report figure)
-  7. clock_ratio/make_report.py            -> EXPERIMENT_REPORT.md (authoritative report)
+  7. variants / single-segment diagnostics (appendix figures)
+  8. clock_ratio/make_report.py            -> EXPERIMENT_REPORT.md (authoritative report)
 """
 
 from __future__ import annotations
@@ -31,6 +32,11 @@ STEPS = [
     ("段均值相关", REPO / "clock_ratio" / "correlation_reanalysis.py"),
     ("段均值相关图", REPO / "clock" / "correlation_analysis.py"),
     ("报告插图", REPO / "clock_ratio" / "make_report_figures.py"),
+    ("变体1（潮汐30s原生）", REPO / "clock" / "segment_analysis" / "variant1_30s_tide.py"),
+    ("变体2（30s均值聚合）", REPO / "clock" / "segment_analysis" / "variant30s_analysis.py"),
+    ("段13多τ相关", REPO / "clock" / "segment13_correlation.py"),
+    ("段13三角窗", REPO / "clock" / "segment_analysis" / "segment13_triangular.py"),
+    ("段6三角窗", REPO / "clock" / "segment_analysis" / "segment6_triangular.py"),
     ("自动报告", REPO / "clock_ratio" / "make_report.py"),
 ]
 

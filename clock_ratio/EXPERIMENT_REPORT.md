@@ -38,6 +38,10 @@
 > 参数（段窗口、扣除区间、常数、shift_a 分量）在 `clock/params.json`，
 > 说明见 `clock/PARAMS.md`。
 
+会话潮汐引力红移频移 Δf/f（专业综合差 → ΔW/c²）：
+
+![会话潮汐引力红移频移](../clock/clock_tidal_shift.png)
+
 ---
 
 ## 2. 钟比值计算结果
@@ -84,6 +88,10 @@ R_ref（段 1 Yb/Sr）= `1.20750703934333772095107679839387673223295991174063313
 | 16 | 41.0 | -0.04 | 0.39 | -0.007 | 0.913 |
 | 17 | 18.3 | -0.12 | 0.34 | -0.033 | 0.730 |
 
+![逐段幅度比 A 森林图](../clock/segment_analysis/batch_forest.png)
+
+![逐段拍频 vs 潮汐共享轴](../clock/segment_analysis/batch_shared_axis.png)
+
 **跨段合并**：14/17 段同号（二项 p=0.0127），
 符号无关 Stouffer |z|=5.87（p=4.3e-09），幅度比 A = -0.54±0.08（6.4σ）。
 
@@ -112,4 +120,22 @@ R_ref（段 1 Yb/Sr）= `1.20750703934333772095107679839387673223295991174063313
 | 整体修正量 | Δf/f = -0.365×10⁻¹⁸ |
 
 > 详细方法见 [docs/WORKFLOW.md](../docs/WORKFLOW.md)、[docs/NOTATION.md](../docs/NOTATION.md)。
+
+---
+
+## 附录：单段诊断与变体分析
+
+### 单段诊断（段 13 / 段 6）
+
+![段 13 多 τ 相关 + lag sweep](../clock/segment13_correlation.png)
+
+![段 13 三角窗拟合共享轴](../clock/segment_analysis/segment13_shared_axis.png)
+
+![段 6 三角窗拟合共享轴](../clock/segment_analysis/segment6_shared_axis.png)
+
+### 变体分析（积分尺度稳健性）
+
+![变体 1（潮汐 30s 原生）森林图](../clock/segment_analysis/variant1_30s_tide_forest.png)
+
+![变体 2（30s 均值聚合）森林图](../clock/segment_analysis/variant30s_forest.png)
 
