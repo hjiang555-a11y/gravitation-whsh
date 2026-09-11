@@ -23,119 +23,24 @@ Outputs: clock_ratio/ratio_17seg.csv, clock_ratio/ratio_17seg_summary.csv
 from __future__ import annotations
 
 import csv
+import sys
 from decimal import Decimal, getcontext
 from pathlib import Path
 
 import numpy as np
 
-# The ratio R ~ 1.2 and the segment-to-segment differences are ~1-5e-18, i.e. at
-# the 16th-18th significant digit. float64 (eps ~2.2e-16, ~260e-18 absolute on
-# R~1.2) destroys that signal, which the MATLAB source avoids via vpa(...,80).
-# We mirror that with decimal arithmetic at 80 significant digits.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from clock.shared import (  # noqa: E402
+    COEF1156, DELTA_G, DIV20, EXCLUDE_RANGES, FREF, GROUPS,
+    JUMP_THRESHOLD, N1156, N1397, N1550, N1550_WH, SHIFT_A,
+    D_7_25, D_1_25, load_beat, longest_valid_span, to_dec,
+)
+
+# The ratio R ~ 1.2 and the segment-to-segment differences are ~1-5e-18; kept in
+# decimal 80-digit arithmetic (set in clock.shared) to match MATLAB's vpa(...,80).
 getcontext().prec = 80
 
-CLOCK_DIR = Path(__file__).resolve().parents[1]
-DATA_DIR = CLOCK_DIR / "clock" / "data" / "环外数据（第八列数据）"
 OUT_DIR = Path(__file__).resolve().parent
-
-C = 299792458.0
-JUMP_THRESHOLD = 10.0
-
-# Ratio-formula constants, held in decimal (80-digit) arithmetic to match the
-# MATLAB vpa(...,80) precision; the E-20-level segment differences survive only
-# if every step of the chain stays above ~20 significant digits.
-N1156 = Decimal(1295739)
-N1397 = Decimal(858456)
-N1550 = Decimal(773598)
-N1550_WH = Decimal(966996)
-FREF = Decimal("1e7")
-DIV20 = Decimal(20)
-B_YB = Decimal("5.3e-18") - Decimal("7e-18")  # -1.7e-18
-DELTA_G = Decimal("-3.116e-15")
-COEF1156 = (Decimal(1) + B_YB) / Decimal(2)
-D_7_25 = Decimal(7) / Decimal(25)
-D_1_25 = Decimal(1) / Decimal(25)
-
-GROUPS = [
-    ("2026-06-29 10:06:28", "2026-06-30 04:59:59"),
-    ("2026-06-30 12:00:00", "2026-06-30 20:11:31"),
-    ("2026-07-01 15:58:41", "2026-07-02 03:53:40"),
-    ("2026-07-02 14:00:00", "2026-07-03 07:51:26"),
-    ("2026-07-03 17:34:22", "2026-07-03 23:00:00"),
-    ("2026-07-04 19:30:46", "2026-07-05 10:00:00"),
-    ("2026-07-05 13:00:00", "2026-07-06 00:00:00"),
-    ("2026-07-06 21:45:16", "2026-07-07 09:52:03"),
-    ("2026-08-07 15:15:00", "2026-08-07 21:30:00"),
-    ("2026-08-07 22:15:00", "2026-08-08 14:20:59"),
-    ("2026-08-09 00:00:00", "2026-08-09 09:57:21"),
-    ("2026-08-10 12:47:06", "2026-08-11 00:00:00"),
-    ("2026-08-11 05:30:00", "2026-08-13 00:00:00"),
-    ("2026-08-13 18:56:58", "2026-08-14 14:00:42"),
-    ("2026-08-21 00:40:03", "2026-08-21 16:40:56"),
-    ("2026-08-21 23:20:01", "2026-08-23 16:20:51"),
-    ("2026-08-25 15:09:41", "2026-08-26 09:29:54"),
-]
-EXCLUDE_RANGES = [
-    ("2026-06-30 05:00:00", "2026-06-30 12:00:00"),
-    ("2026-06-30 20:30:00", "2026-07-01 14:00:00"),
-    ("2026-07-02 08:00:00", "2026-07-02 14:00:00"),
-    ("2026-07-03 12:00:00", "2026-07-03 16:20:00"),
-    ("2026-07-03 23:00:00", "2026-07-04 01:20:00"),
-    ("2026-07-05 10:00:00", "2026-07-05 13:00:00"),
-    ("2026-07-06 00:00:00", "2026-07-06 20:00:00"),
-    ("2026-08-07 21:30:01", "2026-08-07 22:14:59"),
-    ("2026-08-08 18:00:01", "2026-08-08 23:59:59"),
-    ("2026-08-10 01:00:01", "2026-08-10 11:59:59"),
-    ("2026-08-11 00:00:01", "2026-08-11 05:29:59"),
-    ("2026-08-13 00:00:01", "2026-08-13 03:29:59"),
-]
-
-# shift_a 14 segments = a_rou + a_AC + a_SM + a_air + a_BBR
-A_ROU = [
-    -2.3405897235204027e-19, -1.4762696609004877e-19, -2.447205229168124e-19,
-    -2.8193721064244536e-19, -2.722072607303744e-19, -2.6646987912614174e-19,
-    -2.530366977034812e-19, -2.334981365086871e-19,
-    -3.532e-19, -3.532e-19, -3.532e-19, -3.422e-19, -3.422e-19, -3.422e-19,
-]
-A_AC = [7.44377658537123e-18] * 8 + [8.929e-18] * 6
-A_SM = [
-    -1.7854788394394161e-16, -1.786187875083559e-16, -1.7856555448119226e-16,
-    -1.7848198533888947e-16, -1.7852307151852717e-16, -1.784782742736454e-16,
-    -1.7827511036845825e-16, -1.782675356790445e-16, -8.925e-17, 0.0, 0.0, 0.0,
-    0.0, 0.0,
-]
-A_AIR = [-6.7e-19] * 14
-A_BBR = [0.0] * 14
-SHIFT_A_14 = [A_ROU[i] + A_AC[i] + A_SM[i] + A_AIR[i] + A_BBR[i]
-              for i in range(14)]
-# 15/16/17 inherit the segment 12-14 constant shift
-SHIFT_A = SHIFT_A_14 + [SHIFT_A_14[11]] * 3
-
-
-def first_stamp(path):
-    with open(path) as f:
-        for line in f:
-            if line.startswith("#"):
-                continue
-            tok = line.split()
-            dd, tt = int(tok[0]), float(tok[1])
-            yy, mm, day = dd // 10000, (dd // 100) % 100, dd % 100
-            hh = int(tt) // 10000
-            mi = (int(tt) // 100) % 100
-            ss = int(tt) % 100
-            return np.datetime64(f"{2000+yy:04d}-{mm:02d}-{day:02d} "
-                                 f"{hh:02d}:{mi:02d}:{ss:02d}")
-
-
-def longest_valid_span(valid):
-    if not valid.any():
-        return None
-    padded = np.concatenate([[False], valid, [False]])
-    diff = np.diff(padded.astype(int))
-    starts = np.where(diff == 1)[0]
-    stops = np.where(diff == -1)[0]
-    i = int(np.argmax(stops - starts))
-    return int(starts[i]), int(stops[i] - 1)
 
 
 def endpoint_screen(x):
@@ -161,27 +66,6 @@ def endpoint_screen(x):
     return x[lo: hi + 1], n_start, n_end
 
 
-def load_all_beat():
-    files = sorted(DATA_DIR.glob("Freq_B_2_2606*.txt")) + sorted(
-        DATA_DIR.glob("Freq_B_2_2607*.txt")
-    ) + sorted(DATA_DIR.glob("Freq_B_2_2608*.txt"))
-    t_all, b_all = [], []
-    for f in files:
-        b = np.loadtxt(f, usecols=(10,))
-        t0 = first_stamp(f)
-        t = t0 + np.arange(len(b), dtype="int64").astype("timedelta64[s]")
-        t_all.append(t)
-        b_all.append(b)
-    t = np.concatenate(t_all)
-    b = np.concatenate(b_all)
-    order = np.argsort(t.astype("int64"))
-    return t[order], b[order]
-
-
-def to_dec(x):
-    return Decimal(repr(float(x)))
-
-
 def full_ratio(mean_dm_dec, shift_dec, m_dec):
     coef1397 = (Decimal(1) + shift_dec) / Decimal(2)
     den = coef1397 / N1397 * (N1550 + D_7_25 + D_1_25)
@@ -195,7 +79,7 @@ def full_ratio(mean_dm_dec, shift_dec, m_dec):
 
 
 def main():
-    T, B = load_all_beat()
+    T, B = load_beat()
 
     excl = np.zeros(len(T), dtype=bool)
     for s, e in EXCLUDE_RANGES:

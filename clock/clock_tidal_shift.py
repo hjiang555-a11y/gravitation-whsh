@@ -22,43 +22,15 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Expert-provided full tidal "综合差" (solid + ocean), 30-s grid (UTC).
-RESULTS_CSV = (
-    Path(__file__).resolve().parents[1]
-    / "results"
-    / "professional_tidal_delta_30s.csv"
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from clock.shared import (  # noqa: E402
+    C, GROUPS, RESULTS_CSV, TIDAL_COLUMN, UTC_OFFSET, load_tide,
 )
-TIDAL_COLUMN = "total_tidal_delta_m2_s2_surface"
+
 OUT_DIR = Path(__file__).resolve().parent
-
-C = 299792458.0  # speed of light (m/s)
-
-# Table 1 of the PDF lists session times in Beijing time (UTC+8), matching the
-# acquisition PCs ("PC time, time zone local"). The tidal CSV is UTC, so the
-# session windows are shifted back 8 h before masking. (China has no DST.)
-UTC_OFFSET = np.timedelta64(8, "h")
-
-# 17 experimental sessions (start, end), Beijing time (UTC+8), 2026 — tables of
-# clock/潮汐修正后的比值计算.pdf (17-jump-free-segment revision).
-GROUPS = [
-    ("2026-06-29 10:06:28", "2026-06-30 04:59:59"),
-    ("2026-06-30 12:00:00", "2026-06-30 20:11:31"),
-    ("2026-07-01 15:58:41", "2026-07-02 03:53:40"),
-    ("2026-07-02 14:00:00", "2026-07-03 07:51:26"),
-    ("2026-07-03 17:34:22", "2026-07-03 23:00:00"),
-    ("2026-07-04 19:30:46", "2026-07-05 10:00:00"),
-    ("2026-07-05 13:00:00", "2026-07-06 00:00:00"),
-    ("2026-07-06 21:45:16", "2026-07-07 09:52:03"),
-    ("2026-08-07 15:15:00", "2026-08-07 21:30:00"),
-    ("2026-08-07 22:15:00", "2026-08-08 14:20:59"),
-    ("2026-08-09 00:00:00", "2026-08-09 09:57:21"),
-    ("2026-08-10 12:47:06", "2026-08-11 00:00:00"),
-    ("2026-08-11 05:30:00", "2026-08-13 00:00:00"),
-    ("2026-08-13 18:56:58", "2026-08-14 14:00:42"),
-    ("2026-08-21 00:40:03", "2026-08-21 16:40:56"),
-    ("2026-08-21 23:20:01", "2026-08-23 16:20:51"),
-    ("2026-08-25 15:09:41", "2026-08-26 09:29:54"),
-]
 
 # 无跳点有效时长（秒），PDF 起止点筛选后的 trimmed N，用于按测试时间加权。
 TRIMMED_N = np.array(
@@ -71,12 +43,7 @@ TRIMMED_N = np.array(
 
 
 def load_series() -> tuple[np.ndarray, np.ndarray]:
-    rows = list(csv.DictReader(open(RESULTS_CSV)))
-    timestamps = np.array(
-        [r["timestamp_utc"].replace("Z", "") for r in rows], dtype="datetime64[s]"
-    )
-    total = np.array([float(r[TIDAL_COLUMN]) for r in rows])
-    return timestamps, total
+    return load_tide()
 
 
 def main() -> int:

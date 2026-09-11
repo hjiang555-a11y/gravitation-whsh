@@ -1,103 +1,80 @@
 # 武汉—上海远程光钟比对：潮汐引力红移分析
 
-本项目分析武汉（WUHN）与上海（SHAO）两地光钟（Yb/Sr）比对数据中，潮汐引力红移
-效应是否可被检出。潮汐数据为**专业人士提供的 30 秒间隔「综合差」**（固体潮之差
-+ 海潮之差），实验数据为 1550 nm 光纤链路的环外拍频，共 17 段无跳点数据。
+武汉（WUHN）与上海（SHAO）两地光钟（Yb/Sr）经 1550 nm 光纤链路远程比对，
+分析潮汐引力红移效应（广义相对论 `Δf/f = ΔW/c²`）是否可被检出，并重建
+逐段 Yb/Sr 钟比值。
+
+> **权威钟比值**：Yb/Sr = **1.207 507 039 343 337 721**
+> （R_ref = `1.20750703934333772095107679839…`）。
+
+## 符号表
+
+> 完整符号定义见 [docs/NOTATION.md](docs/NOTATION.md)。这里列出最常用的：
+
+| 符号 | 含义 |
+|---|---|
+| `ΔW` | 两站重力势差 = `W(WUHN) − W(SHAO)`（武汉−上海）|
+| `Δf/f` | 相对频率偏移（×10⁻¹⁸）|
+| `R_i` / `R_ref` | 第 i 段钟比值 / 参考钟比值（= R_1）|
+| `y_i` | 段钟比值偏差 = `R_i/R_ref − 1` |
+| `A` | 段内幅度比（`beat = A·tide + noise`，A=+1 表示完整理论幅度）|
+| `COEF` | 拍频→Sr/Yb 比值偏移系数（Dr 公式）|
+| `F_1550` | 1550 nm 传递光频（拍频归一化基准，193.40 THz）|
+| `N1156/N1397/N1550/N1550_WH` | 光梳计数（Yb/Sr/上海1550/武汉1550）|
+
+> **关键易错点**：潮汐拍频模板必须归一化到 `F_1550`（1550 nm 光频），
+> 而非 `COEF`（隐含 `1/COEF = 233.53 THz`，多 Yb/Sr ≈ 1.2075 倍）。
+> 修正后幅度比 A ≈ −0.54（旧值 −0.45 系此错误所致）。
 
 ## 数据来源
 
-* 潮汐数据：专业人士提供的 30 秒间隔武汉—上海潮汐结果，原始数据为 Excel
-  `clock/武汉-上海潮汐结果（0620-0910）-30秒间隔数据.xlsx`（UTC，30 秒网格）。
-  本仓库提供该 xlsx 的「综合差」列读数：`results/professional_tidal_delta_30s.csv`
-  （列名 `total_tidal_delta_m2_s2_surface`，单位 m²/s²，由 mm 按 ΔW = g·mm/1000
-  换算，g ≈ 9.794 m/s²）。
-* 方向约定：专业数据「之差」列的数值方向为 **CAS − SHA = 武汉 − 上海**（表头公式
-  的字面含义；上海沿海海潮负荷位移幅度大于武汉内陆，故该差值为负）。即
-  ΔW = W(WUHN) − W(SHAO)。
-* 实验数据：1550 nm 环外链路拍频（FXE_B8），原始拍频位于 `clock/data/`（已
-  `.gitignore`，不上传 GitHub）。17 段无跳点窗口时间见
-  `clock/潮汐修正后的比值计算.pdf`，窗口时间为**北京时间（UTC+8）**。
-  实验拍频数据的时区均为北京时间（UTC+8），潮汐数据为 UTC。
+- **潮汐**：专业人士提供的 30 秒间隔「综合差」（固体潮+海潮），
+  `results/professional_tidal_delta_30s.csv`（UTC，方向武汉−上海，ΔW = g·mm/1000）。
+- **实验**：1550 nm 环外拍频（FXE_B8，第 8 列数据），`clock/data/环外数据（第八列数据）/`
+  （已 `.gitignore`）。17 段无跳点窗口见 `clock/shared.py` 的 `GROUPS`（北京时 UTC+8）。
 
-## 光钟比对潮汐分析
+## 标准流程（后续扩展按此结构）
 
-潮汐引力势差 ΔW 通过广义相对论引力红移（`Δf/f = ΔW/c²`）影响武汉—上海两地光钟
-（Yb/Sr）比对的频率差。`clock/` 目录记录了把潮汐数据与实测拍频比对的分析，
-完整报告见 [clock/ANALYSIS.md](clock/ANALYSIS.md)。
-
-关键结果：
-
-- **时区与系数修正**：拍频时间戳为北京时间（UTC+8），潮汐 CSV 为 UTC，比对前
-  须 `−8 h` 对齐；拍频→钟频分差的换算系数 `COEF = 4.282082163269648e-15`（由
-  MATLAB `Dr` 公式推导），而非早期脚本误用的 `×F_BEAT`。另发现时间戳 ±1 s 抖动
-  （数据本质为均匀 1-s 采样），已按 MATLAB 约定重建均匀时间轴。
-- **17 段无跳点批量分析**：17 段全部有数据（第 15/16/17 段为 8 月 21–26 日新增），
-  逐段 1200-s 三角窗 + 幅度拟合。单段大多不显著，但 **14/17 段相关系数为负，
-  跨段合并后显著负相关**（符号无关 Stouffer |z| = 5.87，p = 4.3e-9，
-  加权 r ≈ −0.13，A = −0.45±0.07/6.4σ）。
-- **关键发现**：这一致负向最可能是潮汐数据符号方向相反所致；若方向取反
-  （`−ΔW/c²`），则潮汐引力红移以**正确方向、部分幅度**被检出。确认需 Yb/Sr 钟
-  部署站点与拍频符号约定。
-- **信号被链路噪声淹没**：潮汐信号（Δf/f rms ~4.8e-18）比 1200-s 积分后的链路
-  噪声（~1.7e-17）小约 3.6 倍，故单段必然不显著，仅跨段合并能累加出符号趋势。
-- **会话均值相关性**：Pearson r = +0.544（p = 0.044），方向为正、已达 0.05 显著
-  （y_i = R_i/R_ref − 1 由 MATLAB 处理程序精确计算；暂 14 段，17 段逐段 y_i 待
-  实验方导出）。
-
-```bash
-python clock/clock_tidal_shift.py            # 17 组会话平均潮汐频差
-python clock/correlation_analysis.py         # 17 段幅度比 A vs 会话潮汐频差（17 点）
-python clock/segment_analysis/batch_analysis.py   # 17 段批量分析 + 跨段合并统计（核心）
-python clock/segment13_correlation.py        # 第 13 组多 τ 相关 + 幅度拟合
-
-# 新增：三角积分尺度变体与 17 段相关性
-python clock/segment_analysis/variant1_30s_tide.py   # 变体1：潮汐 30s 原生网格
-python clock/segment_analysis/variant30s_analysis.py # 变体2：拍频 30s 均值聚合
-python clock/segment_analysis/segment17_correlation.py # 17 段相关性（17 点两两相关）
+```
+clock/shared.py                       ← 单一真源：常量、17 段 GROUPS、数据加载
+docs/NOTATION.md                      ← 符号表（全库引用）
+clock_ratio/compute_ratio.py          → 17 段钟比值（decimal 80 位 + 端点筛选）
+clock_ratio/correlation_reanalysis.py → 段均值相关性 + 时长加权均值 + 修正量
+clock/segment_analysis/batch_analysis.py → 段内 1200-s 拟合 + 跨段合并（核心检出）
+clock/clock_tidal_shift.py            → 会话潮汐频移
+clock_ratio/EXPERIMENT_REPORT.md      → 总权威报告
 ```
 
-> 原始实验数据与 MATLAB 处理程序位于 `clock/data/`，已由 `.gitignore` 排除，
-> 不上传 GitHub。
+## 主要结论
 
-## 三角积分尺度变体（不覆盖原结果）
+1. **钟比值**：R_ref = `1.207507039343337720951…`（≈…721），与实验方 WLS
+   `1.2075070393433377213(23)` 差 −0.35×10⁻¹⁸。
+2. **潮汐检出（核心）**：段内 1200-s 窗拟合单段不显著，但跨段累加显著——
+   14/17 段同号，符号无关 Stouffer |z|=5.87（p≈4.3e-9），幅度比
+   **A = −0.54±0.08**（6.4σ），潮汐以正确方向、约一半幅度被检出。
+3. **段均值相关**：y_i 与会话潮汐频移 Δf/f 正相关，Pearson r = +0.518（p=0.033）。
 
-为验证检测对**积分尺度**的稳健性，另做了两个变体分析，与原方法（拍频 1-s、
-潮汐插值到 1-s，1200-s 三角窗 / 600-s 步长）对比：
+## 复现
 
-| 分析 | 拍频采样 | 潮汐采样 | 负相关段 | \|z\| | A（精度加权）|
-|---|---|---|---|---|---|
-| 原方法 | 1-s | 插值到 1-s | 14/17 | 5.87 | −0.45±0.07 |
-| 变体 1 | 1-s | **30-s 原生（不插值）** | 14/17 | 5.87 | −0.446±0.070 |
-| 变体 2 | **30-s 均值聚合** | 30-s 原生 | 14/17 | 5.96 | −0.447±0.069 |
+```bash
+python clock_ratio/compute_ratio.py              # 17 段钟比值（含端点筛选）
+python clock/segment_analysis/batch_analysis.py  # 段内拟合 + 跨段合并（核心）
+python clock_ratio/correlation_reanalysis.py     # 段均值相关 + 加权均值 + 修正量
+python clock/clock_tidal_shift.py                # 会话潮汐频移
+```
 
-**结论**：三个方法的结论**高度一致**——潮汐引力红移以负方向、约一半幅度被一致
-检出，检测对积分尺度稳健。详细对比见
-[clock/segment_analysis/VARIANTS_COMPARISON.md](clock/segment_analysis/VARIANTS_COMPARISON.md)。
+## 目录导航
 
-## 17 段相关性（17 个点彼此间的相关）
+| 路径 | 内容 |
+|---|---|
+| `clock_ratio/EXPERIMENT_REPORT.md` | **总权威报告**（钟比值+潮汐+相关性）|
+| `docs/NOTATION.md` | 符号与术语表 |
+| `clock/shared.py` | 代码单一真源 |
+| `clock/SEGMENT_17_SUMMARY.md` | 17 段起止时间表 |
+| `clock/PROFESSIONAL_TIDAL_DATA.md` | 专业潮汐数据说明 |
+| `clock/SIGN_COEFFICIENT_ANALYSIS.md` | 频率链符号与系数提取 |
+| `clock/segment_analysis/` | 段内分析 + 变体 + 17 点相关性 |
+| `clock/temperature/` | 环外信号与温度分析 |
+| `archive/` | 历史/重叠/过时文档（含旧 14 段、旧 A≈−0.45）|
 
-把 17 个无跳点段各作为一个点，考察各段检测结果之间的相关性
-（[clock/segment_analysis/segment17_correlation.md](clock/segment_analysis/segment17_correlation.md)）：
-
-| 相关对 | Pearson r | p |
-|---|---|---|
-| 幅度 A vs 相关系数 r | +0.833（Spearman ρ=+0.966）| <0.001 |
-| 幅度 A vs 会话潮汐频差 | +0.426 | 0.088 |
-| 幅度 A vs 段时长 | −0.017 | 0.949 |
-
-**解读**：A 与 r 高度一致（内部自洽）；A 与段时长无关（检测不依赖段长短）。
-
-## 光纤链路环外数据与温度影响
-
-1550 nm 传递链路 **武汉 → 合肥 → 上海**。此前未分析的环外数据
-（`clock/data/光纤环外（第二列数据）/Freq_A_2_*.txt`，计数器 4 通道 FXE_B1~B4）
-与三站逐小时气温（Meteostat，`clock/temperature/`）的完整分析见
-[clock/temperature/ANALYSIS.md](clock/temperature/ANALYSIS.md)：
-
-- **环外 10 MHz 信号（FXE_B2）**约半数日子锁定、半数日子偶发失锁/跳变（非温度）；
-  唯一超稳的是 FXE_B4 环外参考（std ~0.2 Hz）。
-- **天周期温度影响不可检出**：三站气温有明确日周期（上海日峰峰 4.6 °C、武汉
-  5.6 °C，峰值 14–15 时），但环外参考/信号/1550 nm 链路拍频在锁定状态的日周期
-  分量均远小于各自测量噪声（FXE_B8 鲁棒日峰峰仅 0.008 Hz）。
-- 温度主要通过**链路时延/相位噪声**起作用，需专门的链路双向时延或机架温度日志
-  才可量化，当前拍频数据不承载该信息。
+> 原始实验数据与 MATLAB 处理程序位于 `clock/data/`，已由 `.gitignore` 排除。

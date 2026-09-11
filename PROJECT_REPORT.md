@@ -155,8 +155,8 @@ mm）。该列按 `ΔW = g·(mm)/1000`（g ≈ 9.794 m/s²）换成引力势差�
 | Stouffer 合并（符号无关） | \|z\| = **5.87**，p = 4.3×10⁻⁹ |
 | Fisher 合并 | p = 2.2×10⁻⁶ |
 | 加权相关系数 r | **−0.127**（弱相关） |
-| 幅度比 A | **−0.45 ± 0.07**（距 0 约 6.4σ） |
-| 会话层 Pearson r | +0.544（p=0.044，仍 14 段，方向为正、已达 0.05 显著） |
+| 幅度比 A | **−0.54 ± 0.08**（距 0 约 6.4σ） |
+| 会话层 Pearson r | +0.518（p=0.033，17 段，方向为正、已达 0.05 显著） |
 
 ### 4.5 这些数字分别意味着什么
 
@@ -166,14 +166,12 @@ mm）。该列按 `ΔW = g·(mm)/1000`（g ≈ 9.794 m/s²）换成引力势差�
   这是合理的——因为噪声淹没信号 3.6 倍，本来就只能看到「趋势」，看不到完整波形。
   新增的第 15–17 段相关系数绝对值很小（|r| ≤ 0.03），稀释了合并 r，但符号一致性
   （14/17 同号）与显著性仍稳健。
-- **幅度比 A=−0.45 是关键发现**：A=1 表示实测完整反映了理论潮汐幅度。实测只有
-  **约一半**（−0.45），且方向一致为负。这提示：要么符号约定（s_beat）还没定死导致
+- **幅度比 A=−0.54 是关键发现**：A=1 表示实测完整反映了理论潮汐幅度。实测只有
+  **约一半**（−0.54），且方向一致为负。这提示：要么符号约定（s_beat）还没定死导致
   方向解读待确认，要么潮汐项在总链路里被部分抵消/稀释。
-- **会话层 r=+0.544（p=0.044）**：14 个会话均值的正相关，方向对、已达 0.05 显著
-  （段4/11/14 会话窗口修正后 r 由 +0.458 升至 +0.544，样本 n=14 仍偏小）。这层用的
-  y_i 由 MATLAB 处理程序精确计算，`correlation_analysis.py` 里
-  存放的是低精度读数；17 段修订版未逐段给出第 15/16/17 段的 y_i，故本节仍 14 段，
-  待实验方导出后补齐。
+- **会话层 r=+0.518（p=0.033）**：17 个会话均值的正相关，方向对、已达 0.05 显著。
+  这层用的 y_i 由本报告按 MATLAB 逐段比值公式（decimal 80 位）精确计算，
+  `clock_ratio/compute_ratio.py` 输出 17 段完整值。
 
 ---
 
@@ -199,7 +197,7 @@ mm）。该列按 `ΔW = g·(mm)/1000`（g ≈ 9.794 m/s²）换成引力势差�
 
 > 本节是概要；对 `atomic-clock-comp.pdf` 分析处理部分（OADEV 外推、χ²、Birge、
 > Mandel–Paule、Bayesian、跳点分析）的**完整逐项调研**见
-> [clock/PDF_METHODOLOGY_REVIEW.md](clock/PDF_METHODOLOGY_REVIEW.md)。
+> [archive/PDF_METHODOLOGY_REVIEW.md](archive/PDF_METHODOLOGY_REVIEW.md)（归档）。
 
 `atomic-clock-comp.pdf` 是实验方的官方处理文档（Yb/Sr 比值的最佳估计），我们独立
 核对了它的方法，并与本项目的潮汐分析对照，结论自洽。
@@ -231,7 +229,7 @@ PDF 用三种方法处理「组间散布超过统计不确定度」的问题：
 - PDF 的 **χ²_red = 2.004（p=0.0167）** 和 **Birge ratio = 1.4156** 都明确说明：
   **组间还有 OADEV 无法描述的随机过程**，误差棒低估了实际散布约 1.4 倍。
 - 我们独立的潮汐相关性分析发现：**潮汐信号被噪声淹没 3.6 倍，实测幅度只有理论
-  一半（A=−0.45）**，单段必然不显著，只有跨段合并才显著。
+  一半（A=−0.54）**，单段必然不显著，只有跨段合并才显著。
 
 两条独立路径指向同一件事：**实验数据里存在一个确定结构的、幅度被噪声稀释的
 时变信号**。PDF 把它归为「未建模随机噪声/excess scatter」，而我们把它具体化成了
@@ -251,7 +249,7 @@ PDF 用三种方法处理「组间散布超过统计不确定度」的问题：
 | 潮汐数据 | 专业提供的 30 秒「综合差」，覆盖 2026-06-20 至 09-10（83 天） |
 | 方向 | 武汉 − 上海（ΔW = W(WUHN) − W(SHAO)，即 CAS − SHA），无系统性符号错误 |
 | 潮汐引力红移检出 | **成立**（跨段合并 \|z\|=5.87，p=4.3×10⁻⁹） |
-| 检出幅度 | 约为理论的一半（A=−0.45±0.07，6.4σ） |
+| 检出幅度 | 约为理论的一半（A=−0.54±0.08，6.4σ） |
 | 方向 | 14/17 段一致为负；正负号物理方向待 s_beat 确认 |
 | 温度影响 | 在现有拍频数据中不可检出，不影响潮汐结论 |
 | PDF 自洽性 | Birge ratio 1.3 ≈ 我们检出的「幅度稀释」物理 |
@@ -280,13 +278,13 @@ PDF 用三种方法处理「组间散布超过统计不确定度」的问题：
 潮汐信号是确定的（每个不同日期给出独立的潮汐相位实现），跨天合并可以让噪声
 抵消、信号相干累加。幅度比 A 的精度随独立段数 N 按 **1/√N** 提升：
 
-- 现状：A = 0.45 ± 0.07（17 段，相对精度 15%）。
+- 现状：A = 0.54 ± 0.08（17 段，相对精度 15%）。
 
 | 目标（幅度比相对精度） | 所需独立段数 | 连续运行估算 |
-|---|---:|---:|
+|---:|---:|---:|
 | 10%（钉死「约一半」） | ~38 段 | ~38 天 |
 | 5%（区分 0.5 vs 0.6） | ~150 段 | ~150 天（约 5 个月） |
-| 3%（A=0.45±0.015） | ~416 段 | ~416 天（约 1.1 年） |
+| 3%（A=0.54±0.016） | ~416 段 | ~416 天（约 1.1 年） |
 
 > 注：当前 17 段横跨约 56 天（6 月最后几日 + 7 月初 + 8 月两轮，含空档），有效段率
 > 约 0.3 段/天；若连续运行无空档，每天约 1 段，上表时间即连续运行天数。
@@ -322,7 +320,7 @@ PDF 用三种方法处理「组间散布超过统计不确定度」的问题：
 # 钟比对分析
 python clock/segment_analysis/batch_analysis.py   # 17 段批量分析 + 跨段合并统计（核心）
 python clock/clock_tidal_shift.py                 # 17 组会话平均潮汐频差
-python clock/correlation_analysis.py              # 会话相关性（y_i 暂 14 段）
+python clock/correlation_analysis.py              # 会话相关性（幅度比 A vs 潮汐频差，17 段）
 python clock/segment13_correlation.py             # 第 13 组多 τ 相关 + 幅度拟合
 
 # 温度
@@ -331,15 +329,15 @@ python clock/temperature/fetch_temperature.py
 
 | 文件 | 内容 |
 |---|---|
-| [README.md](README.md) | 项目总览 |
+| [README.md](README.md) | 项目总览 + 符号表 |
 | [PROJECT_REPORT.md](PROJECT_REPORT.md) | 综合项目报告（本文件） |
-| [clock/ANALYSIS.md](clock/ANALYSIS.md) | 钟比对潮汐分析 |
-| [clock/FINAL_REPORT.md](clock/FINAL_REPORT.md) | 钟比对综合报告 |
-| [clock/CORRELATION_REPORT.md](clock/CORRELATION_REPORT.md) | 相关性分析报告 |
+| [clock_ratio/EXPERIMENT_REPORT.md](clock_ratio/EXPERIMENT_REPORT.md) | **总权威报告**（钟比值+潮汐+相关性） |
+| [docs/NOTATION.md](docs/NOTATION.md) | 符号与术语表 |
+| [clock/shared.py](clock/shared.py) | 常量/段定义/数据加载单一真源 |
 | [clock/SIGN_COEFFICIENT_ANALYSIS.md](clock/SIGN_COEFFICIENT_ANALYSIS.md) | 符号系数提取 |
 | [clock/PROFESSIONAL_TIDAL_DATA.md](clock/PROFESSIONAL_TIDAL_DATA.md) | 专业潮汐数据说明 |
-| [clock/PDF_METHODOLOGY_REVIEW.md](clock/PDF_METHODOLOGY_REVIEW.md) | 17 段修订版方法调研 |
 | [clock/temperature/ANALYSIS.md](clock/temperature/ANALYSIS.md) | 环外+温度分析 |
+| [archive/](archive/README.md) | 历史/重叠/过时文档（旧 14 段、旧 A≈−0.45） |
 | [results/professional_tidal_delta_30s.csv](results/professional_tidal_delta_30s.csv) | 专业综合差 ΔW 数据（下游分析输入） |
 | `clock/潮汐修正后的比值计算.pdf` | 实验方 17 段修订版处理文档 |
 

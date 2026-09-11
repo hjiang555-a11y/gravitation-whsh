@@ -27,6 +27,7 @@ Outputs: batch_summary.csv, batch_forest.png, batch_shared_axis.png.
 from __future__ import annotations
 
 import csv
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -37,111 +38,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
-CLOCK_DIR = Path(__file__).resolve().parents[1]
-DATA_DIR = CLOCK_DIR / "data" / "环外数据（第八列数据）"
-# Tidal data = professionally supplied 30-s "综合差" (solid-tide diff + ocean-loading
-# diff), on a 30-s grid (2026-06-20 .. 09-10 UTC), direction Wuhan-minus-Shanghai
-# (CAS - SHA). Read from results/professional_tidal_delta_30s.csv.
-RESULTS_CSV = (
-    Path(__file__).resolve().parents[2]
-    / "results"
-    / "professional_tidal_delta_30s.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from clock.shared import (  # noqa: E402
+    C, COEF, F_1550, EXCLUDE_RANGES, GROUPS, JUMP_THRESHOLD, RESULTS_CSV,
+    TIDAL_COLUMN, UTC_OFFSET, load_beat, load_tide, longest_valid_span,
 )
-TIDAL_COLUMN = "total_tidal_delta_m2_s2_surface"
-OUT_DIR = Path(__file__).resolve().parent
 
-C = 299792458.0
-COEF = 4.282082163269648e-15  # beat[Hz] -> Δf/f
-UTC_OFFSET = np.timedelta64(8, "h")  # Beijing -> UTC
+OUT_DIR = Path(__file__).resolve().parent
 
 WINDOW = 1200  # triangular window full width (s)
 STRIDE = 600   # one point every 600 s (50% overlap)
-JUMP_THRESHOLD = 10.0  # Hz
-
-# 17 experimental sessions (Beijing time, UTC+8) — tables of
-# clock/潮汐修正后的比值计算.pdf (the 17-jump-free-segment revision).
-GROUPS = [
-    ("2026-06-29 10:06:28", "2026-06-30 04:59:59"),
-    ("2026-06-30 12:00:00", "2026-06-30 20:11:31"),
-    ("2026-07-01 15:58:41", "2026-07-02 03:53:40"),
-    ("2026-07-02 14:00:00", "2026-07-03 07:51:26"),
-    ("2026-07-03 17:34:22", "2026-07-03 23:00:00"),
-    ("2026-07-04 19:30:46", "2026-07-05 10:00:00"),
-    ("2026-07-05 13:00:00", "2026-07-06 00:00:00"),
-    ("2026-07-06 21:45:16", "2026-07-07 09:52:03"),
-    ("2026-08-07 15:15:00", "2026-08-07 21:30:00"),
-    ("2026-08-07 22:15:00", "2026-08-08 14:20:59"),
-    ("2026-08-09 00:00:00", "2026-08-09 09:57:21"),
-    ("2026-08-10 12:47:06", "2026-08-11 00:00:00"),
-    ("2026-08-11 05:30:00", "2026-08-13 00:00:00"),
-    ("2026-08-13 18:56:58", "2026-08-14 14:00:42"),
-    ("2026-08-21 00:40:03", "2026-08-21 16:40:56"),
-    ("2026-08-21 23:20:01", "2026-08-23 16:20:51"),
-    ("2026-08-25 15:09:41", "2026-08-26 09:29:54"),
-]
-
-# Manual exclusion windows (Beijing time), copied from the MATLAB exclude_ranges.
-EXCLUDE_RANGES = [
-    ("2026-06-30 05:00:00", "2026-06-30 12:00:00"),
-    ("2026-06-30 20:30:00", "2026-07-01 14:00:00"),
-    ("2026-07-02 08:00:00", "2026-07-02 14:00:00"),
-    ("2026-07-03 12:00:00", "2026-07-03 16:20:00"),
-    ("2026-07-03 23:00:00", "2026-07-04 01:20:00"),
-    ("2026-07-05 10:00:00", "2026-07-05 13:00:00"),
-    ("2026-07-06 00:00:00", "2026-07-06 20:00:00"),
-    ("2026-08-07 21:30:01", "2026-08-07 22:14:59"),
-    ("2026-08-08 18:00:01", "2026-08-08 23:59:59"),
-    ("2026-08-10 01:00:01", "2026-08-10 11:59:59"),
-    ("2026-08-11 00:00:01", "2026-08-11 05:29:59"),
-    ("2026-08-13 00:00:01", "2026-08-13 03:29:59"),
-]
-
-
-def first_stamp(path: Path) -> np.datetime64:
-    """Parse the first data line's timestamp into a datetime64[s] (Beijing time)."""
-    with open(path) as f:
-        for line in f:
-            if line.startswith("#"):
-                continue
-            tok = line.split()
-            dd, tt = int(tok[0]), float(tok[1])
-            yy, mm, day = dd // 10000, (dd // 100) % 100, dd % 100
-            hh = int(tt) // 10000
-            mi = (int(tt) // 100) % 100
-            ss = int(tt) % 100
-            return np.datetime64(f"{2000+yy:04d}-{mm:02d}-{day:02d} "
-                                 f"{hh:02d}:{mi:02d}:{ss:02d}")
-
-
-def load_all_beat() -> tuple[np.ndarray, np.ndarray]:
-    """Uniform 1-s axis from each file's first stamp + row index (ignores jitter)."""
-    files = sorted(DATA_DIR.glob("Freq_B_2_2606*.txt")) + sorted(
-        DATA_DIR.glob("Freq_B_2_2607*.txt")
-    ) + sorted(DATA_DIR.glob("Freq_B_2_2608*.txt"))
-    t_all, b_all = [], []
-    for f in files:
-        b = np.loadtxt(f, usecols=(10,))
-        t0 = first_stamp(f)
-        t = t0 + np.arange(len(b), dtype="int64").astype("timedelta64[s]")
-        t_all.append(t)
-        b_all.append(b)
-    t = np.concatenate(t_all)
-    b = np.concatenate(b_all)
-    order = np.argsort(t.astype("int64"))
-    return t[order], b[order]
-
-
-def longest_valid_span(valid: np.ndarray) -> tuple[int, int] | None:
-    """Return (start, stop) inclusive indices of the longest run of True."""
-    if not valid.any():
-        return None
-    padded = np.concatenate([[False], valid, [False]])
-    diff = np.diff(padded.astype(int))
-    starts = np.where(diff == 1)[0]
-    stops = np.where(diff == -1)[0]  # exclusive (index after last True)
-    lengths = stops - starts
-    i = int(np.argmax(lengths))
-    return int(starts[i]), int(stops[i] - 1)
 
 
 def triangular_window(x: np.ndarray, window: int, stride: int) -> np.ndarray:
@@ -162,7 +68,7 @@ def tidal_beat(t_stamps_utc: np.ndarray, t_tide: np.ndarray, tot: np.ndarray) ->
     t_sec = (t_tide - np.datetime64("1970-01-01")).astype(int)
     s_sec = (t_stamps_utc - np.datetime64("1970-01-01")).astype(int)
     dw = np.interp(s_sec, t_sec, tot)
-    return dw / C**2 / COEF  # beat Hz
+    return dw / C**2 * F_1550  # beat Hz (normalize to 1550nm light, not 1/COEF)
 
 
 def fit_amplitude(beat: np.ndarray, tide: np.ndarray) -> dict[str, float]:
@@ -183,10 +89,8 @@ def fit_amplitude(beat: np.ndarray, tide: np.ndarray) -> dict[str, float]:
 
 
 def main() -> int:
-    T, B = load_all_beat()
-    rows = list(csv.DictReader(open(RESULTS_CSV)))
-    t_tide = np.array([r["timestamp_utc"].replace("Z", "") for r in rows], dtype="datetime64[s]")
-    tot = np.array([float(r[TIDAL_COLUMN]) for r in rows])
+    T, B = load_beat()
+    t_tide, tot = load_tide()
 
     excl = np.zeros(len(T), dtype=bool)
     for s, e in EXCLUDE_RANGES:
@@ -321,8 +225,8 @@ def main() -> int:
         fig, axes = plt.subplots(rows, cols, figsize=(cols * 6, rows * 3),
                                  sharex=False, squeeze=False)
         for ax, r in zip(axes.flat, valid):
-            beat_ff = r["beat_tri"] * COEF * 1e18
-            tide_ff = r["tide"] * COEF * 1e18
+            beat_ff = r["beat_tri"] / F_1550 * 1e18
+            tide_ff = r["tide"] / F_1550 * 1e18
             t = r["t_tri"]
             ax.plot(t, beat_ff, "o-", ms=2, lw=0.8, color="#0969da", label="beat")
             ax.plot(t, tide_ff, lw=1.4, color="#d62728", label="tidal (A=+1)")
