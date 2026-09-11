@@ -58,7 +58,7 @@ def main() -> int:
     y_duration = float(ratio_sum_map["y_duration_1e18"])
     R_seg1_dec = Decimal(R_seg1)
     R_duration_dec = Decimal(R_duration)
-    R_duration_18 = str(R_duration_dec)[:22]  # 22 chars ≈ 1.20750703934333772037
+    R_duration_18 = str(R_duration_dec)[:23]  # 23 chars ≈ 21 decimal digits, enough to resolve +.2f (0.01e-18) diffs
     NIST = Decimal(ratio_sum_map["NIST_reference"])
     WLS = "1.2075070393433377213"
     d_dur_nist = (R_duration_dec - NIST) * Decimal("1e18")
@@ -249,10 +249,10 @@ def main() -> int:
         L.append("")
         L.append("| 方法 | Yb/Sr 中心值 | 统计不确定度 u | 引力（潮汐）修正量 Δf/f |")
         L.append("|---|---|---|---|")
-        L.append(f"| WLS（1/u_i²） | {stat['R_wls'][:22]} | {stat['u_wls']:.3e} | {stat['grav_wls']:+.3e} |")
-        L.append(f"| Birge（B={stat['birge_ratio']:.3f}，1/u_i²） | {stat['R_wls'][:22]} | {stat['u_birge']:.3e} | {stat['grav_birge']:+.3e} |")
-        L.append(f"| Mandel-Paule（ξ={stat['xi_mp']:.3e}，1/(u_i²+ξ²)） | {stat['R_mp'][:22]} | {stat['u_mp']:.3e} | {stat['grav_mp']:+.3e} |")
-        L.append(f"| 贝叶斯（ξ={stat['xi_bayes']:.3e}） | {stat['R_bayes'][:22]} | {stat['u_stat_bayes']:.3e} | {stat['grav_bayes']:+.3e} |")
+        L.append(f"| WLS（1/u_i²） | {stat['R_wls'][:23]} | {stat['u_wls']:.3e} | {stat['grav_wls']:+.3e} |")
+        L.append(f"| Birge（B={stat['birge_ratio']:.3f}，1/u_i²） | {stat['R_wls'][:23]} | {stat['u_birge']:.3e} | {stat['grav_birge']:+.3e} |")
+        L.append(f"| Mandel-Paule（ξ={stat['xi_mp']:.3e}，1/(u_i²+ξ²)） | {stat['R_mp'][:23]} | {stat['u_mp']:.3e} | {stat['grav_mp']:+.3e} |")
+        L.append(f"| 贝叶斯（ξ={stat['xi_bayes']:.3e}） | {stat['R_bayes'][:23]} | {stat['u_stat_bayes']:.3e} | {stat['grav_bayes']:+.3e} |")
         L.append("")
         L.append(f"WLS 拟合度：χ² = {stat['chi2']:.2f}（dof={stat['dof']}，"
                  f"χ²_red = {stat['chi2_red']:.2f}，p = {stat['p_chi2']:.2e}）。")
