@@ -17,6 +17,7 @@ offset is removed before interpolation.
 from __future__ import annotations
 
 import csv
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -26,22 +27,15 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 
-DATA_DIR = (
-    Path(__file__).resolve().parents[1] / "data" / "环外数据（第八列数据）"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from clock.shared import (  # noqa: E402
+    C, F_1550, GROUPS, UTC_OFFSET, DATA_DIR, RESULTS_CSV,
 )
-RESULTS_CSV = (
-    Path(__file__).resolve().parents[2] / "results" / "professional_tidal_delta_30s.csv"
-)
+
 OUT_DIR = Path(__file__).resolve().parent
 
-C = 299792458.0  # m/s
-COEF = 4.282082163269648e-15  # beat[Hz] -> Sr/Yb RATIO offset (Dr formula)
-F_1550 = 193399200000000.0     # 1550 nm transfer light (Hz), the beat normalization
-
-UTC_OFFSET = np.timedelta64(8, "h")
-
-SEG_START = np.datetime64("2026-07-04 19:30:46")  # Beijing time
-SEG_END = np.datetime64("2026-07-05 10:00:00")    # Beijing time
+SEG_START = np.datetime64(GROUPS[5][0])  # Beijing time (segment 6)
+SEG_END = np.datetime64(GROUPS[5][1])
 
 WINDOW = 1200  # triangular window full width (s)
 STRIDE = 600   # one point every 600 s (50% overlap)

@@ -14,6 +14,7 @@ time axis (both converted to the same units via the program's Dr coefficient).
 from __future__ import annotations
 
 import csv
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -23,27 +24,15 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 
-DATA_DIR = (
-    Path(__file__).resolve().parents[1] / "data" / "环外数据（第八列数据）"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from clock.shared import (  # noqa: E402
+    C, F_1550, GROUPS, UTC_OFFSET, DATA_DIR, RESULTS_CSV,
 )
-RESULTS_CSV = (
-    Path(__file__).resolve().parents[2] / "results" / "professional_tidal_delta_30s.csv"
-)
+
 OUT_DIR = Path(__file__).resolve().parent
 
-C = 299792458.0  # m/s
-# Dr = coef * beat[Hz], the beat->Sr/Yb RATIO coefficient from the processing
-# program (Dr = coef1156/N1156 * mean_dm / fref / div20 / den).
-COEF = 4.282082163269648e-15
-# The beat itself normalizes to the 1550 nm transfer light (NOT 1/COEF):
-F_1550 = 193399200000000.0
-
-# Beat timestamps are Beijing time (UTC+8, "PC time, time zone local"); the
-# tidal CSV is UTC, so the 8 h offset is removed before interpolation.
-UTC_OFFSET = np.timedelta64(8, "h")
-
-SEG_START = np.datetime64("2026-08-11 05:30:00")  # Beijing time
-SEG_END = np.datetime64("2026-08-13 00:00:00")    # Beijing time
+SEG_START = np.datetime64(GROUPS[12][0])  # Beijing time (segment 13)
+SEG_END = np.datetime64(GROUPS[12][1])
 
 WINDOW = 1200  # triangular window full width (s)
 STRIDE = 600   # one point every 600 s (50% overlap)

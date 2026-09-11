@@ -42,6 +42,7 @@ Key corrections over earlier scripts:
 from __future__ import annotations
 
 import csv
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -52,22 +53,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
-CLOCK_DIR = Path(__file__).resolve().parent
-DATA_DIR = CLOCK_DIR / "data" / "环外数据（第八列数据）"
-RESULTS_CSV = (
-    Path(__file__).resolve().parents[1]
-    / "results"
-    / "professional_tidal_delta_30s.csv"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from clock.shared import (  # noqa: E402
+    C, F_1550, GROUPS, RESULTS_CSV, DATA_DIR, load_tide,
 )
-OUT_DIR = CLOCK_DIR
 
-C = 299792458.0  # m/s
-COEF = 4.282082163269648e-15  # beat[Hz] -> Sr/Yb RATIO offset (Dr formula)
-F_1550 = 193399200000000.0     # 1550 nm transfer light (Hz), the beat normalization
+OUT_DIR = Path(__file__).resolve().parent
 UTC_OFFSET_H = 8  # data PC local time = UTC+8 (China Standard Time)
 
-SEG_START = np.datetime64("2026-08-11 05:30:00")  # printed (Beijing) time
-SEG_END = np.datetime64("2026-08-13 00:00:00")
+# Segment 13 window (Beijing time), taken from the shared single source of truth.
+SEG_START = np.datetime64(GROUPS[12][0])
+SEG_END = np.datetime64(GROUPS[12][1])
 
 TAU_LIST = [60, 300, 600, 1800, 3600]
 TAU_PLOT = 600

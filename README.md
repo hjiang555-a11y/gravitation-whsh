@@ -36,9 +36,11 @@
 ## 标准流程（后续扩展按此结构）
 
 ```
-clock/shared.py                       ← 单一真源：常量、17 段 GROUPS、数据加载
+clock/params.json                     ← 中间参数文档（实验条件都改这里）
+clock/shared.py                       ← 单一真源：读 params.json，提供常量/段定义/加载器
 docs/NOTATION.md                      ← 符号表（全库引用）
 docs/ERROR_CHECKLIST.md               ← 错误清单 + 检查项目（工作纪律）
+docs/WORKFLOW.md                      ← 总流程文档（怎么跑、实验条件变了改哪）
 clock_ratio/compute_ratio.py          → 17 段钟比值（decimal 80 位 + 端点筛选）
 clock_ratio/correlation_reanalysis.py → 段均值相关性 + 时长加权均值 + 修正量
 clock/segment_analysis/batch_analysis.py → 段内 1200-s 拟合 + 跨段合并（核心检出）
@@ -69,9 +71,11 @@ python clock/clock_tidal_shift.py                # 会话潮汐频移
 | 路径 | 内容 |
 |---|---|
 | `clock_ratio/EXPERIMENT_REPORT.md` | **总权威报告**（钟比值+潮汐+相关性）|
+| `docs/WORKFLOW.md` | 总流程文档（怎么跑、实验条件变了改哪）|
 | `docs/NOTATION.md` | 符号与术语表 |
 | `docs/ERROR_CHECKLIST.md` | 错误清单 + 检查项目（工作纪律）|
-| `clock/shared.py` | 代码单一真源 |
+| `clock/params.json` + `clock/PARAMS.md` | 中间参数文档 + 字段说明 |
+| `clock/shared.py` | 代码单一真源（读 params.json）|
 | `clock/SEGMENT_17_SUMMARY.md` | 17 段起止时间表 |
 | `clock/PROFESSIONAL_TIDAL_DATA.md` | 专业潮汐数据说明 |
 | `clock/SIGN_COEFFICIENT_ANALYSIS.md` | 频率链符号与系数提取 |
