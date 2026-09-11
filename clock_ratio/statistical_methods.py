@@ -219,21 +219,33 @@ def main() -> int:
     mu_post_sd = np.sqrt(mu_post_var)
     xi_post_mean = np.sum(xi_grid * post)
 
-    # ---- Gravitational correction (whole-experiment total) ----
+    # ---- Gravitational (tidal) correction, per-method weights ----
+    # The tidal correction of each segment is Δf/f = ΔW_i/c² (from
+    # clock_tidal_shift.csv). Its whole-experiment total must use the SAME
+    # per-segment weights as the corresponding ratio-combination method, NOT a
+    # duration weight.
     t_tide, tot = load_tide()
-    dff_all, n_valid_all = [], []
-    for kk, (s, e) in enumerate(GROUPS):
+    dff = {}
+    for kk, (s, e) in enumerate(GROUPS, 1):
         S = np.datetime64(s) - np.timedelta64(8, "h")  # Beijing -> UTC
         E = np.datetime64(e) - np.timedelta64(8, "h")
         m = (t_tide >= S) & (t_tide <= E)
         if m.sum():
-            dff_all.append(float(tot[m].mean()) / C ** 2)
-            # duration weight = n_valid (from ratio csv)
-            n_valid_all.append(int(ratio_rows[kk]["n_valid"]))
-    dff_all = np.array(dff_all)
-    n_valid_all = np.array(n_valid_all, dtype=float)
-    wv = n_valid_all / n_valid_all.sum()
-    grav_total = float(np.sum(dff_all * wv))
+            dff[kk] = float(tot[m].mean()) / C ** 2
+    dff_arr = np.array([dff[g] for g in sorted(dff)])
+
+    def weighted(m, w_i):
+        return float(np.sum(w_i * dff_arr) / np.sum(w_i))
+
+    u_arr = np.array([r["u_i"] for r in rows])
+    w_wls = 1.0 / u_arr ** 2                      # WLS / Birge share these weights
+    w_mp = 1.0 / (u_arr ** 2 + xi_mp ** 2)         # M-P effective weights
+    w_bay = 1.0 / (u_arr ** 2 + xi_post_mean ** 2) # Bayesian (posterior-mean xi)
+
+    grav_wls = weighted(-1, w_wls)
+    grav_birge = grav_wls       # Birge center uses the same 1/u² weights
+    grav_mp = weighted(-1, w_mp)
+    grav_bayes = weighted(-1, w_bay)
 
     # ---- assemble outputs ----
     # Precision-weighted (1/u_i²) WLS center; distinct from the duration-weighted
@@ -256,7 +268,10 @@ def main() -> int:
         "u_stat_bayes": float(mu_post_sd),
         "xi_bayes": float(xi_post_mean),
         "R_bayes": float(R0 * (1 + mu_post_mean)),
-        "grav_correction_total": grav_total,
+        "grav_wls": grav_wls,
+        "grav_birge": grav_birge,
+        "grav_mp": grav_mp,
+        "grav_bayes": grav_bayes,
         "y_wls_precision_1e18": float(y_wls * 1e18),
     }
 
@@ -286,7 +301,11 @@ def main() -> int:
     print(f"Mandel-P : xi = {xi_mp:.3e}  u = {u_mp:.3e}  R = {result['R_mp']:.19f}")
     print(f"Bayesian : mu = {mu_post_mean:.3e}  u = {mu_post_sd:.3e}  xi = {xi_post_mean:.3e}")
     print(f"          R = {result['R_bayes']:.19f}")
-    print(f"\ngravitational correction (total) = {grav_total:.6e}")
+    print(f"\ngravitational (tidal) correction, per-method weights:")
+    print(f"  WLS   : {grav_wls:.6e}")
+    print(f"  Birge : {grav_birge:.6e}  (same 1/u² weights as WLS)")
+    print(f"  M-P   : {grav_mp:.6e}")
+    print(f"  Bayes : {grav_bayes:.6e}")
     print(f"\nWrote {csv_path}")
     print(f"Wrote {json_path}")
     return 0

@@ -255,8 +255,14 @@ def main() -> int:
         L.append(f"WLS 拟合度：χ² = {stat['chi2']:.2f}（dof={stat['dof']}，"
                  f"χ²_red = {stat['chi2_red']:.2f}，p = {stat['p_chi2']:.2e}）。")
         L.append("")
-        L.append(f"**引力修正量（全部实验总体，时长加权）**：Δf/f = "
-                 f"{stat['grav_correction_total']:+.3e}。")
+        L.append(f"**引力（潮汐）修正量（各段权重 = 对应方法的权重）**：")
+        L.append("")
+        L.append("| 方法 | 引力修正量 Δf/f |")
+        L.append("|---|---|")
+        L.append(f"| WLS（1/u_i²） | {stat['grav_wls']:+.3e} |")
+        L.append(f"| Birge（1/u_i²） | {stat['grav_birge']:+.3e} |")
+        L.append(f"| Mandel-Paule（1/(u_i²+ξ²)） | {stat['grav_mp']:+.3e} |")
+        L.append(f"| 贝叶斯 | {stat['grav_bayes']:+.3e} |")
         L.append("")
         L.append("> **口径说明**：本套 OADEV 用的是**未做潮汐逐点修正**的原始拍频"
                  "（与 MATLAB 源码一致），故 χ²_red 约 5.4、Birge ratio 约 2.3，"
