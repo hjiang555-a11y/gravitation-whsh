@@ -26,6 +26,78 @@
 > 而非 `COEF`（隐含 `1/COEF = 233.53 THz`，多 Yb/Sr ≈ 1.2075 倍）。
 > 修正后幅度比 A ≈ −0.54（旧值 −0.45 系此错误所致）。
 
+## 关键参数计算方法
+
+> 每个核心参数的计算公式与输入来源。完整实现见 `clock_ratio/compute_ratio.py`
+> 与 `clock/shared.py`；数值存放在 `clock/params.json`（高精度小数存字符串）。
+
+### 1. 拍频偏差 `mean_dm`
+
+```text
+mean_dm = mean(d_long − m)          [Hz]
+   d_long = 该段最长无跳点段（去跳点 + 去扣除 + 端点筛选后）
+   m      = 全段拍频中位数（~33 623 140.92 Hz）
+```
+
+### 2. Sr 系统频移修正 `shift_a`（五分量合成）
+
+```text
+shift_a_i = a_rou_i + a_AC_i + a_SM_i + a_air_i + a_BBR_i
+   a_rou  = 光晶格 AC-Stark 频移（~−3.5~−1.5×10⁻¹⁹）
+   a_AC   = 交流斯塔克频移（+7.444e-18 第一轮 / +8.929e-18 第二轮）
+   a_SM   = 二阶塞曼频移（~−1.78e-16 第一轮 / −8.925e-17 段9 / 0 段10-14）
+   a_air  = 空气折射率修正（−6.7e-19）
+   a_BBR  = 黑体辐射频移（0）
+   （第 15/16/17 段沿用段 12-14 的常数 shift_a）
+```
+
+### 3. 拍频→Sr/Yb 比值偏移系数 `COEF`（Dr 公式）
+
+```text
+Dr      = coef1156/N1156 × (mean_dm / fref / div20) / den
+den     = coef1397_i/N1397 × (N1550 + 7/25 + 1/25)
+coef1397_i = (1 + shift_a_i)/2
+coef1156   = (1 + b_Yb)/2,    b_Yb = 5.3e-18 − 7e-18 = −1.7e-18
+
+COEF = 4.282082163269648e-15   （beat[Hz] → Sr/Yb 比值偏移，无量纲）
+```
+
+`fref × div20 = 200 MHz` 为光梳重复率 `f_rep`。自洽性：
+`N1156 × f_rep = 259.15 THz`（Yb 1156.8 nm）、
+`N1550_WH × f_rep = 193.40 THz`（1550.1 nm 武汉传递链路）。
+
+### 4. 1550 nm 传递光频 `F_1550`（拍频归一化基准）
+
+```text
+F_1550 = N1550_WH × f_rep = 966996 × 200 MHz = 193.3992 THz
+```
+
+> **注意**：`1/COEF = 233.53 THz ≠ F_1550`。`COEF` 是「拍频→比值偏移」
+> 系数、隐含 Yb/Sr≈1.2075 倍；潮汐拍频模板必须归一化到 `F_1550`：
+> `tide_beat = (ΔW/c²) × F_1550`（不是 `÷ COEF`）。
+
+### 5. 逐段钟比值 `R_i`
+
+```text
+ratio_base_i = coef1156/N1156 × NN / (coef1397_i/N1397 × NN2)
+NN  = N1550_WH + 26/20 + m/fref/div20
+NN2 = N1550 + 8/25
+
+SrYb_raw_i = ratio_base_i + Dr_i
+YbSr_raw_i = 1 / SrYb_raw_i
+R_i        = YbSr_raw_i × (1 + delta_g)      delta_g = −3.116e-15（静态引力修正）
+```
+
+### 6. 钟比值偏差 `y_i` 与幅度比 `A`
+
+```text
+y_i = R_i / R_ref − 1            （段级钟比值偏差，归一化到 1 的无量纲）
+A   = Σ(tide·beat) / Σ(tide²)    （段内拟合 beat = A·tide + noise 的斜率，去均值后）
+```
+
+`y_i` 与段潮汐频移 `Δf/f = ΔW/c²` 同是「归一化到 1 的无量纲量」，是物理上正确
+的段级相关配对。`A` 是段内诊断量（A=+1 表完整理论幅度），与 `y_i` 不可互相替代。
+
 ## 数据来源
 
 - **潮汐**：专业人士提供的 30 秒间隔「综合差」（固体潮+海潮），
