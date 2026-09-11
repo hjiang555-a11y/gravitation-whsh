@@ -13,9 +13,9 @@ YbSr_NISTstyle_14bin_full_analysis_20260824.m):
   1. Per segment: take the longest jump-free trace (drop >10 Hz from median,
      mask exclude_ranges), then endpoint-screen (1% peak-to-peak).
   2. OADEV: overlapping Allan deviation of the beat in fractional frequency
-     (normalized to cf = 193e12 = 1550 nm light, matching F_1550). Fit
-     128 s <= tau <= 0.25*T on log-log, require white-noise slope ~-1/2, then
-     extrapolate to tau = T (T = segment valid duration) -> sigma_y(T).
+     (normalized to F_1550 = N1550_WH·f_rep = 193.3992 THz, the 1550 nm light).
+     Fit 128 s <= tau <= 0.25*T on log-log, require white-noise slope ~-1/2,
+     then extrapolate to tau = T (T = segment valid duration) -> sigma_y(T).
   3. u_i = sigma_y(T) * R_i  (per-segment clock-ratio statistical uncertainty).
   4. Combined values:
        - WLS:       y = Σ w_i y_i / Σ w_i,  w_i = 1/u_i^2,  u = 1/sqrt(Σ w_i)
@@ -49,7 +49,6 @@ from clock.shared import (  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parent
 C = 299792458.0
-CF = 193e12  # 1550 nm light, the OADEV normalization (== f1550WH_expect in MATLAB)
 
 
 def endpoint_screen(x):
@@ -67,7 +66,7 @@ def endpoint_screen(x):
 def oadev(x: np.ndarray, tau0: int = 1) -> tuple[np.ndarray, np.ndarray]:
     """Overlapping Allan deviation of fractional-frequency data.
 
-    x is the FRACTIONAL frequency (beat / CF). Returns (tau, sigma_y) arrays.
+    x is the FRACTIONAL frequency (beat / F_1550). Returns (tau, sigma_y) arrays.
     """
     x = np.asarray(x, dtype=float)
     out_tau, out_sig = [], []
@@ -133,7 +132,7 @@ def main() -> int:
     # ---- per-segment OADEV -> u_i ----
     rows = []
     for idx, d_long, T in segment_traces():
-        frac = (d_long - d_long.mean()) / CF  # fractional frequency, demeaned
+        frac = (d_long - d_long.mean()) / F_1550  # fractional frequency, demeaned
         tau, sig = oadev(frac)
         sig_T = extrapolate_u(tau, sig, T) if len(tau) else np.nan
         rows.append({"group": idx, "T_s": T, "u_frac": sig_T})
