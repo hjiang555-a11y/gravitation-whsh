@@ -62,11 +62,17 @@ den = coef1397/N1397 × (N1550 + 7/25 + 1/25)
 代入精确值：
 
 ```text
-COEF = 4.2820821632696486e-15     （beat[Hz] → 比值偏移，无量纲）
+COEF = 4.2820821632696486e-15     （beat[Hz] → Sr/Yb 比值偏移，无量纲）
 ```
 
-即 **Δ(比值) = COEF × 拍频偏差[Hz]**，等价于 `beat = (Δf/f) / COEF`（批处理
-脚本所用系数，方向已对齐）。
+即 **Δ(Sr/Yb 比值) = COEF × 拍频偏差[Hz]**。
+
+> **⚠️ 重要区分（概念修正）**：`COEF` 是「拍频 → **比值偏移**」的系数，隐含
+> 光学频率 `1/COEF ≈ 233.53 THz`。而拍频物理上应归一化到 **1550 nm 传递光**
+> `F_1550 = N1550_WH × f_rep ≈ 193.40 THz`。两者差 `(1/COEF)/F_1550 ≈ 1.2075
+> = Yb/Sr` 倍。**潮汐拍频模板必须用 `F_1550` 归一化**（`tide_beat =
+> (ΔW/c²) × F_1550`），不能用 `1/COEF`——早期脚本在此处把两者混用，导致幅度比
+> A 被系统性低估 1/1.2075 ≈ 0.828 倍（现已修正，见 docs/NOTATION.md）。
 
 ### 1.2 静态引力红移 delta_g
 
@@ -122,14 +128,14 @@ delta_g = −3.116e-15 < 0  →  W_Sr < W_Yb  →  Sr 在低势处，Yb 在高�
 ```
 
 专业数据「综合差」的方向为**武汉 − 上海**，即 CSV 值 `ΔW = W_WUHN − W_SHAO`。
-因此 `δ(Sr/Yb) = −ΔW/c²`。由 §2 的 `Dr = COEF × dm`：
+因此 `δ(Sr/Yb) = −ΔW/c²`。拍频的潮汐响应归一化到 1550 nm 传递光 `F_1550`：
 
 ```text
-拍频潮汐模板 = −ΔW/c² / COEF      （ΔW = CSV 综合差，武汉−上海）
+拍频潮汐模板 = −ΔW/c² × F_1550    （ΔW = CSV 综合差，武汉−上海；F_1550 ≈ 193.40 THz）
 ```
 
 **这与批处理脚本 `batch_analysis.py` 使用的符号一致**（`tidal_beat` 返回
-`+ΔW/c²/COEF`，其中 ΔW 即 CSV 原值；二者在方向纠正后是等价表述——见 §5 的
+`(ΔW/c²) × F_1550`，其中 ΔW 即 CSV 原值；符号方向由 s_beat 决定——见 §5 的
 完整符号链）。
 
 ---
@@ -153,31 +159,35 @@ beat = s_beat × (f_comb − f_remote)
 
 ### 5.2 潮汐对拍频的影响
 
-潮汐引力红移改变光学载波频率（f_opt ≈ 193.4 THz，1550 nm）：
+潮汐引力红移改变光学载波频率（记为 `F_1550 = N1550_WH × f_rep ≈ 193.4 THz`，
+即 1550 nm 传递光）：
 
 ```text
-δf_comb   = f_opt × δW_Yb / c²        （comb 锁 Yb，武汉）
-δf_remote = f_opt × δW_Sr / c²        （remote = Sr，上海）
+δf_comb   = F_1550 × δW_Yb / c²        （comb 锁 Yb，武汉）
+δf_remote = F_1550 × δW_Sr / c²        （remote = Sr，上海）
 
 δbeat = s_beat × (δf_comb − δf_remote)
-      = s_beat × f_opt × (δW_Yb − δW_Sr) / c²
-      = s_beat × f_opt × ΔW / c²         ΔW = W_WUHN − W_SHAO（CSV 综合差方向）
+      = s_beat × F_1550 × (δW_Yb − δW_Sr) / c²
+      = s_beat × F_1550 × ΔW / c²         ΔW = W_WUHN − W_SHAO（CSV 综合差方向）
 ```
 
-数值核对：f_opt × ΔW/c² ≈ 1.934e14 × 5e-18 ≈ **9.7e-4 Hz**，与批处理脚本的
-潮汐拍频 rms（1.1e-3 Hz）量级一致。
+数值核对：`F_1550 × ΔW/c² ≈ 1.934e14 × 5e-18 ≈ 9.7e-4 Hz`，与批处理脚本的
+潮汐拍频 rms（~9.4e-4 Hz，修正后的 `tide_rms_hz`）量级一致。
 
-### 5.3 代码 COEF 隐含的 s_beat
+### 5.3 代码 COEF 与 s_beat 的关系
 
-代码 `Dr = +COEF × δbeat`（COEF > 0），而物理上 δ(Sr/Yb) = −ΔW/c²（见 §4）：
+代码 `Dr = +COEF × δbeat`（COEF > 0）描述的是**拍频 → Sr/Yb 比值偏移**，而非
+拍频 → 光频相对频移。二者是**不同的归一化**：
 
 ```text
-−ΔW/c² = COEF × δbeat = COEF × (s_beat × f_opt × ΔW/c²)
-⇒  代码 COEF 的正号隐含 s_beat = −1（本振频率 > 梳尺频率，f_opt ≈ 1/COEF）
+COEF    ：beat[Hz] → Sr/Yb 比值偏移   （隐含 1/COEF ≈ 233.53 THz）
+1/F_1550：beat[Hz] → 光频相对频移     （F_1550 ≈ 193.40 THz）
+(1/COEF) / F_1550 ≈ 1.2075 = Yb/Sr
 ```
 
-即：**当前 `batch_analysis.py` 的模板 `+ΔW/c²/COEF` 对应「本振频率高于梳尺」的
-假设**（s_beat = −1）。
+因此 `COEF` 的数值**不隐含 s_beat**——它只是 Dr 公式的几何系数（含 `N1550/N1397`
+等计数比）。s_beat 的符号应单独从「梳尺 vs 本振频率高低」判断，符号方向只影响
+相关系数 r 的标签，不影响检出结论（见 §5.4）。
 
 ### 5.4 符号与相关性的关系（重要澄清）
 

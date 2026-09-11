@@ -35,7 +35,8 @@ RESULTS_CSV = (
 OUT_DIR = Path(__file__).resolve().parent
 
 C = 299792458.0  # m/s
-COEF = 4.282082163269648e-15  # beat[Hz] -> Δf/f (from the MATLAB Dr formula)
+COEF = 4.282082163269648e-15  # beat[Hz] -> Sr/Yb RATIO offset (Dr formula)
+F_1550 = 193399200000000.0     # 1550 nm transfer light (Hz), the beat normalization
 
 UTC_OFFSET = np.timedelta64(8, "h")
 
@@ -80,7 +81,7 @@ def tidal_prediction(t_stamps: np.ndarray) -> np.ndarray:
     s_utc = t_stamps - UTC_OFFSET  # Beijing -> UTC
     s_sec = (s_utc - np.datetime64("1970-01-01")).astype(int)
     interp = np.interp(s_sec, t_sec, tot)
-    return interp / C**2 / COEF  # beat Hz
+    return interp / C**2 * F_1550  # beat Hz
 
 
 def main() -> int:
@@ -117,8 +118,8 @@ def main() -> int:
     resid = beat_tri - A * tide
     u_A = float(np.sqrt(np.dot(resid, resid) / (len(beat_tri) - 1) / np.dot(tide, tide)))
 
-    beat_ff = beat_tri * COEF * 1e18
-    tide_ff = tide * COEF * 1e18
+    beat_ff = beat_tri / F_1550 * 1e18
+    tide_ff = tide / F_1550 * 1e18
 
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(t_tri, beat_ff, "o-", ms=4, lw=1.0, color="#0969da",

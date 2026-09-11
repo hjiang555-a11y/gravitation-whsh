@@ -24,8 +24,8 @@
   `= CAS − SHA` 的字面含义；上海沿海海潮负荷位移 std ≈ 26.6 mm 大于武汉内陆的
   ≈ 6.7 mm，故差值为负）。因此 ΔW = W(WUHN) − W(SHAO)。
 - **引力势差换算**：`ΔW = g·(mm)/1000`，g ≈ 9.794 m/s²。
-- **潮汐引力红移**：`Δf/f = ΔW/c²`；拍频模板：`beat = Δf/f / COEF`
-  （COEF = 4.282082163269648e-15）。
+- **潮汐引力红移**：`Δf/f = ΔW/c²`；拍频模板：`beat = Δf/f × F_1550`
+  （F_1550 = N1550_WH × f_rep ≈ 193.40 THz，1550 nm 传递光）。
 
 换算序列固化为 `results/professional_tidal_delta_30s.csv`（列名
 `total_tidal_delta_m2_s2_surface`，单位 m²/s²），供下游钟比对分析直接读取。

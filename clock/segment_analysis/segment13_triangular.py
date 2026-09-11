@@ -32,9 +32,11 @@ RESULTS_CSV = (
 OUT_DIR = Path(__file__).resolve().parent
 
 C = 299792458.0  # m/s
-# Dr = coef * beat[Hz], the beat->clock-fractional-frequency coefficient from the
-# processing program (Dr = coef1156/N1156 * mean_dm / fref / div20 / den).
+# Dr = coef * beat[Hz], the beat->Sr/Yb RATIO coefficient from the processing
+# program (Dr = coef1156/N1156 * mean_dm / fref / div20 / den).
 COEF = 4.282082163269648e-15
+# The beat itself normalizes to the 1550 nm transfer light (NOT 1/COEF):
+F_1550 = 193399200000000.0
 
 # Beat timestamps are Beijing time (UTC+8, "PC time, time zone local"); the
 # tidal CSV is UTC, so the 8 h offset is removed before interpolation.
@@ -84,7 +86,7 @@ def tidal_prediction(t_stamps: np.ndarray) -> np.ndarray:
     s_sec = (s_utc - np.datetime64("1970-01-01")).astype(int)
     interp = np.interp(s_sec, t_sec, tot)
     dff = interp / C**2  # fractional frequency
-    return dff / COEF  # beat Hz (same units as the measured beat)
+    return dff * F_1550  # beat Hz (same units as the measured beat)
 
 
 def main() -> int:
@@ -129,9 +131,9 @@ def main() -> int:
     resid = beat_tri - A * tide
     u_A = float(np.sqrt(np.dot(resid, resid) / (len(beat_tri) - 1) / np.dot(tide, tide)))
 
-    # Convert both to Δf/f (×1e-18): Δf/f = COEF * beat[Hz].
-    beat_ff = beat_tri * COEF * 1e18
-    tide_ff = tide * COEF * 1e18
+    # Convert both to Δf/f (×1e-18): Δf/f = beat[Hz] / F_1550.
+    beat_ff = beat_tri / F_1550 * 1e18
+    tide_ff = tide / F_1550 * 1e18
 
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(t_tri, beat_ff, "o-", ms=4, lw=1.0, color="#0969da",

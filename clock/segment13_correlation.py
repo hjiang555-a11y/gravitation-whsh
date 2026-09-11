@@ -22,10 +22,12 @@ Key corrections over earlier scripts:
        den = coef1397/N1397 * (N1550 + 7/25 + 1/25),
        coef1397 = (1 + shift_a)/2,  N1397 = 858456,  N1550 = 773598,
 
-   giving  Δf/f = COEF * beat[Hz]  with  COEF = 4.282082163269648e-15.
-   Hence the tidal fractional frequency Δf/f = ΔW/c² maps to a beat deviation
+    giving  Δ(Sr/Yb ratio) = COEF * beat[Hz]  with  COEF = 4.282082163269648e-15.
+    However the beat itself is normalized to the 1550 nm transfer light
+    F_1550 = N1550_WH * f_rep ≈ 193.40 THz (NOT 1/COEF ≈ 233.53 THz). Hence the
+    tidal fractional frequency Δf/f = ΔW/c² maps to a beat deviation
 
-       beat[Hz] = (ΔW/c²) / COEF.
+        beat[Hz] = (ΔW/c²) * F_1550.
 
 3. Amplitude fit. Besides Pearson/Spearman correlation, we fit the model
 
@@ -60,7 +62,8 @@ RESULTS_CSV = (
 OUT_DIR = CLOCK_DIR
 
 C = 299792458.0  # m/s
-COEF = 4.282082163269648e-15  # beat[Hz] -> Δf/f  (from the MATLAB processing)
+COEF = 4.282082163269648e-15  # beat[Hz] -> Sr/Yb RATIO offset (Dr formula)
+F_1550 = 193399200000000.0     # 1550 nm transfer light (Hz), the beat normalization
 UTC_OFFSET_H = 8  # data PC local time = UTC+8 (China Standard Time)
 
 SEG_START = np.datetime64("2026-08-11 05:30:00")  # printed (Beijing) time
@@ -114,7 +117,7 @@ def tidal_beat(t_stamps_utc: np.ndarray, t_tide: np.ndarray, tot: np.ndarray) ->
     t_sec = (t_tide - np.datetime64("1970-01-01")).astype(int)
     s_sec = (t_stamps_utc - np.datetime64("1970-01-01")).astype(int)
     dw = np.interp(s_sec, t_sec, tot)
-    return dw / C**2 / COEF
+    return dw / C**2 * F_1550
 
 
 def triangular_segment(x: np.ndarray, tau: int) -> np.ndarray:
@@ -158,7 +161,7 @@ def lag_sweep(beat_utc: np.ndarray, dm: np.ndarray, t_tide: np.ndarray, tot: np.
     print("\nLag sweep (tau=600 s) — A ≈ +1 at the correct time base:")
     print(f"{'lag_h':>6} {'A':>9} {'u_A':>8} {'r':>8} {'rho':>8}")
     for lag in range(-12, 1):
-        tide_1s = np.interp(t_utc_sec + lag * 3600, t_sec, tot) / C**2 / COEF
+        tide_1s = np.interp(t_utc_sec + lag * 3600, t_sec, tot) / C**2 * F_1550
         tide = triangular_segment(tide_1s, tau)
         tide = tide[: len(d_sm)]
         r = float(np.corrcoef(d_sm, tide)[0, 1])
