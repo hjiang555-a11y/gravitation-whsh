@@ -37,6 +37,7 @@ STEPS = [
     ("段13多τ相关", REPO / "clock" / "segment13_correlation.py"),
     ("段13三角窗", REPO / "clock" / "segment_analysis" / "segment13_triangular.py"),
     ("段6三角窗", REPO / "clock" / "segment_analysis" / "segment6_triangular.py"),
+    ("论文统计方法(OADEV+WLS/Birge/M-P/贝叶斯)", REPO / "clock_ratio" / "statistical_methods.py"),
     ("自动报告", REPO / "clock_ratio" / "make_report.py"),
 ]
 

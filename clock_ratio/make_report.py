@@ -11,6 +11,7 @@ Outputs: clock_ratio/EXPERIMENT_REPORT.md
 from __future__ import annotations
 
 import csv
+import json
 from decimal import Decimal
 from pathlib import Path
 
@@ -23,6 +24,7 @@ TIDE_CSV = CLOCK_DIR / "clock_tidal_shift.csv"
 BATCH_CSV = CLOCK_DIR / "segment_analysis" / "batch_summary.csv"
 AGG_CSV = CLOCK_DIR / "segment_analysis" / "batch_aggregate.csv"
 CORR_CSV = OUT_DIR / "correlation_reanalysis.csv"
+STAT_JSON = OUT_DIR / "statistical_methods.json"
 
 
 def _table(rows: list[dict], path: Path) -> list[dict]:
@@ -47,6 +49,7 @@ def main() -> int:
     batch = _table([], BATCH_CSV)
     agg = _table([], AGG_CSV)
     corr = _table([], CORR_CSV)
+    stat = json.load(open(STAT_JSON)) if STAT_JSON.exists() else None
 
     # headline numbers: segment-1 baseline vs whole-experiment weighted value
     ratio_sum_map = {r["field"]: r["value"] for r in ratio_sum}
@@ -228,6 +231,39 @@ def main() -> int:
     L.append("")
     L.append("![变体 2（30s 均值聚合）森林图](../clock/segment_analysis/variant30s_forest.png)")
     L.append("")
+
+    # ---- parallel paper-method results (OADEV + WLS/Birge/MP/Bayesian) ----
+    if stat is not None:
+        L.append("---")
+        L.append("")
+        L.append("## 6. 论文统计分析方法（并列结果，非替代）")
+        L.append("")
+        L.append("按实验方 PDF 的统计处理（每段 OADEV 外推 → 统计不确定度 u_i → "
+                 "WLS / Birge / M-P / 贝叶斯四种方法合并），作用于与 `compute_ratio.py` "
+                 "相同的逐段拍频数据。**与前述时间等权重结果并列，不替代。**")
+        L.append("")
+        L.append(f"每段 OADEV 外推得到的统计不确定度 u_i 与四种合并结果（"
+                 f"`statistical_methods.json`）：")
+        L.append("")
+        L.append("| 方法 | Yb/Sr 中心值 | 统计不确定度 u |")
+        L.append("|---|---|---|")
+        L.append(f"| WLS | {stat['R_wls_precision']:.19f} | {stat['u_wls']:.3e} |")
+        L.append(f"| Birge（B={stat['birge_ratio']:.3f}） | {stat['R_wls_precision']:.19f} | {stat['u_birge']:.3e} |")
+        L.append(f"| Mandel-Paule（ξ={stat['xi_mp']:.3e}） | {stat['R_mp']:.19f} | {stat['u_mp']:.3e} |")
+        L.append(f"| 贝叶斯（ξ={stat['xi_bayes']:.3e}） | {stat['R_bayes']:.19f} | {stat['u_stat_bayes']:.3e} |")
+        L.append("")
+        L.append(f"WLS 拟合度：χ² = {stat['chi2']:.2f}（dof={stat['dof']}，"
+                 f"χ²_red = {stat['chi2_red']:.2f}，p = {stat['p_chi2']:.2e}）。")
+        L.append("")
+        L.append(f"**引力修正量（全部实验总体，时长加权）**：Δf/f = "
+                 f"{stat['grav_correction_total']:+.3e}。")
+        L.append("")
+        L.append("> **口径说明**：本套 OADEV 用的是**未做潮汐逐点修正**的原始拍频"
+                 "（与 MATLAB 源码一致），故 χ²_red 约 5.4、Birge ratio 约 2.3，"
+                 "高于实验方 PDF 的 χ²_red=1.70（后者在 OADEV 前额外做了潮汐逐点修正）。"
+                 "这反映潮汐信号作为『未建模的确定性结构』抬高了组间散布，与本项目"
+                 "『潮汐被检出』的独立结论一致。")
+        L.append("")
 
     out = OUT_DIR / "EXPERIMENT_REPORT.md"
     out.write_text("\n".join(L) + "\n", encoding="utf-8")
