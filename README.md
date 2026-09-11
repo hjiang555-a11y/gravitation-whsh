@@ -124,6 +124,7 @@ clock/shared.py                       ← 单一真源：读 params.json，提�
 docs/NOTATION.md                      ← 符号表（全库引用）
 docs/ERROR_CHECKLIST.md               ← 错误清单 + 检查项目（工作纪律）
 docs/WORKFLOW.md                      ← 总流程文档（怎么跑、实验条件变了改哪）
+docs/METHODOLOGY.md                   ← 计算方法说明（精确定义、公式、归一化基准、存疑项）
 clock_ratio/compute_ratio.py          → 17 段钟比值（decimal 80 位 + 端点筛选）
 clock_ratio/correlation_reanalysis.py → 段均值相关性 + 时长加权均值 + 修正量
 clock/segment_analysis/batch_analysis.py → 段内 1200-s 拟合 + 跨段合并（核心检出）
@@ -168,6 +169,7 @@ python clock_ratio/make_report.py                # 自动生成权威报告
 |---|---|
 | `clock_ratio/EXPERIMENT_REPORT.md` | **总权威报告**（钟比值+潮汐+相关性）|
 | `docs/WORKFLOW.md` | 总流程文档（怎么跑、实验条件变了改哪）|
+| `docs/METHODOLOGY.md` | 计算方法说明（精确定义、公式、归一化基准、存疑项）|
 | `docs/NOTATION.md` | 符号与术语表 |
 | `docs/ERROR_CHECKLIST.md` | 错误清单 + 检查项目（工作纪律）|
 | `clock/params.json` + `clock/PARAMS.md` | 中间参数文档 + 字段说明 |
