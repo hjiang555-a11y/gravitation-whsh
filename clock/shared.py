@@ -20,6 +20,7 @@ See docs/NOTATION.md for the symbol glossary.
 
 from __future__ import annotations
 
+import json
 from decimal import Decimal, getcontext
 from pathlib import Path
 
@@ -37,9 +38,24 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = REPO_ROOT / "clock" / "data" / "环外数据（第八列数据）"
 RESULTS_CSV = REPO_ROOT / "results" / "professional_tidal_delta_30s.csv"
 TIDAL_COLUMN = "total_tidal_delta_m2_s2_surface"
+PARAMS_JSON = Path(__file__).resolve().parent / "params.json"
+
+
+def _load_params() -> dict:
+    """Load the intermediate parameter document (params.json)."""
+    with open(PARAMS_JSON) as f:
+        return json.load(f)
+
+
+def _dec_list(values: list[str]) -> list[Decimal]:
+    """Parse a list of string-encoded decimals into Decimal (preserve precision)."""
+    return [Decimal(v) for v in values]
+
+
+_P = _load_params()
 
 # --------------------------------------------------------------------------
-# Physical / processing constants
+# Physical / processing constants (not in params.json — code-level facts)
 # --------------------------------------------------------------------------
 C = 299792458.0                    # speed of light (m/s)
 JUMP_THRESHOLD = 10.0              # Hz, beat deviation from median to drop
@@ -50,80 +66,40 @@ F_1550 = 193399200000000.0         # 1550nm transfer light, N1550_WH × f_rep (H
 #    factor, so the tidal beat template must normalize to F_1550, not 1/COEF.
 
 # --------------------------------------------------------------------------
-# Ratio-formula constants (MATLAB YbSr_NISTstyle_14bin, lines 143-151)
+# Ratio-formula constants (from params.json "ratio_constants")
 # --------------------------------------------------------------------------
-N1156 = Decimal(1295739)          # Yb 1156 nm comb count
-N1397 = Decimal(858456)           # Sr 1397 nm comb count
-N1550 = Decimal(773598)           # 1550 nm link count (Shanghai end)
-N1550_WH = Decimal(966996)        # 1550 nm link count (Wuhan end)
-FREF = Decimal("1e7")             # comb repetition base (Hz)
-DIV20 = Decimal(20)               # divider; fref*div20 = 200 MHz = f_rep
-B_YB = Decimal("5.3e-18") - Decimal("7e-18")   # Yb fixed shift = -1.7e-18
-DELTA_G = Decimal("-3.116e-15")   # static gravitational redshift correction
+_RC = _P["ratio_constants"]
+N1156 = Decimal(_RC["N1156"])          # Yb 1156 nm comb count
+N1397 = Decimal(_RC["N1397"])          # Sr 1397 nm comb count
+N1550 = Decimal(_RC["N1550"])          # 1550 nm link count (Shanghai end)
+N1550_WH = Decimal(_RC["N1550_WH"])    # 1550 nm link count (Wuhan end)
+FREF = Decimal(_RC["FREF"])            # comb repetition base (Hz)
+DIV20 = Decimal(_RC["DIV20"])          # divider; fref*div20 = 200 MHz = f_rep
+B_YB = Decimal(_RC["b_yb_raw_530"]) - Decimal(_RC["b_yb_raw_700"])  # = -1.7e-18
+DELTA_G = Decimal(_RC["DELTA_G"])      # static gravitational redshift correction
 COEF1156 = (Decimal(1) + B_YB) / Decimal(2)
 D_7_25 = Decimal(7) / Decimal(25)
 D_1_25 = Decimal(1) / Decimal(25)
 
 # --------------------------------------------------------------------------
-# 17 jump-free segment windows (Beijing time, UTC+8)
+# 17 jump-free segment windows + exclusion ranges (from params.json "segments")
 # --------------------------------------------------------------------------
-GROUPS = [
-    ("2026-06-29 10:06:28", "2026-06-30 04:59:59"),
-    ("2026-06-30 12:00:00", "2026-06-30 20:11:31"),
-    ("2026-07-01 15:58:41", "2026-07-02 03:53:40"),
-    ("2026-07-02 14:00:00", "2026-07-03 07:51:26"),
-    ("2026-07-03 17:34:22", "2026-07-03 23:00:00"),
-    ("2026-07-04 19:30:46", "2026-07-05 10:00:00"),
-    ("2026-07-05 13:00:00", "2026-07-06 00:00:00"),
-    ("2026-07-06 21:45:16", "2026-07-07 09:52:03"),
-    ("2026-08-07 15:15:00", "2026-08-07 21:30:00"),
-    ("2026-08-07 22:15:00", "2026-08-08 14:20:59"),
-    ("2026-08-09 00:00:00", "2026-08-09 09:57:21"),
-    ("2026-08-10 12:47:06", "2026-08-11 00:00:00"),
-    ("2026-08-11 05:30:00", "2026-08-13 00:00:00"),
-    ("2026-08-13 18:56:58", "2026-08-14 14:00:42"),
-    ("2026-08-21 00:40:03", "2026-08-21 16:40:56"),
-    ("2026-08-21 23:20:01", "2026-08-23 16:20:51"),
-    ("2026-08-25 15:09:41", "2026-08-26 09:29:54"),
-]
-
-# Manual exclusion windows (Beijing time), copied from MATLAB exclude_ranges.
-EXCLUDE_RANGES = [
-    ("2026-06-30 05:00:00", "2026-06-30 12:00:00"),
-    ("2026-06-30 20:30:00", "2026-07-01 14:00:00"),
-    ("2026-07-02 08:00:00", "2026-07-02 14:00:00"),
-    ("2026-07-03 12:00:00", "2026-07-03 16:20:00"),
-    ("2026-07-03 23:00:00", "2026-07-04 01:20:00"),
-    ("2026-07-05 10:00:00", "2026-07-05 13:00:00"),
-    ("2026-07-06 00:00:00", "2026-07-06 20:00:00"),
-    ("2026-08-07 21:30:01", "2026-08-07 22:14:59"),
-    ("2026-08-08 18:00:01", "2026-08-08 23:59:59"),
-    ("2026-08-10 01:00:01", "2026-08-10 11:59:59"),
-    ("2026-08-11 00:00:01", "2026-08-11 05:29:59"),
-    ("2026-08-13 00:00:01", "2026-08-13 03:29:59"),
-]
+_SG = _P["segments"]
+GROUPS = [tuple(g) for g in _SG["groups"]]
+EXCLUDE_RANGES = [tuple(e) for e in _SG["exclude_ranges"]]
 
 # --------------------------------------------------------------------------
-# Sr systematic shift components (MATLAB a_rou/a_AC/a_SM/a_air/a_BBR)
+# Sr systematic shift components (from params.json "shift_a")
 # shift_a = a_rou + a_AC + a_SM + a_air + a_BBR  (14 segments; 15/16/17 reuse
 # segment 12-14's constant shift). Segment 9's a_SM is -8.925e-17, kept verbatim
 # from the source (its 0 in segments 10-14 is flagged "possibly a placeholder").
 # --------------------------------------------------------------------------
-A_ROU = [
-    -2.3405897235204027e-19, -1.4762696609004877e-19, -2.447205229168124e-19,
-    -2.8193721064244536e-19, -2.722072607303744e-19, -2.6646987912614174e-19,
-    -2.530366977034812e-19, -2.334981365086871e-19,
-    -3.532e-19, -3.532e-19, -3.532e-19, -3.422e-19, -3.422e-19, -3.422e-19,
-]
-A_AC = [7.44377658537123e-18] * 8 + [8.929e-18] * 6
-A_SM = [
-    -1.7854788394394161e-16, -1.786187875083559e-16, -1.7856555448119226e-16,
-    -1.7848198533888947e-16, -1.7852307151852717e-16, -1.784782742736454e-16,
-    -1.7827511036845825e-16, -1.782675356790445e-16, -8.925e-17, 0.0, 0.0, 0.0,
-    0.0, 0.0,
-]
-A_AIR = [-6.7e-19] * 14
-A_BBR = [0.0] * 14
+_SH = _P["shift_a"]
+A_ROU = _dec_list(_SH["a_rou"])
+A_AC = _dec_list(_SH["a_AC"])
+A_SM = _dec_list(_SH["a_SM"])
+A_AIR = _dec_list(_SH["a_air"])
+A_BBR = _dec_list(_SH["a_BBR"])
 SHIFT_A_14 = [A_ROU[i] + A_AC[i] + A_SM[i] + A_AIR[i] + A_BBR[i]
               for i in range(14)]
 SHIFT_A = SHIFT_A_14 + [SHIFT_A_14[11]] * 3   # 15/16/17 inherit seg 12-14
@@ -195,5 +171,11 @@ def longest_valid_span(valid: np.ndarray) -> tuple[int, int] | None:
 
 
 def to_dec(x) -> Decimal:
-    """Convert a float to Decimal via repr (preserves full float64 precision)."""
+    """Return x as Decimal: passthrough if already Decimal, else via repr.
+
+    repr(float) preserves full float64 precision; Decimal must NOT be wrapped in
+    float() or the E-20 precision carried by params.json is destroyed.
+    """
+    if isinstance(x, Decimal):
+        return x
     return Decimal(repr(float(x)))
