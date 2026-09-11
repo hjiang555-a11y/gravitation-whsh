@@ -27,23 +27,22 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock.shared import (  # noqa: E402
-    C, GROUPS, RESULTS_CSV, TIDAL_COLUMN, UTC_OFFSET, load_tide,
+    C, GROUPS, UTC_OFFSET, load_tide,
 )
 
 OUT_DIR = Path(__file__).resolve().parent
-
-# 无跳点有效时长（秒），PDF 起止点筛选后的 trimmed N，用于按测试时间加权。
-TRIMMED_N = np.array(
-    [
-        68004, 29488, 42896, 64280, 19533, 52140, 39526, 43602,
-        22499, 57943, 35824, 40372, 152989, 68623, 57649, 147640, 66014,
-    ],
-    dtype=float,
-)
+RATIO_CSV = Path(__file__).resolve().parents[1] / "clock_ratio" / "ratio_17seg.csv"
 
 
 def load_series() -> tuple[np.ndarray, np.ndarray]:
     return load_tide()
+
+
+def load_valid_n() -> np.ndarray:
+    """Per-segment valid-point counts from our own ratio computation (single
+    source of truth, after endpoint screening) — NOT the PDF's trimmed N."""
+    rows = list(csv.DictReader(open(RATIO_CSV)))
+    return np.array([int(r["n_valid"]) for r in rows], dtype=float)
 
 
 def main() -> int:
@@ -148,13 +147,14 @@ def main() -> int:
 
     dff_all = np.array([r["frequency_shift"] for r in records])
     mean_w_all = np.array([r["mean_delta_w_m2_s2"] for r in records])
-    weights = TRIMMED_N / TRIMMED_N.sum()
+    n_valid = load_valid_n()
+    weights = n_valid / n_valid.sum()
     total_dff = float(np.sum(dff_all * weights))
     total_w = float(np.sum(mean_w_all * weights))
     print()
     print("=== total tidal correction (weighted by jump-free test time) ===")
-    print(f"total test time = {TRIMMED_N.sum():.0f} s "
-          f"= {TRIMMED_N.sum()/3600:.2f} h")
+    print(f"total test time = {n_valid.sum():.0f} s "
+          f"= {n_valid.sum()/3600:.2f} h")
     print(f"total ΔW        = {total_w:.6f} m²/s²")
     print(f"total Δf/f      = {total_dff:.6e}")
     return 0
