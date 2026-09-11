@@ -90,8 +90,9 @@
 | `n` / `n_valid` | 该段有效点数（端点筛选后）|
 | `T_i` / `Teff` | 该段无跳点有效时长 |
 
-完整 17 段起止时间表见 `clock/SEGMENT_17_SUMMARY.md` 或 `clock/shared.py` 的
-`GROUPS`。数据时间跨度：2026-06-29 10:06:28 至 2026-08-26 09:29:53（北京时）。
+完整 17 段起止时间表见 `clock/params.json` 的 `segments.groups` 或
+`clock/shared.py` 的 `GROUPS`。数据时间跨度：2026-06-29 10:06:28 至
+2026-08-26 09:29:53（北京时）。
 
 ## 7. 相关性分析量
 

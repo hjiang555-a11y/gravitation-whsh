@@ -87,7 +87,7 @@ python clock_ratio/make_report.py                # 自动生成权威报告
 | `docs/ERROR_CHECKLIST.md` | 错误清单 + 检查项目（工作纪律）|
 | `clock/params.json` + `clock/PARAMS.md` | 中间参数文档 + 字段说明 |
 | `clock/shared.py` | 代码单一真源（读 params.json）|
-| `clock/SEGMENT_17_SUMMARY.md` | 17 段起止时间表 |
+| `clock/params.json` | 17 段窗口、扣除区间、钟比值常数、shift_a 分量 |
 | `clock/PROFESSIONAL_TIDAL_DATA.md` | 专业潮汐数据说明 |
 | `clock/SIGN_COEFFICIENT_ANALYSIS.md` | 频率链符号与系数提取 |
 | `clock/segment_analysis/` | 段内分析 + 变体 + 17 点相关性 |

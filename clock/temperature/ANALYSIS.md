@@ -28,8 +28,8 @@
 | 武汉 | 57494 | 30.62°N, 114.13°E | 5.6 °C（峰值 15:00） |
 | 合肥 | 58321 | 31.87°N, 117.23°E | —（链路中继） |
 
-复现脚本：[fetch_temperature.py](temperature/fetch_temperature.py)；数据
-[temperature_merged_hourly.csv](temperature/temperature_merged_hourly.csv)。
+复现脚本：[fetch_temperature.py](fetch_temperature.py)；数据
+[temperature_merged_hourly.csv](temperature_merged_hourly.csv)。
 
 ---
 
@@ -48,7 +48,7 @@
 **无固定日相位**。
 
 > **结论**：FXE_B2 的「正午漂移」是偶发失锁/采样异常，**不是环境温度引起的连续
-> 天周期漂移**。图见 [fx_b2_lock_fraction.png](temperature/fx_b2_lock_fraction.png)。
+> 天周期漂移**。图见 [fx_b2_lock_fraction.png](fx_b2_lock_fraction.png)。
 
 ---
 
@@ -65,7 +65,7 @@ FXE_B4 是超稳参考（std ~0.2 Hz），与三站温度相关：
 | 合肥 | −0.013 | −0.9 mHz/°C |
 
 日峰峰值仅 **0.14 Hz**，远小于其 ±1 Hz 量化噪声。**温度天周期在环外参考中不可
-检出**（图 [fx_b4_vs_temperature.png](temperature/fx_b4_vs_temperature.png)）。
+检出**（图 [fx_b4_vs_temperature.png](fx_b4_vs_temperature.png)）。
 
 ### 3.2 环外 10 MHz 信号（FXE_B2，仅有效锁定段）
 

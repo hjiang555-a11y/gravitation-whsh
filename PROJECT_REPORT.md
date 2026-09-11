@@ -317,23 +317,34 @@ PDF 用三种方法处理「组间散布超过统计不确定度」的问题：
 ## 9. 复现与文件索引
 
 ```bash
-# 钟比对分析
+# 一键分析 + 出报告（推荐）
+python run_all.py
+
+# 或分步
+python clock_ratio/compute_ratio.py              # 17 段钟比值（含端点筛选）
 python clock/segment_analysis/batch_analysis.py   # 17 段批量分析 + 跨段合并统计（核心）
 python clock/clock_tidal_shift.py                 # 17 组会话平均潮汐频差
-python clock/correlation_analysis.py              # 会话相关性（幅度比 A vs 潮汐频差，17 段）
-python clock/segment13_correlation.py             # 第 13 组多 τ 相关 + 幅度拟合
+python clock_ratio/correlation_reanalysis.py      # 段均值相关（y_i vs Δf/f）+ 加权均值 + 修正量
+python clock_ratio/make_report.py                 # 自动生成权威报告
 
 # 温度
 python clock/temperature/fetch_temperature.py
 ```
 
+> 完整流程、参数说明、实验条件改变时改哪里见
+> [docs/WORKFLOW.md](docs/WORKFLOW.md)。
+
 | 文件 | 内容 |
 |---|---|
 | [README.md](README.md) | 项目总览 + 符号表 |
 | [PROJECT_REPORT.md](PROJECT_REPORT.md) | 综合项目报告（本文件） |
-| [clock_ratio/EXPERIMENT_REPORT.md](clock_ratio/EXPERIMENT_REPORT.md) | **总权威报告**（钟比值+潮汐+相关性） |
+| [clock_ratio/EXPERIMENT_REPORT.md](clock_ratio/EXPERIMENT_REPORT.md) | **总权威报告**（钟比值+潮汐+相关性，自动生成） |
+| [docs/WORKFLOW.md](docs/WORKFLOW.md) | 总流程文档（怎么跑、实验条件变了改哪） |
 | [docs/NOTATION.md](docs/NOTATION.md) | 符号与术语表 |
-| [clock/shared.py](clock/shared.py) | 常量/段定义/数据加载单一真源 |
+| [docs/ERROR_CHECKLIST.md](docs/ERROR_CHECKLIST.md) | 错误清单 + 检查项目 |
+| [clock/params.json](clock/params.json) + [clock/PARAMS.md](clock/PARAMS.md) | 中间参数文档 + 字段说明 |
+| [clock/shared.py](clock/shared.py) | 常量/段定义/数据加载单一真源（读 params.json） |
+| [run_all.py](run_all.py) | 一键分析入口 |
 | [clock/SIGN_COEFFICIENT_ANALYSIS.md](clock/SIGN_COEFFICIENT_ANALYSIS.md) | 符号系数提取 |
 | [clock/PROFESSIONAL_TIDAL_DATA.md](clock/PROFESSIONAL_TIDAL_DATA.md) | 专业潮汐数据说明 |
 | [clock/temperature/ANALYSIS.md](clock/temperature/ANALYSIS.md) | 环外+温度分析 |
