@@ -1,0 +1,13 @@
+metric,value
+n_segments,17
+negative_r_segments,14
+binomial_p,1.272583e-02
+stouffer_z_sign,-5.155141
+stouffer_z_agn,5.873404
+stouffer_p_agn,4.269352e-09
+fisher_chi2,86.004633
+fisher_p,2.153570e-06
+fisher_z_weighted_r,-0.126788
+amplitude_A,-0.539699
+amplitude_uA,0.084254
+amplitude_sigma,6.405625

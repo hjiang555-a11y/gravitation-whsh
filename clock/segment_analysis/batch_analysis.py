@@ -286,6 +286,25 @@ def main() -> int:
     print(f"Fisher-z weighted r : {_rbar:+.4f}")
     print(f"amplitude A (1/uA^2) : {_Abar:+.4f} +/- {_uAbar:.4f}  ({abs(_Abar)/_uAbar:.2f} sigma)")
 
+    # ---- persist the headline aggregation for the report generator ----
+    agg_path = OUT_DIR / "batch_aggregate.csv"
+    with agg_path.open("w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["metric", "value"])
+        w.writerow(["n_segments", len(_rs)])
+        w.writerow(["negative_r_segments", _neg])
+        w.writerow(["binomial_p", f"{_binom_p:.6e}"])
+        w.writerow(["stouffer_z_sign", f"{np.sum(_z_sign)/np.sqrt(len(_rs)):+.6f}"])
+        w.writerow(["stouffer_z_agn", f"{_z_agn:.6f}"])
+        w.writerow(["stouffer_p_agn", f"{2*stats.norm.cdf(-_z_agn):.6e}"])
+        w.writerow(["fisher_chi2", f"{_chi2:.6f}"])
+        w.writerow(["fisher_p", f"{_fisher_p:.6e}"])
+        w.writerow(["fisher_z_weighted_r", f"{_rbar:+.6f}"])
+        w.writerow(["amplitude_A", f"{_Abar:+.6f}"])
+        w.writerow(["amplitude_uA", f"{_uAbar:.6f}"])
+        w.writerow(["amplitude_sigma", f"{abs(_Abar)/_uAbar:.6f}"])
+    print(f"Wrote {agg_path}")
+
     # ---- robustness / additional dimensions ----
     _okd = [r for r in results if "r" in r and not np.isnan(r["r"])]
     _groups = np.array([r["group"] for r in _okd])

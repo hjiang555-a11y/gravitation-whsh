@@ -29,7 +29,13 @@
 
 ## 2. 全库分析链（一键运行）
 
-按顺序运行（后面的脚本读前面的 CSV 产物）：
+**一键入口**（推荐，自动串联所有步骤并刷新报告）：
+
+```bash
+python run_all.py
+```
+
+等价于按顺序运行以下步骤（后面的脚本读前面的 CSV 产物）：
 
 ```bash
 # 1. 逐段钟比值（decimal 80 位 + 端点筛选）
@@ -42,7 +48,7 @@ python clock/clock_tidal_shift.py
 
 # 3. 段内 1200-s 拟合 + 跨段合并（核心检出）
 python clock/segment_analysis/batch_analysis.py
-#   输出: clock/segment_analysis/batch_summary.csv, batch_forest.png, batch_shared_axis.png
+#   输出: clock/segment_analysis/batch_summary.csv, batch_aggregate.csv（跨段统计）, batch_forest.png, batch_shared_axis.png
 
 # 4. 段均值相关性 + 时长加权均值 + 整体修正量
 python clock_ratio/correlation_reanalysis.py
@@ -55,12 +61,19 @@ python clock/correlation_analysis.py
 # 6. 报告插图
 python clock_ratio/make_report_figures.py
 #   输出: clock_ratio/ratio_segments.png
+
+# 7. 自动生成权威报告
+python clock_ratio/make_report.py
+#   输出: clock_ratio/EXPERIMENT_REPORT.md（从各 CSV 产物自动汇总）
 ```
 
 运行完成后，重点看：
 - `clock_ratio/ratio_17seg.csv` —— 逐段钟比值 R_i 和偏差 y_i
-- `clock/segment_analysis/batch_summary.csv` —— 逐段幅度比 A、跨段合并统计
-- 权威结论汇总在 [clock_ratio/EXPERIMENT_REPORT.md](../clock_ratio/EXPERIMENT_REPORT.md)
+- `clock/segment_analysis/batch_summary.csv` + `batch_aggregate.csv` —— 逐段幅度比 A 与跨段合并统计
+- 权威结论自动汇总在 [clock_ratio/EXPERIMENT_REPORT.md](../clock_ratio/EXPERIMENT_REPORT.md)
+
+> 说明：`make_report.py` 是**自动报告生成器**，从各 CSV 产物读取结果、渲染成
+> 完整 Markdown 报告。新增实验数据后运行 `run_all.py`，报告自动刷新，无需手改。
 
 ## 3. 实验条件改变时改哪里
 

@@ -59,12 +59,23 @@ clock_ratio/EXPERIMENT_REPORT.md      → 总权威报告
 
 ## 复现
 
+**一键分析 + 出报告**（推荐）：
+
+```bash
+python run_all.py   # 跑完全部分析步骤 + 自动刷新 EXPERIMENT_REPORT.md
+```
+
+或分步运行：
+
 ```bash
 python clock_ratio/compute_ratio.py              # 17 段钟比值（含端点筛选）
 python clock/segment_analysis/batch_analysis.py  # 段内拟合 + 跨段合并（核心）
 python clock_ratio/correlation_reanalysis.py     # 段均值相关 + 加权均值 + 修正量
 python clock/clock_tidal_shift.py                # 会话潮汐频移
+python clock_ratio/make_report.py                # 自动生成权威报告
 ```
+
+> 完整流程说明见 [docs/WORKFLOW.md](docs/WORKFLOW.md)。
 
 ## 目录导航
 
