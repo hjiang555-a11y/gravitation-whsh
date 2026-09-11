@@ -251,9 +251,14 @@ def main() -> int:
     # Precision-weighted (1/u_i²) WLS center; distinct from the duration-weighted
     # (n_valid) center in compute_ratio.py — the two weightings answer different
     # questions and must not be conflated.
-    R0 = float(R[1])  # segment-1 ratio, as the y_i baseline reference
+    # R[1] is Decimal; reconstruct each center as R0 × (1 + y) in Decimal so the
+    # e-19-level y does NOT get swallowed by float64 (error-1 discipline).
+    R0 = R[1]  # segment-1 ratio (Decimal), as the y_i baseline reference
+    y_wls_d = Decimal(repr(float(y_wls)))
+    y_mp_d = Decimal(repr(float(y_mp)))
+    mu_d = Decimal(repr(float(mu_post_mean)))
     result = {
-        "R_wls_precision": float(R0 * (1 + y_wls)),
+        "R_wls_precision": str(R0 * (Decimal(1) + y_wls_d)),
         "u_wls": float(u_wls),
         "chi2": float(chi2),
         "dof": int(dof),
@@ -262,12 +267,12 @@ def main() -> int:
         "birge_ratio": float(birge),
         "u_birge": float(u_birge),
         "xi_mp": float(xi_mp),
-        "R_mp": float(R0 * (1 + y_mp)),
+        "R_mp": str(R0 * (Decimal(1) + y_mp_d)),
         "u_mp": float(u_mp),
         "mu_bayes": float(mu_post_mean),
         "u_stat_bayes": float(mu_post_sd),
         "xi_bayes": float(xi_post_mean),
-        "R_bayes": float(R0 * (1 + mu_post_mean)),
+        "R_bayes": str(R0 * (Decimal(1) + mu_d)),
         "grav_wls": grav_wls,
         "grav_birge": grav_birge,
         "grav_mp": grav_mp,
@@ -295,12 +300,12 @@ def main() -> int:
     for r in rows:
         print(f"  seg {r['group']:>2}: T={r['T_s']:>6}s  sigma_y(T)={r['u_frac']:.3e}  u_i={r['u_i']:.3e}")
     print("\n=== combined values ===")
-    print(f"WLS      : R = {result['R_wls_precision']:.19f}  u = {result['u_wls']:.3e}")
+    print(f"WLS      : R = {result['R_wls_precision'][:22]}  u = {result['u_wls']:.3e}")
     print(f"  chi2 = {chi2:.3f} (dof={dof}, chi2_red={chi2_red:.3f}, p={p_chi2:.3f})")
     print(f"Birge    : ratio = {birge:.3f}  u = {u_birge:.3e}")
-    print(f"Mandel-P : xi = {xi_mp:.3e}  u = {u_mp:.3e}  R = {result['R_mp']:.19f}")
+    print(f"Mandel-P : xi = {xi_mp:.3e}  u = {u_mp:.3e}  R = {result['R_mp'][:22]}")
     print(f"Bayesian : mu = {mu_post_mean:.3e}  u = {mu_post_sd:.3e}  xi = {xi_post_mean:.3e}")
-    print(f"          R = {result['R_bayes']:.19f}")
+    print(f"          R = {result['R_bayes'][:22]}")
     print(f"\ngravitational (tidal) correction, per-method weights:")
     print(f"  WLS   : {grav_wls:.6e}")
     print(f"  Birge : {grav_birge:.6e}  (same 1/u² weights as WLS)")
