@@ -38,6 +38,7 @@
 ```
 clock/shared.py                       ← 单一真源：常量、17 段 GROUPS、数据加载
 docs/NOTATION.md                      ← 符号表（全库引用）
+docs/ERROR_CHECKLIST.md               ← 错误清单 + 检查项目（工作纪律）
 clock_ratio/compute_ratio.py          → 17 段钟比值（decimal 80 位 + 端点筛选）
 clock_ratio/correlation_reanalysis.py → 段均值相关性 + 时长加权均值 + 修正量
 clock/segment_analysis/batch_analysis.py → 段内 1200-s 拟合 + 跨段合并（核心检出）
@@ -69,6 +70,7 @@ python clock/clock_tidal_shift.py                # 会话潮汐频移
 |---|---|
 | `clock_ratio/EXPERIMENT_REPORT.md` | **总权威报告**（钟比值+潮汐+相关性）|
 | `docs/NOTATION.md` | 符号与术语表 |
+| `docs/ERROR_CHECKLIST.md` | 错误清单 + 检查项目（工作纪律）|
 | `clock/shared.py` | 代码单一真源 |
 | `clock/SEGMENT_17_SUMMARY.md` | 17 段起止时间表 |
 | `clock/PROFESSIONAL_TIDAL_DATA.md` | 专业潮汐数据说明 |
