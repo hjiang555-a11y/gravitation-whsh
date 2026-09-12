@@ -201,3 +201,21 @@ r 从 −0.134 塌到 +0.003、带符号 Stouffer z 从 −5.16 掉到 +0.39（p
 不重叠块均值及相邻差，不能与这里的新算法直接比较并归因为潮汐效果。
 OADEV 与样本标准差都不是 SEM；新增情景不传播系数、潮汐模型或系统项不确定度，
 不提供新 WLS 或总不确定度，也不把较低 OADEV 解释为统计显著或准确度提升。
+
+### 10.3 潮汐修正后重算四种统计方法
+
+§3 的四种统计合并方法（WLS / Birge / Mandel–Paule / 贝叶斯）在潮汐修正后的
+拍频上重算，见 [METHODOLOGY §10](METHODOLOGY.md#10-新增潮汐修正后重算四种统计方法statistical_methods_tidalpy)
+与 [statistical_methods_tidal.json](../clock_ratio/statistical_methods_tidal.json)。
+这里只列新增的符号约定：
+
+| 符号/字段 | 定义 | 单位/约定 |
+|---|---|---|
+| `b_corr` | `b_raw − A·h`，固定响应系数的修正拍频 | Hz；A∈{0,−1,−0.54} |
+| `frac_corr` | `(b_corr − mean(b_corr))/F_1550` | 无量纲；OADEV 输入 |
+| `u_i,scenario` | `σ_y(T)·R_i,scenario`，修正后的绝对比值不确定度 | 无量纲；不是 SEM |
+| `y_i,scenario` | `R_i,scenario/R_seg1,scenario − 1` | ×10⁻¹⁸；基线为**同情景**段 1，非固定段 1 raw |
+| `R_wls / R_mp / R_bayes`（情景版） | 各情景的 WLS / M-P / 贝叶斯中心值 | 无量纲；以该情景 R_seg1 反演 |
+
+raw 情景（A=0）在这套重算中再现 §3 的四种合并值（浮点积累差异 ~1e-8），作为
+「修正只改模板、不改算法」的自洽校验；theory/empirical 是修正后真正的统计合并投影。

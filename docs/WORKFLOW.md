@@ -130,6 +130,9 @@ python clock/segment_analysis/segment6_triangular.py
 # 12. 历史 Allan 稳定度及统计合并（oadev 名称的算法注释见 METHODOLOGY §2）
 python clock_ratio/statistical_methods.py
 
+# 12b. 潮汐修正后重算四种统计方法（raw/theory/empirical，见 METHODOLOGY §10）
+python clock_ratio/statistical_methods_tidal.py
+
 # 13–14. 独立潮汐比较及独立报告
 python clock_ratio/tidal_correction.py
 python clock_ratio/make_tidal_report.py

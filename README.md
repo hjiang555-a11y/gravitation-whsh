@@ -205,6 +205,15 @@ R 从 [summary.json](clock_ratio/tidal_correction/summary.json) 的完整 Decima
 旧 `statistical_methods.oadev` 实际使用不重叠块均值；旧代码和结果保留，
 不能把旧算法与新 OADEV 的数值差当作潮汐效应。
 
+**四种统计方法（WLS/Birge/M-P/贝叶斯）的潮汐修正重算**：`statistical_methods_tidal.py`
+用与上述相同的固定系数情景（raw/theory/empirical）在修正后拍频上重跑 §6 节的那套
+OADEV→u_i→WLS/Birge/M-P/贝叶斯合并，结果写入
+[statistical_methods_tidal.json](clock_ratio/statistical_methods_tidal.json) 并纳入
+[EXPERIMENT_REPORT.md](clock_ratio/EXPERIMENT_REPORT.md) 第 7 节（并列、不替代）。修正使
+χ²_red 从 raw 的 5.42 降到 theory 的 3.70、empirical 的 4.56；但 OADEV 外推仍系统低估
+u_i，合并值仅供方法比较。详见
+[方法 §10](docs/METHODOLOGY.md#10-新增潮汐修正后重算四种统计方法statistical_methods_tidalpy)。
+
 ## 复现
 
 **只重建新增潮汐分析与独立报告**（希望保留旧产物时推荐）：

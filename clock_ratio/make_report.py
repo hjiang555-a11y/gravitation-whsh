@@ -26,6 +26,7 @@ AGG_CSV = CLOCK_DIR / "segment_analysis" / "batch_aggregate.csv"
 CORR_CSV = OUT_DIR / "correlation_reanalysis.csv"
 CORR_TW_CSV = OUT_DIR / "correlation_reanalysis_timeweighted.csv"
 STAT_JSON = OUT_DIR / "statistical_methods.json"
+STAT_TIDAL_JSON = OUT_DIR / "statistical_methods_tidal.json"
 
 
 def _table(rows: list[dict], path: Path) -> list[dict]:
@@ -52,6 +53,7 @@ def main() -> int:
     corr = _table([], CORR_CSV)
     corr_tw = _table([], CORR_TW_CSV)
     stat = json.load(open(STAT_JSON)) if STAT_JSON.exists() else None
+    stat_tidal = json.load(open(STAT_TIDAL_JSON)) if STAT_TIDAL_JSON.exists() else None
 
     # headline numbers: segment-1 baseline vs duration-weighted experiment value
     ratio_sum_map = {r["field"]: r["value"] for r in ratio_sum}
@@ -301,8 +303,47 @@ def main() -> int:
                  " χ²_red 推高到 ~3.5–4。但 χ²_red≈5.4 的**剩余部分**来自个别段的 u_i 本身"
                  "不可靠（尤其段 5、6、16，u_i 极差约 18 倍，远超白噪声+flicker 应有的"
                  "≤2.8 倍），需逐段复核原始数据与 OADEV 曲线，而非外推偏移。故本并列"
-                 "结果的 u_i 与四种合并值在当前 OADEV 外推下**不可靠**，仅作方法演示，"
+                  "结果的 u_i 与四种合并值在当前 OADEV 外推下**不可靠**，仅作方法演示，"
                  "待正确估计 u_i 后重算。")
+        L.append("")
+
+    # ---- paper-method results on TIDAL-CORRECTED data (parallel, additive) ----
+    if stat_tidal is not None:
+        L.append("---")
+        L.append("")
+        L.append("## 7. 论文统计分析方法：潮汐修正后的重算（并列，非替代）")
+        L.append("")
+        L.append("把上节四种统计方法（WLS / Birge / M-P / 贝叶斯）重新应用到**潮汐修正后**的")
+        L.append("拍频数据上：`b_corr = b_raw − A·h`，固定响应系数 raw A=0、theory A=−1、")
+        L.append("empirical A=−0.54（与 `tidal_correction.py` 相同，不重新拟合）。每段 OADEV")
+        L.append("外推在修正后的拍频上重算 u_i，用与 `statistical_methods.py` 完全相同的算法；")
+        L.append("逐段比值与 y_i 沿用完整 Decimal 反演（`R_i,A`），y_i 以同情景段 1 为基准。")
+        L.append("与上节 raw 基线并列，不替代。")
+        L.append("")
+        L.append("| 情景 | A | WLS R | u_WLS | Birge B | M-P R（ξ） | 贝叶斯 R（ξ） |")
+        L.append("|---|---|---|---|---|---|---|")
+        for key in ("raw", "theory", "empirical"):
+            sc = stat_tidal["scenarios"][key]
+            L.append(
+                f"| {key} | {sc['coefficient']} | {sc['R_wls'][:23]} | {sc['u_wls']:.3e} | "
+                f"{sc['birge_ratio']:.3f} | {sc['R_mp'][:23]}（{sc['xi_mp']:.3e}） | "
+                f"{sc['R_bayes'][:23]}（{sc['xi_bayes']:.3e}） |")
+        L.append("")
+        L.append("| 情景 | A | χ²（dof=16） | χ²_red | p | u_stat_bayes |")
+        L.append("|---|---|---|---|---|---|")
+        for key in ("raw", "theory", "empirical"):
+            sc = stat_tidal["scenarios"][key]
+            L.append(
+                f"| {key} | {sc['coefficient']} | {sc['chi2']:.2f} | {sc['chi2_red']:.3f} | "
+                f"{sc['p_chi2']:.2e} | {sc['u_stat_bayes']:.3e} |")
+        L.append("")
+        L.append("> **口径说明**：raw 情景（A=0）在上表再现了 `statistical_methods.py` 的四种")
+        L.append("> 合并值（浮点积累顺序差异 ~1e-8 相对量级）；theory/empirical 是**新增的修正后**")
+        L.append("> 结果。修正使逐段比值与 u_i 都变化，理论（A=−1）令 χ²_red 从 5.42 降到 3.70、")
+        L.append("> 经验（A=−0.54）降到 4.56——组间散布随「加回潮汐」部分减小，但 §6 的 u_i")
+        L.append("> 不可靠结论在此同样成立：这些合并值仍受 OADEV 外推低估的影响，仅供方法比较，")
+        L.append("> 不作最终不确定度声明。数值来源 [statistical_methods_tidal.json]"
+                 "(statistical_methods_tidal.json)。")
         L.append("")
 
     out = OUT_DIR / "EXPERIMENT_REPORT.md"

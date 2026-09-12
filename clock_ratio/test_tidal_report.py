@@ -24,6 +24,7 @@ LEGACY: Final = (
     "correlation_analysis.py", "make_report_figures.py",
     "variant1_30s_tide.py", "variant30s_analysis.py", "segment13_correlation.py",
     "segment13_triangular.py", "segment6_triangular.py", "statistical_methods.py",
+    "statistical_methods_tidal.py",
     "make_report.py",
 )
 

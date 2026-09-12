@@ -399,3 +399,49 @@ A=−0.5397±0.084 一致。这从「修正后相关性消失」直接确认 −
   不据此新建 WLS、总不确定度或显著性检验，也不改变历史统计结果。
 - 不声称所有段改善。报告的「OADEV 较低组数」仅描述合格组在指定 τ 下的数值比较，
   不代表统计显著或准确度提升；旧 §2 算法与本节新算法之间的差异不能解释为潮汐效应。
+
+---
+
+## 10. 新增：潮汐修正后重算四种统计方法（`statistical_methods_tidal.py`）
+
+这是把 §3 的四种统计合并方法（WLS / Birge / Mandel–Paule / 贝叶斯）重新应用到
+**潮汐修正后**的拍频数据上的独立结果，与 §3 的 raw 基线并列、不替代。实现见
+[statistical_methods_tidal.py](../clock_ratio/statistical_methods_tidal.py)，
+数值来源为 [statistical_methods_tidal.json](../clock_ratio/statistical_methods_tidal.json)。
+
+### 10.1 处理链（修正只作用于拍频与比值，不区分算法）
+
+```text
+b_corr(t) = b_raw(t) − A·h(t)          # 固定响应系数，与 §9 相同
+raw: A=0；theory: A=−1；empirical: A=−0.54
+frac_corr = (b_corr − mean(b_corr)) / F_1550   # 修正后分数频率
+OADEV(frac_corr) → 外推 σ_y(T) → u_i,scenario = σ_y(T)·R_i,scenario
+y_i,scenario = R_i,scenario / R_seg1,scenario − 1
+```
+
+- 冻结原始样本选择（§0.2），对每段保留样本构造修正拍频；`h=F_1550·ΔW/c²` 与 §9.1
+  相同，30 s 网格插值、不外推。
+- OADEV 外推复用 [statistical_methods.py](../clock_ratio/statistical_methods.py) 的
+  `oadev` 与 `extrapolate_u`（128 s≤τ≤T/4 拟合斜率外推到 T），保证 raw 情景与 §3 的
+  算法完全一致，只有修正模板不同。
+- 逐段比值 `R_i,scenario` 从 §9 的完整 Decimal 反演路径取得（`analyze_segment`），
+  保证与 `tidal_correction.py` 的逐组 R 逐位一致；`y_i` 基线改为**同情景**段 1（不是
+  固定段 1 raw），与 §3 的「相对段 1」约定同构。
+
+### 10.2 结果要点（并列，非替代）
+
+四种合并值随情景变化：
+
+| 情景 | A | WLS R | χ²_red | Birge B | M-P ξ | 贝叶斯 ξ |
+|---|---|---|---|---|---|---|
+| raw | 0 | 1.207507039343337720797 | 5.42 | 2.329 | 2.467e-18 | 2.614e-18 |
+| theory | -1 | 1.207507039343337721688 | 3.70 | 1.923 | 2.099e-18 | 2.126e-18 |
+| empirical | -0.54 | 1.207507039343337721259 | 4.56 | 2.135 | 2.180e-18 | 2.294e-18 |
+
+理论（A=−1）令 χ²_red 从 5.42 降到 3.70、经验（A=−0.54）降到 4.56——「加回潮汐」
+使组间散布部分减小。但 §3 的 u_i 不可靠结论（OADEV 外推系统低估 ~30–40% + 个别段
+u_i 异常）在此同样成立，这些合并值仍仅作方法比较，不作最终不确定度声明。
+
+> **口径**：raw 情景（A=0）在 §10 的结果里再现了 §3 的四种合并值（浮点积累顺序
+> 差异 ~1e-8 相对量级），可作为「修正只改动模板、不改变算法」的自洽校验。
+> theory/empirical 是真正的新增修正在统计合并层面的投影。
