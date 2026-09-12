@@ -1,0 +1,75 @@
+{
+  "scenarios": {
+    "raw": {
+      "coefficient": "0",
+      "R_duration": "1.2075070393433377203695609768033054790406356472332098683511270165437806214827708",
+      "total_samples": 1008912,
+      "nsegments": 17,
+      "duration_s": 1008912,
+      "delta_R": "0E-79",
+      "delta_fractional_1e18": "0E+18"
+    },
+    "theory": {
+      "coefficient": "-1",
+      "R_duration": "1.2075070393433377208107524224977096803565326774206876494686919041346183419566985",
+      "total_samples": 1008912,
+      "nsegments": 17,
+      "duration_s": 1008912,
+      "delta_R": "4.411914456944042013158970301874777811175648875908377204739277E-19",
+      "delta_fractional_1e18": "0.3653738084494574866326022799616858374213366701822549185499880"
+    },
+    "empirical": {
+      "coefficient": "-0.54",
+      "R_duration": "1.2075070393433377206078043574782837470908032282498641720238420641867208585906893",
+      "total_samples": 1008912,
+      "nsegments": 17,
+      "duration_s": 1008912,
+      "delta_R": "2.382433806749782680501675810166543036727150476429402371079185E-19",
+      "delta_fractional_1e18": "0.1973018565627070422346793800109980959512169692536483326346433"
+    }
+  },
+  "metadata": {
+    "decimal_precision": 80,
+    "sources": {
+      "beat": "/home/room115/gravitation-whsh/clock/data/环外数据（第八列数据）",
+      "tide": "/home/room115/gravitation-whsh/results/professional_tidal_delta_30s.csv",
+      "tide_column": "total_tidal_delta_m2_s2_surface",
+      "parameters": "/home/room115/gravitation-whsh/clock/params.json"
+    },
+    "conventions": {
+      "delta_w": "W(Wuhan)-W(Shanghai), m^2/s^2",
+      "coefficient": "A is the beat RESPONSE coefficient in b_raw=noise+A*h; fixed, not fitted here",
+      "time": "Raw Beijing timestamps minus UTC_OFFSET (8 hours) yield UTC",
+      "bounds": "First and last actual retained sample timestamps, after BOTH endpoint trims",
+      "dff": "mean_dff=mean(h)/F_1550 is tidal deltaW/c^2, NOT exact ratio normalization"
+    },
+    "formulas": {
+      "template": "h=F_1550*deltaW/C^2",
+      "correction": "b_corr=b_raw-A*h (negative A adds the undemeaned template)",
+      "mean_ratio": "mean_raw_dec=to_dec(float(b_kept.mean())); mean_dm_corr=mean_raw_dec-m_dec-A*to_dec(float(h.mean())); R=full_ratio(mean_dm_corr,SHIFT_A[k],m_dec)",
+      "normalization": "G=1+DELTA_G; S0=G/R0; den_k=((1+SHIFT_A[k])/2)/N1397*(N1550+7/25+1/25); K=(COEF1156/N1156)/(FREF*DIV20*den_k)",
+      "fractional": "R0=RAW segment ratio for every scenario; e=(b-raw_float_mean)-float(A)*h; q=float(K/S0)*e; y=-q/(1+q)",
+      "oadev": "sigma_y=sqrt(sum_runs sum_i (mean(y[i+m:i+2m])-mean(y[i:i+m]))^2/(2*n_pairs)); i=0..N_run-2m",
+      "duration": "R_duration=sum(n_valid_i*R_i)/sum(n_valid_i), same weights for all scenarios",
+      "changes": "delta_R=R-R_raw; delta_fractional_1e18=(R/R_raw-1)*1e18"
+    },
+    "processing": {
+      "selection": "Unchanged shared loaders, inclusive exclusions, global plausible median; group [start,end), 30MHz<b<40MHz, abs(b-group_median)<10Hz; longest_valid_span then raw endpoint_screen; never re-screen corrections",
+      "interpolation": "Finite sorted unique UTC 30s grid; linear interpolation; no clamping, extrapolation or bridging missing >30s intervals",
+      "stability": "Break at every non-1s timestamp step, including duplicates; pool squared differences/counts within each segment only",
+      "taus": "Per segment: dyadic seconds plus 600,1200,3600,7200, capped at one quarter of its longest continuous raw run; identical grid across scenarios",
+      "centering": "Numerical centering only before prefix sums; no detrending or tide demeaning",
+      "std": "Sample fractional and beat standard deviations, ddof=1; CSV empty if n<2",
+      "n_pairs": "Overlapping pair count, not independent degrees of freedom",
+      "zero_sigma": "Corrected/raw OADEV factor is empty when raw sigma is zero or unavailable; unavailable OADEV is empty, never NaN",
+      "duration": "duration_s=n_valid*1s (weight); elapsed_span_s=last-first+1s may include gaps"
+    },
+    "limitations": [
+      "Conditional comparison for fixed exact Decimal A=-1 and A=-0.54, not coefficient estimates.",
+      "No coefficient, tide-model or systematic uncertainty is propagated.",
+      "Raw baseline intentionally inherits the legacy float64 raw mean (converted via repr), then Decimal80 arithmetic; raw quantization is not recovered.",
+      "Segment ratio is inversion after averaging corrected linear beat, not the mean of instantaneous ratios.",
+      "OADEV and sample std are not SEM; no WLS uncertainty or significance claim is manufactured."
+    ]
+  }
+}

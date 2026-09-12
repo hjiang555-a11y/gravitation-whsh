@@ -48,8 +48,8 @@
 | 符号 | 含义 | 值 |
 |---|---|---|
 | `beat`（`b`） | 1550 nm 环外拍频（FXE_B8） | ~33 623 140 Hz |
-| `m` | 拍频全局中位数（去跳点后） | ~33 623 140.92 Hz |
-| `mean_dm` | 段内拍频相对 m 的平均偏差 = `mean(d_long − m)` | Hz |
+| `m` / `m_dec` | 去扣除后且位于 (3e7,4e7) Hz 的原始拍频全局中位数；`m_dec` 为其 Decimal 转换 | ~33 623 140.92 Hz |
+| `mean_dm` | 段内拍频相对 m 的平均偏差；旧求值顺序为 `to_dec(float(mean(d_long)))−m_dec` | Hz |
 | `Dr` | 拍频偏差 → Sr/Yb 比值偏移 | 无量纲 |
 | `COEF` | 拍频[Hz] → **Sr/Yb 比值偏移**的换算系数（Dr 公式） | 4.282082163269648e-15 |
 | `F_1550` | 1550 nm 传递光频率 = `N1550_WH × f_rep`（拍频归一化基准） | 193 399 200 000 000 Hz ≈ 193.40 THz |
@@ -117,8 +117,8 @@
 |---|---|
 | `r` | Pearson 相关系数（段内或段间）|
 | `ρ` | Spearman 秩相关系数 |
-| `A` | 段内幅度比（`beat = A·tide + noise`，A=+1 表示完整理论幅度）|
-| `u_A` | A 的不确定度 |
+| `A` | 拍频响应系数；历史分析由去均值波形拟合，A=+1 表示相对于正模板的同号完整幅度；新增分析固定 A=−1 或 −0.54（见 §10）|
+| `u_A` | 历史拟合 A 的不确定度；新增固定情景不估计或传播此项 |
 | `ΔW_会话` / `dff` | 会话潮汐频移 = 段内 ΔW 均值 / c²（×10⁻¹⁸）|
 | `Stouffer \|z\|` | 符号无关 Stouffer 合并统计量 |
 
@@ -132,3 +132,63 @@
 
 - 专业潮汐「综合差」方向 = **武汉 − 上海**（CAS − SHA），即 `ΔW = W(WUHN) − W(SHAO)`。
 - 潮汐引力红移：`Δf/f = ΔW / c²`。
+
+## 10. 新增固定潮汐修正情景与段内稳定度
+
+本节定义仅用于独立 [REPORT.md](../clock_ratio/tidal_correction/REPORT.md)；
+全精度结果与处理约定见 [summary.json](../clock_ratio/tidal_correction/summary.json)，
+完整公式见 [METHODOLOGY §9](METHODOLOGY.md#9-新增固定响应系数的潮汐修正与段内稳定度)。
+旧段间 `y_i`、历史统计结果及参考值不被替代。
+
+### 10.1 响应与修正（避免双重负号）
+
+| 符号/字段 | 定义 | 单位/约定 |
+|---|---|---|
+| `h(t)` | `F_1550·ΔW(t)/c²`，未去均值潮汐拍频模板 | Hz；ΔW 为武汉−上海 |
+| `A` / `coefficient` | `b_raw=noise+A·h` 的响应系数 | 无量纲；raw=0、theory=−1、empirical=−0.54，固定且不重拟合 |
+| `b_corr` | `b_raw−A·h` | Hz；theory 加 h，empirical 加 0.54h |
+| `raw_mean` | 对冻结保留样本计算的原始 float64 拍频均值 | Hz；转 Decimal 不恢复其量化精度 |
+| `mean_dm_corrected_hz` | `to_dec(raw_mean)−m_dec−A·to_dec(mean(h))` | Hz；以 Decimal80 计算后传给完整 `full_ratio` |
+| `mean_dff` | `mean(h)/F_1550`，即潮汐 ΔW/c² 的样本均值 | 无量纲；`mean_dff_1e18` 为其乘 10¹⁸ |
+| `R_i,A` | 先平均修正后的线性拍频再反演的第 i 段比值 | 无量纲；保留静态 `DELTA_G` 及原有 `shift_a` |
+| `R_duration,A` | `Σ(n_valid_i·R_i,A)/Σn_valid_i` | 无量纲；三情景同权重，非 WLS |
+| `delta_R` / `ΔR` | `R_scenario−R_raw` | 带符号的绝对比值差，非取绝对值；展示列可乘 10¹⁸ |
+| `delta_fractional_1e18` | `(R_scenario/R_raw−1)×10¹⁸` | 分数变化的缩放值，不等于 `delta_R×10¹⁸` 或 `mean_dff_1e18` |
+
+逐组 [ratio_scenarios.csv](../clock_ratio/tidal_correction/ratio_scenarios.csv) 的变化量
+以该组 raw 为参考；summary.json 中的变化量以 raw 的整个实验时长加权中心为参考。
+R 展示时从完整 Decimal 按 `ROUND_HALF_EVEN` 舍入至小数点后 22 位，不意味着相同位数的测量准确度。
+
+A=−0.54 是历史去均值波形幅度的固定情景转用；将其用于未去均值模板的 DC（均值）部分是
+额外假设，不是校准。负号是用户指定约定，不是对
+[硬件极性](../clock/SIGN_COEFFICIENT_ANALYSIS.md) 的新确认。
+
+### 10.2 共同 raw 参考与真正重叠的 Allan 偏差
+
+| 符号/字段 | 定义 | 单位/约定 |
+|---|---|---|
+| `R0` | 当前段 raw 比值，供该段所有情景共用 | 无量纲；不是固定第 1 段 `R_seg1` 或整个实验中心 |
+| `S0` | `(1+DELTA_G)/R0` | 无量纲；原始 Sr/Yb 线性比值 |
+| `K` | 完整 Dr 对拍频偏差的线性系数，含该段 `shift_a`（公式见方法 §9.3） | Hz⁻¹；不用展示用的舍入 `COEF` 代替 |
+| `e(t)` | `(b(t)−raw_mean)−A·h(t)` | Hz；在小残差上施加修正 |
+| `q(t)` | `(K/S0)·e(t)` | 无量纲 |
+| `y(t)` | `R_A(t)/R0−1 = −q/(1+q)` | 段内分数比值序列；不是历史段间 `y_i` |
+| `fractional_std` / `beat_std_hz` | y / e 的样本标准差，`ddof=1` | 无量纲 / Hz；不是 SEM |
+| `run` / `N_run` | 真实连续 1 s 片段 / 片段样本数 | 每个非 1 s 时间步（含重复时间戳）均断开 |
+| `m`（仅 OADEV 公式中） | 每个相邻均值窗口的样本数，τ=m 秒 | 正整数；不同于 §3 拍频中位数 m |
+| `n_pairs` | 同组各 run 中 `max(N_run−2m+1,0)` 之和 | 全部重叠相邻窗口对数，非独立自由度 |
+| `sigma_y` / `σ_y(τ)` | 全部重叠窗口的 Allan 偏差 | 无量纲；平方差与对数只在同组内合并，不跨间断或跨组 |
+| `sigma_factor_vs_raw` | 同组同 τ 的 `σ_y,scenario/σ_y,raw` | 无量纲；raw 为零或不可用时留空，不填零 |
+| `duration_s` | `n_valid×1 s` | 样本权重对应时长，不计间断时长 |
+| `elapsed_span_s` | 实际末样本−首样本+1 s | 可包含间断，不能代替样本权重 |
+
+时间边界使用两端裁剪后的实际保留样本，北京时间减 8 h 对齐 UTC 30 s 潮汐网格；
+不外推、不钳位、不跨缺失插值区间。钟比值仍冻结旧最长有效**索引段**的成员，
+不强制时间连续；只有段内 OADEV 按上述 run 规则断开。
+
+[stability.csv](../clock_ratio/tidal_correction/stability.csv) 使用二进制秒数加
+600、1200、3600、7200 s 的 τ 网格，上限为各段最长 raw run 长度的 1/4，三情景相同。
+只在前缀和前做数值中心化，不去趋势。历史 `statistical_methods.oadev` 用的是
+不重叠块均值及相邻差，不能与这里的新算法直接比较并归因为潮汐效果。
+OADEV 与样本标准差都不是 SEM；新增情景不传播系数、潮汐模型或系统项不确定度，
+不提供新 WLS 或总不确定度，也不把较低 OADEV 解释为统计显著或准确度提升。

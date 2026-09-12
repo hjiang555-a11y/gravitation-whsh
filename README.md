@@ -26,7 +26,7 @@
 | `R_duration` | **整个实验的 Yb/Sr 值** = 17 段按有效时长加权的中心值 `Σ(n_valid_i·R_i)/Σn_valid_i` |
 | `R_wls` | 精度加权 WLS 中心值（权重 = 1/u_i²，最优无偏估计）|
 | `y_i` | 段钟比值偏差 = `R_i/R_seg1 − 1`（×10⁻¹⁸）|
-| `A` | 段内幅度比（`beat = A·tide + noise`，A=+1 表示完整理论幅度）|
+| `A` | 拍频响应系数：历史段内拟合用去均值波形；新增修正固定 A=−1 或 −0.54，`b_corr=b_raw−A·h`（见独立结果）|
 | `COEF` | 拍频→Sr/Yb 比值偏移系数（Dr 公式）|
 | `F_1550` | 1550 nm 传递光频（拍频归一化基准，193.40 THz）|
 | `N1156/N1397/N1550/N1550_WH` | 光梳计数（Yb/Sr/上海1550/武汉1550）|
@@ -47,9 +47,9 @@
 ### 1. 拍频偏差 `mean_dm`
 
 ```text
-mean_dm = mean(d_long − m)          [Hz]
-   d_long = 该段最长无跳点段（去跳点 + 去扣除 + 端点筛选后）
-   m      = 全段拍频中位数（~33 623 140.92 Hz）
+mean_dm = to_dec(float(mean(d_long))) − m_dec       [Hz，旧实现的求值顺序]
+   d_long = 该段最长有效索引段（去跳点 + 去扣除 + 端点筛选后；未保证时间连续）
+   m_dec  = 全局可用拍频中位数转 Decimal（~33 623 140.92 Hz）
 ```
 
 ### 2. Sr 系统频移修正 `shift_a`（五分量合成）
@@ -153,15 +153,74 @@ clock_ratio/EXPERIMENT_REPORT.md      → 总权威报告
 > [docs/METHODOLOGY.md](docs/METHODOLOGY.md) 与
 > [clock_ratio/EXPERIMENT_REPORT.md](clock_ratio/EXPERIMENT_REPORT.md)。
 
+## 新增：固定响应系数的潮汐修正比较（独立结果）
+
+保留上方未做潮汐修正的历史主结果；下表是**先修正拍频、再计算钟比值**的新增情景，
+不替代旧结果或其统计分析。三个情景均使用相同的 **17 组、1,008,912 个保留样本**，
+权重为 `n_valid`（每样本 1 s），不是 WLS。
+
+| 情景 | 响应系数 A | R_duration | ΔR×10¹⁸（绝对比值差） | (R/R_raw−1)×10¹⁸（分数变化） |
+|---|---|---|---|---|
+| raw（旧基线） | 0 | 1.2075070393433377203696 | +0.000000 | +0.000000 |
+| theory（固定理论幅度） | -1 | 1.2075070393433377208108 | +0.441191 | +0.365374 |
+| empirical（固定经验幅度） | -0.54 | 1.2075070393433377206078 | +0.238243 | +0.197302 |
+
+`ΔR = R_duration,scenario − R_duration,raw` 是带符号的**绝对比值差**（不是取绝对值）；
+分数变化还须除以 `R_duration,raw`，因此两列不能混用，也不等于潮汐 `mean_dff`。
+R 从 [summary.json](clock_ratio/tidal_correction/summary.json) 的完整 Decimal 字符串以
+`ROUND_HALF_EVEN` 舍入到小数点后 **22 位**；变化量从未舍入值计算，显示小数点后 6 位。
+显示位数不代表测量准确度。
+
+- **符号与顺序**：`h = F_1550·ΔW/c²`，`ΔW = W(武汉)−W(上海)`；h **不去均值**。
+  A 是 `b_raw = noise + A·h` 中的响应系数，修正为 `b_corr = b_raw − A·h`，
+  即 A=−1 加回 h、A=−0.54 加回 0.54h；本次不重新拟合 A。
+- **同样本比较**：冻结原始筛选、全局中位数、最长有效索引段及两端裁剪；
+  对实际保留的北京时间戳减 8 h 后插值 30 s 潮汐，不外推、不钳位、不跨缺失插值区间。
+  潮汐均值修正在 Decimal80 的小拍频偏差中完成，再经完整 `full_ratio` 反演；
+  保留 `DELTA_G`、`shift_a`，不向 MHz 浮点载波或数量级为 1 的浮点比值直接叠加微小量。
+  旧原始 float64 均值的量化误差仍然继承，并非平均瞬时比值。
+- **段内稳定度**：三情景以同一 raw 段比值为参考，使用完整比值映射及全部重叠窗口的 OADEV；
+  每个非 1 s 时间步（含重复时间戳）均断开，不跨组拼接。保留旧索引段中的间断样本归属，
+  不等于让 OADEV 跨间断。τ=1200 s 时 theory/empirical 分别有 **7/17、10/17** 组 OADEV 较低；
+  τ=3600 s 为 **13/17、13/17**；τ=7200 s 为 **6/15、10/15**。
+  分母仅计该 τ 可比较的组；不是所有段都改善，也不是显著性或准确度结论。
+- **解释边界**：把历史去均值波形的 −0.54 幅度用于未去均值模板的 DC（均值）部分，
+  是额外假设，不是校准；固定负号是用户指定情景，未新解决
+  [硬件极性问题](clock/SIGN_COEFFICIENT_ANALYSIS.md)。未传播系数、潮汐模型或系统项不确定度，
+  OADEV 与样本标准差不是 SEM；没有新增 WLS 或总不确定度。
+
+完整结果见独立 [REPORT.md](clock_ratio/tidal_correction/REPORT.md)，逐组钟比值见
+[ratio_scenarios.csv](clock_ratio/tidal_correction/ratio_scenarios.csv)，全部 τ 与重叠对数见
+[stability.csv](clock_ratio/tidal_correction/stability.csv)。实现：
+[tidal_analysis.py](clock_ratio/tidal_analysis.py)、[tidal_stability.py](clock_ratio/tidal_stability.py)、
+[tidal_correction.py](clock_ratio/tidal_correction.py)；公式细节见
+[方法 §9](docs/METHODOLOGY.md#9-新增固定响应系数的潮汐修正与段内稳定度)。
+旧 `statistical_methods.oadev` 实际使用不重叠块均值；旧代码和结果保留，
+不能把旧算法与新 OADEV 的数值差当作潮汐效应。
+
 ## 复现
 
-**一键分析 + 出报告**（推荐）：
+**只重建新增潮汐分析与独立报告**（希望保留旧产物时推荐）：
 
 ```bash
-python run_all.py   # 跑完全部分析步骤 + 自动刷新 EXPERIMENT_REPORT.md
+python run_all.py --tidal-only
+python run_all.py --help   # 仅显示选项，不启动分析
 ```
 
-或分步运行：
+`--tidal-only` 只顺序运行 `tidal_correction.py`、`make_tidal_report.py`，任一步失败立即停止。
+同样的独立流程可直接运行：
+
+```bash
+python clock_ratio/tidal_correction.py && python clock_ratio/make_tidal_report.py
+```
+
+**全流程重建**（会像历史流程一样重新生成旧分析产物，并加入上述新增两步）：
+
+```bash
+python run_all.py
+```
+
+旧分析的部分分步命令（完整顺序见 WORKFLOW）：
 
 ```bash
 python clock_ratio/compute_ratio.py              # 17 段钟比值（含端点筛选）

@@ -5,6 +5,8 @@ Runs every analysis step in dependency order (each step reads the CSVs produced
 by earlier steps), then regenerates the authoritative report. With new
 experimental data (new beat files + params.json entries), running this single
 script reproduces the full analysis and report.
+Use --tidal-only for just the independent tidal analysis/report (fail-fast).
+Use --help to show options without starting any analysis.
 
 Steps (all in the repo, run via subprocess so each keeps its own main):
   1. clock_ratio/compute_ratio.py          -> ratio_17seg.csv (per-segment ratio)
@@ -23,8 +25,16 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
+from typing import Annotated, Final
+
+import typer
 
 REPO = Path(__file__).resolve().parent
+app = typer.Typer(add_completion=False, pretty_exceptions_enable=False)
+TIDAL_STEPS: Final = [
+    ("独立潮汐修正", REPO / "clock_ratio" / "tidal_correction.py"),
+    ("独立潮汐报告", REPO / "clock_ratio" / "make_tidal_report.py"),
+]
 
 STEPS = [
     ("逐段钟比值", REPO / "clock_ratio" / "compute_ratio.py"),
@@ -40,26 +50,41 @@ STEPS = [
     ("段13三角窗", REPO / "clock" / "segment_analysis" / "segment13_triangular.py"),
     ("段6三角窗", REPO / "clock" / "segment_analysis" / "segment6_triangular.py"),
     ("论文统计方法(OADEV+WLS/Birge/M-P/贝叶斯)", REPO / "clock_ratio" / "statistical_methods.py"),
+    *TIDAL_STEPS,
     ("自动报告", REPO / "clock_ratio" / "make_report.py"),
 ]
 
 
-def main() -> int:
-    failed = []
-    for name, script in STEPS:
+def select_steps(tidal_only: bool) -> list[tuple[str, Path]]:
+    """Keep legacy order by default; isolate the two additive steps when requested."""
+    return list(TIDAL_STEPS if tidal_only else STEPS)
+
+
+def main(tidal_only: bool = False) -> int:
+    failed: list[str] = []
+    for name, script in select_steps(tidal_only):
         print(f"\n===== [{name}] {script.name} =====", flush=True)
         r = subprocess.run([sys.executable, str(script)], cwd=REPO)
         if r.returncode != 0:
             print(f"  ✗ {name} 失败 (exit {r.returncode})", file=sys.stderr)
             failed.append(name)
+            if tidal_only:
+                return 1
         else:
             print(f"  ✓ {name} 完成")
     if failed:
         print(f"\n失败步骤: {failed}", file=sys.stderr)
         return 1
-    print("\n全部步骤完成。报告见 clock_ratio/EXPERIMENT_REPORT.md")
+    report = "clock_ratio/tidal_correction/REPORT.md" if tidal_only else "clock_ratio/EXPERIMENT_REPORT.md"
+    print(f"\n全部步骤完成。报告见 {report}")
     return 0
 
 
+@app.command()
+def cli(tidal_only: Annotated[bool, typer.Option("--tidal-only", help="Run only tidal analysis and its report; stop on the first failure.")] = False) -> None:
+    """Run all legacy steps plus tidal comparison, or just the independent tidal lane."""
+    raise typer.Exit(code=main(tidal_only))
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    app()

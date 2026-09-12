@@ -100,6 +100,8 @@ def main() -> int:
     L = []
     L.append("# 武汉—上海光钟比对实验报告")
     L.append("")
+    L.append("> **导航**：本报告的时长加权钟比值保留未做潮汐修正的旧基线；raw / theory / empirical 的独立潮汐修正比较见新[报告](tidal_correction/REPORT.md)。")
+    L.append("")
     L.append("> **Yb/Sr 钟比值计算 · 潮汐修正 · 相关性分析**（自动生成）")
     L.append(">")
     L.append(f"> **整个实验的 Yb/Sr 值（时长加权中心值）**：**{R_duration_18}**"

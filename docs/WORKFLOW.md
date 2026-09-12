@@ -26,19 +26,77 @@
 - **代码不重复参数** —— 任何脚本要段窗口/常数，一律 `from clock.shared import ...`。
 - **物理量定义统一** —— 符号定义见 [docs/NOTATION.md](NOTATION.md)，错误教训见
   [docs/ERROR_CHECKLIST.md](ERROR_CHECKLIST.md)。
+- **新增情景与实验参数分开** —— `tidal_analysis.py` 的 `SCENARIOS` 固定 A=0、−1、−0.54，
+  是本次指定的比较情景，不是新拟合值，也不改写 `params.json` 中的实验常数。
 
-## 2. 全库分析链（一键运行）
+## 2. 运行入口：独立潮汐比较与全库重建
 
-**一键入口**（推荐，自动串联所有步骤并刷新报告）：
+以下命令均在仓库根目录、已有运行环境中执行。只需查看选项、不启动分析时：
+
+```bash
+python run_all.py --help
+```
+
+### 2.1 只运行新增潮汐分析（保留旧产物时推荐）
+
+```bash
+python run_all.py --tidal-only
+```
+
+该模式**只按顺序运行两个脚本**：
+
+1. [tidal_correction.py](../clock_ratio/tidal_correction.py)：从原始拍频与潮汐数据计算
+   raw（A=0）、theory（A=−1）、empirical（A=−0.54）的钟比值及段内稳定度。
+2. [make_tidal_report.py](../clock_ratio/make_tidal_report.py)：读取新生成的 CSV/JSON，生成独立报告。
+
+**任一步失败立即停止并非零退出**；分析失败后不继续用旧的新增产物生成报告。
+这个入口不运行旧分析和旧报告生成器，只重建 `clock_ratio/tidal_correction/` 下的独立产物，
+因此要保留历史文件时应选它，而非无参数的全流程入口。直接运行以下两脚本得到相同流程；
+使用 `&&` 保留失败即停止的行为：
+
+```bash
+python clock_ratio/tidal_correction.py && python clock_ratio/make_tidal_report.py
+```
+
+只重建独立报告、不重新分析或修改源 CSV/JSON：
+
+```bash
+python clock_ratio/make_tidal_report.py
+```
+
+| 独立产物 | 内容 |
+|---|---|
+| [REPORT.md](../clock_ratio/tidal_correction/REPORT.md) | 三情景中心值、逐组比值、共同 τ 的描述性 OADEV 比较及限制 |
+| [ratio_scenarios.csv](../clock_ratio/tidal_correction/ratio_scenarios.csv) | 逐组全精度比值、绝对/分数变化、实际裁剪后时间边界、有效样本数及样本标准差 |
+| [stability.csv](../clock_ratio/tidal_correction/stability.csv) | 各组各情景的 τ、重叠对数 n_pairs、OADEV 及 corrected/raw 倍数 |
+| [summary.json](../clock_ratio/tidal_correction/summary.json) | 全精度 Decimal 时长加权中心与变化量、处理约定及限制；数值真源 |
+
+计算逻辑见 [tidal_analysis.py](../clock_ratio/tidal_analysis.py) 与
+[tidal_stability.py](../clock_ratio/tidal_stability.py)，方法见 [METHODOLOGY §9](METHODOLOGY.md#9-新增固定响应系数的潮汐修正与段内稳定度)。
+三情景冻结原始样本及权重，不重新筛选或拟合 A；负响应对应加回未去均值模板，
+不是修改 `DELTA_G` 或 `shift_a`。完整比值反演前做潮汐修正，段内 OADEV 另按真实时间间断分开。
+
+有本地原始钟数据时，相关测试命令为（这里列出复核入口，不代表本次文档编辑已执行测试）：
+
+```bash
+RUN_CLOCK_DATA_TESTS=1 python -m pytest -q clock_ratio/test_tidal_analysis.py clock_ratio/test_tidal_outputs.py clock_ratio/test_tidal_report.py
+```
+
+### 2.2 全库分析链（会重新生成历史产物）
 
 ```bash
 python run_all.py
 ```
 
-等价于按顺序运行以下步骤（后面的脚本读前面的 CSV 产物）：
+默认入口仍运行**所有旧步骤，加上新增两步**，并像历史流程一样重新生成旧分析、图及
+`EXPERIMENT_REPORT.md`。新增比较是独立结果，不意味着默认全流程不写旧文件。
+默认模式也保留历史的错误收集行为：某步失败仍继续后续步骤，最后汇总并非零退出；
+不要把 `--tidal-only` 的 fail-fast 保证套到默认模式。
+
+当前 [run_all.py](../run_all.py) 的执行顺序如下：
 
 ```bash
-# 1. 逐段钟比值（decimal 80 位 + 端点筛选）
+# 1. 逐段钟比值（Decimal80 反演 + 原始端点筛选）
 python clock_ratio/compute_ratio.py
 #   输出: clock_ratio/ratio_17seg.csv, ratio_17seg_summary.csv
 
@@ -46,11 +104,11 @@ python clock_ratio/compute_ratio.py
 python clock/clock_tidal_shift.py
 #   输出: clock/clock_tidal_shift.csv, .png
 
-# 3. 段内 1200-s 拟合 + 跨段合并（核心检出）
+# 3. 段内 1200-s 拟合 + 跨段合并（历史检出分析）
 python clock/segment_analysis/batch_analysis.py
-#   输出: clock/segment_analysis/batch_summary.csv, batch_aggregate.csv（跨段统计）, batch_forest.png, batch_shared_axis.png
+#   输出: batch_summary.csv, batch_aggregate.csv, batch_forest.png, batch_shared_axis.png
 
-# 4. 段均值相关性 + 时长加权均值 + 整体修正量
+# 4–6. 历史相关性及报告插图
 python clock_ratio/correlation_reanalysis.py
 #   输出: clock_ratio/correlation_reanalysis.csv, .png
 
@@ -60,24 +118,31 @@ python clock_ratio/correlation_reanalysis_timeweighted.py
 
 # 5. 段均值相关（y_i vs Δf/f，物理量一致的版本）
 python clock/correlation_analysis.py
-#   输出: clock/correlation.png
-
-# 6. 报告插图
 python clock_ratio/make_report_figures.py
-#   输出: clock_ratio/ratio_segments.png
 
-# 7. 自动生成权威报告
+# 7–11. 历史变体及单段诊断（默认流程也运行）
+python clock/segment_analysis/variant1_30s_tide.py
+python clock/segment_analysis/variant30s_analysis.py
+python clock/segment13_correlation.py
+python clock/segment_analysis/segment13_triangular.py
+python clock/segment_analysis/segment6_triangular.py
+
+# 12. 历史 Allan 稳定度及统计合并（oadev 名称的算法注释见 METHODOLOGY §2）
+python clock_ratio/statistical_methods.py
+
+# 13–14. 独立潮汐比较及独立报告
+python clock_ratio/tidal_correction.py
+python clock_ratio/make_tidal_report.py
+
+# 15. 自动生成旧分析总报告
 python clock_ratio/make_report.py
-#   输出: clock_ratio/EXPERIMENT_REPORT.md（从各 CSV 产物自动汇总）
+#   输出: clock_ratio/EXPERIMENT_REPORT.md
 ```
 
-运行完成后，重点看：
-- `clock_ratio/ratio_17seg.csv` —— 逐段钟比值 R_i 和偏差 y_i
-- `clock/segment_analysis/batch_summary.csv` + `batch_aggregate.csv` —— 逐段幅度比 A 与跨段合并统计
-- 权威结论自动汇总在 [clock_ratio/EXPERIMENT_REPORT.md](../clock_ratio/EXPERIMENT_REPORT.md)
-
-> 说明：`make_report.py` 是**自动报告生成器**，从各 CSV 产物读取结果、渲染成
-> 完整 Markdown 报告。新增实验数据后运行 `run_all.py`，报告自动刷新，无需手改。
+运行完成后，历史钟比值与相关性结果仍见
+[EXPERIMENT_REPORT.md](../clock_ratio/EXPERIMENT_REPORT.md)，
+新增固定响应情景见 [tidal_correction/REPORT.md](../clock_ratio/tidal_correction/REPORT.md)。
+两份报告由各自生成器读取产物自动生成，不手改生成报告。
 
 ## 3. 实验条件改变时改哪里
 
@@ -122,13 +187,17 @@ python clock/segment_analysis/segment17_correlation.py # 17 点两两相关
 
 ## 6. 诊断清单（运行前自检）
 
-每次运行前，对照 [docs/ERROR_CHECKLIST.md](ERROR_CHECKLIST.md) 的六类错误自检，
+每次运行前，对照 [docs/ERROR_CHECKLIST.md](ERROR_CHECKLIST.md) 的六类历史错误及新增潮汐专项检查，
 尤其：
 
-- [ ] 高精度小数是否走 Decimal（未用 float 直接算 E-18 量）
+- [ ] 高精度小数是否走 Decimal（未用 float 直接算 E-18 比值差）
 - [ ] 潮汐归一化用 `F_1550`（不是 `COEF`）
 - [ ] 相关性配对物理量一致（`y_i ↔ Δf/f`，不是 `A ↔ Δf/f`）
-- [ ] 参数只在 `params.json`，未散落硬编码
+- [ ] 实验参数仍来自 `params.json`；固定 A 情景与实验常数分开
+- [ ] 要保留旧产物时选择 `--tidal-only`，不误跑默认全流程
+- [ ] 实际裁剪后时间戳减 8 h；潮汐覆盖及插值区间有效，不外推或跨缺失区间
+- [ ] 三情景保留样本与权重相同；OADEV 不跨间断，且不与历史块均值算法混比
+- [ ] 分开报告 `delta_R×10¹⁸` 与 `delta_fractional_1e18`，不把 OADEV 当 SEM 或总不确定度
 
 ## 7. 相关文档
 

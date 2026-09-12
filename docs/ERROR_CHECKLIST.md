@@ -86,3 +86,51 @@
 - 全局等比例缩放下，哪些统计量不变、哪些变？我的判断对吗？
 - 符号/方向约定有没有歧义？
 - 我是否在拿「参考文档结论」当真理，而不是用「原始数据验算」？
+
+---
+
+## 五、新增潮汐修正专项检查（不改历史基线）
+
+本节是新增分析的防错要求，不将每项风险都宣称为已经发生过的错误。
+方法见 [METHODOLOGY §9](METHODOLOGY.md#9-新增固定响应系数的潮汐修正与段内稳定度)，
+结果见独立 [REPORT.md](../clock_ratio/tidal_correction/REPORT.md)。
+
+### 5.1 符号、样本与时间
+
+- [ ] `ΔW=W(武汉)−W(上海)`，`h=F_1550·ΔW/c²`；h 不预加负号、不去均值，不使用 `1/COEF` 生成模板。
+- [ ] A 是 `b_raw=noise+A·h` 的**响应系数**；修正是 `b_corr=b_raw−A·h`。固定 A=−1 加 h，A=−0.54 加 0.54h；本次不重拟合。
+- [ ] 三情景使用完全相同的原始段窗口、含两端扣除区间、全局中位数、跳点筛选、最长有效索引段和两端裁剪；修正后不重新筛选。
+- [ ] 不把旧 `longest_valid_span` 误写成保证时间连续：它只检查索引掩码。时间间断两侧保留样本仍参与比值；OADEV 遇每个非 1 s 步长（含重复时间戳）断开。
+- [ ] 使用**实际裁剪后**保留样本时间戳，北京时间减 8 h 后查询潮汐；不能用旧 CSV 中裁剪前边界代替。
+- [ ] 潮汐时间/数值有限，UTC 30 s 刻度有序且无重复；查询不超覆盖范围，所需插值两端相隔 30 s。不外推、不钳位、不跨缺失区间插值。
+- [ ] 三情景逐组 `n_valid` 一致；`duration_s=n_valid×1 s`，不能用可能含间断的 `elapsed_span_s` 代替权重。
+
+### 5.2 精度、反演与变化量
+
+- [ ] 沿用旧原始 float64 均值，经 `repr` 转 Decimal；明确 Decimal 不恢复已损失的原始均值量化精度。
+- [ ] 在 Decimal80 中计算 `mean_dm_corr=to_dec(raw_mean)−m_dec−A·to_dec(mean(h))`，随后调用完整 `full_ratio`；不向 MHz 浮点拍频或数量级为 1 的浮点比值直接叠加微小量。
+- [ ] 先平均修正后的线性拍频、再反演，不平均瞬时比值；`DELTA_G`、`shift_a` 及完整 Dr 常数保持不变。
+- [ ] [summary.json](../clock_ratio/tidal_correction/summary.json) 的 `R_duration` 与 [ratio_scenarios.csv](../clock_ratio/tidal_correction/ratio_scenarios.csv) 按同一 `n_valid` 权重汇总一致；不换成 WLS。
+- [ ] R 从完整 Decimal 按 `ROUND_HALF_EVEN` 舍入到小数点后 22 位；不先转 float 或截断字符串，显示位数不作为准确度声明。
+- [ ] `delta_R=R−R_raw` 是带符号绝对比值差，`delta_fractional_1e18=(R/R_raw−1)×10¹⁸` 是分数变化；先用未舍入值计算，再展示。两者不混用，也不是 `mean_dff_1e18`。
+
+### 5.3 稳定度与解释边界
+
+- [ ] 同组所有情景共用 raw 参考 R0；`S0=(1+DELTA_G)/R0`，K 来自该段完整 Dr 常数而非舍入 `COEF`，`q=(K/S0)·[(b−raw_mean)−A·h]`，直接计算 `y=−q/(1+q)`。
+- [ ] 新 OADEV 在每个连续 run 内使用全部起点 `j=0,…,N_run−2m`；平方差与对数仅在同组内汇总，分母为 `2·n_pairs`，其中 `n_pairs=Σ_runs max(N_run−2m+1,0)`，不是独立自由度。
+- [ ] τ 为二进制秒数加 600、1200、3600、7200 s，均不超过最长 raw run 长度的 1/4；三情景网格一致，不去趋势。样本标准差使用 `ddof=1`。
+- [ ] 长 τ 不可用或 raw OADEV 为零时，不把缺失 OADEV/倍数填零；报告计数的分母只包括该 τ 可比较的组。
+- [ ] 所有 corrected/raw 倍数来自同一个新 OADEV 算法；旧 `statistical_methods.oadev` 实际是不重叠块均值算法，保留旧输出，不把新旧算法之差归因为潮汐。
+- [ ] −0.54 从去均值波形转用到未去均值 DC 均值是额外假设，不称为校准；固定负号不称为新验证的硬件极性。
+- [ ] 不声称所有段改善；较低 OADEV 只是指定 τ 下的描述性结果，不等于统计显著或准确度提高。
+- [ ] OADEV/样本标准差不是 SEM；没有传播系数、潮汐模型或系统项不确定度，不据此生成新 WLS 或总不确定度。
+
+### 5.4 独立产物与真实验证
+
+- [ ] 要保留旧文件时使用 `python run_all.py --tidal-only`：只运行分析与独立报告两步，任一步失败立即停止；默认 `python run_all.py` 仍会重新生成历史分析及报告。
+- [ ] 独立结果只进入 `clock_ratio/tidal_correction/`；旧主结果不被新情景替代。来源为 summary.json、ratio_scenarios.csv 和 [stability.csv](../clock_ratio/tidal_correction/stability.csv)。
+- [ ] 需要真实数据复核时运行以下命令，并记录实际输出；仅在文档列出命令不代表测试已经通过：
+
+```bash
+RUN_CLOCK_DATA_TESTS=1 python -m pytest -q clock_ratio/test_tidal_analysis.py clock_ratio/test_tidal_outputs.py clock_ratio/test_tidal_report.py
+```
