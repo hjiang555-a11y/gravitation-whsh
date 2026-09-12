@@ -1,0 +1,14 @@
+metric,value
+weighted_pearson_r,0.371644
+weighted_pearson_p,0.225731
+weighted_spearman_rho,0.343231
+weighted_spearman_p,0.265961
+n_eff,12.354611
+wls_slope,0.640826
+wls_slope_se,0.497474
+wls_intercept,-0.247628
+equalweight_pearson_r,0.517648
+equalweight_pearson_p,0.033314
+weighted_mean_yi_1e18,-0.481584
+weighted_mean_dff_1e18,-0.365085
+total_test_time_s,1008912

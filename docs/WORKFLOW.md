@@ -54,6 +54,10 @@ python clock/segment_analysis/batch_analysis.py
 python clock_ratio/correlation_reanalysis.py
 #   输出: clock_ratio/correlation_reanalysis.csv, .png
 
+# 4b. 段均值相关性（时间等权重：权重 = 段有效时长 n_valid）
+python clock_ratio/correlation_reanalysis_timeweighted.py
+#   输出: clock_ratio/correlation_reanalysis_timeweighted.csv, .png
+
 # 5. 段均值相关（y_i vs Δf/f，物理量一致的版本）
 python clock/correlation_analysis.py
 #   输出: clock/correlation.png

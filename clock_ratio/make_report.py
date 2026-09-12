@@ -24,6 +24,7 @@ TIDE_CSV = CLOCK_DIR / "clock_tidal_shift.csv"
 BATCH_CSV = CLOCK_DIR / "segment_analysis" / "batch_summary.csv"
 AGG_CSV = CLOCK_DIR / "segment_analysis" / "batch_aggregate.csv"
 CORR_CSV = OUT_DIR / "correlation_reanalysis.csv"
+CORR_TW_CSV = OUT_DIR / "correlation_reanalysis_timeweighted.csv"
 STAT_JSON = OUT_DIR / "statistical_methods.json"
 
 
@@ -49,6 +50,7 @@ def main() -> int:
     batch = _table([], BATCH_CSV)
     agg = _table([], AGG_CSV)
     corr = _table([], CORR_CSV)
+    corr_tw = _table([], CORR_TW_CSV)
     stat = json.load(open(STAT_JSON)) if STAT_JSON.exists() else None
 
     # headline numbers: segment-1 baseline vs duration-weighted experiment value
@@ -66,6 +68,7 @@ def main() -> int:
 
     agg = {r["metric"]: r["value"] for r in agg}
     corr = {r["metric"]: r["value"] for r in corr}
+    corr_tw = {r["metric"]: r["value"] for r in corr_tw}
 
     n = len(ratio)
     y_i = [float(r["y_i_1e18"]) for r in ratio]
@@ -85,6 +88,14 @@ def main() -> int:
     rho_p = float(corr["spearman_p"])
     w_mean_yi = float(corr["weighted_mean_yi_1e18"])
     w_mean_dff = float(corr["weighted_mean_dff_1e18"])
+
+    tw_r = float(corr_tw["weighted_pearson_r"])
+    tw_r_p = float(corr_tw["weighted_pearson_p"])
+    tw_rho = float(corr_tw["weighted_spearman_rho"])
+    tw_rho_p = float(corr_tw["weighted_spearman_p"])
+    tw_neff = float(corr_tw["n_eff"])
+    tw_slope = float(corr_tw["wls_slope"])
+    tw_slope_se = float(corr_tw["wls_slope_se"])
 
     L = []
     L.append("# 武汉—上海光钟比对实验报告")
@@ -111,8 +122,9 @@ def main() -> int:
     L.append(f"2. **段内分析跨段合并（核心检出）**：{neg}/17 段同号，符号无关 Stouffer "
              f"|z| = **{zagn:.2f}**（p = {p_agn:.1e}），幅度比 **A = {A:+.2f}±{uA:.2f}**"
              f"（{abs(A)/uA:.1f}σ），潮汐以正确方向、约一半幅度被检出。")
-    L.append(f"3. **段均值相关**：y_i 与会话潮汐频移 Δf/f 正相关，Pearson r = "
-             f"**{pear_r:+.3f}**（p = {pear_p:.3f}），Spearman ρ = {rho:+.3f}（p = {rho_p:.3f}）。")
+    L.append(f"3. **段均值相关**：y_i 与会话潮汐频移 Δf/f 正相关，段等权重 Pearson r = "
+             f"**{pear_r:+.3f}**（p = {pear_p:.3f}），Spearman ρ = {rho:+.3f}（p = {rho_p:.3f}）；"
+             f"时间等权重（时长加权）Pearson r = {tw_r:+.3f}（p = {tw_r_p:.3f}，n_eff = {tw_neff:.1f}）。")
     L.append(f"4. **整体均值与修正量**：y_i 时长加权均值 = **{w_mean_yi:+.3f}×10⁻¹⁸**，"
              f"整体潮汐修正量（时长加权 Δf/f）= **{w_mean_dff:+.3f}×10⁻¹⁸**。")
     L.append("")
@@ -191,6 +203,8 @@ def main() -> int:
     L.append("")
     L.append("## 4. 段均值相关性分析")
     L.append("")
+    L.append("### 4.1 单段等权重（每段权重相同）")
+    L.append("")
     L.append("![钟比值偏差 vs 会话潮汐频移](correlation_reanalysis.png)")
     L.append("")
     L.append("| 统计量 | 数值 |")
@@ -200,6 +214,24 @@ def main() -> int:
     L.append(f"| y_i 时长加权均值 | {w_mean_yi:+.3f}×10⁻¹⁸ |")
     L.append(f"| 整体潮汐修正量 Δf/f | {w_mean_dff:+.3f}×10⁻¹⁸ |")
     L.append("")
+    L.append("### 4.2 时间等权重（每秒有效数据权重相同，权重 = 段有效时长）")
+    L.append("")
+    L.append("> 原始逐秒数据不在库内，以各段有效时长 n_valid 作为简单时间权重"
+             "（w_i = n_valid_i / Σn_valid），相关性 p 值用 Kish 有效样本量 "
+             "n_eff = (Σw)²/Σw² 折算。")
+    L.append("")
+    L.append("![钟比值偏差 vs 会话潮汐频移（时间等权重）](correlation_reanalysis_timeweighted.png)")
+    L.append("")
+    L.append("| 统计量 | 数值 |")
+    L.append("|---|---|")
+    L.append(f"| 时长加权 Pearson r | {tw_r:+.3f}（p = {tw_r_p:.3f}，n_eff = {tw_neff:.1f}） |")
+    L.append(f"| 时长加权 Spearman ρ | {tw_rho:+.3f}（p = {tw_rho_p:.3f}） |")
+    L.append(f"| WLS 斜率 | {tw_slope:+.3f} ± {tw_slope_se:.3f} |")
+    L.append("")
+    L.append("> 时间等权重后长段（如段 13、16）权重上升，相关性从段等权重的 "
+             f"r = {pear_r:+.3f}（p = {pear_p:.3f}）降为 r = {tw_r:+.3f}"
+             f"（p = {tw_r_p:.3f}），不再显著——正相关主要由较短段贡献。")
+    L.append("")
     L.append("---")
     L.append("")
     L.append("## 5. 结论")
@@ -208,7 +240,8 @@ def main() -> int:
     L.append("|---|---|")
     L.append(f"| 整个实验 Yb/Sr 值 | R_duration = {R_duration_18}，与实验方 WLS 差 {d_dur_wls:+.2f}×10⁻¹⁸ |")
     L.append(f"| 段内跨段合并 | {neg}/17 同号，Stouffer \\|z\\|={zagn:.2f}（p={p_agn:.1e}），A={A:+.2f}±{uA:.2f} |")
-    L.append(f"| 段均值相关性 | Pearson r = {pear_r:+.3f}（p={pear_p:.3f}） |")
+    L.append(f"| 段均值相关性 | 段等权重 Pearson r = {pear_r:+.3f}（p={pear_p:.3f}）；"
+             f"时间等权重 r = {tw_r:+.3f}（p={tw_r_p:.3f}） |")
     L.append(f"| 整体修正量 | Δf/f = {w_mean_dff:+.3f}×10⁻¹⁸ |")
     L.append("")
     L.append("> 详细方法见 [docs/WORKFLOW.md](../docs/WORKFLOW.md)、"

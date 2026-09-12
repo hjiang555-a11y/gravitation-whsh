@@ -11,10 +11,11 @@ Steps (all in the repo, run via subprocess so each keeps its own main):
   2. clock/clock_tidal_shift.py            -> clock_tidal_shift.csv (tidal Δf/f)
   3. clock/segment_analysis/batch_analysis.py -> batch_summary.csv (within-seg + aggregate)
   4. clock_ratio/correlation_reanalysis.py -> correlation_reanalysis.csv (seg-mean corr)
-  5. clock/correlation_analysis.py         -> correlation.png (y_i vs Δf/f)
-  6. clock_ratio/make_report_figures.py    -> ratio_segments.png (report figure)
-  7. variants / single-segment diagnostics (appendix figures)
-  8. clock_ratio/make_report.py            -> EXPERIMENT_REPORT.md (authoritative report)
+  5. clock_ratio/correlation_reanalysis_timeweighted.py -> correlation_reanalysis_timeweighted.csv (time-weighted corr)
+  6. clock/correlation_analysis.py         -> correlation.png (y_i vs Δf/f)
+  7. clock_ratio/make_report_figures.py    -> ratio_segments.png (report figure)
+  8. variants / single-segment diagnostics (appendix figures)
+  9. clock_ratio/make_report.py            -> EXPERIMENT_REPORT.md (authoritative report)
 """
 
 from __future__ import annotations
@@ -30,6 +31,7 @@ STEPS = [
     ("潮汐频移", REPO / "clock" / "clock_tidal_shift.py"),
     ("段内拟合+跨段合并", REPO / "clock" / "segment_analysis" / "batch_analysis.py"),
     ("段均值相关", REPO / "clock_ratio" / "correlation_reanalysis.py"),
+    ("段均值相关（时间等权重）", REPO / "clock_ratio" / "correlation_reanalysis_timeweighted.py"),
     ("段均值相关图", REPO / "clock" / "correlation_analysis.py"),
     ("报告插图", REPO / "clock_ratio" / "make_report_figures.py"),
     ("变体1（潮汐30s原生）", REPO / "clock" / "segment_analysis" / "variant1_30s_tide.py"),

@@ -129,6 +129,7 @@ docs/WORKFLOW.md                      ← 总流程文档（怎么跑、实验�
 docs/METHODOLOGY.md                   ← 计算方法说明（精确定义、公式、归一化基准、存疑项）
 clock_ratio/compute_ratio.py          → 17 段钟比值（decimal 80 位 + 端点筛选）
 clock_ratio/correlation_reanalysis.py → 段均值相关性 + 时长加权均值 + 修正量
+clock_ratio/correlation_reanalysis_timeweighted.py → 段均值相关性（时间等权重，权重=段有效时长）
 clock/segment_analysis/batch_analysis.py → 段内 1200-s 拟合 + 跨段合并（核心检出）
 clock/clock_tidal_shift.py            → 会话潮汐频移
 clock_ratio/EXPERIMENT_REPORT.md      → 总权威报告
@@ -143,7 +144,9 @@ clock_ratio/EXPERIMENT_REPORT.md      → 总权威报告
 2. **潮汐检出（核心）**：段内 1200-s 窗拟合单段不显著，但跨段累加显著——
    14/17 段同号，符号无关 Stouffer |z|=5.87（p≈4.3e-9），幅度比
    **A = −0.54±0.08**（6.4σ），潮汐以正确方向、约一半幅度被检出。
-3. **段均值相关**：y_i 与会话潮汐频移 Δf/f 正相关，Pearson r = +0.518（p=0.033）。
+3. **段均值相关**：y_i 与会话潮汐频移 Δf/f 正相关，单段等权重 Pearson r = +0.518
+   （p=0.033）；时间等权重（权重=段有效时长）r = +0.372（p=0.226，n_eff≈12.4），
+   不再显著——正相关主要由较短段贡献。
 
 > **结论说明**：以上结论为本库根据实验数据的计算结果（computed），
 > 而非经过独立实验室间对比验证的结果（verified）。具体数值来源详见
@@ -164,6 +167,7 @@ python run_all.py   # 跑完全部分析步骤 + 自动刷新 EXPERIMENT_REPORT.
 python clock_ratio/compute_ratio.py              # 17 段钟比值（含端点筛选）
 python clock/segment_analysis/batch_analysis.py  # 段内拟合 + 跨段合并（核心）
 python clock_ratio/correlation_reanalysis.py     # 段均值相关 + 加权均值 + 修正量
+python clock_ratio/correlation_reanalysis_timeweighted.py  # 段均值相关（时间等权重）
 python clock/clock_tidal_shift.py                # 会话潮汐频移
 python clock_ratio/make_report.py                # 自动生成权威报告
 ```
