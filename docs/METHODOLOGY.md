@@ -215,6 +215,22 @@ Pearson r, Spearman ρ：不加权（17 点）
 > **物理量一致性**：y_i 与 dff 都是「归一化到 1 的无量纲量（潮汐对钟的影响）」，
 > 是物理正确的段级配对。幅度比 A 是段内拟合斜率，与段级 dff 物理量不对应，仅作诊断。
 
+### 6.1 时间等权重版本（`correlation_reanalysis_timeweighted.py`）
+
+上面 Pearson/Spearman/OLS 是**单段等权重**（17 段每段一票）。时间等权重版本让
+**每秒有效数据权重相同**——原始逐秒数据不在库内，用各段有效时长 n_valid 作简单
+时间权重：
+
+```
+w_i = n_valid_i / Σn_valid
+加权 Pearson r、加权 Spearman ρ（秩上的加权 Pearson）
+p 值：Kish 有效样本量 n_eff = (Σw)²/Σw²，t = r·√((n_eff−2)/(1−r²))
+WLS 拟合：y_i = slope·dff + intercept（权重 w_i，SE 按 n_eff 自由度）
+```
+
+输出：`clock_ratio/correlation_reanalysis_timeweighted.csv` / `.png`
+（CSV 同时给出单段等权重 Pearson r 作对照）。
+
 ---
 
 ## 7. 归一化基准总表（全库统一）
