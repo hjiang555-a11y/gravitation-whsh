@@ -20,7 +20,8 @@ ARTIFACTS: Final = ("summary.json", "ratio_scenarios.csv", "stability.csv")
 SCENARIOS: Final = ("raw", "theory", "empirical")
 LEGACY: Final = (
     "compute_ratio.py", "clock_tidal_shift.py", "batch_analysis.py",
-    "correlation_reanalysis.py", "correlation_analysis.py", "make_report_figures.py",
+    "correlation_reanalysis.py", "correlation_reanalysis_timeweighted.py",
+    "correlation_analysis.py", "make_report_figures.py",
     "variant1_30s_tide.py", "variant30s_analysis.py", "segment13_correlation.py",
     "segment13_triangular.py", "segment6_triangular.py", "statistical_methods.py",
     "make_report.py",
