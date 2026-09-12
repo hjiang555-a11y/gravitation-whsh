@@ -145,6 +145,11 @@ clock_ratio/EXPERIMENT_REPORT.md      → 总权威报告
    **A = −0.54±0.08**（6.4σ），潮汐以正确方向、约一半幅度被检出。
 3. **段均值相关**：y_i 与会话潮汐频移 Δf/f 正相关，Pearson r = +0.518（p=0.033）。
 
+> **结论说明**：以上结论为本库根据实验数据的计算结果（computed），
+> 而非经过独立实验室间对比验证的结果（verified）。具体数值来源详见
+> [docs/METHODOLOGY.md](docs/METHODOLOGY.md) 与
+> [clock_ratio/EXPERIMENT_REPORT.md](clock_ratio/EXPERIMENT_REPORT.md)。
+
 ## 复现
 
 **一键分析 + 出报告**（推荐）：
