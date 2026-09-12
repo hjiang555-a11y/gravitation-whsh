@@ -122,6 +122,41 @@ def combine(yy: np.ndarray, u: np.ndarray) -> dict[str, float]:
     }
 
 
+SYNTHESIS_METHODS = ("R_wls", "R_mp", "R_bayes")
+SYNTHESIS_FIELDS = ("chi2_red", "birge_ratio", "xi_mp", "xi_bayes", "u_wls")
+
+
+def build_synthesis(scenarios: dict[str, dict]) -> dict:
+    """Cross-scenario, cross-method digest that answers 'what did the tidal
+    correction do to the combined ratio and its goodness of fit' in one table.
+
+    Per method, expose each scenario's center and deviation vs. the experiment
+    WLS reference 1.2075070393433377213 (×1e18). Also expose the spread measures
+    (chi2_red / Birge / xi) that shrink as the tide is added back."""
+    with localcontext() as ctx:
+        ctx.prec = 80
+        ref = Decimal("1.2075070393433377213")
+        methods = {}
+        for m in SYNTHESIS_METHODS:
+            methods[m] = {
+                key: {
+                    "R": scenarios[key][m],
+                    "deviation_vs_experiment_wls_1e18": float(
+                        (Decimal(scenarios[key][m]) - ref) * Decimal("1e18")),
+                }
+                for key in ("raw", "theory", "empirical")
+            }
+        fits = {
+            key: {f: scenarios[key][f] for f in SYNTHESIS_FIELDS}
+            for key in ("raw", "theory", "empirical")
+        }
+        return {
+            "reference_experiment_wls": str(ref),
+            "methods": methods,
+            "goodness_of_fit": fits,
+        }
+
+
 def scenario_result(segments: tuple[Segment, ...], tide: TideGrid,
                     scenario, corrected_ratios: dict[int, Decimal]) -> dict:
     """Run the full paper-style pipeline for one fixed-coefficient scenario."""
@@ -202,6 +237,8 @@ def main() -> int:
     for scenario in SCENARIOS:
         document["scenarios"][scenario.key] = scenario_result(
             segments, tide, scenario, corrected_ratios[scenario.key])
+
+    document["synthesis"] = build_synthesis(document["scenarios"])
 
     JSON_PATH.write_text(json.dumps(document, indent=2, allow_nan=False), encoding="utf-8")
     print(f"Wrote {JSON_PATH}")

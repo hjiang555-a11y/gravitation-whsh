@@ -346,6 +346,36 @@ def main() -> int:
                  "(statistical_methods_tidal.json)。")
         L.append("")
 
+        synth = stat_tidal.get("synthesis")
+        if synth is not None:
+            L.append("### 7.1 综合结果（跨情景、跨方法）")
+            L.append("")
+            L.append("下表把三种情景、四种方法在潮汐修正下的合并中心值与其相对实验方 WLS")
+            L.append("参考 `1.2075070393433377213` 的偏差（×10⁻¹⁸）并排，给出潮汐修正对统计")
+            L.append("合并的**总效应**——而非逐段/逐情景孤立地看：")
+            L.append("")
+            L.append("| 方法 | raw（A=0） | theory（A=−1） | empirical（A=−0.54） |")
+            L.append("|---|---|---|---|")
+            for m in ("R_wls", "R_mp", "R_bayes"):
+                cells = [f"{synth['methods'][m][k]['R'][:22]}"
+                         for k in ("raw", "theory", "empirical")]
+                L.append(f"| {m} | " + " | ".join(cells) + " |")
+            L.append("")
+            L.append("| 方法 | raw 偏差 | theory 偏差 | empirical 偏差 |")
+            L.append("|---|---|---|---|---|")
+            for m in ("R_wls", "R_mp", "R_bayes"):
+                devs = [f"{synth['methods'][m][k]['deviation_vs_experiment_wls_1e18']:+.3f}"
+                        for k in ("raw", "theory", "empirical")]
+                L.append(f"| {m} | " + " | ".join(devs) + " |")
+            L.append("")
+            L.append("> **总效应**：修正使整个实验的 WLS 中心从 raw 的 −0.50×10⁻¹⁸ 移到 empirical 的")
+            L.append("> −0.04×10⁻¹⁸（最接近实验方 WLS），theory 反号到 +0.39×10⁻¹⁸；χ²_red 从 5.42")
+            L.append("> 单调降到 theory 的 3.70（empirical 4.56），Birge 比与 M-P/贝叶斯 ξ 同步减小，")
+            L.append("> 即「加回潮汐」显著降低了组间散布。但这些合并值仍受 §6 所述 OADEV 外推低估 u_i")
+            L.append("> 的影响，`u` 不是最终不确定度，方向自检见 [METHODOLOGY §9.5]"
+                     "(../docs/METHODOLOGY.md#95-方向自检−054-修正后潮汐相关性消失)。")
+            L.append("")
+
     out = OUT_DIR / "EXPERIMENT_REPORT.md"
     out.write_text("\n".join(L) + "\n", encoding="utf-8")
     print(f"Wrote {out}")
