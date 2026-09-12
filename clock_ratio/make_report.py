@@ -376,6 +376,31 @@ def main() -> int:
                      "(../docs/METHODOLOGY.md#95-方向自检−054-修正后潮汐相关性消失)。")
             L.append("")
 
+            lts = synth.get("long_term_stability")
+            if lts is not None:
+                L.append("### 7.2 长期稳定度改善（跨段钟比值散布）")
+                L.append("")
+                L.append("潮汐是周期约 12/24 h 的慢信号，主要影响的是**跨段（天级）长期散布**，而非单段")
+                L.append("内部短时 OADEV。下表给出补偿前后 17 段钟比值偏差 `y_i` 的段间样本标准差（每段")
+                L.append("相对同情景段 1，×10⁻¹⁸），作为长期稳定度的度量：")
+                L.append("")
+                L.append("| 情景 | 段间 σ(y_i)（×10⁻¹⁸） | 相对 raw 改善 |")
+                L.append("|---|---|---|")
+                for key in ("raw", "theory", "empirical"):
+                    l = lts[key]
+                    L.append(f"| {key} | {l['y_i_std_1e18']:.4f} | {l['improvement_vs_raw_pct']:+.1f}% |")
+                L.append("")
+                L.append("**结论**：补偿潮汐后钟比对长期稳定度有改善——段间钟比值散布从 raw 的")
+                L.append(f"2.98×10⁻¹⁸ 降到 theory 的 {lts['theory']['y_i_std_1e18']:.2f}×10⁻¹⁸")
+                L.append(f"（{lts['theory']['improvement_vs_raw_pct']:+.1f}%）、empirical 的 "
+                         f"{lts['empirical']['y_i_std_1e18']:.2f}×10⁻¹⁸"
+                         f"（{lts['empirical']['improvement_vs_raw_pct']:+.1f}%）；")
+                L.append("组间方差指标 χ²_red 降约 16–32%、Birge 比降约 8–17%（见 §7 表），")
+                L.append("与段间散布下降方向一致。theory（A=−1，完全信任潮汐理论）改善最大，")
+                L.append("empirical（A=−0.54，经验幅度）次之。这些仍是方法比较层面的描述性结论，")
+                L.append("不改变 §6 所述 u_i 不可靠、不作最终不确定度声明的口径。")
+                L.append("")
+
     out = OUT_DIR / "EXPERIMENT_REPORT.md"
     out.write_text("\n".join(L) + "\n", encoding="utf-8")
     print(f"Wrote {out}")

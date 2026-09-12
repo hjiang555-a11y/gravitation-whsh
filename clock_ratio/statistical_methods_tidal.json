@@ -500,6 +500,20 @@
         "xi_bayes": 2.293622447569046e-18,
         "u_wls": 3.0462205725282304e-19
       }
+    },
+    "long_term_stability": {
+      "raw": {
+        "y_i_std_1e18": 2.9803075202753253,
+        "improvement_vs_raw_pct": 0.0
+      },
+      "theory": {
+        "y_i_std_1e18": 2.5877396563976207,
+        "improvement_vs_raw_pct": 13.172058963950084
+      },
+      "empirical": {
+        "y_i_std_1e18": 2.595477732241075,
+        "improvement_vs_raw_pct": 12.912418782834168
+      }
     }
   }
 }

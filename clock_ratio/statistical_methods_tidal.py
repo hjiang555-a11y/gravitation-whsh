@@ -126,13 +126,25 @@ SYNTHESIS_METHODS = ("R_wls", "R_mp", "R_bayes")
 SYNTHESIS_FIELDS = ("chi2_red", "birge_ratio", "xi_mp", "xi_bayes", "u_wls")
 
 
+def _segment_stds(scenarios: dict[str, dict]) -> dict[str, float]:
+    """Per-scenario sample std of the 17 segment deviations y_i (×1e18)."""
+    from statistics import stdev
+    return {
+        key: stdev([r["y_i_1e18"] for r in scenarios[key]["per_segment"]])
+        for key in ("raw", "theory", "empirical")
+    }
+
+
 def build_synthesis(scenarios: dict[str, dict]) -> dict:
     """Cross-scenario, cross-method digest that answers 'what did the tidal
     correction do to the combined ratio and its goodness of fit' in one table.
 
     Per method, expose each scenario's center and deviation vs. the experiment
     WLS reference 1.2075070393433377213 (×1e18). Also expose the spread measures
-    (chi2_red / Birge / xi) that shrink as the tide is added back."""
+    (chi2_red / Birge / xi) that shrink as the tide is added back, and the
+    inter-segment (long-term) stability: the sample std of the 17 segment
+    deviations y_i, which shrinks as the tide — a slow ~12/24 h signal — is
+    removed from the day-to-day spread."""
     with localcontext() as ctx:
         ctx.prec = 80
         ref = Decimal("1.2075070393433377213")
@@ -150,10 +162,20 @@ def build_synthesis(scenarios: dict[str, dict]) -> dict:
             key: {f: scenarios[key][f] for f in SYNTHESIS_FIELDS}
             for key in ("raw", "theory", "empirical")
         }
+        stds = _segment_stds(scenarios)
+        raw_std = stds["raw"]
+        longterm = {
+            key: {
+                "y_i_std_1e18": stds[key],
+                "improvement_vs_raw_pct": 100.0 * (1.0 - stds[key] / raw_std),
+            }
+            for key in ("raw", "theory", "empirical")
+        }
         return {
             "reference_experiment_wls": str(ref),
             "methods": methods,
             "goodness_of_fit": fits,
+            "long_term_stability": longterm,
         }
 
 

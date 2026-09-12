@@ -210,8 +210,9 @@ R 从 [summary.json](clock_ratio/tidal_correction/summary.json) 的完整 Decima
 OADEV→u_i→WLS/Birge/M-P/贝叶斯合并，结果写入
 [statistical_methods_tidal.json](clock_ratio/statistical_methods_tidal.json) 并纳入
 [EXPERIMENT_REPORT.md](clock_ratio/EXPERIMENT_REPORT.md) 第 7 节（并列、不替代）。修正使
-χ²_red 从 raw 的 5.42 降到 theory 的 3.70、empirical 的 4.56；但 OADEV 外推仍系统低估
-u_i，合并值仅供方法比较。详见
+χ²_red 从 raw 的 5.42 降到 theory 的 3.70、empirical 的 4.56；**补偿潮汐后长期稳定度
+改善约 13%**（17 段钟比值段间散布从 2.98×10⁻¹⁸ 降到 ~2.59×10⁻¹⁸，详见报告 §7.2）。
+但 OADEV 外推仍系统低估 u_i，合并值仅供方法比较。详见
 [方法 §10](docs/METHODOLOGY.md#10-新增潮汐修正后重算四种统计方法statistical_methods_tidalpy)。
 
 ## 复现
