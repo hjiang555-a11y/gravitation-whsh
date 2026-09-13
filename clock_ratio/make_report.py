@@ -452,23 +452,37 @@ def main() -> int:
             L.append("导离群点。本节把段 9 剔除后**重新合并**已有的逐段 (y_i, u_i)，回答「第 9 组若提出，")
             L.append("结果变化多少」。**这是附加敏感性检查，17 段主结果（§7）原样保留、不被替换。**")
             L.append("")
-            L.append("| 情景 | A | WLS R（17段→16段） | χ²_red（17段→16段） | Birge（17段→16段） |")
+            L.append("四种统计方法（WLS / Birge / Mandel–Paule / 贝叶斯）的合并中心值"
+                     "（17 段 → 剔除段 9 的 16 段）：")
+            L.append("")
+            L.append("| 情景 | A | WLS R | M-P R（ξ） | 贝叶斯 R（ξ） |")
             L.append("|---|---|---|---|---|")
             for key in ("raw", "theory", "empirical"):
                 f = f_sc[key]
                 r = r_sc[key]
                 L.append(
                     f"| {key} | {f['coefficient']} | {f['R_wls'][:22]}→{r['R_wls'][:22]} | "
-                    f"{f['chi2_red']:.3f}→{r['chi2_red']:.3f} | "
-                    f"{f['birge_ratio']:.3f}→{r['birge_ratio']:.3f} |")
+                    f"{f['R_mp'][:22]}→{r['R_mp'][:22]}（{f['xi_mp']:.2e}→{r['xi_mp']:.2e}） | "
+                    f"{f['R_bayes'][:22]}→{r['R_bayes'][:22]}（{f['xi_bayes']:.2e}→{r['xi_bayes']:.2e}） |")
             L.append("")
-            L.append("> **关键变化**：剔除段 9 后，**潮汐补偿「降低 χ²_red」的效应大幅减弱甚至反号**。")
-            L.append(f"> 17 段时 theory 相对 raw 的 χ²_red 降幅为 −31.8%，剔除段 9 后 raw 的 χ²_red")
+            L.append("| 情景 | A | χ²_red | Birge B | u_WLS |")
+            L.append("|---|---|---|---|---|")
+            for key in ("raw", "theory", "empirical"):
+                f = f_sc[key]
+                r = r_sc[key]
+                L.append(
+                    f"| {key} | {f['coefficient']} | {f['chi2_red']:.3f}→{r['chi2_red']:.3f} | "
+                    f"{f['birge_ratio']:.3f}→{r['birge_ratio']:.3f} | "
+                    f"{f['u_wls']:.3e}→{r['u_wls']:.3e} |")
+            L.append("")
+            L.append("> **关键变化**：剔除段 9 后，**潮汐补偿「降低 χ²_red」的效应大幅减弱甚至反号**，")
+            L.append("> 且**四种方法一致**：")
+            L.append(f"> 17 段时 theory 相对 raw 的 χ²_red 降幅为 +31.8%，剔除段 9 后 raw 的 χ²_red")
             L.append(f"> 从 {f_sc['raw']['chi2_red']:.3f} 骤降到 {r_sc['raw']['chi2_red']:.3f}（最大离群点被移除），")
             L.append(f"> 而 theory 只从 {f_sc['theory']['chi2_red']:.3f} 降到 {r_sc['theory']['chi2_red']:.3f}，两者差距缩小到")
             L.append("> 同量级——即 §7.3「补偿显著改善组间一致性」的证据**高度依赖段 9 这个离群点**。")
-            L.append("> 同时三情景的 WLS 中心值都整体下移约 −0.6×10⁻¹⁸，最接近实验方 WLS 的情景从")
-            L.append(f"> 17 段时的 empirical 变为 16 段时的 theory（|偏差| 0.20×10⁻¹⁸）。")
+            L.append("> WLS / Mandel–Paule / 贝叶斯三种中心值在剔除段 9 后都整体下移约 −0.6×10⁻¹⁸，")
+            L.append(f"> 最接近实验方 WLS 的情景由 17 段的 empirical 变为 16 段的 theory（|偏差| 0.20×10⁻¹⁸）。")
             L.append("> 这提示：**段 9 的 shift_a 异常是组间散布的主要来源之一**，其真实性未定前，")
             L.append("> §7 的 χ²_red 改善与长期稳定度结论都应谨慎解读。数值来源")
             L.append("> [statistical_methods_tidal_seg9_excluded.json]"

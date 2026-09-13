@@ -220,7 +220,8 @@ OADEV→u_i→WLS/Birge/M-P/贝叶斯合并，结果写入
 [statistical_methods_tidal_seg9_excluded.json](clock_ratio/statistical_methods_tidal_seg9_excluded.json)
 并纳入报告 §8。**这是附加结果，17 段主结果不被替换。**关键发现：剔除段 9 后，
 潮汐补偿「降低 χ²_red」的效应大幅减弱甚至反号（theory 相对 raw 的 χ²_red 由 17 段的
-「更好 31.8%」变为 16 段的「略差 5.1%」），说明 §7 的 χ²_red 改善**高度依赖段 9**。
+「更好 31.8%」变为 16 段的「略差 5.1%」），且 WLS / Mandel–Paule / 贝叶斯三种中心值一致
+整体下移约 −0.6×10⁻¹⁸，说明 §7 的 χ²_red 改善**高度依赖段 9**。
 详见 [方法 §11](docs/METHODOLOGY.md#11-段-9-剔除敏感性检查statistical_methods_tidal_seg9py附加)。
 
 ## 复现
