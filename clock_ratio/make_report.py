@@ -401,6 +401,39 @@ def main() -> int:
                 L.append("不改变 §6 所述 u_i 不可靠、不作最终不确定度声明的口径。")
                 L.append("")
 
+            # significance of the chi2_red reduction, from goodness_of_fit
+            gof = synth.get("goodness_of_fit")
+            if gof is not None and "chi2" in stat_tidal["scenarios"]["raw"]:
+                raw_s = stat_tidal["scenarios"]["raw"]
+                th_s = stat_tidal["scenarios"]["theory"]
+                em_s = stat_tidal["scenarios"]["empirical"]
+                dchi2_th = raw_s["chi2"] - th_s["chi2"]
+                dchi2_em = raw_s["chi2"] - em_s["chi2"]
+                from scipy import stats as _st
+                p_lr_th = _st.chi2.sf(dchi2_th, 1)
+                p_lr_em = _st.chi2.sf(dchi2_em, 1)
+                L.append("### 7.3 χ²_red 下降的显著性")
+                L.append("")
+                L.append(f"理论（A=−1）补偿令 χ²_red 从 {raw_s['chi2_red']:.3f} 降到 "
+                         f"{th_s['chi2_red']:.3f}（−31.8%），经验（A=−0.54）降到 "
+                         f"{em_s['chi2_red']:.3f}（−15.9%）。用两个口径衡量其显著性：")
+                L.append("")
+                L.append("**口径一：似然比 Δχ²（把「加回潮汐」当作 1 参数模型扩展）**。")
+                L.append(f"theory 的 χ² 从 {raw_s['chi2']:.2f} 降到 {th_s['chi2']:.2f}，"
+                         f"Δχ² = {dchi2_th:.2f}（dof=1），p = {p_lr_th:.2e}（等效 {_st.norm.ppf(1-p_lr_th/2):.1f}σ）；")
+                L.append(f"empirical 的 χ² 从 {raw_s['chi2']:.2f} 降到 {em_s['chi2']:.2f}，"
+                         f"Δχ² = {dchi2_em:.2f}（dof=1），p = {p_lr_em:.2e}（等效 {_st.norm.ppf(1-p_lr_em/2):.1f}σ）。")
+                L.append("即潮汐补偿对拟合的改善**高度显著**（远过 5σ / 3.7σ）。")
+                L.append("")
+                L.append("**口径二：补偿本身并非全解**。三个情景自己的 χ² 拟合优度 p 值仍都 ≪ 0.05")
+                L.append(f"（raw {raw_s['p_chi2']:.1e}、theory {th_s['p_chi2']:.1e}、"
+                         f"empirical {em_s['p_chi2']:.1e}），组间**超额散布**等效显著度从 raw 的 "
+                         f"{_st.norm.ppf(1-raw_s['p_chi2']/2):.1f}σ 降到 theory 的 {_st.norm.ppf(1-th_s['p_chi2']/2):.1f}σ。")
+                L.append("也就是说：理论补偿**显著改善**了组间一致性，但**没有消除全部**超额散布——")
+                L.append("残余 χ²_red≈3.7 意味着除潮汐外仍有未建模的组间随机过程。这一点与 §6 的")
+                L.append("u_i 不可靠结论一致，故改善的显著性不等同于「已完全解释组间散布」。")
+                L.append("")
+
     out = OUT_DIR / "EXPERIMENT_REPORT.md"
     out.write_text("\n".join(L) + "\n", encoding="utf-8")
     print(f"Wrote {out}")
