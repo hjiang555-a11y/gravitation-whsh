@@ -215,6 +215,14 @@ OADEV→u_i→WLS/Birge/M-P/贝叶斯合并，结果写入
 但 OADEV 外推仍系统低估 u_i，合并值仅供方法比较。详见
 [方法 §10](docs/METHODOLOGY.md#10-新增潮汐修正后重算四种统计方法statistical_methods_tidalpy)。
 
+**段 9 剔除敏感性（附加）**：`statistical_methods_tidal_seg9.py` 把异常段 9
+（`shift_a` 介于两轮之间、y_9 偏大）剔除后重新合并已有逐段 (y_i, u_i)，写入
+[statistical_methods_tidal_seg9_excluded.json](clock_ratio/statistical_methods_tidal_seg9_excluded.json)
+并纳入报告 §8。**这是附加结果，17 段主结果不被替换。**关键发现：剔除段 9 后，
+潮汐补偿「降低 χ²_red」的效应大幅减弱甚至反号（theory 相对 raw 的 χ²_red 由 17 段的
+「更好 31.8%」变为 16 段的「略差 5.1%」），说明 §7 的 χ²_red 改善**高度依赖段 9**。
+详见 [方法 §11](docs/METHODOLOGY.md#11-段-9-剔除敏感性检查statistical_methods_tidal_seg9py附加)。
+
 ## 复现
 
 **只重建新增潮汐分析与独立报告**（希望保留旧产物时推荐）：

@@ -133,6 +133,9 @@ python clock_ratio/statistical_methods.py
 # 12b. 潮汐修正后重算四种统计方法（raw/theory/empirical，见 METHODOLOGY §10）
 python clock_ratio/statistical_methods_tidal.py
 
+# 12c. 段9剔除敏感性检查（附加结果，不替代 12b；见 METHODOLOGY §11）
+python clock_ratio/statistical_methods_tidal_seg9.py
+
 # 13–14. 独立潮汐比较及独立报告
 python clock_ratio/tidal_correction.py
 python clock_ratio/make_tidal_report.py

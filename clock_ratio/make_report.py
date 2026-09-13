@@ -27,6 +27,7 @@ CORR_CSV = OUT_DIR / "correlation_reanalysis.csv"
 CORR_TW_CSV = OUT_DIR / "correlation_reanalysis_timeweighted.csv"
 STAT_JSON = OUT_DIR / "statistical_methods.json"
 STAT_TIDAL_JSON = OUT_DIR / "statistical_methods_tidal.json"
+STAT_TIDAL_SEG9_JSON = OUT_DIR / "statistical_methods_tidal_seg9_excluded.json"
 
 
 def _table(rows: list[dict], path: Path) -> list[dict]:
@@ -54,6 +55,8 @@ def main() -> int:
     corr_tw = _table([], CORR_TW_CSV)
     stat = json.load(open(STAT_JSON)) if STAT_JSON.exists() else None
     stat_tidal = json.load(open(STAT_TIDAL_JSON)) if STAT_TIDAL_JSON.exists() else None
+    stat_tidal_seg9 = (json.load(open(STAT_TIDAL_SEG9_JSON))
+                       if STAT_TIDAL_SEG9_JSON.exists() else None)
 
     # headline numbers: segment-1 baseline vs duration-weighted experiment value
     ratio_sum_map = {r["field"]: r["value"] for r in ratio_sum}
@@ -433,6 +436,44 @@ def main() -> int:
                 L.append("残余 χ²_red≈3.7 意味着除潮汐外仍有未建模的组间随机过程。这一点与 §6 的")
                 L.append("u_i 不可靠结论一致，故改善的显著性不等同于「已完全解释组间散布」。")
                 L.append("")
+
+        # ---- segment-9 exclusion sensitivity (additive; never replaces §7) ----
+        seg9 = stat_tidal_seg9
+        if seg9 is not None:
+            f_sc = stat_tidal["scenarios"]
+            r_sc = seg9["scenarios"]
+            L.append("---")
+            L.append("")
+            L.append("## 8. 段 9 剔除敏感性检查（附加结果，不替代 §7）")
+            L.append("")
+            L.append("段 9 的 Sr 系统频移 `shift_a = −8.13×10⁻¹⁷` 介于 7 月值（≈−1.72×10⁻¹⁶）")
+            L.append("与 8 月值（≈+7.9×10⁻¹⁸）之间，源码自注「请确认是真实值还是占位符」")
+            L.append("（[METHODOLOGY §8](../docs/METHODOLOGY.md)），使其 y_9 偏大、成为原始组间散布的主")
+            L.append("导离群点。本节把段 9 剔除后**重新合并**已有的逐段 (y_i, u_i)，回答「第 9 组若提出，")
+            L.append("结果变化多少」。**这是附加敏感性检查，17 段主结果（§7）原样保留、不被替换。**")
+            L.append("")
+            L.append("| 情景 | A | WLS R（17段→16段） | χ²_red（17段→16段） | Birge（17段→16段） |")
+            L.append("|---|---|---|---|---|")
+            for key in ("raw", "theory", "empirical"):
+                f = f_sc[key]
+                r = r_sc[key]
+                L.append(
+                    f"| {key} | {f['coefficient']} | {f['R_wls'][:22]}→{r['R_wls'][:22]} | "
+                    f"{f['chi2_red']:.3f}→{r['chi2_red']:.3f} | "
+                    f"{f['birge_ratio']:.3f}→{r['birge_ratio']:.3f} |")
+            L.append("")
+            L.append("> **关键变化**：剔除段 9 后，**潮汐补偿「降低 χ²_red」的效应大幅减弱甚至反号**。")
+            L.append(f"> 17 段时 theory 相对 raw 的 χ²_red 降幅为 −31.8%，剔除段 9 后 raw 的 χ²_red")
+            L.append(f"> 从 {f_sc['raw']['chi2_red']:.3f} 骤降到 {r_sc['raw']['chi2_red']:.3f}（最大离群点被移除），")
+            L.append(f"> 而 theory 只从 {f_sc['theory']['chi2_red']:.3f} 降到 {r_sc['theory']['chi2_red']:.3f}，两者差距缩小到")
+            L.append("> 同量级——即 §7.3「补偿显著改善组间一致性」的证据**高度依赖段 9 这个离群点**。")
+            L.append("> 同时三情景的 WLS 中心值都整体下移约 −0.6×10⁻¹⁸，最接近实验方 WLS 的情景从")
+            L.append(f"> 17 段时的 empirical 变为 16 段时的 theory（|偏差| 0.20×10⁻¹⁸）。")
+            L.append("> 这提示：**段 9 的 shift_a 异常是组间散布的主要来源之一**，其真实性未定前，")
+            L.append("> §7 的 χ²_red 改善与长期稳定度结论都应谨慎解读。数值来源")
+            L.append("> [statistical_methods_tidal_seg9_excluded.json]"
+                     "(statistical_methods_tidal_seg9_excluded.json)。")
+            L.append("")
 
     out = OUT_DIR / "EXPERIMENT_REPORT.md"
     out.write_text("\n".join(L) + "\n", encoding="utf-8")

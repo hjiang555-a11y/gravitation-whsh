@@ -24,7 +24,7 @@ LEGACY: Final = (
     "correlation_analysis.py", "make_report_figures.py",
     "variant1_30s_tide.py", "variant30s_analysis.py", "segment13_correlation.py",
     "segment13_triangular.py", "segment6_triangular.py", "statistical_methods.py",
-    "statistical_methods_tidal.py",
+    "statistical_methods_tidal.py", "statistical_methods_tidal_seg9.py",
     "make_report.py",
 )
 
@@ -191,3 +191,21 @@ def test_navigation_when_baseline_report_is_preserved() -> None:
     note = "> **导航**：本报告的时长加权钟比值保留未做潮汐修正的旧基线；raw / theory / empirical 的独立潮汐修正比较见新[报告](tidal_correction/REPORT.md)。"
     assert note in (REPO / "clock_ratio" / "EXPERIMENT_REPORT.md").read_text()
     assert note in (REPO / "clock_ratio" / "make_report.py").read_text()
+
+
+def test_seg9_exclusion_when_combined_values_are_reduced(tmp_path: Path) -> None:
+    from clock_ratio.statistical_methods_tidal_seg9 import main as seg9_main
+    # Given the actual per-segment source, When re-combining without segment 9,
+    # Then every scenario has 16 segments and the source file is untouched.
+    source = REPO / "clock_ratio" / "statistical_methods_tidal.json"
+    before = source.read_text()
+    import json
+    out = REPO / "clock_ratio" / "statistical_methods_tidal_seg9_excluded.json"
+    assert seg9_main() == 0
+    document = json.loads(out.read_text())
+    assert set(document["scenarios"]) == {"raw", "theory", "empirical"}
+    for scenario in document["scenarios"].values():
+        assert scenario["n_segments"] == 16
+        assert scenario["excluded_group"] == 9
+        assert all(row["group"] != 9 for row in scenario["per_segment"])
+    assert source.read_text() == before
