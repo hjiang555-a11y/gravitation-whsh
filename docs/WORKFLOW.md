@@ -116,6 +116,10 @@ python clock_ratio/correlation_reanalysis.py
 python clock_ratio/correlation_reanalysis_timeweighted.py
 #   输出: clock_ratio/correlation_reanalysis_timeweighted.csv, .png
 
+# 4c. 段均值相关性·剔除段9（附加结果，不替代 4/4b；见 METHODOLOGY §6.2）
+python clock_ratio/correlation_reanalysis_seg9_excluded.py
+#   输出: clock_ratio/correlation_reanalysis_seg9_excluded.csv, .png
+
 # 5. 段均值相关（y_i vs Δf/f，物理量一致的版本）
 python clock/correlation_analysis.py
 python clock_ratio/make_report_figures.py

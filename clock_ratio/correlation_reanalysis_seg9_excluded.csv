@@ -1,0 +1,11 @@
+metric,value
+excluded_group,9
+n_segments,16
+pearson_r,0.428662
+pearson_p,0.097585
+spearman_rho,0.397059
+spearman_p,0.127806
+ols_slope,0.575868
+ols_intercept,0.138276
+weighted_mean_yi_1e18,-0.638663
+weighted_mean_dff_1e18,-0.416767

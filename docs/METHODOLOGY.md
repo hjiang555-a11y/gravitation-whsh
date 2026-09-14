@@ -241,6 +241,24 @@ WLS 拟合：y_i = slope·dff + intercept（权重 w_i，SE 按 n_eff 自由度�
 输出：`clock_ratio/correlation_reanalysis_timeweighted.csv` / `.png`
 （CSV 同时给出单段等权重 Pearson r 作对照）。
 
+### 6.2 段 9 剔除版本（`correlation_reanalysis_seg9_excluded.py`，附加）
+
+段 9 的 `shift_a` 异常（§8.2/§8.3）使其 `y_9` 偏大。本脚本把段 9 剔除后，用**完全
+相同**的段级配对（`y_i ↔ Δf/f`）与单段等权重统计量重算相关性，作为附加敏感性检查；
+17 段原结果（§6 正文）原样保留、不被替换。实现读 `ratio_17seg.csv` 与
+`clock_tidal_shift.csv`，丢 `group==9` 一行（17→16）后重算。
+
+| 量 | 17 段（原） | 16 段（剔段 9） |
+|---|---|---|
+| Pearson $r$ | $+0.518$（$p=0.033$） | $+0.429$（$p=0.098$） |
+| Spearman $\rho$ | $+0.488$（$p=0.047$） | $+0.397$（$p=0.128$） |
+| $y_i$ 时长加权均值 | $-0.482$ | $-0.639$ |
+
+**关键结论**：剔除段 9 后，$y_i$ 与潮汐频移的段级正相关**仍为正（$r=+0.429$）但不再
+达到 $0.05$ 显著**（$p=0.098$）；即「段均值正相关」这一条也**部分依赖段 9**。方向
+（正相关）与 17 段一致，故不推翻物理判断，但显著性结论需谨慎。输出：
+`clock_ratio/correlation_reanalysis_seg9_excluded.csv` / `.png`。
+
 ---
 
 ## 7. 归一化基准总表（全库统一）
