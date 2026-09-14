@@ -259,6 +259,25 @@ WLS 拟合：y_i = slope·dff + intercept（权重 w_i，SE 按 n_eff 自由度�
 （正相关）与 17 段一致，故不推翻物理判断，但显著性结论需谨慎。输出：
 `clock_ratio/correlation_reanalysis_seg9_excluded.csv` / `.png`。
 
+### 6.3 段 9 剔除：完全独立重算（`correlation_reanalysis_seg9_independent.py`）
+
+§6.2 是**读已算好的 `ratio_17seg.csv` 再删一行**的快速检查。为排除"上游产物本身有误"
+的可能，本脚本用**完全独立**的路径重做一遍：从原始拍频文件出发，重新做段选择（窗口、
+扣除、跳点、最长有效索引段、端点裁剪）、重算 `mean_dm`、以 Decimal80 重跑完整 Dr 反演
+得到每段 $R_i$（镜像 `compute_ratio.py`），再删段 9 计算相关性。**不读任何已算好的比值
+CSV，也不写任何已有产物。**
+
+- **交叉验证**：独立重算的 17 段 $R_i$ 与 `ratio_17seg.csv` 的最大相对差为
+  $0.0$（逐位一致），证明上游比值产物可信。
+- **结果**：与 §6.2 完全一致——Pearson $r=+0.429$（$p=0.098$）、Spearman
+  $\rho=+0.397$（$p=0.128$）、$y_i$ 时长加权均值 $-0.639$。
+- 产物：`correlation_reanalysis_seg9_independent.csv` / `.json`（JSON 含逐段
+  $R_i$、$y_i$、$\Delta f/f$ 及重算一致性指标）。
+
+> 因此，"剔除段 9 后 $r$ 由 $+0.518$ 降到 $+0.429$、显著性消失"这一结论**经两条独立
+> 路径确认**，不是上游 CSV 的假象。段 9 位于散点右上角（$y$ 最大、$\Delta f/f$ 偏正），
+> 沿正相关方向，故剔除它 $r$ 下降属预期。
+
 ---
 
 ## 7. 归一化基准总表（全库统一）

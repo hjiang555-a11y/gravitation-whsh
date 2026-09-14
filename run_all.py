@@ -43,6 +43,7 @@ STEPS = [
     ("段均值相关", REPO / "clock_ratio" / "correlation_reanalysis.py"),
     ("段均值相关（时间等权重）", REPO / "clock_ratio" / "correlation_reanalysis_timeweighted.py"),
     ("段均值相关·剔除段9(附加)", REPO / "clock_ratio" / "correlation_reanalysis_seg9_excluded.py"),
+    ("段均值相关·剔除段9(完全独立重算)", REPO / "clock_ratio" / "correlation_reanalysis_seg9_independent.py"),
     ("段均值相关图", REPO / "clock" / "correlation_analysis.py"),
     ("报告插图", REPO / "clock_ratio" / "make_report_figures.py"),
     ("变体1（潮汐30s原生）", REPO / "clock" / "segment_analysis" / "variant1_30s_tide.py"),

@@ -131,6 +131,7 @@ clock_ratio/compute_ratio.py          → 17 段钟比值（decimal 80 位 + 端
 clock_ratio/correlation_reanalysis.py → 段均值相关性 + 时长加权均值 + 修正量
 clock_ratio/correlation_reanalysis_timeweighted.py → 段均值相关性（时间等权重，权重=段有效时长）
 clock_ratio/correlation_reanalysis_seg9_excluded.py → 段均值相关性·剔除段9（附加，不替代）
+clock_ratio/correlation_reanalysis_seg9_independent.py → 段均值相关性·剔除段9 完全独立重算（从原始拍频重做比值）
 clock/segment_analysis/batch_analysis.py → 段内 1200-s 拟合 + 跨段合并（核心检出）
 clock/clock_tidal_shift.py            → 会话潮汐频移
 clock_ratio/EXPERIMENT_REPORT.md      → 总权威报告

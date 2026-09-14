@@ -22,6 +22,7 @@ LEGACY: Final = (
     "compute_ratio.py", "clock_tidal_shift.py", "batch_analysis.py",
     "correlation_reanalysis.py", "correlation_reanalysis_timeweighted.py",
     "correlation_reanalysis_seg9_excluded.py",
+    "correlation_reanalysis_seg9_independent.py",
     "correlation_analysis.py", "make_report_figures.py",
     "variant1_30s_tide.py", "variant30s_analysis.py", "segment13_correlation.py",
     "segment13_triangular.py", "segment6_triangular.py", "statistical_methods.py",
@@ -227,3 +228,25 @@ def test_seg9_correlation_when_original_is_preserved() -> None:
     assert float(reduced["pearson_p"]) > 0.05
     assert (REPO / "clock_ratio" / "correlation_reanalysis.png").exists()
     assert orig_csv.read_text() == before
+
+
+def test_seg9_independent_when_recomputes_from_raw_and_matches() -> None:
+    from clock_ratio.correlation_reanalysis_seg9_independent import main as indep_main
+    import csv
+    import json
+    # Given the raw beat data, When re-deriving ratios and excluding segment 9,
+    # Then the raw re-derivation matches the stored ratios and existing products
+    # stay untouched.
+    ratio_csv = REPO / "clock_ratio" / "ratio_17seg.csv"
+    orig_corr = REPO / "clock_ratio" / "correlation_reanalysis.csv"
+    ratio_before, corr_before = ratio_csv.read_text(), orig_corr.read_text()
+    assert indep_main() == 0
+    document = json.loads((REPO / "clock_ratio" / "correlation_reanalysis_seg9_independent.json").read_text())
+    assert document["n_segments"] == 16
+    assert document["excluded_group"] == 9
+    assert document["raw_rederivation_max_rel_diff_vs_ratio_17seg"] == 0.0
+    assert document["pearson_r"] == pytest.approx(0.428662, abs=1e-5)
+    row = dict(csv.reader(open(REPO / "clock_ratio" / "correlation_reanalysis_seg9_independent.csv")))
+    assert row["n_segments"] == "16"
+    assert ratio_csv.read_text() == ratio_before
+    assert orig_corr.read_text() == corr_before
