@@ -266,6 +266,7 @@ python clock_ratio/make_report.py                # 自动生成权威报告
 | 路径 | 内容 |
 |---|---|
 | `clock_ratio/EXPERIMENT_REPORT.md` | **总权威报告**（钟比值+潮汐+相关性）|
+| `docs/PAPER_DRAFT.md` | 论文段落草稿（钟比值/潮汐效应/修正，配 4 图）|
 | `docs/WORKFLOW.md` | 总流程文档（怎么跑、实验条件变了改哪）|
 | `docs/METHODOLOGY.md` | 计算方法说明（精确定义、公式、归一化基准、存疑项）|
 | `docs/NOTATION.md` | 符号与术语表 |

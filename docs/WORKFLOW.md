@@ -135,6 +135,9 @@ python clock/segment13_correlation.py
 python clock/segment_analysis/segment13_triangular.py
 python clock/segment_analysis/segment6_triangular.py
 
+# 11b. 论文配图（附加结果，写入 clock_ratio/paper_figs/；见 docs/PAPER_DRAFT.md）
+python clock_ratio/make_paper_figures.py
+
 # 12. 历史 Allan 稳定度及统计合并（oadev 名称的算法注释见 METHODOLOGY §2）
 python clock_ratio/statistical_methods.py
 
