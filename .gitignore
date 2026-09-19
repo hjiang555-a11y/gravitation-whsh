@@ -8,3 +8,18 @@ clock/data/
 # 专业提供的原始 EOP/潮汐 Excel（大文件，不上传；其换算序列见
 # results/professional_tidal_delta_30s.csv）
 clock/武汉-上海潮汐结果（0620-0910）-30秒间隔数据.xlsx
+
+# LaTeX 中间产物（源文件 main.tex / refs.bib 保留）
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.toc
+paper/*.pdf
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+
+# Agent scratch / notepads（本地协调用，不入库）
+.omo/

@@ -266,7 +266,11 @@ python clock_ratio/make_report.py                # 自动生成权威报告
 | 路径 | 内容 |
 |---|---|
 | `clock_ratio/EXPERIMENT_REPORT.md` | **总权威报告**（钟比值+潮汐+相关性）|
-| `docs/PAPER_DRAFT.md` | 论文段落草稿（钟比值/潮汐效应/修正，配 4 图）|
+| `paper/main.tex` + `paper/refs.bib` | **LaTeX 投稿稿**（英文；`cd paper && pdflatex main.tex && bibtex main && pdflatex main.tex` ×2）|
+| `docs/PAPER_DRAFT.md` | 论文段落草稿（中文，配 4 图）|
+| `docs/PAPER_DRAFT_EN.md` | 论文段落草稿（英文，与中文稿同数同构）|
+| `docs/PAPER_INTEGRITY_REPORT.md` | 论文草稿完整性/一致性审计（claim→证据，PASS-WITH-NOTES）|
+| `clock_ratio/paper_figs/` | 论文配图（4 图 × PNG300dpi + 矢量 PDF）|
 | `docs/WORKFLOW.md` | 总流程文档（怎么跑、实验条件变了改哪）|
 | `docs/METHODOLOGY.md` | 计算方法说明（精确定义、公式、归一化基准、存疑项）|
 | `docs/NOTATION.md` | 符号与术语表 |
