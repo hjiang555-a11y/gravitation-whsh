@@ -44,8 +44,9 @@ Wuhan--Shanghai optical-clock comparison and a fixed-coefficient
 tidal-correction analysis}
 
 \author{%
-  % TODO: verify author list, affiliations, and corresponding author.
-  \textit{Author list to be completed}%
+  Haifeng Jiang%
+  % TODO: add co-authors and affiliations if any; corresponding author
+  % e-mail not included here.
 }
 \date{\today}
 
@@ -223,7 +224,7 @@ scatter is $\sigma(y_i) = 2.98\e{-18}$.
 
 \begin{figure}[t]
   \centering
-  % TODO: verify figure path; PNG fallback is ../clock_ratio/paper_figs/fig1_ratio_segments.png
+  % Vector figure (PNG fallback: ../clock_ratio/paper_figs/fig1_ratio_segments.png)
   \includegraphics[width=0.85\linewidth]{../clock_ratio/paper_figs/fig1_ratio_segments.pdf}
   \caption{Per-segment clock-ratio deviation $y_i$ with the
   duration-weighted mean.}
@@ -290,7 +291,7 @@ $r = +0.518$ ($p = 0.033$).
 
 \begin{figure}[t]
   \centering
-  % TODO: verify figure path; PNG fallback is ../clock_ratio/paper_figs/fig2_tidal_detection.png
+  % Vector figure (PNG fallback: ../clock_ratio/paper_figs/fig2_tidal_detection.png)
   \includegraphics[width=0.85\linewidth]{../clock_ratio/paper_figs/fig2_tidal_detection.pdf}
   \caption{Per-segment tidal amplitude $A_i$ and the combined value
   $A=-0.54\pm0.08$.}
@@ -434,7 +435,7 @@ $2.596\e{-18}$ (empirical, $+12.9\%$).
 
 \begin{figure}[t]
   \centering
-  % TODO: verify figure path; PNG fallback is ../clock_ratio/paper_figs/fig3_correction.png
+  % Vector figure (PNG fallback: ../clock_ratio/paper_figs/fig3_correction.png)
   \includegraphics[width=0.85\linewidth]{../clock_ratio/paper_figs/fig3_correction.pdf}
   \caption{Long-term stability $\sigma(y_i)$ and
   $\chi^{2}_{\mathrm{red}}$ by scenario.}
@@ -443,7 +444,7 @@ $2.596\e{-18}$ (empirical, $+12.9\%$).
 
 \begin{figure}[t]
   \centering
-  % TODO: verify figure path; PNG fallback is ../clock_ratio/paper_figs/fig4_methods_summary.png
+  % Vector figure (PNG fallback: ../clock_ratio/paper_figs/fig4_methods_summary.png)
   \includegraphics[width=0.85\linewidth]{../clock_ratio/paper_figs/fig4_methods_summary.pdf}
   \caption{Four-method centres relative to the experiment-side WLS and
   NIST references.}
@@ -558,11 +559,14 @@ final uncertainty statement.
 \section*{Data availability}
 % =====================================================================
 The analysis code and derived numeric artifacts are available in the
-project repository. The raw beat files and the professional tidal series
+project repository at
+\url{https://github.com/hjiang555-a11y/gravitation-whsh}, released under the
+Apache License 2.0. The raw beat files and the professional tidal series
 are not redistributed here; the derived per-segment ratios, the
 statistical-combination results, and the tidal-correction summaries are
 provided as machine-readable JSON and CSV files.
-% TODO: verify repository URL, DOI, and licence before submission.
+% Repository URL verified from `git remote -v`; licence = Apache-2.0
+% (LICENSE file at repository root).
 
 % =====================================================================
 \bibliographystyle{plain}

@@ -8,7 +8,7 @@ the Wuhan (Yb) - Shanghai (Sr) optical-clock comparison.
 | File | Purpose |
 |---|---|
 | `main.tex` | Full article: abstract, introduction, setup, methods, detection, correction, caveats, conclusion, data availability, references. |
-| `refs.bib` | BibTeX entries. **All entries are placeholders** (see below). |
+| `refs.bib` | BibTeX entries (2 verified references; see below). |
 | `README.md` | This file. |
 
 ## How to compile
@@ -40,8 +40,8 @@ show as `?` until `bibtex` and the second `pdflatex` pass run.
 
 ## Figures
 
-The four figures are `\includegraphics` placeholders pointing at PDF
-files that do **not** exist yet:
+The four figures are `\includegraphics` references to existing vector PDF
+files:
 
 ```
 ../clock_ratio/paper_figs/fig1_ratio_segments.pdf
@@ -50,18 +50,11 @@ files that do **not** exist yet:
 ../clock_ratio/paper_figs/fig4_methods_summary.pdf
 ```
 
-Only the PNG versions exist in the repository
-(`clock_ratio/paper_figs/figN_*.png`). To build with figures, either:
-
-1. convert the PNGs to PDF, e.g.
-   `for f in ../clock_ratio/paper_figs/fig*.png; do convert "$f" "${f%.png}.pdf"; done`
-   (requires ImageMagick), or
-2. edit the four `\includegraphics` lines in `main.tex` to use `.png`.
-
-Without the figure files, `pdflatex` still exits 0 but prints
-`LaTeX Warning: File ... not found` and leaves the figure boxes empty.
-Each `\includegraphics` line carries a `% TODO: verify figure path`
-comment with the PNG fallback.
+Both PNG (300 dpi raster) and vector PDF versions exist in the repository
+(`clock_ratio/paper_figs/figN_*.{png,pdf}`). The LaTeX source uses the
+vector PDFs; each `\includegraphics` line carries a comment naming the PNG
+fallback. To build with the PNGs instead, edit the four
+`\includegraphics` lines in `main.tex` to use `.png`.
 
 ## Verified vs placeholder
 
@@ -97,18 +90,27 @@ The verified anchor values are:
 - Segment-9 excluded correlation: `r=+0.429` (`p=0.098`) vs full
   `+0.518` (`p=0.033`); independent re-derivation max rel diff `= 0`
 
-### Placeholder (needs verification before submission)
+### Completed (was placeholder, now verified)
 
-- **All bibliography entries** in `refs.bib`. Each carries a
-  `% TODO: verify citation` comment. The NIST and European-network
-  entries have plausible metadata but the authors, volume, article
-  number, year, and DOI have **not** been checked against the publisher
-  record. The remaining entries are generic placeholders that must be
-  replaced with real references.
-- **Author list and affiliations** in `main.tex` (`% TODO: verify`).
-- **Repository URL, DOI, and licence** in the Data availability section
-  (`% TODO: verify`).
-- **Figure files** (PDF paths do not exist; see above).
+- **Bibliography** in `refs.bib`. The two reference-value entries are
+  verified against the publisher / arXiv records:
+  - `aeppli2026nist` - Aeppli et al., *Atomic Clock Frequency Ratios with
+    Fractional Uncertainty ≤ 3.2×10⁻¹⁸*, Phys. Rev. Lett. **137**, 033201
+    (2026), DOI `10.1103/g865-9mk1`, arXiv:2512.21428. Reports the
+    NIST Yb/Sr value `1.2075070393433377230(37)`.
+  - `pizzocaro2026european` - Pizzocaro et al., *International Optical
+    Clock Comparison Using the European Optical Fiber Network*,
+    Phys. Rev. Research **8**, 033250 (2026), DOI `10.1103/l4bh-ryxs`,
+    arXiv:2604.27963. Reports the European-network Yb/Sr value
+    `1.207507039343337718(32)`.
+  The five unused generic placeholder entries were removed.
+- **Author** in `main.tex` - `Haifeng Jiang` (from the repository git
+  history). A `% TODO` remains for optional co-authors/affiliations.
+- **Repository URL, DOI, and licence** in the Data availability section -
+  URL `https://github.com/hjiang555-a11y/gravitation-whsh`, licence
+  Apache-2.0 (`LICENSE` file at repository root). No DOI is minted.
+- **Figure files** - the four vector PDFs exist and are embedded
+  (`% TODO: verify figure path` comments removed).
 
 ## Caveats carried into the paper
 
