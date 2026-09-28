@@ -16,8 +16,8 @@ reach self-evaluated uncertainties better than `2 × 10⁻¹⁸`, yet frequency 
 with uncertainty better than `5 × 10⁻¹⁸` remain rare: only one such result, a
 2026 NIST–JILA ytterbium/strontium ratio, meets the requirement, and it differs
 substantially from earlier reports. Here we link an IAPMST ytterbium clock
-(Wuhan) to a USTC strontium clock (Shanghai) by fibre and measure the Yb/Sr
-ratio. The site geopotential difference is obtained by spirit levelling, with
+(Wuhan) to a USTC strontium clock (Shanghai) about `700 km` away, by fibre, and
+measure the Yb/Sr ratio. The site geopotential difference is obtained by spirit levelling, with
 uncertainty below `2 mm`. From `58` days and `280` hours of data, after
 correcting the tidal gravitational redshift and applying a Bayesian treatment,
 we obtain Yb/Sr = 1.207 507 039 343 337 7215(23), deviating from the NIST–JILA

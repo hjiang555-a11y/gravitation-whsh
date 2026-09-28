@@ -25,8 +25,8 @@ frequency ratio between a NIST ytterbium clock and a JILA strontium clock,
 meets the requirement, and it differs substantially from previously reported
 results. Here we connect a ytterbium clock of the Innovation Academy for
 Precision Measurement Science and Technology (IAPMST, Wuhan) to a strontium
-clock of the University of Science and Technology of China (USTC, Shanghai) by
-fibre to build an optical clock network, and measure the Yb/Sr frequency ratio.
+clock of the University of Science and Technology of China (USTC, Shanghai),
+about `700 km` away, by fibre to build an optical clock network, and measure the Yb/Sr frequency ratio.
 The geopotential difference between the two sites is obtained by spirit
 levelling, with an uncertainty of less than `2 mm`. From `58` days of data
 totalling `280` hours, after correcting the tidal gravitational redshift and
@@ -52,7 +52,7 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 不同机构间高精度的不同种光学钟比较是重新定义国际单位制「秒」的核心要求。目前许多光学钟
 的自评估不确定度已优于 `2 × 10⁻¹⁸`，但频率比测量的不确定度优于 `5 × 10⁻¹⁸` 的情况仍较为
 罕见：仅有一组 2026 年报道的 NIST 镱光钟与 JILA 锶光钟频率的比值数据符合要求，且与此前
-报道结果存在显著差异。本文通过光纤连接中国科学院精密测量科学与技术创新研究院（IAPMST）的
+报道结果存在显著差异。本文通过光纤连接了相距约 700 公里的中国科学院精密测量科学与技术创新研究院（IAPMST）的
 镱钟（武汉）与中国科学技术大学（USTC）的锶钟（上海），构建了光学钟网络，测量了镱/锶频率比。
 两地间重力势能差通过水准测量获得，不确定度小于 `2 mm`。基于跨越 `58` 天、总计 `280` 小时的
 数据，在修正潮汐引力红移并采用贝叶斯方法统计处理数据后，我们得到
