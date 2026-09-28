@@ -12,6 +12,8 @@
 | 文件 | 用途 |
 |---|---|
 | [`REPORT.md`](REPORT.md) | **主报告**（中文）：实验装置、BSM 文献综述、灵敏度矩阵、**§2.6 更远距离的物理检验优势**、量级估算、局限、后续建议 |
+| [`ABSTRACT_NATURE.md`](ABSTRACT_NATURE.md) | **Nature 风格摘要**（单一连续段落，~192 词，中英双版 + 关键词）；秒定义路线图定位 |
+| [`ABSTRACT.md`](ABSTRACT.md) | 六层结构·带标签版摘要（备用呈现方式，内容同源）|
 | [`sensitivity_estimate.py`](sensitivity_estimate.py) | 量级估算脚本；读库内已有产物，无需原始拍频 |
 | [`sensitivity_estimates.csv`](sensitivity_estimates.csv) | 逐段 `h_0` 与 `δ_R` 表（脚本输出）|
 | [`sensitivity_summary.json`](sensitivity_summary.json) | 合并 `δ_R`、`d_e`、`Λ_γ` 汇总（脚本输出）|
