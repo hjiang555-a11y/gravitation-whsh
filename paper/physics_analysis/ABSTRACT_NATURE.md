@@ -16,8 +16,7 @@
 
 ## Abstract
 
-High-precision comparison of different species of optical clocks between
-different institutions is a core requirement for redefining the SI second. Many
+Achieving high-consistency frequency-ratio measurements between different species of optical clocks at different institutions is a core requirement for redefining the SI second. Many
 optical clocks now achieve self-evaluated uncertainties better than
 `2 × 10⁻¹⁸`, yet frequency ratios measured with an uncertainty better than
 `5 × 10⁻¹⁸` remain rare: only one such result, a 2026 measurement of the
@@ -34,8 +33,7 @@ applying a Bayesian treatment, we obtain
 Yb/Sr = 1.207 507 039 343 337 7215(23). This deviates from the latest NIST–JILA
 value, 1.207 507 039 343 337 7230(37), by −1.5 × 10⁻¹⁸, and from the latest
 European-network value, 1.207 507 039 343 337 718(32), by +3.5 × 10⁻¹⁸. A
-cross-segment analysis resolves the tidal gravitational-redshift modulation at
-a significance of 6.4σ; removing the model-predicted modulation markedly
+the data resolve the tidal gravitational-redshift modulation at a significance of 6.4σ; removing the model-predicted modulation markedly
 improves the statistical consistency of the data, lowering the reduced
 chi-square from 5.42 to 3.70 (a 32% reduction), showing the effect is
 significant. An inter-city, cross-species clock network thus both supports
@@ -49,7 +47,7 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 
 ## 中文版（Nature 风格单段）
 
-不同机构间高精度的不同种光学钟比较是重新定义国际单位制「秒」的核心要求。目前许多光学钟
+实现不同机构间的不同种光学钟高符合度比值测量是重新定义国际单位制「秒」的核心要求。目前许多光学钟
 的自评估不确定度已优于 `2 × 10⁻¹⁸`，但频率比测量的不确定度优于 `5 × 10⁻¹⁸` 的情况仍较为
 罕见：仅有一组 2026 年报道的 NIST 镱光钟与 JILA 锶光钟频率的比值数据符合要求，且与此前
 报道结果存在显著差异。本文通过光纤连接了相距约 700 公里的中国科学院精密测量科学与技术创新研究院（IAPMST）的
@@ -59,7 +57,7 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 Yb/Sr = 1.207 507 039 343 337 7215(23)。该结果与 NIST–JILA 的最新结果
 1.207 507 039 343 337 7230(37) 相比偏差为 −1.5 × 10⁻¹⁸，与欧洲网络的最新结果
 1.207 507 039 343 337 718(32) 相比偏差为 +3.5 × 10⁻¹⁸。该频率比还包含地球物理信号：
-跨段分析以 6.4σ 显著性分辨出潮汐引力红移调制。去除模型预测的潮汐调制，显著提高了数据的
+数据 6.4σ 显著性分辨出潮汐引力红移调制。去除模型预测的潮汐调制，显著提高了数据的
 统计一致性，使约化卡方值从 5.42 降至 3.70（降幅达 32%），表明该效应具有显著性。因此，
 城市间、跨物种的时钟网络不仅提供了支持重新定义的比较数据，还充当了时间变化引力势的探测器，
 实现了毫米级的重力位差测量。
