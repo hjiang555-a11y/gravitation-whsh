@@ -1,0 +1,43 @@
+{
+  "description": "ILLUSTRATIVE order-of-magnitude BSM sensitivity for the Wuhan-Shanghai Yb/Sr comparison. NOT a constraint statement.",
+  "inputs": {
+    "stat_json": "clock_ratio/statistical_methods_tidal.json",
+    "ratio_csv": "clock_ratio/ratio_17seg.csv",
+    "n_segments": 17,
+    "total_valid_s": 1008912,
+    "observation_span_s": 5009005.0,
+    "duty_cycle": 0.20141964322255618
+  },
+  "constants": {
+    "K_Yb": 0.31,
+    "K_Sr": 0.06,
+    "DeltaK_alpha": 0.25,
+    "d_e_prefactor_eV_inv": 4.2e+30,
+    "stochastic_rescale": 3.0,
+    "rho_dm_GeV_cm3": 0.4,
+    "v_dm_over_c": 0.001
+  },
+  "mass_band_eV": {
+    "f_min_Hz": 9.982022377697767e-09,
+    "f_max_Hz": 0.01,
+    "m_phi_min_eV": 4.1282327494222944e-23,
+    "m_phi_max_eV": 4.1356676966040036e-17,
+    "coherence_time_at_m_min_s": 100180100000000.0,
+    "coherence_time_at_m_max_s": 100000000.00000001
+  },
+  "h0_mean_fractional2_s": 3.872388085398421e-31,
+  "combined_h0": {
+    "delta_R_reach": 8.761486409944686e-19,
+    "d_e_at_m_min_eV": 6.076468462033539e-10,
+    "d_e_at_m_max_eV": 0.0006087412181733661,
+    "d_e_scaled_rayleigh_at_m_min_eV": 1.8229405386100618e-09,
+    "lambda_gamma_gev_at_m_min": 5.667969057628996e+27
+  },
+  "combined_inverse_variance": {
+    "delta_R_reach": 4.550896121123565e-19,
+    "d_e_at_m_min_eV": 3.1562426122821204e-10,
+    "d_e_at_m_max_eV": 0.000316192700522684,
+    "d_e_scaled_rayleigh_at_m_min_eV": 9.468727836846362e-10,
+    "lambda_gamma_gev_at_m_min": 1.0912100067479234e+28
+  }
+}
