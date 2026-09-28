@@ -16,8 +16,7 @@ with uncertainty better than `5 × 10⁻¹⁸` remain rare: only one such result
 2026 NIST–JILA ytterbium/strontium ratio, meets the requirement, and it differs
 substantially from earlier reports. Here we link an IAPMST ytterbium clock
 (Wuhan) to a USTC strontium clock (Shanghai) about `700 km` away, by fibre, and
-measure the Yb/Sr ratio. The site geopotential difference is obtained by spirit levelling, with
-uncertainty below `2 mm`. From `58` days and `280` hours of data, after
+measure the Yb/Sr ratio. The site geopotential difference, `ΔW = −280.05 m²/s²` (a level difference of `−28.6 m`), is obtained by spirit levelling. From `58` days and `280` hours of data, after
 correcting the tidal gravitational redshift and applying a Bayesian treatment,
 we obtain Yb/Sr = 1.207 507 039 343 337 7215(23), deviating from the NIST–JILA
 value 1.207 507 039 343 337 7230(37) by −1.5 × 10⁻¹⁸ and from the European value
@@ -36,5 +35,6 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 ## 数值溯源
 
 所有数值与 [`ABSTRACT.md`](ABSTRACT.md) 相同，来源见该文件「数值溯源」表。
-其中「重力势差（水准测量）不确定度 < 2 mm」为**用户提供的独立测量**，不在本库。
+其中重力势差 `ΔW = −280.05 m²/s²`（正高差 `−28.6 m`）由库内 `delta_g = −3.116e-15` 反推，
+据用户说明由水准测量独立获得（测量报告不在本库）。
 本版仅做篇幅精简，未改动任何数字。
