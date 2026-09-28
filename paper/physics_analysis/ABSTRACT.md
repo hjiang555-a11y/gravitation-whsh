@@ -51,25 +51,9 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 
 ## English version — shortened
 
-> **说明**：以下是英文摘要的**精简版**（删冗余修饰，未改动任何数字）；上方 "English version"
-> 为完整版。两版并存。
+> **说明**：以下是英文摘要的**精简版**；上方 "English version" 为完整版。两版并存。
 
-Achieving high-consistency frequency-ratio measurements between different-species optical clocks at different institutions is a core requirement for redefining the SI second. Many clocks now
-reach self-evaluated uncertainties better than `2 × 10⁻¹⁸`, yet frequency ratios
-with uncertainty better than `5 × 10⁻¹⁸` remain rare: only one such result, a
-2026 NIST–JILA ytterbium/strontium ratio, meets the requirement, and it differs
-substantially from earlier reports. Here we link an IAPMST ytterbium clock
-(Wuhan) to a USTC strontium clock (Shanghai) about `700 km` away, by fibre, and
-measure the Yb/Sr ratio. The site geopotential difference, `ΔW = −280.05 m²/s²` (a level difference of `−28.6 m`), is obtained by spirit levelling. From `58` days and `280` hours of data, after
-correcting the tidal gravitational redshift and applying a Bayesian treatment,
-we obtain Yb/Sr = 1.207 507 039 343 337 7215(23), deviating from the NIST–JILA
-value 1.207 507 039 343 337 7230(37) by −1.5 × 10⁻¹⁸ and from the European value
-1.207 507 039 343 337 718(32) by +3.5 × 10⁻¹⁸. The data resolve the tidal
-gravitational-redshift modulation at 6.4σ significance; removing the
-reduced chi-square from 5.42 to 3.70 (32%), showing the effect is significant.
-An inter-city, cross-species clock network thus both supports redefinition and
-senses the time-varying gravitational potential, resolving its difference at
-the millimetre level.
+Achieving high-consistency frequency-ratio measurements between different-species optical clocks at different institutions is a core requirement for redefining the SI second. Many clocks now reach self-evaluated uncertainties better than 2 × 10⁻¹⁸, yet frequency ratios with uncertainty better than 5 × 10⁻¹⁸ remain rare: only one such result, a 2026 NIST–JILA ytterbium/strontium ratio, meets the requirement, and it differs substantially from earlier reports. Here we link an IAPMST ytterbium clock (Wuhan) to a USTC strontium clock (Shanghai) about 700 km away, by fibre, and measure the Yb/Sr ratio. The site geopotential difference, ΔW = −280.05 m²/s², is obtained by spirit levelling. From 58 days and 280 hours of data, after correcting the tidal gravitational redshift and applying a Bayesian treatment, we obtain Yb/Sr = 1.207 507 039 343 337 7215(23), deviating from the latest NIST–JILA value 1.207 507 039 343 337 7230(37) by −1.5 × 10⁻¹⁸ and from the European value by +3.5 × 10⁻¹⁸. The data resolve the tidal gravitational-redshift modulation at 6.4σ significance; removing the tidal modulation lowers the reduced chi-square from 5.42 to 3.70 (32%). Such an inter-city, cross-species clock network both supports redefinition and senses the time-varying gravitational potential, resolving its difference at the millimetre level.
 
 **Keywords:** optical lattice clock; Yb/Sr frequency ratio; fibre-link clock
 comparison; SI second redefinition; gravitational redshift; tidal potential
