@@ -27,7 +27,7 @@ Precision Measurement Science and Technology (IAPMST, Wuhan) to a strontium
 clock of the University of Science and Technology of China (USTC, Shanghai),
 about `700 km` away, by fibre to build an optical clock network, and measure the Yb/Sr frequency ratio.
 The geopotential difference between the two sites,
-`ΔW = −280.05 m²/s²` (a level difference of `−28.6 m`), is obtained by spirit
+`ΔW = 280.05 m²/s²` (a level difference of `+28.6 m`), is obtained by spirit
 levelling. From `58` days of data
 totalling `280` hours, after correcting the tidal gravitational redshift and
 applying a Bayesian treatment, we obtain
@@ -53,7 +53,7 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 罕见：仅有一组 2026 年报道的 NIST 镱光钟与 JILA 锶光钟频率的比值数据符合要求，且与此前
 报道结果存在显著差异。本文通过光纤连接了相距约 700 公里的中国科学院精密测量科学与技术创新研究院（IAPMST）的
 镱钟（武汉）与中国科学技术大学（USTC）的锶钟（上海），构建了光学钟网络，测量了镱/锶频率比。
-两地间重力势能差 `ΔW = −280.05 m²/s²`（正高差 `−28.6 m`）通过水准测量获得。基于跨越 `58` 天、总计 `280` 小时的
+两地间重力势能差 `ΔW = 280.05 m²/s²`（正高差 `+28.6 m`）通过水准测量获得。基于跨越 `58` 天、总计 `280` 小时的
 数据，在修正潮汐引力红移并采用贝叶斯方法统计处理数据后，我们得到
 Yb/Sr = 1.207 507 039 343 337 7215(23)。该结果与 NIST–JILA 的最新结果
 1.207 507 039 343 337 7230(37) 相比偏差为 −1.5 × 10⁻¹⁸，与欧洲网络的最新结果
@@ -77,12 +77,12 @@ Yb/Sr = 1.207 507 039 343 337 7215(23)。该结果与 NIST–JILA 的最新结�
 | 历时 `58` 天 / `280` 小时 | `clock_ratio/ratio_17seg.csv`（总有效 1 008 912 s）|
 | 潮汐 `6.4σ` | `clock/segment_analysis/batch_aggregate.csv` |
 | 约化卡方 `5.42 → 3.70`（`−32%`）| `clock_ratio/statistical_methods_tidal.json` |
-| 重力势差（水准测量）| `ΔW = −280.05 m²/s²`（正高差 `−28.6 m`）| 本库：`delta_g = −3.116e-15` → `clock/SIGN_COEFFICIENT_ANALYSIS.md` §1.2 |
+| 重力势差（水准测量）| `ΔW = 280.05 m²/s²`（正高差 `+28.6 m`）| 本库：`delta_g = −3.116e-15` → `clock/SIGN_COEFFICIENT_ANALYSIS.md` §1.2 |
 
 > **口径声明**：
 > 1. 比值中心值、不确定度与参考值符合度**引用实验方 PDF**；该 PDF 标注 tide model 项未计入、
 >    link/comb 项记为 0。
-> 2. **重力势差 `ΔW = −280.05 m²/s²`（正高差 `−28.6 m`）**由库内 `delta_g = −3.116×10⁻¹⁵` 反推
+> 2. **重力势差 `ΔW = 280.05 m²/s²`（正高差 `+28.6 m`）**由库内 `delta_g = −3.116×10⁻¹⁵` 反推
 >    （`clock/SIGN_COEFFICIENT_ANALYSIS.md` §1.2）；据用户说明由水准测量独立获得（测量报告不在本库）。
 >    实验方 PDF 中另有 `static geopotential = 1.0×10⁻¹⁸`（≈9 mm）作为**系统不确定度项**，勿与势差数值混用。
 > 3. 约化卡方降幅 `−32%` 为同一 `u_i` 下 raw→full-tidal 的比较，且**段 9 敏感**（剔除段 9 后

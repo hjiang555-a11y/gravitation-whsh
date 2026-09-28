@@ -20,6 +20,6 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 ## 数值溯源
 
 所有数值与 [`ABSTRACT.md`](ABSTRACT.md) 相同，来源见该文件「数值溯源」表。
-其中重力势差 `ΔW = −280.05 m²/s²`（正高差 `−28.6 m`）由库内 `delta_g = −3.116e-15` 反推，
+其中重力势差 `ΔW = 280.05 m²/s²`（正高差 `+28.6 m`）由库内 `delta_g = −3.116e-15` 反推，
 据用户说明由水准测量独立获得（测量报告不在本库）。
 本版仅做篇幅精简，未改动任何数字。

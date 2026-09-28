@@ -8,7 +8,7 @@
 
 ## 中文版
 
-实现不同机构间的不同种光学钟高符合度比值测量是重新定义国际单位制「秒」的核心要求。目前许多光学钟的自评估不确定度已优于 `2 × 10⁻¹⁸`，但频率比测量的不确定度优于 `5 × 10⁻¹⁸` 的情况仍较为罕见：仅有一组 2026 年报道的 NIST 镱光钟与 JILA 锶光钟频率的比值数据符合要求，且与此前报道结果存在显著差异。本文通过光纤连接了相距约 700 公里的中国科学院精密测量科学与技术创新研究院（IAPMST）的镱钟（武汉）与中国科学技术大学（USTC）的锶钟（上海），构建了光学钟网络，测量了镱/锶频率比。两地间重力势能差 `ΔW = −280.05 m²/s²`（正高差 `−28.6 m`，武汉 Yb 高于上海 Sr）通过水准测量获得。基于跨越 `58` 天、总计 `280` 小时的数据，在修正潮汐引力红移并采用贝叶斯方法统计处理数据后，我们得到 Yb/Sr = 1.207 507 039 343 337 7215(23)。该结果与 NIST–JILA 的最新结果 1.207 507 039 343 337 7230(37) 相比偏差为 −1.5 × 10⁻¹⁸，与欧洲网络的最新结果 1.207 507 039 343 337 718(32) 相比偏差为 +3.5 × 10⁻¹⁸。该频率比还包含地球物理信号，数据 6.4σ 显著性分辨出潮汐引力红移调制。去除模型预测的潮汐调制，显著提高了数据的统计一致性，使约化卡方值从 5.42 降至 3.70（降幅达 32%），表明该效应具有显著性。因此，城市间、跨物种的时钟网络不仅提供了支持重新定义的比较数据，还充当了时间变化引力势的探测器，实现了毫米级的重力位差测量。
+实现不同机构间的不同种光学钟高符合度比值测量是重新定义国际单位制「秒」的核心要求。目前许多光学钟的自评估不确定度已优于 `2 × 10⁻¹⁸`，但频率比测量的不确定度优于 `5 × 10⁻¹⁸` 的情况仍较为罕见：仅有一组 2026 年报道的 NIST 镱光钟与 JILA 锶光钟频率的比值数据符合要求，且与此前报道结果存在显著差异。本文通过光纤连接了相距约 700 公里的中国科学院精密测量科学与技术创新研究院（IAPMST）的镱钟（武汉）与中国科学技术大学（USTC）的锶钟（上海），构建了光学钟网络，测量了镱/锶频率比。两地间重力势能差 `ΔW = 280.05 m²/s²`（正高差 `+28.6 m`，武汉 Yb 高于上海 Sr）通过水准测量获得。基于跨越 `58` 天、总计 `280` 小时的数据，在修正潮汐引力红移并采用贝叶斯方法统计处理数据后，我们得到 Yb/Sr = 1.207 507 039 343 337 7215(23)。该结果与 NIST–JILA 的最新结果 1.207 507 039 343 337 7230(37) 相比偏差为 −1.5 × 10⁻¹⁸，与欧洲网络的最新结果 1.207 507 039 343 337 718(32) 相比偏差为 +3.5 × 10⁻¹⁸。该频率比还包含地球物理信号，数据 6.4σ 显著性分辨出潮汐引力红移调制。去除模型预测的潮汐调制，显著提高了数据的统计一致性，使约化卡方值从 5.42 降至 3.70（降幅达 32%），表明该效应具有显著性。因此，城市间、跨物种的时钟网络不仅提供了支持重新定义的比较数据，还充当了时间变化引力势的探测器，实现了毫米级的重力位差测量。
 
 **关键词：** 光晶格钟；Yb/Sr 频率比；光纤链路钟比对；秒定义重定义；引力红移；潮汐势
 
@@ -27,7 +27,7 @@ Precision Measurement Science and Technology (IAPMST, Wuhan) to a strontium
 clock of the University of Science and Technology of China (USTC, Shanghai),
 about `700 km` away, by fibre to build an optical clock network, and measure the Yb/Sr frequency ratio.
 The geopotential difference between the two sites,
-`ΔW = −280.05 m²/s²` (a level difference of `−28.6 m`, with Yb in Wuhan higher
+`ΔW = 280.05 m²/s²` (a level difference of `+28.6 m`, with Yb in Wuhan higher
 than Sr in Shanghai), is obtained by spirit levelling. From `58` days of data
 totalling `280` hours, after correcting the tidal gravitational redshift and
 applying a Bayesian treatment, we obtain
@@ -70,12 +70,12 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 | 欧洲网络参考 | `1.207 507 039 343 337 718(32)`（相差 +3.5 × 10⁻¹⁸）| 实验方 PDF §5.6（Pizzocaro 2026, PRR 8, 033250）|
 | 潮汐检出 | `6.4σ`，幅度约为参考模型一半 | `clock/segment_analysis/batch_aggregate.csv` |
 | 约化卡方 | `5.42 → 3.70`（`−32%`）| `clock_ratio/statistical_methods_tidal.json`（n_segments=17, dof=16）|
-| 重力势差（水准测量）| `ΔW = −280.05 m²/s²`（正高差 `−28.6 m`）| 本库：`delta_g = −3.116e-15` → `clock/SIGN_COEFFICIENT_ANALYSIS.md` §1.2；`clock/params.json` |
+| 重力势差（水准测量）| `ΔW = 280.05 m²/s²`（正高差 `+28.6 m`）| 本库：`delta_g = −3.116e-15` → `clock/SIGN_COEFFICIENT_ANALYSIS.md` §1.2；`clock/params.json` |
 
 > **口径声明**：
 > 1. 比值中心值、不确定度与参考值符合度**引用实验方 PDF**（非本库自算）；该 PDF 标注
 >    tide model 不确定度未计入、link/comb 项记为 0。
-> 2. **重力势差 `ΔW = −280.05 m²/s²`（正高差 `−28.6 m`）**由库内静态引力修正 `delta_g = −3.116×10⁻¹⁵` 反推
+> 2. **重力势差 `ΔW = 280.05 m²/s²`（正高差 `+28.6 m`）**由库内静态引力修正 `delta_g = −3.116×10⁻¹⁵` 反推
 >    （`clock/SIGN_COEFFICIENT_ANALYSIS.md` §1.2）；据用户说明，该势差由水准测量独立获得（测量报告
 >    不在本库）。注意：实验方 PDF 中另有 `static geopotential = 1.0×10⁻¹⁸`（≈9 mm）将其作为**系统
 >    不确定度项**，与这里的势差**数值**为不同口径，勿混用。
