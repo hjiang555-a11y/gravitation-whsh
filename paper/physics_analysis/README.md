@@ -11,7 +11,7 @@
 
 | 文件 | 用途 |
 |---|---|
-| [`REPORT.md`](REPORT.md) | **主报告**（中文）：实验装置、BSM 文献综述、灵敏度矩阵、量级估算、局限、后续建议 |
+| [`REPORT.md`](REPORT.md) | **主报告**（中文）：实验装置、BSM 文献综述、灵敏度矩阵、**§2.6 更远距离的物理检验优势**、量级估算、局限、后续建议 |
 | [`sensitivity_estimate.py`](sensitivity_estimate.py) | 量级估算脚本；读库内已有产物，无需原始拍频 |
 | [`sensitivity_estimates.csv`](sensitivity_estimates.csv) | 逐段 `h_0` 与 `δ_R` 表（脚本输出）|
 | [`sensitivity_summary.json`](sensitivity_summary.json) | 合并 `δ_R`、`d_e`、`Λ_γ` 汇总（脚本输出）|
@@ -26,6 +26,10 @@
    [../../clock_ratio/EXPERIMENT_REPORT.md](../../clock_ratio/EXPERIMENT_REPORT.md)）。
 4. **量级估算**：`δ_R ≈ 8.8×10⁻¹⁹`；`d_e ~ 6×10⁻¹⁰`（低质量端）至 `6×10⁻⁴`（高质量端），
    均为 illustrative。
+5. **长基线（§2.6）**：武汉—上海水平基线 **≈690 km**（高度差仅 ~30 m）。**空间敏感**通道
+   受益于长基线——时空分离标量场（信号 ∝ 分离距离 `D`）、基本常数空间变化（∝`L`）、
+   拓扑缺陷（∝孔径）；**本地型**通道（振荡标量场、光子扇区、洛伦兹）**无直接增益**，
+   优势来自长积分时间与 `ΔK`。
 
 ## 复现
 
