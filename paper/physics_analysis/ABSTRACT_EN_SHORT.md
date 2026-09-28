@@ -15,7 +15,7 @@ measurements between clocks with uncertainty better than `5 × 10⁻¹⁸` remai
 rare: only one such NIST–JILA ratio exists, and reported results differ
 substantially. Here we measure the Yb/Sr ratio with an optical clock network
 linking the IAPMST Yb clock (Wuhan) to the USTC Sr clock (Shanghai) over
-installed fibre. From 17 segments spanning `58` days, after correcting the tidal
+installed fibre. From `280` hours of data spanning `58` days, after correcting the tidal
 gravitational redshift and combining inter-segment scatter with a Bayesian
 method, we obtain Yb/Sr = 1.207 507 039 343 337 7215(23). This differs from the
 NIST–JILA value `1.207 507 039 343 337 7230(37)` by −1.5 × 10⁻¹⁸ and from the
@@ -23,7 +23,7 @@ European network value `1.207 507 039 343 337 718(32)` by +3.5 × 10⁻¹⁸. Th
 ratio also carries a geophysical signal: a cross-segment analysis resolves the
 tidal gravitational-redshift modulation at 6.4σ, with an amplitude about half
 the reference tidal model. Removing this modulation markedly improves the
-17-segment internal consistency, lowering the reduced chi-square from 5.42 to
+internal consistency, lowering the reduced chi-square from 5.42 to
 3.70 (−32%), identifying the effect as significant. An inter-city,
 different-species clock network thus delivers both redefinition-supporting
 comparisons and a sensor of the time-varying gravitational potential, resolving

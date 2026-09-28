@@ -25,7 +25,7 @@ optical clocks reach `10⁻¹⁸` accuracy, but inter-species frequency ratios
 verified at more than one institution remain scarce. Here we link a ytterbium
 optical lattice clock in Wuhan to a strontium optical lattice clock in Shanghai
 through a `690 km` installed-fibre network and operate them as a single
-comparison. From `1 008 912` one-second samples across 17 jump-free segments,
+comparison. From `280` hours of one-second samples,
 after point-by-point correction of the tidal gravitational redshift, a Bayesian
 combination of the per-segment scatter gives
 `Yb/Sr = 1.207 507 039 343 337 7215(23)`, differing from the NIST and
@@ -50,13 +50,13 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 
 跨距离比较不同种类的光钟，是以光学跃迁重定义国际单位制「秒」的核心要求：单台光钟已达
 `10⁻¹⁸` 精度，但在多个机构验证过的异种钟频率比依然稀缺。本文以 `690 km` 现网光纤连接
-武汉 Yb 光晶格钟与上海 Sr 光晶格钟，将其作为一个比对系统运行。从跨 17 段无跳点窗口的
+武汉 Yb 光晶格钟与上海 Sr 光晶格钟，将其作为一个比对系统运行。从 `280` 小时的
 `1 008 912` 个 1 秒样本出发，在**逐点扣除潮汐引力红移**后，用**贝叶斯方法**合并段间散布，
 定出 `Yb/Sr = 1.207 507 039 343 337 7215(23)`，与 NIST 值相差 `−1.5 × 10⁻¹⁸`、与欧洲
 网络值相差 `+3.5 × 10⁻¹⁸`；三个由独立光钟、独立链路、不同大陆得到的测定值在
 `5 × 10⁻¹⁸` 内一致。该比值还携带地球物理信号：跨段分析在 **`6.4σ`** 水平上分辨出潮汐引力
 红移调制（17 段中 14 段同号；Stouffer `z = 5.87`，Fisher `p = 2.2 × 10⁻⁶`），幅度约为
-参考潮汐模型的一半。扣除该调制后，17 个段之间的内部一致性显著改善，约化卡方由 `5.42`
+参考潮汐模型的一半。扣除该调制后，测量数据之间的内部一致性显著改善，约化卡方由 `5.42`
 降至 `3.70`（**−32%**）；该效应由一个段主导，其本身并不构成对模型的独立确认。跨城、异种
 光钟网络由此既给出可支撑重定义的比对，又成为一种探测时变重力势的传感器。
 

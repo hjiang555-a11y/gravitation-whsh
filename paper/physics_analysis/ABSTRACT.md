@@ -8,7 +8,7 @@
 
 ## 中文版
 
-比较机构研制的不同种类的光钟的高准确度比对，是以光学跃迁重定义国际单位制「秒」的核心要求：许多台光钟自评估的不确定度已优于 `2 × 10⁻¹⁸`，但满足不确定度优于 `5 × 10⁻¹⁸` 的钟频率比值测量仅有 NIST-JILA 的比值测量仅有 1 次，而且测量结果之间存在大幅差异。本文报道了以网光纤连接的 IAPMST Yb 光钟（武汉）与 USTC Sr 光钟（上海）构建的光钟网络进行的光钟比值测量实验。历时 `58` 天的 17 段测量数据，在扣除潮汐引力红移后，用贝叶斯方法合并段间散布，定出 Yb/Sr = 1.207 507 039 343 337 7215(23)；该值与 NIST-JILA 值 `1.207 507 039 343 337 7230(37)` 相差 −1.5 × 10⁻¹⁸、与欧洲网络值 `1.207 507 039 343 337 718(32)` 相差 +3.5 × 10⁻¹⁸。该比值还携带地球物理信号：跨段分析在 6.4σ 水平上分辨出潮汐引力红移调制，幅度约为参考潮汐模型的一半。扣除潮汐调制后，17 个段之间的内部一致性显著改善，约化卡方由 5.42 降至 3.70（−32%），说明该效应是影响比值的显著项。本实验表明跨城、异种光钟网络技术既给出可支撑重定义的比对，又成为一种探测时变重力势的传感器，可在毫米量级测量引力势差。
+比较不同机构研制的不同种类光钟的高准确度比对，是以光学跃迁重定义国际单位制「秒」的核心要求：许多台光钟自评估的不确定度已优于 `2 × 10⁻¹⁸`，但满足不确定度优于 `5 × 10⁻¹⁸` 的钟频率比值测量仅有 NIST-JILA 的比值测量仅有 1 次，而且测量结果之间存在大幅差异。本文报道了以网光纤连接的 IAPMST Yb 光钟（武汉）与 USTC Sr 光钟（上海）构建的光钟网络进行的光钟比值测量实验。历时 `280` 小时的测量数据，在扣除潮汐引力红移后，用贝叶斯方法合并段间散布，定出 Yb/Sr = 1.207 507 039 343 337 7215(23)；该值与 NIST-JILA 值 `1.207 507 039 343 337 7230(37)` 相差 −1.5 × 10⁻¹⁸、与欧洲网络值 `1.207 507 039 343 337 718(32)` 相差 +3.5 × 10⁻¹⁸。该比值还携带地球物理信号：跨段分析在 6.4σ 水平上分辨出潮汐引力红移调制，幅度约为参考潮汐模型的一半。扣除潮汐调制后，测量数据之间的内部一致性显著改善，约化卡方由 5.42 降至 3.70（−32%），说明该效应是影响比值的显著项。本实验表明跨城、异种光钟网络技术既给出可支撑重定义的比对，又成为一种探测时变重力势的传感器，可在毫米量级测量引力势差。
 
 **关键词：** 光晶格钟；Yb/Sr 频率比；光纤链路钟比对；秒定义重定义；引力红移；潮汐势
 
@@ -24,7 +24,7 @@ uncertainty better than `5 × 10⁻¹⁸` remain rare: only one such NIST–JILA
 measurement exists, and the reported results differ substantially from one
 another. Here we report a frequency-ratio measurement performed with an optical
 clock network that links the IAPMST Yb optical clock (Wuhan) to the USTC Sr
-optical clock (Shanghai) through an installed fibre network. From 17 segments of
+optical clock (Shanghai) through an installed fibre network. From `280` hours of
 data spanning `58` days, after correcting for the tidal gravitational redshift,
 a Bayesian combination of the inter-segment scatter yields
 Yb/Sr = 1.207 507 039 343 337 7215(23). This value differs from the NIST–JILA
@@ -33,7 +33,7 @@ network value of `1.207 507 039 343 337 718(32)` by +3.5 × 10⁻¹⁸. The rati
 carries a geophysical signal: a cross-segment analysis resolves the tidal
 gravitational-redshift modulation at the 6.4σ level, with an amplitude about
 half that of the reference tidal model. After removing this tidal modulation,
-the internal consistency among the 17 segments improves markedly, with the
+the internal consistency of the data improves markedly, with the
 reduced chi-square dropping from 5.42 to 3.70 (−32%), identifying the effect as
 a significant term affecting the ratio. This experiment shows that an inter-city,
 different-species optical clock network delivers both comparisons able to
@@ -58,7 +58,7 @@ measurements between clocks with uncertainty better than `5 × 10⁻¹⁸` remai
 rare: only one such NIST–JILA ratio exists, and reported results differ
 substantially. Here we measure the Yb/Sr ratio with an optical clock network
 linking the IAPMST Yb clock (Wuhan) to the USTC Sr clock (Shanghai) over
-installed fibre. From 17 segments spanning `58` days, after correcting the tidal
+installed fibre. From `280` hours of data spanning `58` days, after correcting the tidal
 gravitational redshift and combining inter-segment scatter with a Bayesian
 method, we obtain Yb/Sr = 1.207 507 039 343 337 7215(23). This differs from the
 NIST–JILA value `1.207 507 039 343 337 7230(37)` by −1.5 × 10⁻¹⁸ and from the
@@ -66,7 +66,7 @@ European network value `1.207 507 039 343 337 718(32)` by +3.5 × 10⁻¹⁸. Th
 ratio also carries a geophysical signal: a cross-segment analysis resolves the
 tidal gravitational-redshift modulation at 6.4σ, with an amplitude about half
 the reference tidal model. Removing this modulation markedly improves the
-17-segment internal consistency, lowering the reduced chi-square from 5.42 to
+internal consistency, lowering the reduced chi-square from 5.42 to
 3.70 (−32%), identifying the effect as significant. An inter-city,
 different-species clock network thus delivers both redefinition-supporting
 comparisons and a sensor of the time-varying gravitational potential, resolving
