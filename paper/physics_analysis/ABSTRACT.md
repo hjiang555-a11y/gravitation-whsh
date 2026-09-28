@@ -30,9 +30,9 @@ differs from the NIST–JILA value by `−1.5 × 10⁻¹⁸` and from the Europe
 value by `+3.5 × 10⁻¹⁸`. The ratio also carries a geophysical signal: a
 cross-segment analysis resolves the tidal gravitational-redshift modulation at
 `6.4σ`, with an amplitude about half that of the reference tidal model.
-Correcting this tidal modulation markedly improves the inter-segment consistency,
-reducing the reduced chi-square from `5.42` to `3.70` (`−32%`), identifying the
-effect as a significant term in the ratio. The experiment shows that an
+Correcting this tidal modulation markedly improves the inter-segment consistency
+of all 17 groups, reducing the reduced chi-square from `5.42` to `3.70` (`−32%`),
+identifying the effect as a significant term in the ratio. The experiment shows that an
 inter-city, different-species optical-clock network delivers both
 redefinition-grade comparisons and a sensor of the time-varying gravitational
 potential, capable of measuring geopotential differences at the millimetre
