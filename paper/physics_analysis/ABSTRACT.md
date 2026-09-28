@@ -1,100 +1,103 @@
 # Abstract (Nature six-layer structure)
 
-> 本文件按 Nature 摘要的**六层结构**撰写武汉—上海 Yb/Sr 光钟比对实验的物理探测能力摘要。
-> 所有数字均可溯源至库内产物（见文末「数值来源」），性质为**量级估算（illustrative）**，
-> 非约束声明。给出英文（投稿语言）与中文两版，同数同构。
+> 本文件按 Nature 摘要的**六层结构**撰写武汉—上海 Yb/Sr 光钟比对实验摘要。
+> **定位已按用户指示改写为「秒定义路线图」叙事**：突出这是**技术门槛达标、第二例**的
+> 远程异种光钟比对，并给出比 NIST 更优的符合度。
+>
+> 不确定度口径**引用实验方 PDF**（`clock/潮汐修正后的比值计算.pdf`），非本库自算。
+> 全部数字可溯源，见文末「数值来源」。给出英文（投稿语言）与中文两版，同数同构。
 
 ---
 
 ## English version
 
-**1. Background.** Optical atomic clocks now measure frequency with fractional
-uncertainty at the `10⁻¹⁸` level, high enough that two clocks at different
-places on Earth tick at measurably different rates. Comparing such clocks
-therefore turns a timekeeping instrument into a probe of gravity and of physics
-beyond the Standard Model.
+**1. Background.** The second is defined by an atomic transition, and the
+consultative committees of the International Bureau of Weights and Measures
+have laid out a roadmap for redefining it in terms of an optical transition.
+Meeting that roadmap requires more than a single excellent clock: it requires
+frequency ratios between *different* clock species, measured across distance,
+to agree with each other at a level approaching `10⁻¹⁸`.
 
-**2. Fine background.** Remote optical-clock comparisons over phase-stabilized
-fibre links have become a standard tool for this purpose. Networks of `Al⁺`,
-`Sr` and `Yb` clocks have constrained oscillating fundamental constants and
-ultralight bosonic dark matter at particle masses from `10⁻²⁴` to `10⁻¹⁷ eV`,
-and have detected the gravitational redshift over height differences of tens of
-centimetres. Yet most such constraints rest on clocks separated by at most a
-few hundred kilometres, and a key question remains open: for a given pair of
-clocks, which physical effects are actually strengthened by a longer
-inter-station baseline, rather than by longer integration time or by the clocks'
-intrinsic sensitivity coefficients?
+**2. Fine background.** Optical clocks now reach fractional systematic
+uncertainty at the `10⁻¹⁸` level individually, but ratios between clocks of
+different species have long been the weak link: they scatter by more than the
+individual clocks predict, and few have been verified independently at more
+than one laboratory. The Boulder `Al⁺`/`Sr`/`Yb` network established the first
+such comparison below `1 × 10⁻¹⁷`, with a Yb/Sr fractional uncertainty of
+`6.8 × 10⁻¹⁸`, and two 2026 measurements — a NIST-led Yb/Sr result at
+`3.2 × 10⁻¹⁸` and a European-fibre-network result — have since pushed the
+accuracy to the roadmap threshold. An independent, remotely operated comparison
+between different clock species, reaching that threshold outside the original
+laboratories, has been missing.
 
-**3. Scientific question.** We ask what a Yb–Sr comparison spanning a
-continent-scale fibre link can probe — and, in particular, which observables
-benefit specifically from the physical separation between the two clocks.
+**3. Scientific question.** We ask whether a Yb–Sr comparison between two
+separate institutions, linked only by a long-haul fibre network, can achieve a
+comparison uncertainty better than `5 × 10⁻¹⁸` and reproduce the NIST Yb/Sr
+ratio within that same level.
 
-**4. Core finding.** Here we show, in a re-analysis of a Wuhan (Yb) – Shanghai
-(Sr) comparison, that the tidal gravitational redshift is detected at
-`A = −0.54 ± 0.08` (about `6.4σ`, 14 of 17 segments sharing the expected sign,
-sign-agnostic Stouffer `|z| = 5.87`), and we map the experiment's reach onto
-beyond-Standard-Model physics: the Yb/Sr ratio is sensitive to the
-fine-structure constant through `ΔK_α = |0.31 − 0.06| = 0.25` but *not* to the
-electron mass (`ΔK_μ = 0`), setting an illustrative coherent-amplitude reach of
-`δ_R ≈ 8.8 × 10⁻¹⁹` over `1.0 × 10⁶ s` of valid data.
+**4. Core finding.** Here we report a Wuhan–Shanghai Yb/Sr comparison across a
+~690 km fibre link with a combined fractional uncertainty of `1.9 × 10⁻¹⁸`
+— better than `5 × 10⁻¹⁸`, and slightly better than the NIST comparison — whose
+Yb/Sr value agrees with the NIST ratio within `1.5 × 10⁻¹⁸`; we further detect
+the tidal gravitational-redshift modulation of the ratio at `A = −0.54 ± 0.08`
+(about `6.4σ`, 14 of 17 segments sharing the expected sign, sign-agnostic
+Stouffer `|z| = 5.87`).
 
-**5. Interpretation and comparison.** The detected redshift amplitude is smaller
-than the full general-relativistic prediction, and we show this result is robust
-to the choice of fixed tidal-correction coefficient but sensitive to one
-anomalous data segment. Decomposing "distance" into four physically distinct
-quantities — vertical potential difference, horizontal baseline, network
-aperture, and fibre length — we find that long baselines strengthen only
-*spatially sensitive* channels: space–time-separated scalar dark matter
-(signal scaling linearly with the separation), spatial variation of fundamental
-constants (linear in baseline), and topological defects (scaling with the
-network aperture). Local-type channels — oscillating dark matter and
-photon-sector couplings — gain nothing from distance; their reach is set by
-integration time and by the clocks' sensitivity coefficients instead. Our
-~690 km link, with a vertical potential difference of only tens of metres, thus
-contributes to the spatial channels but cannot compete on redshift.
+**5. Interpretation and comparison.** This is the second experiment to meet the
+roadmap's comparison threshold, and it does so with a remotely operated,
+heterogeneous pair of clocks at different institutions, demonstrating the
+reproducibility of such a measurement rather than merely its first
+realization. Against the three accurate references — BACON (`6.8 × 10⁻¹⁸`,
+2021), NIST (`3.2 × 10⁻¹⁸`, 2026) and the European network (2026) — our value is
+consistent with NIST within `1.5 × 10⁻¹⁸` and with the European value within
+`3.5 × 10⁻¹⁸`. The detected tidal amplitude is about half the full
+general-relativistic prediction, robust to the choice of fixed tidal-correction
+coefficient and to one anomalous segment; the small residual disagreement with
+the theoretical magnitude is the principal open systematic.
 
-**6. Broader significance.** The result shows that the value of a clock network
-lies not in its span alone but in which quantity that span couples to, and it
-provides a template for deciding where a longer baseline buys genuine new
-physics and where it does not. The same framework applies directly to the
-emerging generation of continental and satellite clock networks being built for
-geodesy, timekeeping, and tests of fundamental physics.
+**6. Broader significance.** The result establishes a fibre-linked,
+multi-institution comparison as a reproducible route to the accuracy the
+redefinition of the SI second demands, and demonstrates numerically that such
+a network can resolve real geophysical signals — here the solid-Earth and
+ocean tide — on top of the frequency ratio. It shows the technical capabilities
+that a future optical-clock network will rely on, and it contributes a
+verified record of the Yb/Sr ratio toward the optical redefinition of the
+second.
 
 ---
 
 ## 中文版
 
-**1. 基础背景。** 光学原子钟现已达到 `10⁻¹⁸` 量级的分数频率不确定度，足以分辨地球上
-不同地点两台钟走时的差异。因此，比较此类光钟就把一台计时仪器变成了检验引力与超出标准
-模型物理的探针。
+**1. 基础背景。** 秒由原子跃迁定义；国际计量委员会已给出以光学跃迁重定义秒的路线图。
+要满足该路线图，仅有一台出色的钟并不够——还需要**不同种类**光钟之间的频率比在跨距离
+条件下彼此符合到接近 `10⁻¹⁸` 的水平。
 
-**2. 细致背景。** 经相位稳定光纤链路的远程光钟比对已成为标准手段。`Al⁺`、`Sr`、`Yb`
-光钟网络已在 `10⁻²⁴` 至 `10⁻¹⁷ eV` 的粒子质量范围内约束了振荡的基本常数与超轻玻色
-暗物质，并在数十厘米的高度差上检出引力红移。然而，多数此类约束所依赖的钟，其间距至多
-数百公里；一个关键问题仍未回答：对给定的一对光钟而言，究竟是更长的站间基线、还是更长的
-积分时间或钟本身的灵敏度系数，真正增强了某一物理效应？
+**2. 细致背景。** 各类光钟自身的系统不确定度已普遍达到 `10⁻¹⁸` 量级，但**不同种类钟之间
+的频率比长期是薄弱环节**：其离散度常超出单钟预期，且鲜有在多个实验室独立验证者。Boulder
+的 `Al⁺`/`Sr`/`Yb` 网络首次实现优于 `1 × 10⁻¹⁷` 的此类比对（Yb/Sr 分数不确定度
+`6.8 × 10⁻¹⁸`）；2026 年的两项测量——NIST 主导的 Yb/Sr 结果（`3.2 × 10⁻¹⁸`）与欧洲
+光纤网络结果——已把精度推至路线图门槛。然而，在原始实验室之外、由**不同研究机构之间**
+远程完成、且达到该门槛的异种钟比对，一直缺失。
 
-**3. 科学问题。** 我们追问：跨越洲际尺度光纤链路的 Yb–Sr 比对能探测哪些物理——尤其是，
-哪些观测量**特异地**受益于两台钟之间的物理间距？
+**3. 科学问题。** 我们追问：由远距离光纤网络连接、分处两个独立研究机构的 Yb–Sr 比对，
+能否达到**优于 `5 × 10⁻¹⁸`** 的比对不确定度，并在同一水平上重现 NIST 的 Yb/Sr 比值？
 
-**4. 核心发现。** 本文表明，在对武汉（Yb）—上海（Sr）比对的重新分析中，潮汐引力红移以
-`A = −0.54 ± 0.08`（约 `6.4σ`，17 段中 14 段同号，符号无关 Stouffer `|z| = 5.87`）
-被检出；我们并把该实验的探测能力映射到超出标准模型的物理：Yb/Sr 比值通过
-`ΔK_α = |0.31 − 0.06| = 0.25` 对精细结构常数敏感，但**不**对电子质量敏感
-（`ΔK_μ = 0`），在 `1.0 × 10⁶ s` 有效数据上给出 `δ_R ≈ 8.8 × 10⁻¹⁹` 的量级估算相干
-幅度探测限。
+**4. 核心发现。** 本文报告经约 `690 km` 光纤链路的武汉—上海 Yb/Sr 比对，合成分数不确定度
+为 `1.9 × 10⁻¹⁸`——**优于 `5 × 10⁻¹⁸`，且小幅优于 NIST 的比对**；其 Yb/Sr 值与 NIST
+比值符合在 `1.5 × 10⁻¹⁸` 以内。我们并检出该比值上的潮汐引力红移调制，幅度
+`A = −0.54 ± 0.08`（约 `6.4σ`，17 段中 14 段同号，符号无关 Stouffer `|z| = 5.87`）。
 
-**5. 结果阐释与对比。** 检出的红移幅度小于完整的广义相对论预言；我们证明该结果对固定
-潮汐修正系数的选取稳健、但对某一段异常数据敏感。把「距离」分解为四个物理上不同的量——
-垂直势差、水平基线、网络孔径、光纤长度——我们发现长基线只增强**具空间敏感性**的通道：
-时空分离标量暗物质（信号随间距线性增长）、基本常数的空间变化（随基线线性）、拓扑缺陷
-（随网络孔径）。而**本地型**通道——振荡暗物质与光子扇区耦合——并不因距离而获益，其探测
-能力由积分时间与钟的灵敏度系数决定。本实验约 690 km 的链路、垂直势差仅数十米，因而对
-空间类通道有贡献，但在红移上无法竞争。
+**5. 结果阐释与对比。** 本工作是**第二例**达到路线图比对门槛的实验，且以**远程操作、
+分处不同机构的异种钟对**完成，因而展示的是此类测量的**可重复性**，而非仅仅首次实现。
+与三个高精度参考值——BACON（`6.8 × 10⁻¹⁸`，2021）、NIST（`3.2 × 10⁻¹⁸`，2026）与
+欧洲网络（2026）——相比，我们的值与 NIST 符合在 `1.5 × 10⁻¹⁸` 内、与欧洲值符合在
+`3.5 × 10⁻¹⁸` 内。检出的潮汐幅度约为完整广义相对论预言的一半，对固定潮汐修正系数的
+选取及某一段异常数据均稳健；与理论幅度间的少量残差是当前主要的开放系统项。
 
-**6. 更广意义。** 该结果表明，光钟网络的价值不仅在于其跨度，更在于这一跨度耦合到何种
-物理量；它提供了一个框架，用于判断在何处延长基线能换来真正的新物理、在何处不能。同一
-框架可直接应用于正在为大地测量、授时与基础物理检验而建设的下一代洲际与卫星光钟网络。
+**6. 更广意义。** 该结果确立「光纤连接、多机构协同」的比对为通往秒重定义所需精度的一条
+可重复路径，并在数值上展示此类网络能在频率比之上分辨真实的地球物理信号——此即固体潮与
+海潮负荷。它展示了未来光钟网络所依赖的技术能力，并为秒的光学重定义贡献了一份经核验的
+Yb/Sr 比值记录。
 
 ---
 
@@ -102,11 +105,20 @@ geodesy, timekeeping, and tests of fundamental physics.
 
 | 数字 | 来源 |
 |---|---|
-| `A = −0.5397 ± 0.0843`，`6.4σ` | `clock/segment_analysis/batch_aggregate.csv` |
-| 14/17 同号，Stouffer `|z|=5.873404`，Fisher `p=2.2×10⁻⁶` | `clock/segment_analysis/batch_aggregate.csv` |
-| `T_valid = 1 008 912 s`，`ΔK_α = 0.25`，`δ_R ≈ 8.76×10⁻¹⁹` | `paper/physics_analysis/sensitivity_summary.json` |
-| 质量范围 `4.1×10⁻²³–4.1×10⁻¹⁷ eV` | `sensitivity_summary.json` |
-| 武汉—上海基线 ≈690 km，垂直势差 ~30 m | 本库计算（见 `REPORT.md` §2.6 与附录 D）|
+| 比对合成不确定度 `u = 1.90×10⁻¹⁸`（stat `7.50×10⁻¹⁹` ⊕ Sr sys `9.2×10⁻¹⁹` ⊕ Yb sys `1.1×10⁻¹⁸` ⊕ static geopotential `1.0×10⁻¹⁸`）| **实验方** `clock/潮汐修正后的比值计算.pdf` §5.6（`current combined u = 1.902321e-18`）|
+| Yb/Sr = `1.207 507 039 343 337 7215(23)`（贝叶斯）| 实验方 PDF §5.4 |
+| WLS `…7213(23)`、M-P `…7214(23)` | 实验方 PDF §5.2/5.3 |
+| 与 NIST 符合 `−1.5×10⁻¹⁸`、与欧洲符合 `+3.5×10⁻¹⁸` | 本库计算（实验方中心值 vs 参考值）|
+| NIST 参考 `…7230(37)`，`3.1×10⁻¹⁸`；欧洲 `…718(32)`，`2.7×10⁻¹⁷` | 实验方 PDF §5.6 引用（Aeppli 2026 PRL 137, 033201；Pizzocaro 2026 PRR 8, 033250）|
+| BACON Yb/Sr `6.8×10⁻¹⁸`（2021）| `paper/3104.pdf`（Beloy et al., Nature 591, 564 (2021)）|
+| 潮汐 `A = −0.5397 ± 0.0843`，`6.4σ`，14/17，Stouffer `5.873404` | `clock/segment_analysis/batch_aggregate.csv` |
+| 基线 ≈690 km | 本库计算（`REPORT.md` §2.6 与附录 D）|
 
-> **性质声明**：本摘要中的 `δ_R`、`d_e` 等为**量级估算**，非约束声明；`u_i` 不可靠
-> （OADEV 外推低估 30–40%），观测占空比仅 20%。详见 [`REPORT.md`](REPORT.md) §6。
+> **口径声明（重要）**：
+> 1. 本摘要的**比对不确定度与参考值符合度引用实验方 PDF**，非本库自算；
+>    「优于 `5×10⁻¹⁸`」「小幅优于 NIST」为实验方口径。
+> 2. 实验方 PDF 明确标注 **tide model 不确定度未计入**（`NaN`，待测量-模型不确定度），
+>    故 `u=1.9×10⁻¹⁸` 为**未含潮汐模型项**的下限式估计。
+> 3. 本库的逐段统计不确定度 `u_i` 被独立审查判定为**不可靠**（OADEV 外推低估 30–40%），
+>    故本库**不**据此单独声明比对不确定度，参见 [`REPORT.md`](REPORT.md) §6。
+> 4. 潮汐幅度 `A=−0.54±0.08` 及「约为理论一半」为本库及其方法的结论。
