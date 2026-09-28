@@ -21,22 +21,25 @@
 
 Comparing clocks of different species across distance is the outstanding
 requirement for redefining the SI second on an optical transition: single
-optical clocks already reach `10⁻¹⁸` accuracy, but inter-species frequency
-ratios verified at more than one institution remain scarce. Here we link a
-ytterbium optical lattice clock in Wuhan to a strontium optical lattice clock
-in Shanghai through a `690 km` installed-fibre network and operate them as a
-single comparison. From `1 008 912` one-second samples across 17 jump-free
-segments, and after point-by-point correction of the tidal gravitational
-redshift, a Bayesian combination of the per-segment scatter gives
+optical clocks reach `10⁻¹⁸` accuracy, but inter-species frequency ratios
+verified at more than one institution remain scarce. Here we link a ytterbium
+optical lattice clock in Wuhan to a strontium optical lattice clock in Shanghai
+through a `690 km` installed-fibre network and operate them as a single
+comparison. From `1 008 912` one-second samples across 17 jump-free segments,
+after point-by-point correction of the tidal gravitational redshift, a Bayesian
+combination of the per-segment scatter gives
 `Yb/Sr = 1.207 507 039 343 337 7215(23)`, differing from the NIST and
 European-network values by `−1.5 × 10⁻¹⁸` and `+3.5 × 10⁻¹⁸`; the three
 determinations, obtained with independent clocks, links and continents, agree
 within `5 × 10⁻¹⁸`. The same ratio carries a geophysical signal: a cross-segment
 analysis detects the tidal gravitational-redshift modulation at `6.4σ`
 (`14` of `17` segments sharing the expected sign; Stouffer `z = 5.87`, Fisher
-`p = 2.2 × 10⁻⁶`), with an amplitude about half that of the reference tidal
-model. Inter-city, heterogeneous clock networks thus deliver both
-redefinition-grade comparisons and a sensor of the time-varying geopotential.
+`p = 2.2 × 10⁻⁶`), with an amplitude about half that of the reference model.
+Correcting for this modulation sharpens the inter-segment consistency, reducing
+the reduced chi-square from `5.42` to `3.70` (`−32%`) — a change dominated by
+one segment and not, on its own, an independent confirmation of the model.
+Inter-city clock networks thus deliver both redefinition-grade comparisons and a
+sensor of the time-varying geopotential.
 
 **Keywords:** optical lattice clock; Yb/Sr frequency ratio; fibre-link clock
 comparison; SI second redefinition; gravitational redshift; tidal potential
@@ -53,8 +56,9 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 网络值相差 `+3.5 × 10⁻¹⁸`；三个由独立光钟、独立链路、不同大陆得到的测定值在
 `5 × 10⁻¹⁸` 内一致。该比值还携带地球物理信号：跨段分析在 **`6.4σ`** 水平上分辨出潮汐引力
 红移调制（17 段中 14 段同号；Stouffer `z = 5.87`，Fisher `p = 2.2 × 10⁻⁶`），幅度约为
-参考潮汐模型的一半。跨城、异种光钟网络由此既给出可支撑重定义的比对，又成为一种探测
-时变重力势的传感器。
+参考潮汐模型的一半。扣除该调制后，17 个段之间的内部一致性显著改善，约化卡方由 `5.42`
+降至 `3.70`（**−32%**）；该效应由一个段主导，其本身并不构成对模型的独立确认。跨城、异种
+光钟网络由此既给出可支撑重定义的比对，又成为一种探测时变重力势的传感器。
 
 **关键词：** 光晶格钟；Yb/Sr 频率比；光纤链路钟比对；秒定义重定义；引力红移；潮汐势
 
@@ -72,6 +76,8 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 | BACON 2021 Yb/Sr `6.8×10⁻¹⁸` | `paper/3104.pdf`（Beloy et al., Nature 591, 564 (2021)）|
 | 17 段、`1 008 912` 样本 | `clock_ratio/tidal_correction/summary.json`（`total_samples`）|
 | 潮汐 `A = −0.5397 ± 0.0843`，`6.4σ`，14/17 同号，Stouffer `5.873404`，Fisher `2.15×10⁻⁶` | `clock/segment_analysis/batch_aggregate.csv` |
+| 约化卡方 `5.424 → 3.699`（**−31.8%**；raw `A=0` → theory `A=−1`，同一 `u_i`）| `clock_ratio/statistical_methods_tidal.json`（`scenarios.raw/theory.chi2_red`）|
+| 段 9 剔除后该改善**反号**：17 段 `+31.8%` → 16 段 `−5.1%`（raw `2.684`、theory `2.821`）| `clock_ratio/statistical_methods_tidal_seg9_excluded.json` |
 | 基线 ≈690 km | 本库计算（`REPORT.md` §2.6 与附录 D）|
 
 > **口径与措辞声明（重要）**：
@@ -84,3 +90,6 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 >    精度纪录、不声称「达到重定义阈值」、不声称「第二例」。
 > 5. 潮汐幅度约为参考模型的一半——这是**开放系统项**，摘要如实标注，未解释为与 GR 的
 >    偏差或符合。
+> 6. 约化卡方降幅 `−32%` 是**同一 `u_i` 下 raw→full-tidal 的比较**（本库重算），且**段 9
+>    敏感**：剔除段 9 后该改善反号（`+31.8%` → `−5.1%`）。故摘要仅称「改善内部一致性」，
+>    并明确声明该效应**由单个段主导、不构成独立确认**，不作为模型的验证证据。
