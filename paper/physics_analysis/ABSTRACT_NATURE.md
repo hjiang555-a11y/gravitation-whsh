@@ -30,7 +30,8 @@ The geopotential difference between the two sites,
 `ΔW = 280.05 m²/s²` (a level difference of `+28.6 m`), is obtained by spirit
 levelling. From `58` days of data
 totalling `280` hours, after correcting the tidal gravitational redshift and
-applying a Bayesian treatment, we obtain
+applying a Bayesian treatment, we obtain a Bayesian statistical uncertainty of
+`0.75 × 10⁻¹⁸` (clock statistical noise only, excluding clock evaluation), giving
 Yb/Sr = 1.207 507 039 343 337 7215(23). This deviates from the latest NIST–JILA
 value, 1.207 507 039 343 337 7230(37), by −1.5 × 10⁻¹⁸, and from the latest
 European-network value, 1.207 507 039 343 337 718(32), by +3.5 × 10⁻¹⁸. A
@@ -54,8 +55,8 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 报道结果存在显著差异。本文通过光纤连接了相距约 700 公里的中国科学院精密测量科学与技术创新研究院（IAPMST）的
 镱钟（武汉）与中国科学技术大学（USTC）的锶钟（上海），构建了光学钟网络，测量了镱/锶频率比。
 两地间重力势能差 `ΔW = 280.05 m²/s²`（正高差 `+28.6 m`）通过水准测量获得。基于跨越 `58` 天、总计 `280` 小时的
-数据，在修正潮汐引力红移并采用贝叶斯方法统计处理数据后，我们得到
-Yb/Sr = 1.207 507 039 343 337 7215(23)。该结果与 NIST–JILA 的最新结果
+数据，在修正潮汐引力红移并采用贝叶斯方法统计处理数据后，我们得到贝叶斯分析统计不确定度
+`0.75 × 10⁻¹⁸`（仅含钟统计噪声、不含钟评估），并定出 Yb/Sr = 1.207 507 039 343 337 7215(23)。该结果与 NIST–JILA 的最新结果
 1.207 507 039 343 337 7230(37) 相比偏差为 −1.5 × 10⁻¹⁸，与欧洲网络的最新结果
 1.207 507 039 343 337 718(32) 相比偏差为 +3.5 × 10⁻¹⁸。该频率比还包含地球物理信号：
 数据 6.4σ 显著性分辨出潮汐引力红移调制。去除模型预测的潮汐调制，显著提高了数据的
