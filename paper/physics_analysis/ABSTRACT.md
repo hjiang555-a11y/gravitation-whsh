@@ -60,6 +60,25 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 
 ---
 
+## 新版摘要（网络定位版 / network-framing）
+
+> **本节为按用户新思路撰写的版本**（网络价值 + 地球探测），不替换上方各版；三版并存。
+> 依据 `paper/ref/` 中的四篇参考文献（BACON 2021；Aeppli 2026；Arnold 2026；Zhang 2026）。
+
+### 中文版
+
+全球已有多台光钟自评估性能优于 `10⁻¹⁸`，但它们之间的频率比符合度尚未达到秒定义变更的要求，且这些高性能光钟普遍难以搬运——其性能确认只能依靠大量、高精度的钟间比对来实现。因此，构建高可靠的光钟比对网络，既是国际单位制「秒」定义变更的必要条件，也为人类更精密地探测地球提供了最精确的手段。本实验演示了城际距离（约 `700 公里`）尺度的光钟网络技术，连接中国科学院精密测量科学与技术创新研究院（IAPMST，武汉）的镱钟与中国科学技术大学（USTC，上海）的锶钟，可满足未来光钟秒定义变更与应用需求。基于跨越 `58` 天、总计 `280` 小时的数据，在扣除潮汐引力红移并采用贝叶斯方法处理后，定出 Yb/Sr = 1.207 507 039 343 337 7215(23)。钟比对表现出显著的引力潮汐相关性：跨段分析以 `6.4σ` 显著性分辨出潮汐引力红移调制，扣除后约化卡方由 `5.42` 降至 `3.70`（降幅 `32%`），体现了对地球时空参量的测量能力。
+
+**关键词：** 光钟比对网络；秒定义重定义；城际光纤链路；Yb/Sr 频率比；引力潮汐；地球探测
+
+### English version
+
+Many optical clocks worldwide now reach self-evaluated uncertainties below `10⁻¹⁸`, yet their mutual frequency-ratio agreement has not met the requirements for redefining the SI second, and these high-performance clocks are generally difficult to transport — confirming their performance instead relies on extensive, high-precision clock-to-clock comparisons. Building a highly reliable optical clock comparison network is therefore not only a prerequisite for the redefinition of the SI second but also provides the most precise means by which humanity can sense the Earth. Here we demonstrate an inter-city (about `700 km`) optical clock network that links the ytterbium clock of the Innovation Academy for Precision Measurement Science and Technology (IAPMST, Wuhan) to the strontium clock of the University of Science and Technology of China (USTC, Shanghai), meeting future needs for the SI-second redefinition and its applications. From `58` days (`280` hours) of data, after correcting the tidal gravitational redshift and applying a Bayesian analysis, we obtain Yb/Sr = 1.207 507 039 343 337 7215(23). The comparison exhibits a pronounced tidal gravitational correlation: a cross-segment analysis resolves the tidal gravitational-redshift modulation at `6.4σ` significance, and removing it lowers the reduced chi-square from `5.42` to `3.70` (a `32%` reduction), demonstrating the capability to measure Earth's space–time parameters.
+
+**Keywords:** optical clock comparison network; SI second redefinition; inter-city fibre link; Yb/Sr frequency ratio; gravitational tide; Earth sensing
+
+---
+
 ## 数值溯源
 
 | 数字 | 值 | 来源 |
