@@ -16,31 +16,7 @@
 
 ## Abstract
 
-Achieving high-consistency frequency-ratio measurements between different species of optical clocks at different institutions is a core requirement for redefining the SI second. Many
-optical clocks now achieve self-evaluated uncertainties better than
-`2 × 10⁻¹⁸`, yet frequency ratios measured with an uncertainty better than
-`5 × 10⁻¹⁸` remain rare: only one such result, a 2026 measurement of the
-frequency ratio between a NIST ytterbium clock and a JILA strontium clock,
-meets the requirement, and it differs substantially from previously reported
-results. Here we connect a ytterbium clock of the Innovation Academy for
-Precision Measurement Science and Technology (IAPMST, Wuhan) to a strontium
-clock of the University of Science and Technology of China (USTC, Shanghai),
-about `700 km` away, by fibre to build an optical clock network, and measure the Yb/Sr frequency ratio.
-The geopotential difference between the two sites,
-`ΔW = 280.05 m²/s²` (a level difference of `+28.6 m`), is obtained by spirit
-levelling. From `58` days of data
-totalling `280` hours, after correcting the tidal gravitational redshift and
-applying a Bayesian treatment, we obtain a Bayesian statistical uncertainty of
-`0.75 × 10⁻¹⁸` (clock statistical noise only, excluding clock evaluation), giving
-Yb/Sr = 1.207 507 039 343 337 7215(23). This deviates from the latest NIST–JILA
-value, 1.207 507 039 343 337 7230(37), by −1.5 × 10⁻¹⁸, and from the latest
-European-network value, 1.207 507 039 343 337 718(32), by +3.5 × 10⁻¹⁸. A
-the data resolve the tidal gravitational-redshift modulation at a significance of 6.4σ; removing the model-predicted modulation markedly
-improves the statistical consistency of the data, lowering the reduced
-chi-square from 5.42 to 3.70 (a 32% reduction), showing the effect is
-significant. An inter-city, cross-species clock network thus both supports
-redefinition and senses the time-varying gravitational potential, resolving its
-difference at the millimetre level.
+Achieving high-consistency frequency-ratio measurements between different-species optical clocks at different institutions is a core requirement for redefining the SI second. Many optical clocks now reach self-evaluated uncertainties better than `2 × 10⁻¹⁸`, yet ratios measured with uncertainty better than `5 × 10⁻¹⁸` remain rare: only one such result, a 2026 NIST–JILA ytterbium/strontium ratio, meets the requirement, and it differs substantially from earlier reports. Here we link an IAPMST ytterbium clock (Wuhan) to a USTC strontium clock (Shanghai), about `700 km` away, by fibre. The geopotential difference, `ΔW = 280.05 m²/s²` (a level difference of `+28.6 m`), is obtained by spirit levelling. From `58` days (`280` hours) of data, after correcting the tidal gravitational redshift and applying a Bayesian analysis, we obtain a Bayesian statistical uncertainty of `0.75 × 10⁻¹⁸` (clock statistical noise only, excluding clock evaluation), giving Yb/Sr = 1.207 507 039 343 337 7215(23). This deviates from the latest NIST–JILA value 1.207 507 039 343 337 7230(37) by −1.5 × 10⁻¹⁸ and from the European-network value 1.207 507 039 343 337 718(32) by +3.5 × 10⁻¹⁸. The data also resolve the tidal gravitational-redshift modulation at 6.4σ, and removing it lowers the reduced chi-square from 5.42 to 3.70 (32%). An inter-city, cross-species clock network thus both supports redefinition and senses the time-varying gravitational potential at the millimetre level.
 
 **Keywords:** optical lattice clock; Yb/Sr frequency ratio; fibre-link clock
 comparison; SI second redefinition; gravitational redshift; tidal potential

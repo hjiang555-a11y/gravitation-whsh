@@ -16,33 +16,7 @@
 
 ## English version
 
-Achieving high-consistency frequency-ratio measurements between different species of optical clocks at different institutions is a core requirement for redefining the SI second. Many
-optical clocks now achieve self-evaluated uncertainties better than
-`2 × 10⁻¹⁸`, yet frequency ratios measured with an uncertainty better than
-`5 × 10⁻¹⁸` remain rare: only one such result, a 2026 measurement of the
-frequency ratio between a NIST ytterbium clock and a JILA strontium clock,
-meets the requirement, and it differs substantially from previously reported
-results. Here we connect a ytterbium clock of the Innovation Academy for
-Precision Measurement Science and Technology (IAPMST, Wuhan) to a strontium
-clock of the University of Science and Technology of China (USTC, Shanghai),
-about `700 km` away, by fibre to build an optical clock network, and measure the Yb/Sr frequency ratio.
-The geopotential difference between the two sites,
-`ΔW = 280.05 m²/s²` (a level difference of `+28.6 m`, with Yb in Wuhan higher
-than Sr in Shanghai), is obtained by spirit levelling. From `58` days of data
-totalling `280` hours, after correcting the tidal gravitational redshift and
-applying a Bayesian treatment, we obtain
-Yb/Sr = 1.207 507 039 343 337 7215(23). This result deviates from the latest
-NIST–JILA value, 1.207 507 039 343 337 7230(37), by −1.5 × 10⁻¹⁸, and from the
-latest European-network value, 1.207 507 039 343 337 718(32), by +3.5 × 10⁻¹⁸.
-The frequency ratio also contains a geophysical signal: a cross-segment analysis
-resolves the tidal gravitational-redshift modulation at a significance of 6.4σ.
-Removing the model-predicted tidal modulation markedly improves the statistical
-consistency of the data, lowering the reduced chi-square from 5.42 to 3.70 (a
-reduction of 32%), showing that the effect is significant. Thus, an inter-city,
-cross-species clock network not only provides comparison data that support
-redefinition but also acts as a detector of the time-varying gravitational
-potential, achieving millimetre-level measurements of the gravity potential
-difference.
+Achieving high-consistency frequency-ratio measurements between different-species optical clocks at different institutions is a core requirement for redefining the SI second. Many optical clocks now reach self-evaluated uncertainties better than 2 × 10⁻¹⁸, yet ratios measured with uncertainty better than 5 × 10⁻¹⁸ remain rare: only one such result, a 2026 NIST–JILA ytterbium/strontium ratio, meets the requirement, and it differs substantially from earlier reports. Here we link an IAPMST ytterbium clock (Wuhan) to a USTC strontium clock (Shanghai), about 700 km away, by fibre. The geopotential difference, ΔW = 280.05 m²/s² (a level difference of +28.6 m), is obtained by spirit levelling. From 58 days (280 hours) of data, after correcting the tidal gravitational redshift and applying a Bayesian analysis, we obtain a Bayesian statistical uncertainty of 0.75 × 10⁻¹⁸ (clock statistical noise only, excluding clock evaluation), giving Yb/Sr = 1.207 507 039 343 337 7215(23). This deviates from the latest NIST–JILA value 1.207 507 039 343 337 7230(37) by −1.5 × 10⁻¹⁸ and from the European value 1.207 507 039 343 337 718(32) by +3.5 × 10⁻¹⁸. The ratio also resolves the tidal gravitational-redshift modulation at 6.4σ; removing it lowers the reduced chi-square from 5.42 to 3.70 (32%). An inter-city, cross-species clock network thus both supports redefinition and senses the time-varying gravitational potential at the millimetre level.
 
 **Keywords:** optical lattice clock; Yb/Sr frequency ratio; fibre-link clock
 comparison; SI second redefinition; gravitational redshift; tidal potential
@@ -63,17 +37,17 @@ comparison; SI second redefinition; gravitational redshift; tidal potential
 ## 新版摘要（网络定位版 / network-framing）
 
 > **本节为按用户新思路撰写的版本**（网络价值 + 地球探测），不替换上方各版；三版并存。
-> 依据 `paper/ref/` 中的四篇参考文献（BACON 2021；Aeppli 2026；Arnold 2026；Zhang 2026）。
+> 依据 `paper/ref/` 中的四篇参考文献，已收入 [`refs.bib`](refs.bib)：`beloy2021bacon`（BACON 2021, Nature 591, 564）、`aeppli2026nist`（Aeppli 2026, PRL 137, 033201）、`arnold2026lu`（Arnold 2026, Nature, Lu⁺）、`zhang2026ca`（Zhang 2026, PRL 136, 053202, ⁴⁰Ca⁺）。
 
 ### 中文版
 
-全球已有多台光钟自评估性能优于 `10⁻¹⁸`，但它们之间的频率比符合度尚未达到秒定义变更的要求，且这些高性能光钟普遍难以搬运——其性能确认只能依靠大量、高精度的钟间比对来实现。因此，构建高可靠的光钟比对网络，既是国际单位制「秒」定义变更的必要条件，也为人类更精密地探测地球提供了最精确的手段。本实验演示了城际距离（约 `700 公里`）尺度的光钟网络技术，连接中国科学院精密测量科学与技术创新研究院（IAPMST，武汉）的镱钟与中国科学技术大学（USTC，上海）的锶钟，可满足未来光钟秒定义变更与应用需求。基于跨越 `58` 天、总计 `280` 小时的数据，在扣除潮汐引力红移并采用贝叶斯方法处理后，得到贝叶斯分析统计不确定度 `0.75 × 10⁻¹⁸`（仅含钟统计噪声、不含钟评估），并定出 Yb/Sr = 1.207 507 039 343 337 7215(23)。钟比对表现出显著的引力潮汐相关性：跨段分析以 `6.4σ` 显著性分辨出潮汐引力红移调制，扣除后约化卡方由 `5.42` 降至 `3.70`（降幅 `32%`），体现了对地球时空参量的测量能力。
+全球已有多台光钟自评估性能优于 `10⁻¹⁸` [zhang2026ca]，但它们之间的频率比符合度尚未达到秒定义变更的要求 [aeppli2026nist, arnold2026lu]，且这些高性能光钟普遍难以搬运——其性能确认只能依靠大量、高精度的钟间比对来实现。因此，构建高可靠的光钟比对网络，既是国际单位制「秒」定义变更的必要条件，也为人类更精密地探测地球提供了最精确的手段 [arnold2026lu]。本实验演示了城际距离（约 `700 公里`）尺度的光钟网络技术，连接中国科学院精密测量科学与技术创新研究院（IAPMST，武汉）的镱钟与中国科学技术大学（USTC，上海）的锶钟，可满足未来光钟秒定义变更与应用需求。基于跨越 `58` 天、总计 `280` 小时的数据，在扣除潮汐引力红移并采用贝叶斯方法处理后，得到贝叶斯分析统计不确定度 `0.75 × 10⁻¹⁸`（仅含钟统计噪声、不含钟评估），并定出 Yb/Sr = 1.207 507 039 343 337 7215(23)。钟比对表现出显著的引力潮汐相关性：跨段分析以 `6.4σ` 显著性分辨出潮汐引力红移调制，扣除后约化卡方由 `5.42` 降至 `3.70`（降幅 `32%`），体现了对地球时空参量的测量能力。
 
 **关键词：** 光钟比对网络；秒定义重定义；城际光纤链路；Yb/Sr 频率比；引力潮汐；地球探测
 
 ### English version
 
-Many optical clocks worldwide now reach self-evaluated uncertainties below `10⁻¹⁸`, yet their mutual frequency-ratio agreement has not met the requirements for redefining the SI second, and these high-performance clocks are generally difficult to transport — confirming their performance instead relies on extensive, high-precision clock-to-clock comparisons. Building a highly reliable optical clock comparison network is therefore not only a prerequisite for the redefinition of the SI second but also provides the most precise means by which humanity can sense the Earth. Here we demonstrate an inter-city (about `700 km`) optical clock network that links the ytterbium clock of the Innovation Academy for Precision Measurement Science and Technology (IAPMST, Wuhan) to the strontium clock of the University of Science and Technology of China (USTC, Shanghai), meeting future needs for the SI-second redefinition and its applications. From `58` days (`280` hours) of data, after correcting the tidal gravitational redshift and applying a Bayesian analysis, we obtain a Bayesian statistical uncertainty of `0.75 × 10⁻¹⁸` (clock statistical noise only, excluding clock evaluation), giving Yb/Sr = 1.207 507 039 343 337 7215(23). The comparison exhibits a pronounced tidal gravitational correlation: a cross-segment analysis resolves the tidal gravitational-redshift modulation at `6.4σ` significance, and removing it lowers the reduced chi-square from `5.42` to `3.70` (a `32%` reduction), demonstrating the capability to measure Earth's space–time parameters.
+Many optical clocks worldwide now reach self-evaluated uncertainties below `10⁻¹⁸` [zhang2026ca], yet their mutual frequency-ratio agreement has not met the requirements for redefining the SI second [aeppli2026nist, arnold2026lu], and these clocks are generally difficult to transport — confirming their performance instead relies on extensive, high-precision comparisons. A highly reliable optical clock comparison network is therefore not only a prerequisite for the redefinition of the SI second but also provides the most precise means by which humanity can sense the Earth [arnold2026lu]. Here we demonstrate an inter-city (about `700 km`) network linking an IAPMST ytterbium clock (Wuhan) to a USTC strontium clock (Shanghai), meeting future needs for the redefinition and its applications. From `58` days (`280` hours) of data, after correcting the tidal gravitational redshift and applying a Bayesian analysis, we obtain a Bayesian statistical uncertainty of `0.75 × 10⁻¹⁸` (clock statistical noise only, excluding clock evaluation), giving Yb/Sr = 1.207 507 039 343 337 7215(23). A cross-segment analysis resolves the tidal gravitational-redshift modulation at `6.4σ`, and removing it lowers the reduced chi-square from `5.42` to `3.70` (a `32%` reduction), demonstrating the capability to measure Earth's space–time parameters.
 
 **Keywords:** optical clock comparison network; SI second redefinition; inter-city fibre link; Yb/Sr frequency ratio; gravitational tide; Earth sensing
 
