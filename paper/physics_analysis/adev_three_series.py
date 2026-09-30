@@ -4,21 +4,32 @@
 The user asked for the (overlapping) Allan deviation of the Yb/Sr ratio, with
 three curves on a single plot:
 
-  1. "17 段选取后的有效数据"        -> the RAW valid data (tidal response A = 0)
-  2. "潮汐修正的有效数据"           -> the tidal-CORRECTED valid data (A = -0.54,
-                                       the historical empirical response coefficient)
+  1. "17 段选取后的有效数据"        -> the RAW valid data (no correction, A = 0)
+  2. "潮汐修正的有效数据"           -> the tidal-CORRECTED valid data, using the
+                                       MODEL tide (A = -1, i.e. the physical
+                                       deltaW/c^2 template with unit response --
+                                       NOT a fitted amplitude, NOT -0.54)
   3. "对应的潮汐修正数据连接成一个
-      长数据系列"                   -> the tidal-correction series itself,
-                                       i.e. (-A) * h / F_1550  (the fractional
-                                       template that is SUBTRACTED from the raw
-                                       series), concatenated end-to-end
+      长数据系列"                   -> the MODEL tidal data itself, i.e. the
+                                       fractional template h / F_1550 = deltaW/c^2
+                                       (the model series that is SUBTRACTED from
+                                       the raw beat), concatenated end-to-end
+
+The model tide is the professional 30-s "综合差" deltaW (W(WUHN)-W(SHAO)),
+converted to a fractional shift via deltaW/c^2 -- with NO fitted response
+coefficient. The -0.54 amplitude in the wider repo is a *fitted diagnostic*
+and is deliberately NOT used here.
 
 All three series are built per segment through the SAME selection pipeline that
-produces the published results (clock_ratio.tidal_analysis), then concatenated
-into one long series each. ADEV is computed with the repo's gap-safe estimator
-(clock_ratio.tidal_stability.oadev): every non-1-second step (including repeated
-timestamps and the inter-segment joins) BREAKS the series, so no averaging
-window ever crosses a gap.
+produces the published results (clock_ratio.tidal_analysis), then integrated
+into ONE long series each: the per-segment samples are laid end-to-end on a
+single synthetic 1-second axis (the calendar dead time between segments is
+ignored, as is standard for concatenated-ADEV of a clock network with dead
+time). This lets the Allan windows span the segment joins, so the curves reach
+daily (and longer) averaging times -- unlike a gap-safe estimator, which would
+stop at the longest single segment (~10 h).
+
+Concatenated total: 1 008 912 s = 280.25 h -> tau up to ~70 h (T/4).
 
 Units: fractional frequency (dimensionless); plotted as x 1e-18.
 
@@ -44,42 +55,52 @@ from clock import shared as s                                    # noqa: E402
 from clock_ratio.tidal_analysis import (                          # noqa: E402
     SCENARIOS, TideGrid, analyze_segment, select_segments,
 )
-from clock_ratio.tidal_stability import continuous_runs, oadev, tau_grid  # noqa: E402
+from clock_ratio.tidal_stability import continuous_runs, oadev  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parent
-EMPIRICAL = SCENARIOS[2]   # Scenario("empirical", Decimal("-0.54"))
-RAW = SCENARIOS[0]         # Scenario("raw", Decimal("0"))
+RAW = SCENARIOS[0]         # Scenario("raw",        Decimal("0"))   -- uncorrected
+MODEL = SCENARIOS[1]       # Scenario("theory",     Decimal("-1"))  -- model tide
 
-# tau grid for the pooled (long-series) curves: dyadic seconds + fixed taus,
-# capped at longest_run//4, identical to the repo convention.
-FIXED_TAUS = (600, 1200, 3600, 7200)
+# tau grid for the pooled (long-series) curves: dyadic seconds plus fixed taus
+# (10 min, 20 min, 1 h, 2 h, 12 h, 1--3 days) capped at longest_run // 4, the
+# conventional maximum for a stable OADEV estimate.
+FIXED_TAUS = (600, 1200, 3600, 7200, 43200, 86400, 172800, 259200)
 
 
 def pooled_tau_grid(times: np.ndarray) -> tuple[int, ...]:
     longest = max(stop - start for start, stop in continuous_runs(times))
-    return tau_grid(longest)
+    maximum = longest // 4
+    dyadic = {2**i for i in range(maximum.bit_length())} if maximum > 0 else set()
+    tagged = {t for t in (86400, 172800, 259200, maximum) if 0 < t <= maximum}
+    return tuple(sorted(dyadic | {t for t in FIXED_TAUS if t <= maximum} | tagged))
 
 
 def build_series() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Return (times, raw_y, corrected_y, tide_y) concatenated over 17 segments."""
+    """Return (times, raw_y, corrected_y, tide_y) as ONE concatenated series.
+
+    Per-segment fractional series are laid end-to-end on a single synthetic
+    1-second axis (calendar gaps ignored), so Allan windows may span the joins.
+    """
     beat_t, beat_b = s.load_beat()
     segments = select_segments(beat_t, beat_b)
     tide_t, tide_w = s.load_tide()
     grid = TideGrid(tide_t, tide_w)
 
-    all_t, all_raw, all_corr, all_tide = [], [], [], []
-    coef = float(EMPIRICAL.coefficient)   # -0.54
+    all_raw, all_corr, all_tide = [], [], []
     for seg in segments:
-        h = grid.beat_at(seg.times)                       # Hz, undemeaned template
-        raw = analyze_segment(seg, h, RAW).fluctuations    # y = -q/(1+q)
-        corr = analyze_segment(seg, h, EMPIRICAL).fluctuations
-        tide_frac = (-coef) * h / s.F_1550                 # the subtracted correction
-        all_t.append(seg.times)
+        h = grid.beat_at(seg.times)                       # Hz, undemeaned MODEL template
+        raw = analyze_segment(seg, h, RAW).fluctuations    # y = -q/(1+q), uncorrected
+        corr = analyze_segment(seg, h, MODEL).fluctuations  # model tide removed (A=-1)
+        tide_frac = h / s.F_1550                            # the MODEL tidal data itself
         all_raw.append(np.asarray(raw, dtype=float))
         all_corr.append(np.asarray(corr, dtype=float))
         all_tide.append(np.asarray(tide_frac, dtype=float))
-    return (np.concatenate(all_t), np.concatenate(all_raw),
-            np.concatenate(all_corr), np.concatenate(all_tide))
+    y_raw = np.concatenate(all_raw)
+    y_corr = np.concatenate(all_corr)
+    y_tide = np.concatenate(all_tide)
+    t0 = np.datetime64("2026-06-29T00:00:00")
+    times = t0 + np.arange(len(y_raw), dtype="int64").astype("timedelta64[s]")
+    return times, y_raw, y_corr, y_tide
 
 
 def main() -> int:
@@ -116,9 +137,9 @@ def main() -> int:
         "raw":       dict(color="#1f4e79", marker="o", ms=3.2, lw=1.3,
                           label="17 segments, raw valid data"),
         "corrected": dict(color="#c0504d", marker="s", ms=3.0, lw=1.3,
-                          label="tidal-corrected valid data (A = -0.54)"),
+                          label="tidal-corrected valid data (model tide, $A=-1$)"),
         "tide":      dict(color="#4f8a3d", marker="^", ms=3.2, lw=1.3,
-                          label="tidal-correction series, $-A\\,h/F_{1550}$"),
+                          label="model tidal data, $\\Delta W/c^2$"),
     }
     for key in ("raw", "corrected", "tide"):
         ax.loglog(tau_arr, curves[key] * 1e18, **styles[key])
