@@ -659,6 +659,45 @@ support.
         % src: docs/METHODOLOGY.md Sec. 9.6
 \end{enumerate}
 
+\subsection{Consistency with earlier tidal-correction models}
+\label{sec:tidal-model}
+
+The fitted amplitude is sensitive to the frequency to which the tidal
+beat template is normalised, and an error there propagates directly into
+the reported amplitude. In earlier versions of this analysis the
+template was normalised to $1/\mathrm{COEF} \approx 233.53$\,THz (the
+frequency implicitly carried by the clock-ratio conversion coefficient
+$\mathrm{COEF} = 4.282\times10^{-15}$). The physically correct
+reference for the \emph{beat} is instead the $1550$\,nm transfer light,
+$\Ffifteen = N_{1550}^{\mathrm{WH}} f_{\mathrm{rep}} = 193.40$\,THz
+(Eq.~\eqref{eq:template}). The two differ by the Yb/Sr factor
+$(1/\mathrm{COEF})/\Ffifteen \approx 1.2075$, so the earlier
+normalisation underestimated $A$ by a factor $1/1.2075 \approx 0.828$:
+the historical value $A \approx -0.45$ becomes $A \approx -0.54$ under
+the correct normalisation, consistently across all three fitting
+variants ($-0.540$, $-0.538$, $-0.539$). The change from $-0.45$ to
+$-0.54$ is therefore an artefact of the template normalisation, not of
+the data, and it does not by itself indicate that an earlier external
+tidal model was wrong.
+% src: docs/NOTATION.md Sec. 3 (COEF vs F_1550), archive/README.md
+
+A second, independent inconsistency arises from the response
+\emph{sign}. The present fit returns $A<0$, i.e.\ the beat falls as the
+tidal potential rises, whereas the naive expectation from
+Eq.~\eqref{eq:redshift} is a positive frequency shift for a raised
+potential. The sign is a response convention fixed here by a
+model-independent self-check (Sec.~\ref{sec:correction}): with
+$A_{\mathrm{fix}}=-0.54$ the post-correction correlation with the
+template collapses to zero, and the zero of a grid scan falls exactly at
+$-0.54$. It is \emph{not} derived from the comb/local-oscillator sign
+chain $s_{\mathrm{beat}}$, which remains unfixed; a sign flip there would
+reverse the reported sign of $A$ without affecting its magnitude or the
+$6.4\sigma$ detection. Any comparison with previous tidal-correction
+models must therefore account for both effects---the normalisation
+factor and the sign convention---before the amplitudes can be placed on
+a common footing.
+% src: docs/METHODOLOGY.md Sec. 9.5-9.6, clock/SIGN_COEFFICIENT_ANALYSIS.md
+
 \subsection{Segment-9 sensitivity in detail}
 Table~\ref{tab:seg9} compares the 17-segment and 16-segment
 (segment-9-excluded) results. Removing segment~9 drops the raw
