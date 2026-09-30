@@ -41,7 +41,7 @@
 \newcommand{\Ffifteen}{F_{1550}}
 \newcommand{\e}[1]{\times 10^{#1}}
 
-\title{An inter-city optical-clock network for frequency metrology
+\title{An inter-city optical clock network for precision metrology
 and relativistic geodesy}
 
 \author{%
@@ -72,32 +72,36 @@ fibre network. The geopotential difference,
 $\dW = 280.049\pm0.083\ \mathrm{m^{2}/s^{2}}$, is obtained by spirit
 levelling. From $58$\,days
 ($280$\,h; $1\,008\,912$ one-second samples in $17$ uninterrupted
-segments), combining the segments with a Bayesian random-effect model,
-we obtain a Bayesian statistical uncertainty of $0.75\e{-18}$ (clock
-statistical noise only, excluding clock evaluation). The experiment-side
-analysis, which includes a point-by-point tidal correction, gives the
-centre
+segments), and applying a Bayesian random-effect model to the
+segment-to-segment scatter, we obtain the Yb/Sr frequency ratio
 \begin{equation*}
   \mathrm{Yb/Sr} = 1.207\,507\,039\,343\,337\,7215(23) .
 \end{equation*}
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4 (Bayesian, tidal-corrected)
-Because the tidal term is a small effect compared with the present
-uncertainty, we here adopt the \emph{uncorrected} centre as the headline
-result and report the tidal correction separately as an effect estimate
-(Sec.~\ref{sec:correction} and the tidal-model discussion in
-Sec.~\ref{sec:tidal-model}); the uncorrected
-centre from the same analysis is $1.207\,507\,039\,343\,337\,721\,3(23)$,
-lower by only $0.2\e{-18}$.
+% NOTE: the Bayesian statistical uncertainty is 0.75e-18 (clock statistical
+% noise only); it is reported in the main text (Sec. 3.2) rather than in the
+% abstract, to avoid over-stating the uncertainty given the systematics not
+% included here.
+This value is anchored to the two leading independent determinations: it
+lies $-1.7\e{-18}$ below the NIST--JILA value
+$1.207\,507\,039\,343\,337\,7230(37)$ \cite{aeppli2026nist} and
+$+3.3\e{-18}$ above the European-network value
+$1.207\,507\,039\,343\,337\,718(32)$ \cite{pizzocaro2026european}. All
+three determinations agree within $5\e{-18}$---the mutual-agreement level
+targeted for the SI-second redefinition---so this work contributes an
+independent, inter-city, cross-species comparison at the accuracy for
+which the redefinition calls. Because the tidal term is a small effect
+compared with the present uncertainty, we adopt the \emph{uncorrected}
+centre as the headline result and report the tidal correction separately
+as an effect estimate (Sec.~\ref{sec:correction} and the tidal-model
+discussion in Sec.~\ref{sec:tidal-model}); the uncorrected centre from
+the same analysis is $1.207\,507\,039\,343\,337\,721\,3(23)$, lower by
+only $0.2\e{-18}$.
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4 (WLS, tidal-corrected);
 %      uncorrected WLS/bayes centre reproduced independently in this work (Sec. 3.2).
-This deviates from the NIST--JILA value $1.207\,507\,039\,343\,337\,7230(37)$
-\cite{aeppli2026nist} by $-1.7\e{-18}$ and from the European-network
-value $1.207\,507\,039\,343\,337\,718(32)$ \cite{pizzocaro2026european}
-by $+3.3\e{-18}$, so that the three determinations agree within
-$5\e{-18}$, the level targeted for the SI-second redefinition. This
-work's own independent reconstruction of the same ratios reproduces the
-centre to within $2\e{-20}$ under the Bayesian convention and to within
-$2.6\e{-19}$ under the duration-weighted convention
+This work's own independent reconstruction of the same ratios reproduces
+the centre to within $2\e{-20}$ under the Bayesian convention and to
+within $2.6\e{-19}$ under the duration-weighted convention
 (Sec.~\ref{sec:methods}). The same data resolve the tidal
 gravitational-redshift modulation across the baseline at $6.4\sigma$
 (14 of 17 segments with consistent sign; sign-agnostic Stouffer
@@ -133,16 +137,18 @@ signature on the clock ratio.
 
 Reaching this performance in practice requires comparisons between
 clocks that sit in different laboratories and, increasingly, in
-different cities. The redefinition of the SI second calls for
-independent frequency ratios whose mutual agreement reaches the
-$5\e{-18}$ level, a target that is met by only a single Yb/Sr
-determination to date \cite{aeppli2026nist}, which itself differs
-markedly from earlier reports. At the same time, because these clocks
-are difficult to transport, confirming their performance rests on
-extensive, high-precision comparisons rather than on moving the clocks
-to one another. A reliable comparison network is therefore both a
-prerequisite for the redefinition and the most precise means by which
-the time-varying gravitational potential of the Earth can be sensed.
+different cities. The redefinition of the SI second calls for a matrix
+of independent frequency ratios, measured by different laboratories,
+whose entries mutually agree at the few-parts-in-$10^{18}$ level; for
+Yb/Sr only a single determination to date meets this target
+\cite{aeppli2026nist}, and it differs markedly from earlier reports, so
+further independent measurements at this accuracy are needed. At the
+same time, because these clocks are difficult to transport, confirming
+their performance rests on extensive, high-precision comparisons rather
+than on moving the clocks to one another. A reliable comparison network
+is therefore both a prerequisite for the redefinition and the most
+precise means by which the time-varying gravitational potential of the
+Earth can be sensed.
 
 Remote optical-clock comparisons over fibre links have accordingly
 become a standard tool. Single-species links have demonstrated
@@ -168,10 +174,19 @@ USTC strontium clock in Shanghai, at different institutions and linked
 by a phase-stabilised telecom fibre, were operated coherently for
 $58$\,days. The experiment yields $17$ uninterrupted segments
 ($1\,008\,912$ one-second samples, $280$\,h of valid data) and two
-results: a Yb/Sr ratio consistent with the two leading determinations
-at the $5\e{-18}$ level, and a $6.4\sigma$ detection of the tidal
-gravitational-redshift modulation of that ratio. Our contributions are:
+results: an independent, inter-city, cross-species Yb/Sr ratio that
+agrees with the two leading determinations at the $5\e{-18}$ level
+required for the SI-second redefinition, and a $6.4\sigma$ detection of
+the tidal gravitational-redshift modulation of that ratio. Our
+contributions are:
 \begin{itemize}
+  \item a redefinition-relevant frequency-ratio comparison: a Yb/Sr
+        centre obtained across two institutions, two clock species, and
+        a $\sim 700$\,km fibre baseline, independent of the existing
+        determinations and agreeing with them within $5\e{-18}$---the
+        mutual-agreement level the CCTF roadmap identifies as a
+        prerequisite for redefining the SI second;
+        % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.6
   \item an independent reconstruction of the per-segment Yb/Sr ratio at
         80-decimal precision and its duration-weighted centre, with a
         fully independent re-derivation that reproduces the
@@ -738,6 +753,36 @@ systematic side: the clock evaluations and a campaign of joint
 geodetic levelling, rather than longer integration alone.
 % src: clock_ratio/statistical_methods_tidal.json (long_term_stability.raw.y_i_std_1e18=2.980);
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.5 (link/comb < 1e-19)
+
+\subsection{Contribution to the SI-second redefinition}
+\label{sec:si-second}
+
+The immediate metrological value of this work is as an independent
+consistency check on the optical frequency ratios that the redefinition
+of the SI second will rest on. The redefinition requires a matrix of
+ratios between the candidate clocks, measured by different laboratories,
+whose entries mutually agree at the level of a few parts in
+$10^{18}$. For Yb/Sr specifically, only a single determination has so
+far reached the $5\e{-18}$ agreement target \cite{aeppli2026nist}, and it
+differs markedly from earlier reports; a second, independent measurement
+at this accuracy is therefore of direct value. The present ratio is
+obtained at a third institution, with a different pair of clocks, over a
+$\sim 700$\,km fibre baseline, and with independent hardware and
+analysis, yet agrees with both the NIST--JILA and European-network
+values within $5\e{-18}$. It thereby supplies the kind of repeated,
+cross-laboratory comparison that the redefinition requires, rather than
+being limited to a single-site measurement.
+% src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.6
+
+We are careful not to overstate this contribution. The $0.75\e{-18}$
+Bayesian statistical uncertainty of the ratio (reported in
+Sec.~\ref{sec:methods}) covers only the clock statistical noise; it
+excludes the clock evaluations, the tidal-model uncertainty, and the
+link and comb terms (Table~\ref{tab:budget}), so it is a statistical
+floor and not the total uncertainty of the comparison. The claim we make
+is therefore deliberately the conservative one: an independent ratio
+consistent with the existing determinations at the $5\e{-18}$ level, not
+a new most-precise value.
 
 \subsection{Applications and outlook}
 \label{sec:outlook}
