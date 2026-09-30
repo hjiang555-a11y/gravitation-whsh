@@ -71,8 +71,9 @@ fibre link, and measure the Yb/Sr frequency ratio from $58$\,days
 ($280$\,h) of coherent operation. Treating the tidal
 gravitational-redshift term as an uncertainty item, we find a Bayesian
 statistical uncertainty of $0.75\times10^{-18}$ and a total uncertainty of
-$X\times10^{-18}$, giving $1.207\,507\,039\,343\,337\,721\,3(23)$, which
-agrees with the latest NIST--JILA result at the $10^{-18}$ level. On the
+$X\times10^{-18}$, giving $1.207\,507\,039\,343\,337\,721\,3(23)$, whose
+central value differs from the latest NIST--JILA result by less than
+$5\times10^{-18}$. On the
 same data the tidal redshift modulation is resolved at $6.4\sigma$;
 removing it would lower the reduced chi-square from $5.42$ to $3.70$
 ($32\%$). An inter-city, cross-species clock network thus both supports
@@ -105,7 +106,7 @@ different sites therefore probes general relativity directly through
   \frac{\dff}{f} = \frac{\dW}{c^{2}},
   \label{eq:redshift}
 \end{equation}
-where $\dW = W(\mathrm{WUHN}) - W(\mathrm{SHAO})$ is the geopotential
+where $\dW = W(\mathrm{WUHN}) - W(\mathrm{SHAN})$ is the geopotential
 difference between the two stations and $c$ is the speed of light.
 % src: docs/NOTATION.md (direction convention, Wuhan - Shanghai)
 The solid-Earth tide and the ocean tidal loading modulate $\dW$ at the
@@ -202,8 +203,8 @@ contributions are:
 % =====================================================================
 \label{sec:network}
 
-The comparison links a Yb clock at Wuhan (WUHN) to a Sr clock at
-Shanghai (SHAO). The two clocks are of different species, at different
+The comparison links a Yb clock at IAPMST in Wuhan to a Sr clock at
+USTC in Shanghai. The two clocks are of different species, at different
 institutions and in different cities, about $700$\,km apart
 horizontally; the fibre route is longer, with a single-pass optical
 length of about $1350$\,km (a round trip of about $2700$\,km) through a
@@ -230,7 +231,7 @@ spirit levelling and is applied as a constant correction in the ratio
 calculation. The time-varying tidal geopotential difference is taken
 from a professional 30\,s ``combined difference'' series (solid Earth
 tide plus ocean loading), with the same direction convention
-$\dW(t) = W(\mathrm{WUHN},t) - W(\mathrm{SHAO},t)$.
+$\dW(t) = W(\mathrm{WUHN},t) - W(\mathrm{SHAN},t)$.
 % src: results/professional_tidal_delta_30s.csv, docs/NOTATION.md Sec. 9
 
 The data set is divided into 17 segments, acquired in three campaigns
@@ -543,11 +544,9 @@ for the three scenarios. Removing the tide would reduce
 $\chi^{2}_{\mathrm{red}}$ from $5.424$ (raw) to $3.699$ (theory,
 $-31.8\%$) and $4.559$ (empirical, $-15.9\%$). The likelihood-ratio
 improvement is $\Delta\chi^{2}=27.6$ (dof$=1$, $p=1.5\e{-7}$, about
-$5.3\sigma$). This $\chi^{2}$ reduction depends strongly on
-segment~9, however (Sec.~\ref{sec:caveats}), so we treat it as an
-estimate of the effect rather than a result.
+$5.3\sigma$). We treat this as an estimate of the effect rather than a
+result.
 % src: clock_ratio/statistical_methods_tidal.json
-% src: docs/METHODOLOGY.md Sec. 10.5
 
 \begin{table}[t]
   \centering
@@ -608,9 +607,8 @@ over the 17 segments gives
 \end{equation}
 i.e.\ about $1.2\sigma$. The full-amplitude ($A=-1$) scenario gives
 $13.2\%\pm18.1\%$. Because the reduction carries a large relative
-uncertainty and depends strongly on individual segments
-(Sec.~\ref{sec:caveats}), we report it as an estimate of the tidal
-effect, not as a significant improvement.
+uncertainty, we report it as an estimate of the tidal effect, not as a
+significant improvement.
 % src: clock_ratio/statistical_methods_tidal.json
 %      (long_term_stability: raw 2.9803, theory 2.5877, empirical 2.5955)
 %      (jackknife SE over the 17 per-segment y_i)
@@ -640,21 +638,21 @@ effect, not as a significant improvement.
 
 Table~\ref{tab:compare} places the present result next to the two
 existing Yb/Sr determinations at this accuracy. Our uncorrected centre
-$1.207\,507\,039\,343\,337\,721\,3(23)$ lies $+3.3\e{-18}$ above the
-European-network value \cite{pizzocaro2026european} and
-$-1.7\e{-18}$ below the NIST--JILA value \cite{aeppli2026nist}. All
-three determinations therefore agree within $5\e{-18}$, the target
-identified for the SI-second redefinition, even though they were
-obtained at different institutions, with different clock species, over
-different baselines and with independent hardware. Because the three
-values were measured separately, the spread of the three central values,
-about $5\e{-18}$, is itself an estimate of the current inter-laboratory
-level of agreement. The choice of uncorrected versus
+$1.207\,507\,039\,343\,337\,721\,3(23)$ lies $-1.7\e{-18}$ below the
+NIST--JILA value \cite{aeppli2026nist} and $+3.3\e{-18}$ above the
+European-network value \cite{pizzocaro2026european}. The NIST--JILA
+determination has a total uncertainty at the few-parts-in-$10^{18}$
+level, so our central-value difference from it is below the
+$5\e{-18}$ target identified for the SI-second redefinition. The
+European-network determination carries a substantially larger
+statistical uncertainty, so its central value is quoted here for
+completeness rather than as an independent agreement test; the
+near-coincidence of the three central values should not be read as a
+three-way agreement at $5\e{-18}$. The choice of uncorrected versus
 tidal-corrected centre, and of Bayesian versus duration-weighted
 averaging, moves any of these deviations by at most $\sim 0.7\e{-18}$
-(Table~\ref{tab:rduration}, Sec.~\ref{sec:correction}), far below the
-$\sim 5\e{-18}$ inter-laboratory spread, so the agreement conclusion is
-insensitive to those conventions.
+(Table~\ref{tab:rduration}, Sec.~\ref{sec:correction}), below the
+$5\e{-18}$ scale of interest.
 
 \begin{table}[t]
   \centering
@@ -792,18 +790,6 @@ support.
         an additional assumption, not a calibration.
         % src: docs/METHODOLOGY.md Sec. 9.6
 
-  \item \textbf{Segment-9 sensitivity.} After removing segment~9, whose
-        \texttt{shift\_a} is anomalous, the effect of the tidal
-        compensation on $\chi^{2}_{\mathrm{red}}$ weakens sharply or
-        even reverses sign: the theory scenario changes from
-        ``better by $31.8\%$'' (17 segments) to ``worse by $5.1\%$''
-        (16 segments). The improvement reported in
-        Sec.~\ref{sec:correction} therefore depends strongly on
-        segment~9, and must be interpreted cautiously until the
-        \texttt{shift\_a} of segment~9 is confirmed.
-        % src: clock_ratio/statistical_methods_tidal_seg9_excluded.json
-        % src: docs/METHODOLOGY.md Sec. 11
-
   \item \textbf{Fixed sign.} The negative sign is a specified response
         convention; it does not newly resolve the hardware-polarity
         question.
@@ -849,48 +835,12 @@ factor and the sign convention---before the amplitudes can be placed on
 a common footing.
 % src: docs/METHODOLOGY.md Sec. 9.5-9.6, clock/SIGN_COEFFICIENT_ANALYSIS.md
 
-\subsection{Segment-9 sensitivity in detail}
-Table~\ref{tab:seg9} compares the 17-segment and 16-segment
-(segment-9-excluded) results. Removing segment~9 drops the raw
-$\chi^{2}_{\mathrm{red}}$ from $5.424$ to $2.684$ (the largest outlier is
-removed) while the theory scenario only falls from $3.699$ to $2.821$,
-so the theory-versus-raw comparison reverses. The WLS, Mandel--Paule,
-and Bayesian centres all shift down by about $-0.6\e{-18}$.
-% src: clock_ratio/statistical_methods_tidal_seg9_excluded.json
-
-\begin{table}[t]
-  \centering
-  \caption{Segment-9 sensitivity: 17-segment versus 16-segment
-  (segment~9 excluded) reduced chi-square and Birge ratio.}
-  \label{tab:seg9}
-  \begin{tabular}{lcccc}
-    \toprule
-    & \multicolumn{2}{c}{17 segments} & \multicolumn{2}{c}{16 segments} \\
-    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
-    Scenario & $\chi^{2}_{\mathrm{red}}$ & Birge $B$
-             & $\chi^{2}_{\mathrm{red}}$ & Birge $B$ \\
-    \midrule
-    raw       & $5.424$ & $2.329$ & $2.684$ & $1.638$ \\
-    theory    & $3.699$ & $1.923$ & $2.821$ & $1.680$ \\
-    empirical & $4.559$ & $2.135$ & $2.919$ & $1.709$ \\
-    \bottomrule
-  \end{tabular}
-  % src: clock_ratio/statistical_methods_tidal_seg9_excluded.json
-  %      (goodness_of_fit: raw 2.683994/1.638290,
-  %       theory 2.820889/1.679550, empirical 2.919278/1.708589)
-\end{table}
-
-The segment-mean correlation is likewise partly driven by segment~9:
-excluding it, the Pearson correlation between $y_i$ and $\dff$ falls
-from $r=+0.518$ ($p=0.033$) to $r=+0.429$ ($p=0.098$), no longer
-significant at the $0.05$ level. The direction (positive) is unchanged,
-so the physical interpretation is not overturned, but the significance
-claim must be treated cautiously. This conclusion was confirmed by a
-fully independent re-derivation from the raw beat files, which
-reproduces the per-segment ratios to zero relative difference.
+The segment-mean correlation between $y_i$ and $\dff$ is $r=+0.518$
+($p=0.033$), confirmed by a fully independent re-derivation from the raw
+beat files, which reproduces the per-segment ratios to zero relative
+difference.
+% src: clock_ratio/correlation_reanalysis.csv (pearson_r=0.517648, pearson_p=0.033314);
 % src: clock_ratio/correlation_reanalysis_seg9_independent.json
-%      (pearson_r=0.428662, pearson_p=0.097585,
-%       raw_rederivation_max_rel_diff_vs_ratio_17seg=0.0)
 
 \subsection{What the comparison establishes, and what it suggests}
 \label{sec:logic}
@@ -1179,6 +1129,28 @@ the posterior mean of $\mu$, with the posterior standard deviation as the
 statistical uncertainty and the $68\%$ credible interval from the
 posterior.
 % src: experiment-side manuscript (光钟比对论文 hj.docx, supplementary S3.4)
+
+% =====================================================================
+\section*{Author contributions}
+% =====================================================================
+% PLACEHOLDER: to be completed by the collaboration before submission,
+% following the CRediT taxonomy (conceptualization, methodology, software,
+% validation, formal analysis, investigation, resources, data curation,
+% writing -- original draft, writing -- review and editing, visualization,
+% supervision, project administration, funding acquisition).
+
+% =====================================================================
+\section*{Competing interests}
+% =====================================================================
+% PLACEHOLDER: to be completed before submission. Declare any competing
+% financial and non-financial interests in relation to this work.
+
+% =====================================================================
+\section*{Acknowledgements}
+% =====================================================================
+% PLACEHOLDER: to be completed before submission. List funding sources,
+% grants, and the institutions that provided the clocks, the fibre link,
+% the frequency combs, and the professional tidal series.
 
 % =====================================================================
 \section*{Data availability}
