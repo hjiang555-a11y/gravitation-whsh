@@ -66,26 +66,30 @@ we link an IAPMST ytterbium clock (Wuhan) to a USTC strontium clock
 fibre network. The geopotential difference, $\dW = 280.049\pm0.083\
 \mathrm{m^{2}/s^{2}}$, is obtained by spirit levelling. From $58$\,days
 ($280$\,h; $1\,008\,912$ one-second samples in $17$ uninterrupted
-segments), after correcting the tidal gravitational redshift
-point-by-point and combining the segments with a Bayesian random-effect
-model, we obtain a statistical uncertainty of $0.75\e{-18}$ (clock
-statistical noise only, excluding clock evaluation), giving
+segments), combining the segments with a Bayesian random-effect model,
+we obtain a statistical uncertainty of $0.75\e{-18}$ (clock statistical
+noise only, excluding clock evaluation), giving
 \begin{equation*}
-  \mathrm{Yb/Sr} = 1.207\,507\,039\,343\,337\,7215(23) .
+  \mathrm{Yb/Sr} = 1.207\,507\,039\,343\,337\,7213(23) .
 \end{equation*}
-% src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4
+% src: clock_ratio/statistical_methods_tidal.json (raw, uncorrected Bayesian centre)
 This deviates from the NIST--JILA value $1.207\,507\,039\,343\,337\,7230(37)$
-\cite{aeppli2026nist} by $-1.5\e{-18}$ and from the European-network
+\cite{aeppli2026nist} by $-1.7\e{-18}$ and from the European-network
 value $1.207\,507\,039\,343\,337\,718(32)$ \cite{pizzocaro2026european}
-by $+3.5\e{-18}$, so that the three determinations agree within
-$5\e{-18}$, the level targeted for the SI-second redefinition. The same
-data resolve the tidal gravitational-redshift modulation across the
-baseline at $6.4\sigma$ (14 of 17 segments with consistent sign;
-sign-agnostic Stouffer $|z|=5.87$), with a fitted response amplitude
-$A=-0.5397\pm0.0843$; removing the tide lowers the reduced chi-square
-from $5.42$ to $3.70$. An inter-city, cross-species clock network thus
-both supports the redefinition and acts as a sensor of the time-varying
-gravitational potential at the centimetre level.
+by $+3.3\e{-18}$, so that the three determinations agree within
+$5\e{-18}$, the level targeted for the SI-second redefinition. We do
+\emph{not} apply a tidal correction to this value, because the tidal
+term is a small effect compared with the present uncertainty; instead we
+report it as an estimate. The same data resolve the tidal
+gravitational-redshift modulation across the baseline at $6.4\sigma$
+(14 of 17 segments with consistent sign; sign-agnostic Stouffer
+$|z|=5.87$), with a fitted response amplitude
+$A=-0.5397\pm0.0843$. Had the tide been removed at this amplitude, the
+segment-to-segment dispersion would decrease by about $13\%$
+($12.9\%\pm11.0\%$); we present this as an estimate of the effect, not
+as an adopted correction. An inter-city, cross-species clock network
+thus both supports the redefinition and acts as a sensor of the
+time-varying gravitational potential at the centimetre level.
 % src: clock/segment_analysis/batch_aggregate.csv,
 % src: clock_ratio/statistical_methods_tidal.json
 \end{abstract}
@@ -155,9 +159,12 @@ gravitational-redshift modulation of that ratio. Our contributions are:
         at $A=-0.5397\pm0.0843$ ($6.4\sigma$), significant in sign
         consistency, Stouffer, and Fisher combinations;
         % src: clock/segment_analysis/batch_aggregate.csv
-  \item a comparison of two fixed-coefficient tidal corrections
-        ($A=-1$ and $A=-0.54$) against the uncorrected baseline, with
-        an honest account of the caveats that limit the interpretation.
+  \item an estimate of the tidal effect on the ratio measurement: with
+        the tide removed at the fitted amplitude the segment-to-segment
+        dispersion would decrease by about $13\%$
+        ($12.9\%\pm11.0\%$). Because the tidal term is a small effect
+        compared with the present uncertainty, it is reported as an
+        estimate and \emph{not} applied to the headline ratio.
 \end{itemize}
 
 % =====================================================================
@@ -237,19 +244,23 @@ The duration-weighted centre of the whole experiment is
   \label{eq:rduration}
 \end{equation}
 
-\subsection{Experiment-side result and internal re-derivation}
-The primary Yb/Sr result is obtained on the experiment side from a
-Bayesian random-effect combination of the per-segment ratios after a
-point-by-point tidal correction, giving
+\subsection{Headline result and internal re-derivation}
+The primary Yb/Sr result is the \emph{uncorrected} Bayesian random-effect
+combination of the per-segment ratios (no tidal correction; the static
+geopotential is removed):
 \begin{equation}
-  \mathrm{Yb/Sr} = 1.207\,507\,039\,343\,337\,7215(23),
+  \mathrm{Yb/Sr} = 1.207\,507\,039\,343\,337\,7213(23),
   \label{eq:result-bayes}
 \end{equation}
+% src: clock_ratio/statistical_methods_tidal.json (raw R_bayes)
 with a statistical uncertainty of $0.75\e{-18}$ from the clock
 statistical noise alone (clock evaluation, tidal-model and
-link/comb terms excluded); the corresponding tidal-corrected
-precision-weighted centre is $1.207\,507\,039\,343\,337\,7213(23)$, and
-the uncorrected centre is $1.207\,507\,039\,343\,337\,7206(23)$.
+link/comb terms excluded). For reference, the experiment-side
+point-by-point-tidal-corrected Bayesian centre is
+$1.207\,507\,039\,343\,337\,7215(23)$, a shift of only
+$+0.2\e{-18}$; because the tidal term is a small effect compared with
+the present uncertainty, we report it as an estimate (Sec.~\ref{sec:correction})
+rather than adopting the corrected value.
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4
 To verify that these values follow from the raw beat files, we
 independently rebuilt the ratio chain in this work. Reconstructing the
@@ -260,7 +271,7 @@ duration-weighted centre of the uncorrected baseline gives
   \label{eq:raw}
 \end{equation}
 % src: clock_ratio/tidal_correction/summary.json (scenario raw)
-which agrees with the experiment-side uncorrected centre to about
+which agrees with the uncorrected Bayesian centre to about
 $1\e{-18}$ after the different averaging conventions are accounted for.
 A fully independent re-derivation of all 17 segment ratios from the raw
 beat files---segment selection, median, and the complete Dr
@@ -394,14 +405,20 @@ $r = +0.518$ ($p = 0.033$).
 \end{figure}
 
 % =====================================================================
-\section{Validity and magnitude of the tidal correction}
+\section{Estimate of the tidal effect}
 % =====================================================================
 \label{sec:correction}
 
+The tidal term is small compared with the present uncertainty
+($\dff \sim 5\e{-18}$ rms against a $0.75\e{-18}$ statistical term and a
+$\lesssim 2\e{-18}$ total), so we do \emph{not} apply a tidal correction
+to the headline ratio. This section quantifies what the correction
+\emph{would} do, as an estimate of the effect.
+
 \subsection{Fixed-coefficient scenarios}
-The tidal correction is justified if the corrected residual is no longer
-systematically correlated with the tidal template. We adopt two
-fixed-response scenarios rather than refitting the amplitude:
+A tidal correction is meaningful only if the corrected residual is no
+longer systematically correlated with the tidal template. We consider
+two fixed-response scenarios rather than refitting the amplitude:
 \begin{equation}
   b_{\mathrm{corr}}(t) = b_{\mathrm{raw}}(t) - A\,h(t),
   \qquad
@@ -411,7 +428,8 @@ fixed-response scenarios rather than refitting the amplitude:
 where the ``theory'' scenario takes $A=-1$ (full trust in the
 professional tidal data and in general relativity) and the ``empirical''
 scenario takes $A=-0.54$ (trust the waveform, use the historical fitted
-magnitude).
+magnitude). These are \emph{estimates of the effect}, not corrections
+adopted into the result.
 % src: docs/METHODOLOGY.md Sec. 9.1
 
 \subsection{Direction self-check}
@@ -427,9 +445,11 @@ correlation, without relying on the not-yet-fixed comb/local-oscillator
 sign factor $s_{\mathrm{beat}}$.
 % src: docs/METHODOLOGY.md Sec. 9.5
 
-\subsection{Magnitude of the correction}
-The correction shifts the duration-weighted centre upward from the
-baseline. Table~\ref{tab:rduration} lists the three scenarios.
+\subsection{Magnitude of the effect}
+Had the tide been removed, the duration-weighted centre would shift
+upward from the baseline. Table~\ref{tab:rduration} lists the three
+scenarios; the shift is at most $+0.44\e{-18}$, i.e.\ comparable to but
+below the present statistical uncertainty.
 % src: clock_ratio/tidal_correction/summary.json
 
 \begin{table}[t]
@@ -437,7 +457,8 @@ baseline. Table~\ref{tab:rduration} lists the three scenarios.
   \caption{Duration-weighted centre $\Rdur$ by scenario. The last column
   is the signed absolute ratio difference from the raw baseline,
   $\Delta R = \Rdur^{(\mathrm{scenario})} - \Rdur^{(\mathrm{raw})}$,
-  in units of $10^{-18}$.}
+  in units of $10^{-18}$. These scenarios are effect estimates, not the
+  adopted result.}
   \label{tab:rduration}
   \begin{tabular}{lccc}
     \toprule
@@ -466,18 +487,20 @@ reference.
 
 \subsection{Internal consistency}
 Table~\ref{tab:chi2} reports the reduced chi-square and the Birge ratio
-for the three scenarios. The correction reduces $\chi^{2}_{\mathrm{red}}$
-from $5.424$ (raw) to $3.699$ (theory, $-31.8\%$) and $4.559$
-(empirical, $-15.9\%$). The likelihood-ratio improvement is
-$\Delta\chi^{2}=27.6$ (dof$=1$, $p=1.5\e{-7}$, about $5.3\sigma$),
-indicating that the compensation significantly improves the
-inter-segment consistency.
+for the three scenarios. Removing the tide would reduce
+$\chi^{2}_{\mathrm{red}}$ from $5.424$ (raw) to $3.699$ (theory,
+$-31.8\%$) and $4.559$ (empirical, $-15.9\%$). The likelihood-ratio
+improvement is $\Delta\chi^{2}=27.6$ (dof$=1$, $p=1.5\e{-7}$, about
+$5.3\sigma$). This $\chi^{2}$ reduction depends strongly on
+segment~9, however (Sec.~\ref{sec:caveats}), so we treat it as an
+estimate of the effect rather than a result.
 % src: clock_ratio/statistical_methods_tidal.json
 % src: docs/METHODOLOGY.md Sec. 10.5
 
 \begin{table}[t]
   \centering
-  \caption{Reduced chi-square and Birge ratio by scenario.}
+  \caption{Reduced chi-square and Birge ratio by scenario (effect
+  estimates, not the adopted result).}
   \label{tab:chi2}
   \begin{tabular}{lccc}
     \toprule
@@ -518,15 +541,27 @@ reference.
   % src: clock_ratio/statistical_methods_tidal.json (synthesis.methods)
 \end{table}
 
-\subsection{Long-term stability}
+\subsection{Dispersion reduction (effect estimate)}
 The tidal signal is a slow ($\sim$12/24\,h) modulation and mainly affects
 the day-scale inter-segment scatter rather than the short-term
 within-segment OADEV. Using the inter-segment sample standard deviation
-of $y_i$ as the long-term stability metric, the scatter drops from
-$2.980\e{-18}$ (raw) to $2.588\e{-18}$ (theory, $+13.2\%$) and
-$2.596\e{-18}$ (empirical, $+12.9\%$).
+of $y_i$ as the dispersion metric, removing the tide at the fitted
+amplitude would reduce it from $2.980\e{-18}$ (raw) to
+$2.596\e{-18}$ (empirical), a decrease of about $13\%$. A jackknife
+over the 17 segments gives
+\begin{equation}
+  \Delta\sigma(y_i)/\sigma(y_i) = 12.9\% \pm 11.0\%
+  \qquad (A=-0.54),
+  \label{eq:dispersion}
+\end{equation}
+i.e.\ about $1.2\sigma$. The full-amplitude ($A=-1$) scenario gives
+$13.2\%\pm18.1\%$. Because the reduction carries a large relative
+uncertainty and depends strongly on individual segments
+(Sec.~\ref{sec:caveats}), we report it as an estimate of the tidal
+effect, not as a significant improvement.
 % src: clock_ratio/statistical_methods_tidal.json
 %      (long_term_stability: raw 2.9803, theory 2.5877, empirical 2.5955)
+%      (jackknife SE over the 17 per-segment y_i)
 
 \begin{figure}[t]
   \centering
@@ -552,10 +587,10 @@ $2.596\e{-18}$ (empirical, $+12.9\%$).
 \label{sec:comparison}
 
 Table~\ref{tab:compare} places the present result next to the two
-existing Yb/Sr determinations at this accuracy. Our Bayesian centre
-$1.207\,507\,039\,343\,337\,7215(23)$ lies $+3.5\e{-18}$ above the
+existing Yb/Sr determinations at this accuracy. Our uncorrected Bayesian
+centre $1.207\,507\,039\,343\,337\,7213(23)$ lies $+3.3\e{-18}$ above the
 European-network value \cite{pizzocaro2026european} and
-$-1.5\e{-18}$ below the NIST--JILA value \cite{aeppli2026nist}. All
+$-1.7\e{-18}$ below the NIST--JILA value \cite{aeppli2026nist}. All
 three determinations therefore agree within $5\e{-18}$, the target
 identified for the SI-second redefinition, even though they were
 obtained at different institutions, with different clock species, over
@@ -573,12 +608,12 @@ level of agreement.
     \toprule
     Determination & Yb/Sr & Deviation & Ref. \\
     \midrule
-    NIST--JILA       & $1.207\,507\,039\,343\,337\,7230(37)$ & $-1.5$ & \cite{aeppli2026nist} \\
-    This work        & $1.207\,507\,039\,343\,337\,7215(23)$ & $0$    & --- \\
-    European network & $1.207\,507\,039\,343\,337\,718(32)$  & $+3.5$ & \cite{pizzocaro2026european} \\
+    NIST--JILA       & $1.207\,507\,039\,343\,337\,7230(37)$ & $-1.7$ & \cite{aeppli2026nist} \\
+    This work        & $1.207\,507\,039\,343\,337\,7213(23)$ & $0$    & --- \\
+    European network & $1.207\,507\,039\,343\,337\,718(32)$  & $+3.3$ & \cite{pizzocaro2026european} \\
     \bottomrule
   \end{tabular}
-  % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.6
+  % src: clock_ratio/statistical_methods_tidal.json (raw R_bayes)
 \end{table}
 
 % =====================================================================
@@ -674,28 +709,27 @@ We have reported an inter-city, cross-species optical-clock network:
 an IAPMST Yb clock in Wuhan and a USTC Sr clock in Shanghai, about
 $700$\,km apart, linked through a phase-stabilised telecom fibre. Over
 $58$\,days the network delivered $17$ uninterrupted segments and
-$1\,008\,912$ one-second samples ($280$\,h). After a point-by-point
-tidal correction and a Bayesian combination of the segment scatter, the
-Yb/Sr ratio is $1.207\,507\,039\,343\,337\,7215(23)$, with a statistical
+$1\,008\,912$ one-second samples ($280$\,h). Combining the segments
+with a Bayesian random-effect model, the uncorrected Yb/Sr ratio is
+$1.207\,507\,039\,343\,337\,7213(23)$, with a statistical
 uncertainty of $0.75\e{-18}$ and a total fractional uncertainty below
 $2\e{-18}$; it agrees with the NIST--JILA and European-network
 determinations within $5\e{-18}$. An independent reconstruction of the
 per-segment ratios at 80-decimal precision in this work reproduces the
-experiment-side ratio chain exactly. On the same data set, the tidal
-gravitational redshift is detected at the correct sign and roughly half
-the theoretical magnitude, $A=-0.5397\pm0.0843$ ($6.4\sigma$), with
+ratio chain exactly. On the same data set, the tidal gravitational
+redshift is detected at the correct sign and roughly half the
+theoretical magnitude, $A=-0.5397\pm0.0843$ ($6.4\sigma$), with
 cross-segment significance in sign consistency ($14/17$, $p=0.013$),
 Stouffer ($|z|=5.87$, $p=4.3\e{-9}$), and Fisher ($p=2.2\e{-6}$)
-combinations. Two fixed-coefficient tidal corrections shift the centre
-toward the experiment-side reference and reduce the inter-segment
-scatter by about $13\%$, but the improvement depends strongly on
-segment~9 and the per-segment uncertainties remain unreliable; we
-therefore present the correction as a method-comparison result, not as a
-final uncertainty statement. These results establish an inter-city
-clock network as a dual-purpose instrument---supporting the SI-second
-redefinition through independent ratio comparisons, and sensing the
-time-varying gravitational potential---and as a prototype node pair for
-a future distributed chronometric reference frame.
+combinations. Because the tidal term is small compared with the present
+uncertainty, we report it as an effect estimate rather than applying a
+correction: removing the tide at the fitted amplitude would reduce the
+inter-segment dispersion by about $13\%$ ($12.9\%\pm11.0\%$) and shift
+the centre by at most $+0.4\e{-18}$. These results establish an
+inter-city clock network as a dual-purpose instrument---supporting the
+SI-second redefinition through independent ratio comparisons, and
+sensing the time-varying gravitational potential---and as a prototype
+node pair for a future distributed chronometric reference frame.
 
 % =====================================================================
 \appendix
