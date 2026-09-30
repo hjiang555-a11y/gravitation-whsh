@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Spliced concatenated stability: A=0, A=-1, and the A=-1 correction term.
+"""Spliced concatenated stability: A=0, A=-1, A=-0.54, and the A=-1 correction.
 
 The 17 valid segments are SPLICED end-to-end with their inter-segment gaps
 removed, giving one continuous 1,008,912-sample record. A single standard
@@ -9,12 +9,13 @@ full spliced length instead of being capped by the longest single run.
   1. select_segments -> the 17 frozen segments (raw data alone decide
      membership, identical to every other artifact).
   2. Build the per-second ratio fluctuation series y(t) = -q/(1+q) for each
-     scenario (A=0 raw, A=-1 theory) via analyze_segment.
+     scenario (A=0 raw, A=-1 theory, A=-0.54 empirical) via analyze_segment.
   3. SPLICE: concatenate the 17 segment series back-to-back, dropping the
      wall-clock gaps entirely (t = 0,1,2,... over the spliced record).
-  4. Run one OADEV on the spliced record for three series:
+  4. Run one OADEV on the spliced record for four series:
        - raw        A=0
        - theory     A=-1
+       - empirical  A=-0.54  (dashed in the figure)
        - correction the removed term itself, h/F_1550
 
 Because the gaps are removed, the spliced record is treated as if the
@@ -110,11 +111,12 @@ def main() -> int:
         raise AnalysisError(f"tide data could not be loaded: {error}") from error
 
     scenario_by_key = {sc.key: sc for sc in SCENARIOS}
-    raw_results, theory_results, h_frac = [], [], []
+    raw_results, theory_results, empirical_results, h_frac = [], [], [], []
     for segment in segments:
         h = tide.beat_at(segment.times)
         raw_results.append(analyze_segment(segment, h, scenario_by_key["raw"]))
         theory_results.append(analyze_segment(segment, h, scenario_by_key["theory"]))
+        empirical_results.append(analyze_segment(segment, h, scenario_by_key["empirical"]))
         h_frac.append(h / s.F_1550)
 
     segment_times = [r.segment.times for r in raw_results]
@@ -124,6 +126,7 @@ def main() -> int:
     series = {
         "raw": np.concatenate([r.fluctuations for r in raw_results]),
         "theory": np.concatenate([r.fluctuations for r in theory_results]),
+        "empirical": np.concatenate([r.fluctuations for r in empirical_results]),
         "correction": np.concatenate(h_frac),
     }
     n_total = len(series["raw"])
@@ -135,7 +138,7 @@ def main() -> int:
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.writer(stream)
         writer.writerow(["series", "tau_s", "tau_days", "n_pairs", "sigma_y", "u_sigma"])
-        for key in ("raw", "theory", "correction"):
+        for key in ("raw", "theory", "empirical", "correction"):
             for point in curves[key]:
                 writer.writerow([
                     key, point["tau_s"], f"{point['tau_s'] / 86400:.6f}",
@@ -145,25 +148,26 @@ def main() -> int:
                 ])
 
     lines = [
-        "# Spliced concatenated stability (A=0, A=-1, A=-1 correction)\n",
+        "# Spliced concatenated stability (A=0, A=-1, A=-0.54, A=-1 correction)\n",
         f"17 segments placed end-to-end on one continuous 1-s clock; the "
         f"wall-clock gaps are removed. The aligned record spans "
         f"**{n_total:,}** s ({n_total / 86400:.3f} d of pure data time) versus "
         f"{span_days:.2f} d of real elapsed time. One OADEV per series over the "
         f"aligned axis, starting at tau = {TAU_START_S} s.\n",
-        "| tau [s] | tau [d] | raw (A=0) | theory (A=-1) | correction h/F1550 "
-        "| n_pairs |",
-        "|---|---|---|---|---|---|",
+        "| tau [s] | tau [d] | raw (A=0) | theory (A=-1) | empirical (A=-0.54) "
+        "| correction h/F1550 | n_pairs |",
+        "|---|---|---|---|---|---|---|",
     ]
     for i, tau in enumerate(taus):
-        p_raw, p_th, p_cor = curves["raw"][i], curves["theory"][i], curves["correction"][i]
+        p_raw, p_th, p_em = curves["raw"][i], curves["theory"][i], curves["empirical"][i]
+        p_cor = curves["correction"][i]
         def f(p):
             if p["sigma_y"] is None:
                 return "—"
             return f"{p['sigma_y']:.3e} ± {p['u_sigma']:.1e}"
         lines.append(
-            f"| {tau} | {tau / 86400:.3f} | {f(p_raw)} | {f(p_th)} | {f(p_cor)} "
-            f"| {p_raw['n_pairs']} |")
+            f"| {tau} | {tau / 86400:.3f} | {f(p_raw)} | {f(p_th)} | {f(p_em)} "
+            f"| {f(p_cor)} | {p_raw['n_pairs']} |")
     lines.append(
         "\n> `u_sigma` is the 1-sigma EDF (Riley & Howe) uncertainty on sigma_y. "
         "Gaps are removed, so the record is treated as contiguous; a tau longer "
@@ -179,7 +183,7 @@ def main() -> int:
           f"({n_total:,} samples, 1-s steps)")
     print(f"pure data span {n_total / 86400:.3f} d vs real elapsed {span_days:.2f} d; "
           f"tau up to {taus[-1]} s ({taus[-1] / 86400:.3f} d)")
-    for key in ("raw", "theory", "correction"):
+    for key in ("raw", "theory", "empirical", "correction"):
         p = curves[key][-1]
         sigma = "N/A" if p["sigma_y"] is None else f"{p['sigma_y']:.4e}"
         print(f"  {key:11s} sigma_y({p['tau_s']}s) = {sigma}  (n_pairs={p['n_pairs']})")
@@ -193,19 +197,21 @@ def write_figure(taus, curves) -> None:
     import matplotlib.pyplot as plt
 
     meta = {
-        "raw": ("raw (A=0)", "#8a8a8a", "o"),
-        "theory": ("theory (A=-1)", "#1f4e9c", "s"),
-        "correction": ("correction h/F1550 (A=-1)", "#b22222", "^"),
+        "raw": ("raw (A=0)", "#8a8a8a", "o", "-"),
+        "theory": ("theory (A=-1)", "#1f4e9c", "s", "-"),
+        "empirical": ("empirical (A=-0.54)", "#2ca02c", "D", "--"),
+        "correction": ("correction h/F1550 (A=-1)", "#b22222", "^", "-"),
     }
     fig, ax = plt.subplots(figsize=(6.9, 3.6))
-    for key in ("raw", "theory", "correction"):
-        label, color, marker = meta[key]
+    for key in ("raw", "theory", "empirical", "correction"):
+        label, color, marker, linestyle = meta[key]
         pts = [p for p in curves[key] if p["sigma_y"] is not None]
         xs = [p["tau_s"] for p in pts]
         ys = [p["sigma_y"] for p in pts]
         es = [p["u_sigma"] for p in pts]
         ax.errorbar(xs, ys, yerr=es, color=color, marker=marker, ms=4.0,
-                    lw=1.2, elinewidth=0.8, capsize=1.8, label=label)
+                    lw=1.2, linestyle=linestyle, elinewidth=0.8, capsize=1.8,
+                    label=label)
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlabel(r"$\tau$ [s]")
