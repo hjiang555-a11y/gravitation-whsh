@@ -45,7 +45,8 @@ MD_PATH = OUT_DIR / "concatenated_stability_long.md"
 FIG_PNG = OUT_DIR / "concatenated_stability_long.png"
 FIG_PDF = OUT_DIR / "concatenated_stability_long.pdf"
 
-TAUS_S = (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 600, 1024, 1200, 2048,
+TAU_START_S = 100
+TAUS_S = (128, 256, 512, 600, 1024, 1200, 2048,
           3600, 4096, 7200, 8192, 16384, 21600, 32768, 43200, 65536, 86400,
           100000, 131072, 172800, 200000, 262144, 345600, 400000)
 
@@ -71,6 +72,11 @@ def spliced_oadev(y: np.ndarray, taus_s) -> list[dict]:
 
     The record has no gaps (t = 0,1,...,N-1). For lag m (tau = m seconds),
     every start i=0..N-2m contributes an adjacent m-averaged difference.
+
+    The 1-sigma uncertainty on sigma_y uses the chi-square estimate with
+    equivalent degrees of freedom for overlapping Allan deviation
+    (Riley & Howe):  Edf = (3*(N-1)/(2*m) - 1) * (2/3), clipped to >= 1;
+    u_sigma = sigma_y / sqrt(2 * Edf).
     """
     n = len(y)
     centered = y - y[0]
@@ -81,11 +87,14 @@ def spliced_oadev(y: np.ndarray, taus_s) -> list[dict]:
         m = int(tau)
         n_pairs = n - 2 * m
         if n_pairs <= 0:
-            points.append({"tau_s": m, "n_pairs": 0, "sigma_y": None})
+            points.append({"tau_s": m, "n_pairs": 0, "sigma_y": None, "u_sigma": None})
             continue
         difference = (prefix[2 * m:] - 2 * prefix[m:-m] + prefix[:-2 * m]) / m
         sigma = float(np.sqrt(np.dot(difference, difference) / (2.0 * n_pairs)))
-        points.append({"tau_s": m, "n_pairs": int(n_pairs), "sigma_y": sigma})
+        edf = max(1.0, (3.0 * (n - 1) / (2.0 * m) - 1.0) * (2.0 / 3.0))
+        u_sigma = sigma / np.sqrt(2.0 * edf)
+        points.append({"tau_s": m, "n_pairs": int(n_pairs), "sigma_y": sigma,
+                       "u_sigma": float(u_sigma)})
     return points
 
 
@@ -120,18 +129,19 @@ def main() -> int:
     n_total = len(series["raw"])
     if not np.all(np.diff(aligned_times) == np.timedelta64(1, "s")):
         raise AnalysisError("aligned axis is not a monotone 1-second clock")
-    taus = [t for t in TAUS_S if t < n_total // 2]
+    taus = [t for t in TAUS_S if TAU_START_S <= t < n_total // 2]
     curves = {key: spliced_oadev(series[key], taus) for key in series}
 
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.writer(stream)
-        writer.writerow(["series", "tau_s", "tau_days", "n_pairs", "sigma_y"])
+        writer.writerow(["series", "tau_s", "tau_days", "n_pairs", "sigma_y", "u_sigma"])
         for key in ("raw", "theory", "correction"):
             for point in curves[key]:
                 writer.writerow([
                     key, point["tau_s"], f"{point['tau_s'] / 86400:.6f}",
                     point["n_pairs"],
                     "" if point["sigma_y"] is None else f"{point['sigma_y']:.6e}",
+                    "" if point["u_sigma"] is None else f"{point['u_sigma']:.6e}",
                 ])
 
     lines = [
@@ -140,7 +150,7 @@ def main() -> int:
         f"wall-clock gaps are removed. The aligned record spans "
         f"**{n_total:,}** s ({n_total / 86400:.3f} d of pure data time) versus "
         f"{span_days:.2f} d of real elapsed time. One OADEV per series over the "
-        "aligned axis.\n",
+        f"aligned axis, starting at tau = {TAU_START_S} s.\n",
         "| tau [s] | tau [d] | raw (A=0) | theory (A=-1) | correction h/F1550 "
         "| n_pairs |",
         "|---|---|---|---|---|---|",
@@ -148,15 +158,18 @@ def main() -> int:
     for i, tau in enumerate(taus):
         p_raw, p_th, p_cor = curves["raw"][i], curves["theory"][i], curves["correction"][i]
         def f(p):
-            return "—" if p["sigma_y"] is None else f"{p['sigma_y']:.3e}"
+            if p["sigma_y"] is None:
+                return "—"
+            return f"{p['sigma_y']:.3e} ± {p['u_sigma']:.1e}"
         lines.append(
             f"| {tau} | {tau / 86400:.3f} | {f(p_raw)} | {f(p_th)} | {f(p_cor)} "
             f"| {p_raw['n_pairs']} |")
     lines.append(
-        "\n> Gaps are removed, so the record is treated as contiguous. A tau "
-        "longer than one raw segment is computable but mixes different "
-        "campaigns; `n_pairs` records the number of adjacent m-averaged "
-        "differences behind each point.\n")
+        "\n> `u_sigma` is the 1-sigma EDF (Riley & Howe) uncertainty on sigma_y. "
+        "Gaps are removed, so the record is treated as contiguous; a tau longer "
+        "than one raw segment is computable but mixes different campaigns, and "
+        "`n_pairs` records the adjacent m-averaged differences behind each "
+        "point.\n")
     lines.append(f"\n![Spliced stability]({FIG_PNG.name})\n")
     MD_PATH.write_text("\n".join(lines), encoding="utf-8")
 
@@ -187,9 +200,12 @@ def write_figure(taus, curves) -> None:
     fig, ax = plt.subplots(figsize=(6.9, 3.6))
     for key in ("raw", "theory", "correction"):
         label, color, marker = meta[key]
-        xs = [p["tau_s"] for p in curves[key] if p["sigma_y"] is not None]
-        ys = [p["sigma_y"] for p in curves[key] if p["sigma_y"] is not None]
-        ax.loglog(xs, ys, color=color, marker=marker, ms=4.0, lw=1.2, label=label)
+        pts = [p for p in curves[key] if p["sigma_y"] is not None]
+        xs = [p["tau_s"] for p in pts]
+        ys = [p["sigma_y"] for p in pts]
+        es = [p["u_sigma"] for p in pts]
+        ax.errorbar(xs, ys, yerr=es, color=color, marker=marker, ms=4.0,
+                    lw=1.2, elinewidth=0.8, capsize=1.8, label=label)
     ax.set_xlabel(r"$\tau$ [s]")
     ax.set_ylabel(r"$\sigma_y(\tau)$")
     ax.set_title("Spliced concatenated ratio stability (gaps removed)",
