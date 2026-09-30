@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Spliced concatenated stability: A=0, A=-1, A=-0.54, and the A=-1 correction.
+"""Spliced concatenated stability for both compensation signs.
 
 The 17 valid segments are SPLICED end-to-end with their inter-segment gaps
 removed, giving one continuous 1,008,912-sample record. A single standard
@@ -9,14 +9,22 @@ full spliced length instead of being capped by the longest single run.
   1. select_segments -> the 17 frozen segments (raw data alone decide
      membership, identical to every other artifact).
   2. Build the per-second ratio fluctuation series y(t) = -q/(1+q) for each
-     scenario (A=0 raw, A=-1 theory, A=-0.54 empirical) via analyze_segment.
+     scenario via analyze_segment. analyse_segment applies
+     b_corr = b_raw - coefficient*h, so the coefficient sign selects the
+     compensation direction:
+       raw            A=0      (no correction)
+       theory         A=-1     (full-amplitude correction)
+       empirical      A=-0.54  (fitted-amplitude correction)
+       pos_theory     A=+1     (full-amplitude, OPPOSITE sign)
+       pos_empirical  A=+0.54  (fitted-amplitude, OPPOSITE sign)
+       correction     the removed term itself, h/F_1550
   3. SPLICE: concatenate the 17 segment series back-to-back, dropping the
      wall-clock gaps entirely (t = 0,1,2,... over the spliced record).
-  4. Run one OADEV on the spliced record for four series:
-       - raw        A=0
-       - theory     A=-1
-       - empirical  A=-0.54  (dashed in the figure)
-       - correction the removed term itself, h/F_1550
+  4. Run one OADEV on the spliced record for every series.
+
+The pos_* series exist to show that the opposite compensation direction
+leaves MORE scatter, i.e. the chosen (negative) sign is the one that
+removes the tide.
 
 Because the gaps are removed, the spliced record is treated as if the
 segments were contiguous; a tau longer than one raw segment is now
@@ -30,6 +38,7 @@ from __future__ import annotations
 
 import csv
 import sys
+from decimal import Decimal
 from pathlib import Path
 
 import numpy as np
@@ -37,7 +46,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock import shared as s  # noqa: E402
 from clock_ratio.tidal_analysis import (  # noqa: E402
-    SCENARIOS, AnalysisError, TideGrid, analyze_segment, select_segments,
+    SCENARIOS, AnalysisError, Scenario, TideGrid, analyze_segment, select_segments,
 )
 
 OUT_DIR = Path(__file__).resolve().parent
@@ -111,24 +120,31 @@ def main() -> int:
         raise AnalysisError(f"tide data could not be loaded: {error}") from error
 
     scenario_by_key = {sc.key: sc for sc in SCENARIOS}
-    raw_results, theory_results, empirical_results, h_frac = [], [], [], []
+    opposite = {
+        "pos_theory": Scenario("pos_theory", Decimal("1")),
+        "pos_empirical": Scenario("pos_empirical", Decimal("0.54")),
+    }
+    results: dict[str, list] = {k: [] for k in
+                                ("raw", "theory", "empirical", "pos_theory",
+                                 "pos_empirical")}
     for segment in segments:
         h = tide.beat_at(segment.times)
-        raw_results.append(analyze_segment(segment, h, scenario_by_key["raw"]))
-        theory_results.append(analyze_segment(segment, h, scenario_by_key["theory"]))
-        empirical_results.append(analyze_segment(segment, h, scenario_by_key["empirical"]))
-        h_frac.append(h / s.F_1550)
+        results["raw"].append(analyze_segment(segment, h, scenario_by_key["raw"]))
+        results["theory"].append(analyze_segment(segment, h, scenario_by_key["theory"]))
+        results["empirical"].append(analyze_segment(segment, h, scenario_by_key["empirical"]))
+        results["pos_theory"].append(analyze_segment(segment, h, opposite["pos_theory"]))
+        results["pos_empirical"].append(analyze_segment(segment, h, opposite["pos_empirical"]))
 
-    segment_times = [r.segment.times for r in raw_results]
+    segment_times = [r.segment.times for r in results["raw"]]
     aligned_times = aligned_axis(segment_times)
     span_days = float((segment_times[-1][-1] - segment_times[0][0])
                       / np.timedelta64(1, "D"))
+    h_frac_all = np.concatenate([tide.beat_at(seg.times) / s.F_1550 for seg in segments])
     series = {
-        "raw": np.concatenate([r.fluctuations for r in raw_results]),
-        "theory": np.concatenate([r.fluctuations for r in theory_results]),
-        "empirical": np.concatenate([r.fluctuations for r in empirical_results]),
-        "correction": np.concatenate(h_frac),
+        key: np.concatenate([r.fluctuations for r in results[key]])
+        for key in ("raw", "theory", "empirical", "pos_theory", "pos_empirical")
     }
+    series["correction"] = h_frac_all
     n_total = len(series["raw"])
     if not np.all(np.diff(aligned_times) == np.timedelta64(1, "s")):
         raise AnalysisError("aligned axis is not a monotone 1-second clock")
@@ -138,7 +154,8 @@ def main() -> int:
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.writer(stream)
         writer.writerow(["series", "tau_s", "tau_days", "n_pairs", "sigma_y", "u_sigma"])
-        for key in ("raw", "theory", "empirical", "correction"):
+        for key in ("raw", "theory", "empirical", "pos_theory", "pos_empirical",
+                    "correction"):
             for point in curves[key]:
                 writer.writerow([
                     key, point["tau_s"], f"{point['tau_s'] / 86400:.6f}",
@@ -148,18 +165,20 @@ def main() -> int:
                 ])
 
     lines = [
-        "# Spliced concatenated stability (A=0, A=-1, A=-0.54, A=-1 correction)\n",
+        "# Spliced concatenated stability (both compensation signs)\n",
         f"17 segments placed end-to-end on one continuous 1-s clock; the "
         f"wall-clock gaps are removed. The aligned record spans "
         f"**{n_total:,}** s ({n_total / 86400:.3f} d of pure data time) versus "
         f"{span_days:.2f} d of real elapsed time. One OADEV per series over the "
         f"aligned axis, starting at tau = {TAU_START_S} s.\n",
         "| tau [s] | tau [d] | raw (A=0) | theory (A=-1) | empirical (A=-0.54) "
-        "| correction h/F1550 | n_pairs |",
-        "|---|---|---|---|---|---|---|",
+        "| pos_theory (A=+1) | pos_empirical (A=+0.54) | correction h/F1550 "
+        "| n_pairs |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for i, tau in enumerate(taus):
         p_raw, p_th, p_em = curves["raw"][i], curves["theory"][i], curves["empirical"][i]
+        p_pt, p_pe = curves["pos_theory"][i], curves["pos_empirical"][i]
         p_cor = curves["correction"][i]
         def f(p):
             if p["sigma_y"] is None:
@@ -167,7 +186,7 @@ def main() -> int:
             return f"{p['sigma_y']:.3e} ± {p['u_sigma']:.1e}"
         lines.append(
             f"| {tau} | {tau / 86400:.3f} | {f(p_raw)} | {f(p_th)} | {f(p_em)} "
-            f"| {f(p_cor)} | {p_raw['n_pairs']} |")
+            f"| {f(p_pt)} | {f(p_pe)} | {f(p_cor)} | {p_raw['n_pairs']} |")
     lines.append(
         "\n> `u_sigma` is the 1-sigma EDF (Riley & Howe) uncertainty on sigma_y. "
         "Gaps are removed, so the record is treated as contiguous; a tau longer "
@@ -183,10 +202,11 @@ def main() -> int:
           f"({n_total:,} samples, 1-s steps)")
     print(f"pure data span {n_total / 86400:.3f} d vs real elapsed {span_days:.2f} d; "
           f"tau up to {taus[-1]} s ({taus[-1] / 86400:.3f} d)")
-    for key in ("raw", "theory", "empirical", "correction"):
+    for key in ("raw", "theory", "empirical", "pos_theory", "pos_empirical",
+                "correction"):
         p = curves[key][-1]
         sigma = "N/A" if p["sigma_y"] is None else f"{p['sigma_y']:.4e}"
-        print(f"  {key:11s} sigma_y({p['tau_s']}s) = {sigma}  (n_pairs={p['n_pairs']})")
+        print(f"  {key:13s} sigma_y({p['tau_s']}s) = {sigma}  (n_pairs={p['n_pairs']})")
     print(f"wrote {CSV_PATH.name}, {MD_PATH.name}")
     return 0
 
@@ -200,10 +220,13 @@ def write_figure(taus, curves) -> None:
         "raw": ("raw (A=0)", "#8a8a8a", "o", "-"),
         "theory": ("theory (A=-1)", "#1f4e9c", "s", "-"),
         "empirical": ("empirical (A=-0.54)", "#2ca02c", "D", "--"),
+        "pos_theory": ("pos_theory (A=+1)", "#1f4e9c", "s", ":"),
+        "pos_empirical": ("pos_empirical (A=+0.54)", "#2ca02c", "D", ":"),
         "correction": ("correction h/F1550 (A=-1)", "#b22222", "^", "-"),
     }
     fig, ax = plt.subplots(figsize=(6.9, 3.6))
-    for key in ("raw", "theory", "empirical", "correction"):
+    for key in ("raw", "theory", "empirical", "pos_theory", "pos_empirical",
+                "correction"):
         label, color, marker, linestyle = meta[key]
         pts = [p for p in curves[key] if p["sigma_y"] is not None]
         xs = [p["tau_s"] for p in pts]
