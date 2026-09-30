@@ -145,7 +145,7 @@ def main() -> int:
         ax.loglog(tau_arr, curves[key] * 1e18, **styles[key])
 
     ax.set_xlabel(r"Averaging time $\tau$ (s)")
-    ax.set_ylabel(r"Overlapping Allan deviation $\sigma_y(\tau)$  ($10^{-18}$)")
+    ax.set_ylabel(r"Ratio uncertainty $\sigma_y(\tau)$ of Yb/Sr  ($10^{-18}$)")
     ax.grid(True, which="both", ls=":", lw=0.5, alpha=0.6)
     ax.legend(fontsize=8, frameon=False, loc="lower left")
     fig.tight_layout()
