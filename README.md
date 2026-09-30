@@ -226,6 +226,27 @@ OADEV→u_i→WLS/Birge/M-P/贝叶斯合并，结果写入
 整体下移约 −0.6×10⁻¹⁸，说明 §7 的 χ²_red 改善**高度依赖段 9**。
 详见 [方法 §11](docs/METHODOLOGY.md#11-段-9-剔除敏感性检查statistical_methods_tidal_seg9py附加)。
 
+**拼接序列稳定度（附加，频域视角）**：§7.2 的「长期稳定度」用的是 17 段**段均值**的
+样本标准差 σ(y_i)（离散度，只看段间常数偏移）。本节补一个频域视角：把全部 1,008,912 个
+1 s 样本接成一条序列，跑重叠 Allan 偏差 σ_y(τ)，看潮汐修正在各平均时间 τ 上的作用。
+两个量测**不同频段**，不矛盾（解释见报告 §9.3）。
+
+- **gap-safe 版**（`concatenated_stability.py` → `concatenated_stability.{md,csv}`）：段间真实
+  空档保持为断点（不跨 gap 拼接），拼接后恰为 **17 个连续 run**；与既有逐段池化曲线在
+  τ≤4096 s **逐位一致**（比值 1.0000），大 τ 才因参与段选择不同而分离。
+- **拼接版**（`concatenated_stability_long.py` → `concatenated_stability_long.{md,csv,png,pdf}`）：
+  17 段**端到端相接**（空档移除）成一条连续 1 s 记录（对齐轴跨度 **11.677 d** 纯数据时间，
+  实际历时 57.97 d），τ 可达 **4.63 d**；每点带 **EDF（Riley & Howe）1σ 误差棒**，
+  τ 从 **128 s** 起。log-log 图含三条补偿线（raw/theory/empirical）+ 修正项。
+
+**要点**：短 τ（≤~512 s）三线重合（潮汐是慢信号）；长 τ 处 `empirical (A=−0.54)` 最低
+（τ=32768 s：8.14e-19 vs raw 8.36e-19，长期变稳），而 `theory (A=−1)` **高于 raw**
+（8.71e-19，即**过扣**）。**反号证伪**：临时画入的 A=+1 / A=+0.54 在所有长 τ 处显著高于
+raw（4.63 d：1.09e-18 / 9.48e-19），证明负号才是抵消方向。**离散度降（A=−1 13.17%、
+A=−0.54 12.91%）与 A=−1 的长 τ 不稳定度升都是真实的**：前者对幅度不敏感、后者敏感。
+数值见 [EXPERIMENT_REPORT.md](clock_ratio/EXPERIMENT_REPORT.md) §9。**这是独立结果，
+不替换 §7 的任何数值；拼接版 τ 长于单段会混合不同测量战役，`n_pairs` 逐点列出。**
+
 ## 复现
 
 **只重建新增潮汐分析与独立报告**（希望保留旧产物时推荐）：
@@ -265,8 +286,10 @@ python clock_ratio/make_report.py                # 自动生成权威报告
 
 | 路径 | 内容 |
 |---|---|
-| `clock_ratio/EXPERIMENT_REPORT.md` | **总权威报告**（钟比值+潮汐+相关性）|
-| `paper/main.tex` + `paper/refs.bib` | **LaTeX 投稿稿**（英文；`cd paper && pdflatex main.tex && bibtex main && pdflatex main.tex` ×2）|
+| `clock_ratio/EXPERIMENT_REPORT.md` | **总权威报告**（钟比值+潮汐+相关性+拼接稳定度 §9）|
+| `clock_ratio/concatenated_stability.py` + `.md/.csv` | gap-safe 拼接稳定度（A=0/−1/−0.54，不跨 gap）|
+| `clock_ratio/concatenated_stability_long.py` + `.md/.csv/.png/.pdf` | 拼接版长 τ 稳定度（段端到端相接，τ≤4.63 d，带 EDF 误差棒，log-log 图）|
+| `paper/main.tex` + `paper/refs.bib` | **LaTeX 投稿稿**（英文，Nature 网络框架；`cd paper && pdflatex main.tex && bibtex main && pdflatex main.tex` ×2）|
 | `docs/PAPER_DRAFT.md` | 论文段落草稿（中文，配 4 图）|
 | `docs/PAPER_DRAFT_EN.md` | 论文段落草稿（英文，与中文稿同数同构）|
 | `docs/PAPER_INTEGRITY_REPORT.md` | 论文草稿完整性/一致性审计（claim→证据，PASS-WITH-NOTES）|
