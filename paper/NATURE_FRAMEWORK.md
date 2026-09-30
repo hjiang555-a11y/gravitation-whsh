@@ -37,12 +37,14 @@
 
 ---
 
-## 1. 摘要（Nature 规范：单段、无引用、无公式，~189 词）
+## 1. 摘要（Nature 规范：单段、无引用、无公式，~165 词）
 
 > **Nature 摘要纪律**：单一连续段落；无小标题；**无引用命令**；**无 display 公式**
 > （数值内联）；~150–200 词；五段式流：背景 → 缺口 → 本文做法 → 发现 → 意义。
+> **语言纪律**：首句直陈要求、不作冗长定语堆叠；避免"Highly consistent…with demonstrated
+> statistical reliability"式的绕口长句。
 >
-> **两处刻意保留**：
+> **三处刻意保留**：
 > ① **不强调"未做修正"**——潮汐项直接表述为"carried as an uncertainty item"，不写
 >    "without a tidal correction"（作者指示：无需强调）。
 > ② **总不确定度占位 `X×10⁻¹⁸`**——部分不确定度项（如 tide model、附加系统项）仍在评估，
@@ -52,13 +54,13 @@
 
 ### English（= `main.tex` 当前摘要）
 
-Highly consistent frequency-ratio measurements between different types of optical clocks at different institutions, with demonstrated statistical reliability, are essential for redefining the SI second. Many atomic clocks now reach self-evaluated uncertainties below 2×10⁻¹⁸, but independent comparisons are still needed to confirm these results, and no inter-city comparison has yet reached the 5×10⁻¹⁸ level required for a revised definition. Here we connect an IAPMST ytterbium clock in Wuhan to a USTC strontium clock in Shanghai, about 700 km apart, through a phase-stabilised fibre network, and measure their Yb/Sr frequency ratio from 58 days (280 h) of coherent operation, with the tidal gravitational-redshift term carried as an uncertainty item. We obtain a Bayesian experimental statistical uncertainty of 0.75×10⁻¹⁸ and a total uncertainty of X×10⁻¹⁸, giving 1.207 507 039 343 337 721 3(23), which agrees with the latest NIST–JILA result at the 10⁻¹⁸ level. On the same data the tidal redshift modulation is resolved at 6.4σ; removing it would lower the reduced chi-square from 5.42 to 3.70 (32%). This cross-city, cross-species clock network thus both supports the redefinition of the SI second and enables centimetre-level sensing of the time-varying gravitational potential.
+Redefining the SI second requires frequency ratios measured independently by different laboratories, and agreeing to within a few parts in 10¹⁸. Many optical clocks already reach this accuracy, yet few independent comparisons confirm it, and none between different cities has reached the required 5×10⁻¹⁸ level. Here we compare an IAPMST ytterbium clock in Wuhan with a USTC strontium clock in Shanghai, about 700 km apart, through a phase-stabilised fibre network, and measure the Yb/Sr frequency ratio from 58 days (280 h) of coherent operation. Treating the tidal gravitational-redshift term as an uncertainty item, we find a Bayesian statistical uncertainty of 0.75×10⁻¹⁸ and a total uncertainty of X×10⁻¹⁸, giving 1.207 507 039 343 337 721 3(23), which agrees with the latest NIST–JILA result at the 10⁻¹⁸ level. On the same data the tidal redshift modulation is resolved at 6.4σ; removing it would lower the reduced chi-square from 5.42 to 3.70 (32%). An inter-city, cross-species clock network thus both supports the redefinition of the SI second and senses the time-varying gravitational potential at the centimetre level.
 
-*（~189 words；五段式：背景 → 缺口 → 做法 → 发现 → 意义）*
+*（~165 words；五段式：背景 → 缺口 → 做法 → 发现 → 意义）*
 
 ### 中文版
 
-不同机构间不同种光钟的高一致性频率比测量（且具备统计可靠性）是重新定义国际单位制「秒」的关键。许多原子钟的自评估不确定度已优于 2×10⁻¹⁸，但仍需独立的比对来验证这些结果；迄今尚无跨城比对达到修订秒定义所需的 5×10⁻¹⁸ 水平。本文通过相位稳定光纤网络，连接中科院精密测量院（IAPMST，武汉）的镱钟与中科大（USTC，上海）的锶钟（相距约 700 公里），基于 58 天（280 小时）相干运行数据测定其 Yb/Sr 频率比，并将潮汐引力红移项**作为不确定度项计入**。得到贝叶斯实验统计不确定度 0.75×10⁻¹⁸、总不确定度 `X×10⁻¹⁸`（占位，待评估），比值为 1.207 507 039 343 337 721 3(23)，与最新 NIST–JILA 结果在 10⁻¹⁸ 量级相符。同一数据在 6.4σ 显著度分辨出潮汐红移调制；若将其扣除，约化卡方由 5.42 降至 3.70（降幅 32%）。该跨城、跨种光钟网络既支撑秒重定义，又实现了厘米级时变引力势探测。
+重新定义国际单位制「秒」，需要由不同实验室独立测量、并在十亿亿分之一（10⁻¹⁸）量级相互符合的频率比。许多光钟已达此精度，但独立的比对验证仍少，且尚无跨城比对达到所需的 5×10⁻¹⁸ 水平。本文通过相位稳定光纤网络，比较相距约 700 公里的中科院精密测量院（IAPMST，武汉）镱钟与中科大（USTC，上海）锶钟，基于 58 天（280 小时）相干运行数据测定其 Yb/Sr 频率比。将潮汐引力红移项作为不确定度项，得到贝叶斯统计不确定度 0.75×10⁻¹⁸、总不确定度 `X×10⁻¹⁸`（占位），比值为 1.207 507 039 343 337 721 3(23)，与最新 NIST–JILA 结果在 10⁻¹⁸ 量级相符。同一数据在 6.4σ 显著度分辨出潮汐红移调制；若将其扣除，约化卡方由 5.42 降至 3.70（降幅 32%）。跨城、跨种光钟网络由此既支撑秒重定义，又以厘米级精度感知时变引力势。
 
 **关键词：** 光钟网络；秒定义重定义；Yb/Sr 频率比；跨城光纤链路；引力红移；潮汐势
 
