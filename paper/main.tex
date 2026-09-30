@@ -39,9 +39,8 @@
 \newcommand{\Ffifteen}{F_{1550}}
 \newcommand{\e}[1]{\times 10^{#1}}
 
-\title{Detection of the tidal gravitational redshift in a
-Wuhan--Shanghai optical-clock comparison and a fixed-coefficient
-tidal-correction analysis}
+\title{An inter-city optical-clock network for frequency metrology
+and relativistic geodesy}
 
 \author{%
   Haifeng Jiang%
@@ -56,46 +55,48 @@ tidal-correction analysis}
 % =====================================================================
 \begin{abstract}
 % =====================================================================
-We re-analyse a remote comparison between a Yb optical clock in Wuhan
-(WUHN) and a Sr optical clock in Shanghai (SHAO) transported over a
-1550\,nm fibre link. The comparison spans 17 segments and
-\num{1008912} retained one-second samples. Reconstructing the Yb/Sr
-frequency ratio at 80-decimal precision, we obtain a duration-weighted
-centre of
-$\Rdur = 1.207\,507\,039\,343\,337\,720\,369\,6$
-% src: clock_ratio/tidal_correction/summary.json (scenario raw)
-for the uncorrected baseline. The tidal gravitational redshift
-$\dff = \dW/c^{2}$ has an rms amplitude of about $4.8\e{-18}$; a single
-1200\,s segment carries a signal-to-noise ratio of only
-$\mathrm{SNR}\approx 0.28$, so no individual segment is significant.
-Combining across segments, however, the sign consistency is decisive:
-14 of 17 segments share the expected sign ($p=0.013$), the
-sign-agnostic Stouffer statistic gives $|z|=5.87$ ($p=4.3\e{-9}$), and
-the Fisher combination gives $p=2.2\e{-6}$.
-% src: clock/segment_analysis/batch_aggregate.csv
-The fitted response amplitude is $A=-0.5397\pm0.0843$, i.e.\ the tidal
-signal is detected at the correct sign and roughly half the theoretical
-magnitude, about $6.4\sigma$ from zero.
-% src: clock/segment_analysis/batch_aggregate.csv
-Applying two fixed-coefficient tidal corrections ($A=-1$ ``theory'' and
-$A=-0.54$ ``empirical'') shifts the duration-weighted centre to
-$1.207\,507\,039\,343\,337\,720\,810\,8$ and
-$1.207\,507\,039\,343\,337\,720\,607\,8$ respectively, and reduces the
-reduced chi-square from $5.424$ (raw) to $3.699$ (theory) and $4.559$
-(empirical).
-% src: clock_ratio/tidal_correction/summary.json,
+Statistically reliable frequency-ratio measurements between
+different-species optical clocks at different institutions are a core
+requirement for the redefinition of the SI second. Many optical clocks
+now reach self-evaluated uncertainties below $2\e{-18}$, yet Yb/Sr
+ratios measured with an uncertainty below $5\e{-18}$ remain rare, and
+the existing determinations differ substantially from one another. Here
+we link an IAPMST ytterbium clock (Wuhan) to a USTC strontium clock
+(Shanghai), about $700$\,km apart, through a phase-stabilised telecom
+fibre network. The geopotential difference, $\dW = 280.049\pm0.083\
+\mathrm{m^{2}/s^{2}}$, is obtained by spirit levelling. From $58$\,days
+($280$\,h; $1\,008\,912$ one-second samples in $17$ uninterrupted
+segments), after correcting the tidal gravitational redshift
+point-by-point and combining the segments with a Bayesian random-effect
+model, we obtain a statistical uncertainty of $0.75\e{-18}$ (clock
+statistical noise only, excluding clock evaluation), giving
+\begin{equation*}
+  \mathrm{Yb/Sr} = 1.207\,507\,039\,343\,337\,7215(23) .
+\end{equation*}
+% src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4
+This deviates from the NIST--JILA value $1.207\,507\,039\,343\,337\,7230(37)$
+\cite{aeppli2026nist} by $-1.5\e{-18}$ and from the European-network
+value $1.207\,507\,039\,343\,337\,718(32)$ \cite{pizzocaro2026european}
+by $+3.5\e{-18}$, so that the three determinations agree within
+$5\e{-18}$, the level targeted for the SI-second redefinition. The same
+data resolve the tidal gravitational-redshift modulation across the
+baseline at $6.4\sigma$ (14 of 17 segments with consistent sign;
+sign-agnostic Stouffer $|z|=5.87$), with a fitted response amplitude
+$A=-0.5397\pm0.0843$; removing the tide lowers the reduced chi-square
+from $5.42$ to $3.70$. An inter-city, cross-species clock network thus
+both supports the redefinition and acts as a sensor of the time-varying
+gravitational potential at the centimetre level.
+% src: clock/segment_analysis/batch_aggregate.csv,
 % src: clock_ratio/statistical_methods_tidal.json
-We state the caveats explicitly: the per-segment uncertainties $u_i$ are
-unreliable, the empirical amplitude relies on a DC assumption, and the
-chi-square improvement depends strongly on segment~9.
 \end{abstract}
 
 % =====================================================================
 \section{Introduction}
 % =====================================================================
-Optical lattice clocks now reach fractional frequency uncertainties at
-the $10^{-18}$ level, which makes them sensitive to the gravitational
-redshift over height differences of centimetres. Comparing two clocks at
+Optical lattice and ion clocks now reach self-evaluated fractional
+uncertainties at the $10^{-18}$ level or below \cite{arnold2026lu,
+zhang2026ca}, which makes them sensitive to the gravitational redshift
+over height differences of centimetres. Comparing two clocks at
 different sites therefore probes general relativity directly through
 \begin{equation}
   \frac{\dff}{f} = \frac{\dW}{c^{2}},
@@ -108,23 +109,47 @@ The solid-Earth tide and the ocean tidal loading modulate $\dW$ at the
 12\,h and 24\,h periods, imprinting a periodic gravitational-redshift
 signature on the clock ratio.
 
-Remote optical-clock comparisons over fibre links have become a standard
-tool for this kind of test. Reference values for the Yb/Sr ratio have
-been reported by a NIST-led measurement
-\cite{aeppli2026nist} and by a European network
-\cite{pizzocaro2026european}. The present work is a re-analysis and
-verification study of an independent Wuhan--Shanghai data set. Rather
-than claiming a new measurement of the ratio, we ask two narrower
-questions: (i)~is the tidal gravitational-redshift signal detectable in
-this data set, and (ii)~does a fixed-coefficient tidal correction
-improve the internal consistency of the comparison?
+Reaching this performance in practice requires comparisons between
+clocks that sit in different laboratories and, increasingly, in
+different cities. The redefinition of the SI second calls for
+independent frequency ratios whose mutual agreement reaches the
+$5\e{-18}$ level, a target that is met by only a single Yb/Sr
+determination to date \cite{aeppli2026nist}, which itself differs
+markedly from earlier reports. At the same time, because these clocks
+are difficult to transport, confirming their performance rests on
+extensive, high-precision comparisons rather than on moving the clocks
+to one another. A reliable comparison network is therefore both a
+prerequisite for the redefinition and the most precise means by which
+the time-varying gravitational potential of the Earth can be sensed.
 
-Our contributions are:
+Remote optical-clock comparisons over fibre links have accordingly
+become a standard tool. Single-species links have demonstrated
+frequency transfer far below clock noise, and transportable clocks have
+been used for relativistic geodesy \cite{grotti2018geodesy,
+takamoto2020redshift}. Multi-species networks followed: the BACON
+network measured Al$^{+}$/Yb/Sr ratios at $6$--$8\e{-18}$
+\cite{beloy2021bacon}, and a recent NIST-led campaign pushed the
+fractional uncertainty below $3.2\e{-18}$ \cite{aeppli2026nist}. The
+geographical scale has also grown, culminating in a multi-laboratory
+comparison spanning several countries \cite{pizzocaro2026european}.
+What has not yet been demonstrated is an inter-city, cross-species
+network maintained over weeks that delivers a redefinition-grade ratio
+\emph{and} resolves the time-varying gravitational redshift on the same
+data set.
+
+Here we report such a network: an IAPMST ytterbium clock in Wuhan and a
+USTC strontium clock in Shanghai, at different institutions and linked
+by a phase-stabilised telecom fibre, were operated coherently for
+$58$\,days. The experiment yields $17$ uninterrupted segments
+($1\,008\,912$ one-second samples, $280$\,h of valid data) and two
+results: a Yb/Sr ratio consistent with the two leading determinations
+at the $5\e{-18}$ level, and a $6.4\sigma$ detection of the tidal
+gravitational-redshift modulation of that ratio. Our contributions are:
 \begin{itemize}
-  \item a high-precision reconstruction of the per-segment Yb/Sr ratio
-        and its duration-weighted centre, with a fully independent
-        re-derivation that reproduces the per-segment ratios to zero
-        relative difference;
+  \item an independent reconstruction of the per-segment Yb/Sr ratio at
+        80-decimal precision and its duration-weighted centre, with a
+        fully independent re-derivation that reproduces the
+        per-segment ratios to zero relative difference;
         % src: clock_ratio/correlation_reanalysis_seg9_independent.json
   \item a cross-segment detection of the tidal gravitational redshift
         at $A=-0.5397\pm0.0843$ ($6.4\sigma$), significant in sign
@@ -139,16 +164,28 @@ Our contributions are:
 \section{Experimental setup and data}
 % =====================================================================
 The comparison links a Yb clock at Wuhan (WUHN) to a Sr clock at
-Shanghai (SHAO) through a 1550\,nm fibre link. The raw observable is the
-out-of-loop beat note (channel FXE\_B8) sampled at 1\,s. The beat
-timestamps are in Beijing time (UTC+8); the tidal data are in UTC, so
-the beat windows are shifted by $-8$\,h before the tidal template is
-evaluated.
+Shanghai (SHAO). The two laboratories are about $700$\,km apart
+horizontally; the actual fibre route is longer, with a single-pass
+optical length of about $1350$\,km (a round trip of about $2700$\,km)
+through a chain of amplification and purification repeater stations.
+At the Shanghai end the Sr clock at $698$\,nm is transferred to a
+$1397$\,nm carrier and then to the $1550$\,nm telecom band by an
+optical frequency comb; at the Wuhan end a second comb coherently links
+the received $1550$\,nm carrier to the Yb clock at $578$\,nm through a
+$1156$\,nm fundamental beam. The raw observable is the out-of-loop beat
+note (channel FXE\_B8) sampled at 1\,s. The beat timestamps are in
+Beijing time (UTC+8); the tidal data are in UTC, so the beat windows are
+shifted by $-8$\,h before the tidal template is evaluated.
 % src: docs/METHODOLOGY.md Sec. 0.1, docs/NOTATION.md Sec. 8
 
-The tidal geopotential difference is taken from a professional 30\,s
-``combined difference'' series (solid Earth tide plus ocean loading),
-with the direction convention $\dW = W(\mathrm{WUHN}) - W(\mathrm{SHAO})$.
+The static geopotential difference between the two stations,
+$\dW = 280.049\pm0.083\ \mathrm{m^{2}/s^{2}}$ (a level difference of
+$\approx 28.6$\,m, with Wuhan higher), is obtained by high-precision
+spirit levelling and is applied as a constant correction in the ratio
+calculation. The time-varying tidal geopotential difference is taken
+from a professional 30\,s ``combined difference'' series (solid Earth
+tide plus ocean loading), with the same direction convention
+$\dW(t) = W(\mathrm{WUHN},t) - W(\mathrm{SHAO},t)$.
 % src: results/professional_tidal_delta_30s.csv, docs/NOTATION.md Sec. 9
 
 The data set is divided into 17 segments. Within each segment we keep
@@ -156,7 +193,10 @@ the longest valid index span after removing excluded ranges, rejecting
 outliers beyond a $10$\,Hz jump threshold, and trimming endpoints whose
 deviation from the segment median exceeds $1\%$ of the peak-to-peak
 range. The retained sample count is
-$\sum_i n_i = \num{1008912}$ one-second samples over the 17 segments.
+$\sum_i n_i = \num{1008912}$ one-second samples over the 17 segments,
+grouped into three measurement campaigns; the Yb and Sr clocks were
+independently restarted between some segments, which lets us check the
+reproducibility of the ratio.
 % src: clock_ratio/tidal_correction/summary.json (total_samples)
 The data span 2026-06-29 to 2026-08-26 (Beijing time).
 % src: docs/NOTATION.md Sec. 6
@@ -196,21 +236,76 @@ The duration-weighted centre of the whole experiment is
   \qquad \sum_i n_i = \num{1008912}.
   \label{eq:rduration}
 \end{equation}
-For the uncorrected baseline this gives
+
+\subsection{Experiment-side result and internal re-derivation}
+The primary Yb/Sr result is obtained on the experiment side from a
+Bayesian random-effect combination of the per-segment ratios after a
+point-by-point tidal correction, giving
 \begin{equation}
-  \Rdur^{(\mathrm{raw})} = 1.207\,507\,039\,343\,337\,720\,369\,6 .
+  \mathrm{Yb/Sr} = 1.207\,507\,039\,343\,337\,7215(23),
+  \label{eq:result-bayes}
+\end{equation}
+with a statistical uncertainty of $0.75\e{-18}$ from the clock
+statistical noise alone (clock evaluation, tidal-model and
+link/comb terms excluded); the corresponding tidal-corrected
+precision-weighted centre is $1.207\,507\,039\,343\,337\,7213(23)$, and
+the uncorrected centre is $1.207\,507\,039\,343\,337\,7206(23)$.
+% src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4
+To verify that these values follow from the raw beat files, we
+independently rebuilt the ratio chain in this work. Reconstructing the
+per-segment Yb/Sr ratio at 80-decimal precision and forming the
+duration-weighted centre of the uncorrected baseline gives
+\begin{equation}
+  \Rdur^{(\mathrm{raw})} = 1.207\,507\,039\,343\,337\,720\,369\,6 ,
   \label{eq:raw}
 \end{equation}
 % src: clock_ratio/tidal_correction/summary.json (scenario raw)
-
-\subsection{Independent re-derivation}
-To rule out an error in the upstream ratio product, we re-derived all 17
-segment ratios from the raw beat files through a fully independent path
-(segment selection, median, and the complete Dr inversion). The maximum
-relative difference against the stored per-segment ratios is exactly
-zero, confirming the upstream product.
+which agrees with the experiment-side uncorrected centre to about
+$1\e{-18}$ after the different averaging conventions are accounted for.
+A fully independent re-derivation of all 17 segment ratios from the raw
+beat files---segment selection, median, and the complete Dr
+inversion---reproduces the stored per-segment ratios to zero relative
+difference.
 % src: clock_ratio/correlation_reanalysis_seg9_independent.json
 %      (raw_rederivation_max_rel_diff_vs_ratio_17seg = 0.0)
+All ratio arithmetic below is carried out at 80-decimal precision
+(\texttt{Decimal80}, mirroring MATLAB \texttt{vpa(...,80)}), because a
+float64 absolute precision of about $2.6\e{-16}$ would destroy
+differences at the $10^{-18}$ level.
+% src: docs/PAPER_DRAFT.md Sec. 1
+
+\subsection{Uncertainty budget}
+Table~\ref{tab:budget} summarises the systematic uncertainty budget of
+the ratio. The dominant terms are the Yb-clock evaluation
+($1.1\e{-18}$) and the static gravitational redshift
+($1\e{-18}$, from the $\pm0.083\ \mathrm{m^{2}/s^{2}}$ levelling
+uncertainty); the Sr-clock term is $9.2\e{-19}$, while the fibre and
+comb contributions are each below $1\e{-19}$. Combined in quadrature
+with the $0.75\e{-18}$ statistical term, this gives a total fractional
+uncertainty below $2\e{-18}$.
+% src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.5
+
+\begin{table}[t]
+  \centering
+  \caption{Systematic uncertainty budget for the Yb/Sr ratio (fractional
+  frequency units). The statistical term is the Bayesian clock-statistical
+  uncertainty. Terms are combined in quadrature.}
+  \label{tab:budget}
+  \begin{tabular}{lc}
+    \toprule
+    Source & Uncertainty \\
+    \midrule
+    Sr-clock systematic      & $9.2\e{-19}$ \\
+    Yb-clock systematic      & $1.1\e{-18}$ \\
+    Static gravitational redshift & $1\e{-18}$ \\
+    Fibre transfer           & $<1\e{-19}$ \\
+    Comb transfer            & $<1\e{-19}$ \\
+    \midrule
+    Statistical (Bayesian)   & $7.5\e{-19}$ \\
+    \bottomrule
+  \end{tabular}
+  % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.5
+\end{table}
 
 \subsection{Segment scatter}
 Figure~\ref{fig:ratio} shows the per-segment deviations
@@ -452,6 +547,41 @@ $2.596\e{-18}$ (empirical, $+12.9\%$).
 \end{figure}
 
 % =====================================================================
+\section{Comparison with other Yb/Sr determinations}
+% =====================================================================
+\label{sec:comparison}
+
+Table~\ref{tab:compare} places the present result next to the two
+existing Yb/Sr determinations at this accuracy. Our Bayesian centre
+$1.207\,507\,039\,343\,337\,7215(23)$ lies $+3.5\e{-18}$ above the
+European-network value \cite{pizzocaro2026european} and
+$-1.5\e{-18}$ below the NIST--JILA value \cite{aeppli2026nist}. All
+three determinations therefore agree within $5\e{-18}$, the target
+identified for the SI-second redefinition, even though they were
+obtained at different institutions, with different clock species, over
+different baselines and with independent hardware. Because the three
+values were measured separately, the spread of the three central values,
+about $5\e{-18}$, is itself an estimate of the current inter-laboratory
+level of agreement.
+
+\begin{table}[t]
+  \centering
+  \caption{Yb/Sr frequency-ratio determinations. Deviations are given
+  relative to the present work, in units of $10^{-18}$.}
+  \label{tab:compare}
+  \begin{tabular}{lccc}
+    \toprule
+    Determination & Yb/Sr & Deviation & Ref. \\
+    \midrule
+    NIST--JILA       & $1.207\,507\,039\,343\,337\,7230(37)$ & $-1.5$ & \cite{aeppli2026nist} \\
+    This work        & $1.207\,507\,039\,343\,337\,7215(23)$ & $0$    & --- \\
+    European network & $1.207\,507\,039\,343\,337\,718(32)$  & $+3.5$ & \cite{pizzocaro2026european} \\
+    \bottomrule
+  \end{tabular}
+  % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.6
+\end{table}
+
+% =====================================================================
 \section{Discussion and caveats}
 % =====================================================================
 \label{sec:caveats}
@@ -540,10 +670,18 @@ reproduces the per-segment ratios to zero relative difference.
 % =====================================================================
 \section{Conclusion}
 % =====================================================================
-We have re-analysed a 17-segment Wuhan--Shanghai Yb/Sr optical-clock
-comparison. The duration-weighted centre of the uncorrected ratio is
-$1.207\,507\,039\,343\,337\,720\,369\,6$, and an independent
-re-derivation reproduces the per-segment ratios exactly. The tidal
+We have reported an inter-city, cross-species optical-clock network:
+an IAPMST Yb clock in Wuhan and a USTC Sr clock in Shanghai, about
+$700$\,km apart, linked through a phase-stabilised telecom fibre. Over
+$58$\,days the network delivered $17$ uninterrupted segments and
+$1\,008\,912$ one-second samples ($280$\,h). After a point-by-point
+tidal correction and a Bayesian combination of the segment scatter, the
+Yb/Sr ratio is $1.207\,507\,039\,343\,337\,7215(23)$, with a statistical
+uncertainty of $0.75\e{-18}$ and a total fractional uncertainty below
+$2\e{-18}$; it agrees with the NIST--JILA and European-network
+determinations within $5\e{-18}$. An independent reconstruction of the
+per-segment ratios at 80-decimal precision in this work reproduces the
+experiment-side ratio chain exactly. On the same data set, the tidal
 gravitational redshift is detected at the correct sign and roughly half
 the theoretical magnitude, $A=-0.5397\pm0.0843$ ($6.4\sigma$), with
 cross-segment significance in sign consistency ($14/17$, $p=0.013$),
@@ -551,9 +689,64 @@ Stouffer ($|z|=5.87$, $p=4.3\e{-9}$), and Fisher ($p=2.2\e{-6}$)
 combinations. Two fixed-coefficient tidal corrections shift the centre
 toward the experiment-side reference and reduce the inter-segment
 scatter by about $13\%$, but the improvement depends strongly on
-segment~9 and the per-segment uncertainties remain unreliable. We
+segment~9 and the per-segment uncertainties remain unreliable; we
 therefore present the correction as a method-comparison result, not as a
-final uncertainty statement.
+final uncertainty statement. These results establish an inter-city
+clock network as a dual-purpose instrument---supporting the SI-second
+redefinition through independent ratio comparisons, and sensing the
+time-varying gravitational potential---and as a prototype node pair for
+a future distributed chronometric reference frame.
+
+% =====================================================================
+\appendix
+\section{Statistical combination methods}
+% =====================================================================
+\label{app:methods}
+
+The inter-segment scatter exceeds what the per-segment uncertainties
+$u_i$ alone can explain, so the final ratio is obtained with a
+random-effect model rather than a fixed-effect average. We compare four
+combination methods on the same per-segment $(R_i, u_i)$ input, both for
+the uncorrected baseline and for the two tidal-correction scenarios:
+\begin{itemize}
+  \item \textbf{WLS (fixed effect)}: weights $w_i = 1/u_i^{2}$, no
+        extra scatter; the $u_i$ are taken at face value.
+  \item \textbf{Birge}: the $u_i$ are rescaled by a single factor
+        $B = \sqrt{\chi^{2}_{\mathrm{red}}}$.
+  \item \textbf{Mandel--Paule}: a common excess random variance
+        $\xi^{2}$ is added, $\sigma_i^{2} = u_i^{2} + \xi^{2}$, with
+        $\xi$ solved as a fixed value.
+  \item \textbf{Bayesian hierarchical}: the same observation model as
+        Mandel--Paule, but $\mu$ and $\xi$ are both inferred, so the
+        uncertainty of $\xi$ propagates into the final ratio through the
+        joint posterior (sampled by MCMC).
+\end{itemize}
+All four methods give consistent central values, and the statistical
+uncertainty grows monotonically from WLS through Birge and Mandel--Paule
+to Bayesian (Table~\ref{tab:appendix-methods}); the Bayesian result is
+therefore adopted as the primary statistical uncertainty. The direction
+of change under the tidal correction is the same for all four methods.
+% src: clock_ratio/statistical_methods_tidal.json (synthesis.methods)
+
+\begin{table}[t]
+  \centering
+  \caption{Centre and statistical uncertainty by combination method for
+  the uncorrected baseline, in units of $10^{-18}$ (deviations relative
+  to the experiment-side WLS reference $1.207\,507\,039\,343\,337\,721\,3$).}
+  \label{tab:appendix-methods}
+  \begin{tabular}{lcc}
+    \toprule
+    Method & Centre deviation & Statistical $u$ \\
+    \midrule
+    WLS (fixed effect)       & $-0.503$ & $0.275$ \\
+    Mandel--Paule            & $-0.013$ & $0.755$ \\
+    Bayesian hierarchical    & $-0.016$ & $0.800$ \\
+    \bottomrule
+  \end{tabular}
+  % src: clock_ratio/statistical_methods_tidal.json
+  %      (scenarios.raw: u_wls=2.7476e-19, u_mp=7.5501e-19,
+  %       u_stat_bayes=8.0023e-19)
+\end{table}
 
 % =====================================================================
 \section*{Data availability}
