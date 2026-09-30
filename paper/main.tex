@@ -200,12 +200,19 @@ contributions are:
 % =====================================================================
 \section{Experimental setup and data}
 % =====================================================================
+\label{sec:network}
+
 The comparison links a Yb clock at Wuhan (WUHN) to a Sr clock at
-Shanghai (SHAO). The two laboratories are about $700$\,km apart
-horizontally; the actual fibre route is longer, with a single-pass
-optical length of about $1350$\,km (a round trip of about $2700$\,km)
-through a chain of amplification and purification repeater stations.
-At the Shanghai end the Sr clock at $698$\,nm is transferred to a
+Shanghai (SHAO). The two clocks are of different species, at different
+institutions and in different cities, about $700$\,km apart
+horizontally; the fibre route is longer, with a single-pass optical
+length of about $1350$\,km (a round trip of about $2700$\,km) through a
+chain of amplification and purification repeater stations. The link is a
+loop-back architecture: at each repeater the incoming ultrastable
+carrier is optically purified before re-amplification, so that the added
+instability stays below the clock noise on time scales longer than
+$\sim 100$\,s---the transfer chain is not the limiting noise source. At
+the Shanghai end the Sr clock at $698$\,nm is transferred to a
 $1397$\,nm carrier and then to the $1550$\,nm telecom band by an
 optical frequency comb; at the Wuhan end a second comb coherently links
 the received $1550$\,nm carrier to the Yb clock at $578$\,nm through a
@@ -213,7 +220,8 @@ $1156$\,nm fundamental beam. The raw observable is the out-of-loop beat
 note (channel FXE\_B8) sampled at 1\,s. The beat timestamps are in
 Beijing time (UTC+8); the tidal data are in UTC, so the beat windows are
 shifted by $-8$\,h before the tidal template is evaluated.
-% src: docs/METHODOLOGY.md Sec. 0.1, docs/NOTATION.md Sec. 8
+% src: docs/METHODOLOGY.md Sec. 0.1, docs/NOTATION.md Sec. 8;
+% src: experiment-side manuscript (光钟比对论文 hj.docx, Sec. 2)
 
 The static geopotential difference between the two stations,
 $\dW = 280.049\pm0.083\ \mathrm{m^{2}/s^{2}}$ (a level difference of
@@ -225,57 +233,30 @@ tide plus ocean loading), with the same direction convention
 $\dW(t) = W(\mathrm{WUHN},t) - W(\mathrm{SHAO},t)$.
 % src: results/professional_tidal_delta_30s.csv, docs/NOTATION.md Sec. 9
 
-The data set is divided into 17 segments. Within each segment we keep
-the longest valid index span after removing excluded ranges, rejecting
-outliers beyond a $10$\,Hz jump threshold, and trimming endpoints whose
-deviation from the segment median exceeds $1\%$ of the peak-to-peak
-range. The retained sample count is
-$\sum_i n_i = \num{1008912}$ one-second samples over the 17 segments,
-grouped into three measurement campaigns; the Yb and Sr clocks were
-independently restarted between some segments, which lets us check the
-reproducibility of the ratio.
-% src: clock_ratio/tidal_correction/summary.json (total_samples)
-The data span 2026-06-29 to 2026-08-26 (Beijing time).
-% src: docs/NOTATION.md Sec. 6
-
-% =====================================================================
-\section{Network and observation campaign}
-% =====================================================================
-\label{sec:network}
-
-The main text figure (Fig.~\ref{fig:ratio}) shows the per-segment
-deviations; here we record the network context in which they were taken.
-The two clocks are of different species and sit at different
-institutions, in different cities, roughly $700$\,km apart, and are
-connected only through the fibre link and the two combs. The link is a
-loop-back architecture: at each repeater the incoming ultrastable
-carrier is optically purified before re-amplification, so that the added
-instability stays below the clock noise on time scales longer than
-$\sim 100$\,s. This is the property that makes the comparison possible at
-all---the transfer chain is not the limiting noise source.
-% src: experiment-side manuscript (光钟比对论文 hj.docx, Sec. 2)
-
-The 17 segments were acquired in three campaigns separated by weeks, and
-the two clocks were deliberately restarted between some segments in
-campaign~1 (Yb after segments 4--6, Sr after segments 7--8). Because a
-restart re-initialises the local comb, any change of the ratio across a
-restart would appear as a segment offset; none is observed, so the ratio
-centre shows no measurable bias between campaigns despite the lock
-losses and restarts (Fig.~\ref{fig:ratio}). Several segments of
+The data set is divided into 17 segments, acquired in three campaigns
+separated by weeks. Within each segment we keep the longest valid index
+span after removing excluded ranges, rejecting outliers beyond a
+$10$\,Hz jump threshold, and trimming endpoints whose deviation from the
+segment median exceeds $1\%$ of the peak-to-peak range. The retained
+sample count is $\sum_i n_i = \num{1008912}$ one-second samples over the
+17 segments; the segment boundaries are listed in
+Table~\ref{tab:segments}. The data span $58$\,days of wall-clock time
+but yield only $1\,008\,912$\,s ($280$\,h) of valid, jump-free data, a
+duty cycle of about $20\%$, gated by the simultaneous lock state of the
+two clocks and the comb chain rather than by the link. The Yb and Sr
+clocks were deliberately restarted between some segments in campaign~1
+(Yb after segments 4--6, Sr after segments 7--8); because a restart
+re-initialises the local comb, any change of the ratio across a restart
+would appear as a segment offset, and none is observed, so the ratio
+centre shows no measurable bias between campaigns. Several segments of
 campaign~2 show a larger beat jitter, correlated with typhoon weather
 that increased the noise of the aerial portion of the fibre route; these
 segments are retained, and their effect is absorbed by the excess-scatter
 term $\xi$ of the random-effect model (Sec.~\ref{sec:methods}).
+% src: clock_ratio/ratio_17seg.csv; clock_ratio/tidal_correction/summary.json;
 % src: experiment-side manuscript (光钟比对论文 hj.docx, Sec. 2-3)
-
-The observation campaign spans $58$\,days of wall-clock time but yields
-only $1\,008\,912$\,s ($280$\,h) of valid, jump-free data, i.e.\ a duty
-cycle of about $20\%$. This is representative of inter-city operation:
-the data are gated by the simultaneous lock state of the two clocks and
-the comb chain, not by the link. The retained sample count
-($\sum_i n_i = 1\,008\,912$) and the segment boundaries are listed in
-Table~\ref{tab:segments}.
-% src: clock_ratio/ratio_17seg.csv; clock_ratio/tidal_correction/summary.json
+The data span 2026-06-29 to 2026-08-26 (Beijing time).
+% src: docs/NOTATION.md Sec. 6
 
 % =====================================================================
 \section{Clock-ratio determination}
@@ -304,7 +285,6 @@ All ratio arithmetic is carried out at 80-decimal precision
 (\texttt{Decimal80}, mirroring MATLAB \texttt{vpa(...,80)}), because a
 float64 absolute precision of about $2.6\e{-16}$ would destroy
 differences at the $10^{-18}$ level.
-% src: docs/PAPER_DRAFT.md Sec. 1
 
 The duration-weighted centre of the whole experiment is
 \begin{equation}
@@ -313,7 +293,7 @@ The duration-weighted centre of the whole experiment is
   \label{eq:rduration}
 \end{equation}
 
-\subsection{Headline result and internal re-derivation}
+\subsection{Headline result}
 The headline Yb/Sr result adopted here is the \emph{uncorrected}
 combination of the per-segment ratios (no tidal correction; the static
 geopotential is removed):
@@ -324,69 +304,48 @@ geopotential is removed):
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4 (tidal-corrected WLS; adopted uncorrected here)
 with the Bayesian \emph{statistical} uncertainty of $0.75\e{-18}$ from the
 clock statistical noise alone (clock evaluation, tidal-model and
-link/comb terms excluded).
-% Convention note: the (23) label is the display precision of the value
-% string; the statistical term 0.75e-18 is the Bayesian clock-statistical
-% uncertainty.  The two are distinct conventions and must not be conflated.
-The parenthetical $(23)$ is the display precision of the value string;
-it is \emph{not} a restatement of the $0.75\e{-18}$ statistical term, and
-the two conventions are kept separate throughout
-(Secs.~\ref{sec:methods} and~\ref{sec:caveats}). As noted in the
-abstract, this uncorrected centre lies $0.2\e{-18}$ below the
-experiment-side tidal-corrected Bayesian centre
+link/comb terms excluded). The parenthetical $(23)$ is the display
+precision of the value string; it is \emph{not} a restatement of the
+$0.75\e{-18}$ statistical term. This uncorrected centre lies
+$0.2\e{-18}$ below the experiment-side tidal-corrected Bayesian centre
 $1.207\,507\,039\,343\,337\,7215(23)$; because the tidal term is a small
 effect compared with the present uncertainty, it is reported as an
 estimate (Sec.~\ref{sec:correction}) rather than adopted.
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4
-To verify that these values follow from the raw beat files, we
-independently rebuilt the ratio chain in this work. Reconstructing the
-per-segment Yb/Sr ratio at 80-decimal precision and forming the
-duration-weighted centre of the uncorrected baseline gives
-\begin{equation}
-  \Rdur^{(\mathrm{raw})} = 1.207\,507\,039\,343\,337\,720\,369\,6 ,
-  \label{eq:raw}
-\end{equation}
-% src: clock_ratio/tidal_correction/summary.json (scenario raw)
-and, under the Bayesian convention, the corresponding independent
-centre is
-\begin{equation}
-  \mathrm{Yb/Sr}^{(\mathrm{raw,bayes})} =
-  1.207\,507\,039\,343\,337\,721\,28(4) ,
-  \label{eq:raw-bayes}
-\end{equation}
-% full Bayesian raw centre: 1.20750703934333772128383548...
-% src: clock_ratio/statistical_methods_tidal.json (synthesis.methods.R_bayes.raw.R)
-so the two centre values differ by $2.6\e{-19}$ (duration-weighted) and
-$2\e{-20}$ (Bayesian) from the experiment-side uncorrected centre, i.e.\
-purely an averaging-convention difference. A fully independent
-re-derivation of all 17 segment ratios from the raw beat
-files---segment selection, median, and the complete Dr
-inversion---reproduces the stored per-segment ratios to zero relative
-difference.
+Our own re-derivation of the ratio chain from the raw beat files
+reproduces the uncorrected baseline (duration-weighted centre
+$1.207\,507\,039\,343\,337\,720\,369\,6$, and a Bayesian centre
+$1.207\,507\,039\,343\,337\,721\,28$), differing from the experiment-side
+value by $2.6\e{-19}$ and $2\e{-20}$ respectively---a pure
+averaging-convention difference---and reproduces the stored per-segment
+ratios to zero relative difference (a pipeline-internal consistency
+check).
+% src: clock_ratio/tidal_correction/summary.json (scenario raw);
+% src: clock_ratio/statistical_methods_tidal.json (synthesis.methods.R_bayes.raw.R);
 % src: clock_ratio/correlation_reanalysis_seg9_independent.json
 %      (raw_rederivation_max_rel_diff_vs_ratio_17seg = 0.0)
-All ratio arithmetic below is carried out at 80-decimal precision
-(\texttt{Decimal80}, mirroring MATLAB \texttt{vpa(...,80)}), because a
-float64 absolute precision of about $2.6\e{-16}$ would destroy
-differences at the $10^{-18}$ level.
-% src: docs/PAPER_DRAFT.md Sec. 1
 
 \subsection{Uncertainty budget}
-Table~\ref{tab:budget} summarises the systematic uncertainty budget of
-the ratio. The dominant terms are the Yb-clock evaluation
-($1.1\e{-18}$) and the static gravitational redshift
-($1\e{-18}$, from the $\pm0.083\ \mathrm{m^{2}/s^{2}}$ levelling
-uncertainty); the Sr-clock term is $9.2\e{-19}$, while the fibre and
-comb contributions are each below $1\e{-19}$. Combined in quadrature
-with the $0.75\e{-18}$ statistical term, this gives a total fractional
-uncertainty below $2\e{-18}$.
-% src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.5
+Table~\ref{tab:budget} lists the uncertainty terms of the ratio. The
+dominant contributions are the Yb-clock evaluation ($1.1\e{-18}$) and
+the static gravitational redshift ($1\e{-18}$, from the
+$\pm0.083\ \mathrm{m^{2}/s^{2}}$ levelling uncertainty); the Sr-clock
+term is $9.2\e{-19}$, the fibre and comb contributions are each below
+$1\e{-19}$, and the Bayesian statistical term is $0.75\e{-18}$. The
+tidal gravitational-redshift term is carried here as an uncertainty item
+rather than applied as a correction (Sec.~\ref{sec:correction}); it is
+comparable in size to the other terms, so the total fractional
+uncertainty is left provisional pending a full evaluation of the tidal
+and remaining systematic contributions.
+% src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.6;
+% src: clock/clock_tidal_shift.csv (tidal term ~2e-18, rms of the per-segment correction)
 
 \begin{table}[t]
   \centering
-  \caption{Systematic uncertainty budget for the Yb/Sr ratio (fractional
-  frequency units). The statistical term is the Bayesian clock-statistical
-  uncertainty. Terms are combined in quadrature.}
+  \caption{Uncertainty terms for the Yb/Sr ratio (fractional frequency
+  units). Terms are combined in quadrature. The tidal term is carried as
+  an uncertainty item (not applied as a correction), and the total is
+  provisional pending the full systematics evaluation.}
   \label{tab:budget}
   \begin{tabular}{lc}
     \toprule
@@ -397,11 +356,14 @@ uncertainty below $2\e{-18}$.
     Static gravitational redshift & $1\e{-18}$ \\
     Fibre transfer           & $<1\e{-19}$ \\
     Comb transfer            & $<1\e{-19}$ \\
+    Statistical (Bayesian)   & $0.75\e{-18}$ \\
+    Tidal term (item)        & $\sim 2\e{-18}$ \\
     \midrule
-    Statistical (Bayesian)   & $7.5\e{-19}$ \\
+    Total                    & provisional \\
     \bottomrule
   \end{tabular}
-  % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.5
+  % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.6;
+  % src: clock/clock_tidal_shift.csv (tidal term, rms ~1.999e-18)
 \end{table}
 
 \subsection{Segment scatter}
@@ -498,10 +460,11 @@ $r = +0.518$ ($p = 0.033$).
 \label{sec:correction}
 
 The tidal term is small compared with the present uncertainty
-($\dff \sim 5\e{-18}$ rms against a $0.75\e{-18}$ statistical term and a
-$\lesssim 2\e{-18}$ total), so we do \emph{not} apply a tidal correction
-to the headline ratio. This section quantifies what the correction
-\emph{would} do, as an estimate of the effect.
+($\dff \sim 5\e{-18}$ rms against a $0.75\e{-18}$ statistical term), so we
+do \emph{not} apply a tidal correction to the headline ratio; it is
+carried as an uncertainty item (Table~\ref{tab:budget}). This section
+quantifies what the correction \emph{would} do, as an estimate of the
+effect.
 
 \subsection{Fixed-coefficient scenarios}
 A tidal correction is meaningful only if the corrected residual is no
@@ -570,8 +533,8 @@ $-0.69\e{-18}$ (empirical). Under the precision-weighted WLS convention
 this reference), the deviations are $-0.503\e{-18}$ (raw),
 $+0.389\e{-18}$ (theory), and $-0.041\e{-18}$ (empirical), so the
 empirical scenario is closest to the reference. All of these shifts are
-below the $\sim 2\e{-18}$ total uncertainty; they quantify the effect
-rather than redefining the result.
+below the present uncertainty; they quantify the effect rather than
+redefining the result.
 % src: clock_ratio/statistical_methods_tidal.json (synthesis.methods.R_wls)
 
 \subsection{Internal consistency}
@@ -1030,8 +993,12 @@ of change under the tidal correction is the same for all four methods.
 \begin{table}[t]
   \centering
   \caption{Centre and statistical uncertainty by combination method for
-  the uncorrected baseline, in units of $10^{-18}$ (deviations relative
-  to the experiment-side WLS reference $1.207\,507\,039\,343\,337\,721\,3$).}
+  the uncorrected baseline, computed in this work's own re-run of the
+  per-segment ratios, in units of $10^{-18}$ (deviations relative
+  to the experiment-side WLS reference $1.207\,507\,039\,343\,337\,721\,3$).
+  The experiment-side analysis reports a slightly different Bayesian
+  statistical term ($0.75\times10^{-18}$; adopted for the headline
+  value), reflecting its own ratio pipeline.}
   \label{tab:appendix-methods}
   \begin{tabular}{lcc}
     \toprule

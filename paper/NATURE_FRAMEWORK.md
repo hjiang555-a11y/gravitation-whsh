@@ -78,7 +78,7 @@ Redefining the SI second requires frequency ratios of optical clocks measured in
 
 ---
 
-## 3. 论文框架（`main.tex` 当前 9 节 + 4 附录）
+## 3. 论文框架（`main.tex` 当前 8 节 + 4 附录）
 
 ### 3.1 主文分节
 
@@ -86,14 +86,13 @@ Redefining the SI second requires frequency ratios of optical clocks measured in
 |---|---|---|
 | **Abstract** | 见 §1 | — |
 | **1. Introduction**（4 段）| ①光钟精度→引力红移；②网络是使能基础设施、双重目标（物理+秒定义）、CCTF 判据、Yb/Sr 仅一例达标；③光纤链路史（Sr–Sr 1415 km→BACON→NIST→欧洲网络→十钟六国）+ **新颖性缺口**（无异地异种 ≤5×10⁻¹⁸）；④本文网络 + 贡献清单 | — |
-| **2. Experimental setup and data** | 两钟、光纤链路、光梳链；静态势差 ΔW；17 段筛选规则 | — |
-| **3. Network and observation campaign** | 环回链路净化、三战役、重启复现性、台风抖动、20% 占空比 | 图 1 入 ED；表 C（逐段）|
-| **4. Clock-ratio determination** | 4.1 拍频→比值反演（Decimal80）；**4.2 主结果 + 内部独立重算**；4.3 **不确定度预算（含潮汐项）**；4.4 段间散布 | **Table 1**（预算）；**Fig 1** |
-| **5. Tidal gravitational-redshift detection** | 模板归一化（`F_1550` 非 `1/COEF`）；段内拟合；跨段合并；`6.4σ`、`14/17`、Stouffer、Fisher、`A=−0.5397±0.0843`；段均值相关 `r=+0.518` | **Fig 2** |
-| **6. Estimate of the tidal effect** | 6.1 固定系数情景（theory/empirical）；6.2 方向自检；6.3 幅度；6.4 内部一致性（`χ²`）；6.5 离散度降（`13%`）| **Table 2/3/4**；**Fig 3/4** |
-| **7. Comparison with other Yb/Sr determinations** | 三方并列表 + 偏差（−1.7/+3.3）；三方 ≤5×10⁻¹⁸；口径不敏感（≤0.7×10⁻¹⁸）| **Table 5** |
-| **8. Discussion and caveats** | 8.1 阐释；**8.2 秒定义贡献（含新颖性宣称）**；8.3 应用与展望；8.4 局限（4 条）；8.5 早期潮汐模型一致性；8.6 段 9 敏感性；8.7 两条逻辑结论 | ED 表 |
-| **9. Conclusion** | 主结果 + 总不确定度 + 潮汐检出 + 双重用途定位 | — |
+| **2. Experimental setup and data**（2/3 合并）| 两钟、光纤链路（环回净化）、光梳链；静态势差 ΔW；17 段筛选规则；三战役、重启复现性、台风抖动、20% 占空比 | 图 1 入 ED；表 C（逐段）|
+| **3. Clock-ratio determination** | 3.1 拍频→比值反演（Decimal80）；**3.2 主结果（未修正）+ 内部重算**；3.3 **不确定度预算（含潮汐项，总值为 provisional）**；3.4 段间散布 | **Table 1**（预算）；**Fig 1** |
+| **4. Tidal gravitational-redshift detection** | 模板归一化（`F_1550` 非 `1/COEF`）；段内拟合；跨段合并；`6.4σ`、`14/17`、Stouffer、Fisher、`A=−0.5397±0.0843`；段均值相关 `r=+0.518` | **Fig 2** |
+| **5. Estimate of the tidal effect** | 5.1 固定系数情景（theory/empirical）；5.2 方向自检；5.3 幅度；5.4 内部一致性（`χ²`）；5.5 离散度降（`13%`）| **Table 2/3/4**；**Fig 3/4** |
+| **6. Comparison with other Yb/Sr determinations** | 三方并列表 + 偏差（−1.7/+3.3）；三方 ≤5×10⁻¹⁸；口径不敏感（≤0.7×10⁻¹⁸）| **Table 5** |
+| **7. Discussion and caveats** | 7.1 阐释；**7.2 秒定义贡献（含新颖性宣称）**；7.3 应用与展望；7.4 局限（4 条）；7.5 早期潮汐模型一致性；7.6 段 9 敏感性；7.7 两条逻辑结论 | ED 表 |
+| **8. Conclusion** | 主结果 + 总不确定度（provisional）+ 潮汐检出 + 双重用途定位 | — |
 
 ### 3.2 附录（Supplementary）
 
