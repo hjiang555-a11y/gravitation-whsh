@@ -206,6 +206,8 @@ def write_figure(taus, curves) -> None:
         es = [p["u_sigma"] for p in pts]
         ax.errorbar(xs, ys, yerr=es, color=color, marker=marker, ms=4.0,
                     lw=1.2, elinewidth=0.8, capsize=1.8, label=label)
+    ax.set_xscale("log")
+    ax.set_yscale("log")
     ax.set_xlabel(r"$\tau$ [s]")
     ax.set_ylabel(r"$\sigma_y(\tau)$")
     ax.set_title("Spliced concatenated ratio stability (gaps removed)",
