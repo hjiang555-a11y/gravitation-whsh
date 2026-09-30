@@ -1,0 +1,207 @@
+#!/usr/bin/env python3
+"""Spliced concatenated stability: A=0, A=-1, and the A=-1 correction term.
+
+The 17 valid segments are SPLICED end-to-end with their inter-segment gaps
+removed, giving one continuous 1,008,912-sample record. A single standard
+overlapping Allan deviation then runs on that record, so tau can reach the
+full spliced length instead of being capped by the longest single run.
+
+  1. select_segments -> the 17 frozen segments (raw data alone decide
+     membership, identical to every other artifact).
+  2. Build the per-second ratio fluctuation series y(t) = -q/(1+q) for each
+     scenario (A=0 raw, A=-1 theory) via analyze_segment.
+  3. SPLICE: concatenate the 17 segment series back-to-back, dropping the
+     wall-clock gaps entirely (t = 0,1,2,... over the spliced record).
+  4. Run one OADEV on the spliced record for three series:
+       - raw        A=0
+       - theory     A=-1
+       - correction the removed term itself, h/F_1550
+
+Because the gaps are removed, the spliced record is treated as if the
+segments were contiguous; a tau longer than one raw segment is now
+computable but mixes different campaigns. n_pairs is reported so the record
+length behind each point is explicit.
+
+Independent result set; modifies no existing artifact.
+"""
+
+from __future__ import annotations
+
+import csv
+import sys
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from clock import shared as s  # noqa: E402
+from clock_ratio.tidal_analysis import (  # noqa: E402
+    SCENARIOS, AnalysisError, TideGrid, analyze_segment, select_segments,
+)
+
+OUT_DIR = Path(__file__).resolve().parent
+CSV_PATH = OUT_DIR / "concatenated_stability_long.csv"
+MD_PATH = OUT_DIR / "concatenated_stability_long.md"
+FIG_PNG = OUT_DIR / "concatenated_stability_long.png"
+FIG_PDF = OUT_DIR / "concatenated_stability_long.pdf"
+
+TAUS_S = (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 600, 1024, 1200, 2048,
+          3600, 4096, 7200, 8192, 16384, 21600, 32768, 43200, 65536, 86400,
+          100000, 131072, 172800, 200000, 262144, 345600, 400000)
+
+
+def aligned_axis(segment_times: list[np.ndarray]) -> np.ndarray:
+    """Place each segment end-to-end on one continuous 1-s clock.
+
+    Starts at the first segment's timestamp and appends each segment back-to-back
+    so the gaps between real segments are removed. Every step is exactly 1 s, so
+    tau on this axis is pure data time, not wall-clock time.
+    """
+    origin = segment_times[0][0]
+    blocks, offset = [], 0
+    for times in segment_times:
+        blocks.append(origin + np.timedelta64(offset, "s")
+                      + np.arange(len(times)) * np.timedelta64(1, "s"))
+        offset += len(times)
+    return np.concatenate(blocks)
+
+
+def spliced_oadev(y: np.ndarray, taus_s) -> list[dict]:
+    """Overlapping Allan deviation on one continuous spliced record.
+
+    The record has no gaps (t = 0,1,...,N-1). For lag m (tau = m seconds),
+    every start i=0..N-2m contributes an adjacent m-averaged difference.
+    """
+    n = len(y)
+    centered = y - y[0]
+    centered = centered - centered.mean()
+    prefix = np.concatenate(([0.0], np.cumsum(centered)))
+    points = []
+    for tau in taus_s:
+        m = int(tau)
+        n_pairs = n - 2 * m
+        if n_pairs <= 0:
+            points.append({"tau_s": m, "n_pairs": 0, "sigma_y": None})
+            continue
+        difference = (prefix[2 * m:] - 2 * prefix[m:-m] + prefix[:-2 * m]) / m
+        sigma = float(np.sqrt(np.dot(difference, difference) / (2.0 * n_pairs)))
+        points.append({"tau_s": m, "n_pairs": int(n_pairs), "sigma_y": sigma})
+    return points
+
+
+def main() -> int:
+    try:
+        times, beat = s.load_beat()
+    except (OSError, ValueError) as error:
+        raise AnalysisError(f"raw beat data could not be loaded: {error}") from error
+    segments = select_segments(times, beat)
+    try:
+        tide = TideGrid(*s.load_tide())
+    except (OSError, ValueError, KeyError) as error:
+        raise AnalysisError(f"tide data could not be loaded: {error}") from error
+
+    scenario_by_key = {sc.key: sc for sc in SCENARIOS}
+    raw_results, theory_results, h_frac = [], [], []
+    for segment in segments:
+        h = tide.beat_at(segment.times)
+        raw_results.append(analyze_segment(segment, h, scenario_by_key["raw"]))
+        theory_results.append(analyze_segment(segment, h, scenario_by_key["theory"]))
+        h_frac.append(h / s.F_1550)
+
+    segment_times = [r.segment.times for r in raw_results]
+    aligned_times = aligned_axis(segment_times)
+    span_days = float((segment_times[-1][-1] - segment_times[0][0])
+                      / np.timedelta64(1, "D"))
+    series = {
+        "raw": np.concatenate([r.fluctuations for r in raw_results]),
+        "theory": np.concatenate([r.fluctuations for r in theory_results]),
+        "correction": np.concatenate(h_frac),
+    }
+    n_total = len(series["raw"])
+    if not np.all(np.diff(aligned_times) == np.timedelta64(1, "s")):
+        raise AnalysisError("aligned axis is not a monotone 1-second clock")
+    taus = [t for t in TAUS_S if t < n_total // 2]
+    curves = {key: spliced_oadev(series[key], taus) for key in series}
+
+    with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.writer(stream)
+        writer.writerow(["series", "tau_s", "tau_days", "n_pairs", "sigma_y"])
+        for key in ("raw", "theory", "correction"):
+            for point in curves[key]:
+                writer.writerow([
+                    key, point["tau_s"], f"{point['tau_s'] / 86400:.6f}",
+                    point["n_pairs"],
+                    "" if point["sigma_y"] is None else f"{point['sigma_y']:.6e}",
+                ])
+
+    lines = [
+        "# Spliced concatenated stability (A=0, A=-1, A=-1 correction)\n",
+        f"17 segments placed end-to-end on one continuous 1-s clock; the "
+        f"wall-clock gaps are removed. The aligned record spans "
+        f"**{n_total:,}** s ({n_total / 86400:.3f} d of pure data time) versus "
+        f"{span_days:.2f} d of real elapsed time. One OADEV per series over the "
+        "aligned axis.\n",
+        "| tau [s] | tau [d] | raw (A=0) | theory (A=-1) | correction h/F1550 "
+        "| n_pairs |",
+        "|---|---|---|---|---|---|",
+    ]
+    for i, tau in enumerate(taus):
+        p_raw, p_th, p_cor = curves["raw"][i], curves["theory"][i], curves["correction"][i]
+        def f(p):
+            return "—" if p["sigma_y"] is None else f"{p['sigma_y']:.3e}"
+        lines.append(
+            f"| {tau} | {tau / 86400:.3f} | {f(p_raw)} | {f(p_th)} | {f(p_cor)} "
+            f"| {p_raw['n_pairs']} |")
+    lines.append(
+        "\n> Gaps are removed, so the record is treated as contiguous. A tau "
+        "longer than one raw segment is computable but mixes different "
+        "campaigns; `n_pairs` records the number of adjacent m-averaged "
+        "differences behind each point.\n")
+    lines.append(f"\n![Spliced stability]({FIG_PNG.name})\n")
+    MD_PATH.write_text("\n".join(lines), encoding="utf-8")
+
+    write_figure(taus, curves)
+
+    print(f"aligned axis: {aligned_times[0]} .. {aligned_times[-1]} "
+          f"({n_total:,} samples, 1-s steps)")
+    print(f"pure data span {n_total / 86400:.3f} d vs real elapsed {span_days:.2f} d; "
+          f"tau up to {taus[-1]} s ({taus[-1] / 86400:.3f} d)")
+    for key in ("raw", "theory", "correction"):
+        p = curves[key][-1]
+        sigma = "N/A" if p["sigma_y"] is None else f"{p['sigma_y']:.4e}"
+        print(f"  {key:11s} sigma_y({p['tau_s']}s) = {sigma}  (n_pairs={p['n_pairs']})")
+    print(f"wrote {CSV_PATH.name}, {MD_PATH.name}")
+    return 0
+
+
+def write_figure(taus, curves) -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    meta = {
+        "raw": ("raw (A=0)", "#8a8a8a", "o"),
+        "theory": ("theory (A=-1)", "#1f4e9c", "s"),
+        "correction": ("correction h/F1550 (A=-1)", "#b22222", "^"),
+    }
+    fig, ax = plt.subplots(figsize=(6.9, 3.6))
+    for key in ("raw", "theory", "correction"):
+        label, color, marker = meta[key]
+        xs = [p["tau_s"] for p in curves[key] if p["sigma_y"] is not None]
+        ys = [p["sigma_y"] for p in curves[key] if p["sigma_y"] is not None]
+        ax.loglog(xs, ys, color=color, marker=marker, ms=4.0, lw=1.2, label=label)
+    ax.set_xlabel(r"$\tau$ [s]")
+    ax.set_ylabel(r"$\sigma_y(\tau)$")
+    ax.set_title("Spliced concatenated ratio stability (gaps removed)",
+                 fontsize=9.5)
+    ax.grid(True, which="both", alpha=0.18, lw=0.4)
+    ax.legend(frameon=False, fontsize=8)
+    for spine in ("top", "right"):
+        ax.spines[spine].set_visible(False)
+    fig.savefig(FIG_PNG, dpi=300, bbox_inches="tight")
+    fig.savefig(FIG_PDF)
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
