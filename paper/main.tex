@@ -741,6 +741,44 @@ reproduces the per-segment ratios to zero relative difference.
 %      (pearson_r=0.428662, pearson_p=0.097585,
 %       raw_rederivation_max_rel_diff_vs_ratio_17seg=0.0)
 
+\subsection{What the comparison establishes, and what it suggests}
+\label{sec:logic}
+
+Two logically distinct statements follow from the data.
+
+\emph{(i) The clock comparison already tests and detects the dynamic
+gravitational tide.} The evidence is twofold. First, the segment-mean
+ratio deviation is significantly correlated with the session tidal shift
+(Pearson $r=+0.518$, $p=0.033$), and the cross-segment detection is
+robust in sign and magnitude ($A=-0.54\pm0.08$, $6.4\sigma$; 14/17
+segments with consistent sign; sign-agnostic Stouffer $|z|=5.87$).
+Second, removing the tide lowers the segment-to-segment dispersion from
+$2.980\e{-18}$ to $2.596\e{-18}$, a fairly clear reduction of about
+$13\%$ ($12.9\%\pm11.0\%$). A correction that did not match the data
+would not reduce the dispersion, so its reduction is itself evidence
+that the tide is present in the ratio.
+
+\emph{(ii) The tidal model may be more complex than a single rigid
+template.} The \emph{stability} change under the fitted correction is
+not monotonic in $\tau$: for $\tau \lesssim 2\times10^{4}$\,s the
+corrected series is slightly \emph{more} stable than the raw series
+(e.g.\ empirical-to-raw $\sigma_y$ ratio $0.95$ at $1.6\times10^{4}$\,s),
+whereas beyond $\sim 2\times10^{4}$\,s it is slightly \emph{less} stable
+(ratio $\approx 1.06$--$1.07$ at $3$--$9\times10^{4}$\,s). Such a
+crossover can arise if part of the tidal contribution is modelled with a
+phase or timing offset relative to the rest---i.e.\ if different tidal
+constituents (solid-Earth, ocean loading, and their propagation delays)
+do not share a single rigid phase. A rigid time-shift of the whole
+template does not repair the fit (shifting the template by up to
+$\pm1800$\,s leaves the explained beat variance essentially unchanged),
+which points to a \emph{per-component} phase mismatch rather than a
+global delay. We therefore regard the present single-template correction
+as an estimate of the tidal effect; a constituent-resolved tidal model
+with independent phases would be needed to remove the residual at long
+$\tau$.
+% src: clock_ratio/statistical_methods_tidal.json (dispersion 2.980/2.596 e-18)
+% src: clock_ratio/concatenated_stability_long.csv (emp/raw crossover at ~2e4 s)
+
 % =====================================================================
 \section{Conclusion}
 % =====================================================================
