@@ -3,12 +3,27 @@
 LaTeX submission draft for the tidal gravitational-redshift analysis of
 the Wuhan (Yb) - Shanghai (Sr) optical-clock comparison.
 
+## Version status (milestone)
+
+- **v0.3 (2026-10-01, commit `da5b2e4`)** — stable working version.
+  Nature Article structure, main text compressed to 13 pages.
+- **Structure** — Results: 2.1 Network and observation campaign →
+  2.2 Theoretical tidal influence → 2.3 Tidal gravitational-redshift
+  detection → 2.4 Clock-ratio determination. Discussion:
+  3.1 Attempted tidal compensation → 3.2 Clock-comparison synthesis.
+- **Placeholders / open items** — many sections will be revised later:
+  abstract total uncertainty is left as `X×10⁻¹⁸`; `tab:budget` Total row
+  is `provisional`; the tidal term is carried as an uncertainty item
+  `<5e-19` (theoretical bound), with no empirical compensation adopted.
+- Do not treat the `X` and `provisional` placeholders as errors.
+
 ## Files
 
 | File | Purpose |
 |---|---|
-| `main.tex` | Full article: abstract, introduction, setup, methods, detection, correction, caveats, conclusion, data availability, references. |
-| `refs.bib` | BibTeX entries (2 verified references; see below). |
+| `main.tex` | Full article: abstract, introduction, results, discussion, methods, back matter, references. |
+| `refs.bib` | BibTeX entries (24 references, all cited and resolving; see below). |
+| `overleaf/` + `overleaf-upload.zip` | Self-contained Overleaf upload (main.tex with `figs/` paths, refs.bib, figures). |
 | `README.md` | This file. |
 
 ## How to compile
