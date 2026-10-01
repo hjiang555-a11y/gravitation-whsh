@@ -183,7 +183,9 @@ gives a direct reproducibility check, and the ratio centre shows no
 measurable bias across restarts. The static geopotential difference,
 $\dW = 280.042\pm0.085\ \mathrm{m^{2}/s^{2}}$ (Wuhan higher), is fixed
 by first-order spirit levelling and applied as a constant correction
-(Methods). The time-varying tidal geopotential difference,
+(Methods); its $\pm0.085\ \mathrm{m^{2}/s^{2}}$ uncertainty enters the
+ratio budget as the $1\e{-18}$ static-redshift term (Table~\ref{tab:budget}).
+The time-varying tidal geopotential difference,
 $\dW(t) = W_{\mathrm{WUHN}}(t) - W_{\mathrm{SHAN}}(t)$, is taken from a
 professional 30\,s series combining solid-Earth tide and ocean loading.
 \par}
@@ -288,10 +290,14 @@ segments).
 % src: clock/segment_analysis/batch_summary.csv (tide_rms_hz / F_1550;
 %      median 3.844e-18, min 0.857e-18, max 6.562e-18)
 
-After both the beat and a tidal template (normalised to the $1550$\,nm
-transfer frequency, Methods) are passed through a $1200$\,s triangular
-window and demeaned, each segment is fitted with
-$A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. A
+After both the beat and a tidal template are passed through a
+$1200$\,s triangular window and demeaned, each segment is fitted with
+$A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. The
+template is normalised to the $1550$\,nm transfer frequency
+$\Ffifteen=193.40$\,THz, not to the ratio-conversion coefficient
+$1/\mathrm{COEF}\approx233.53$\,THz; the two differ by the Yb/Sr factor
+$1.2075$, so the choice of reference sets the amplitude scale and must be
+accounted for before comparing $A$ with other tidal analyses (Methods). A
 single segment reaches only $\mathrm{SNR}\approx0.28$, so no segment is
 individually significant (Fig.~\ref{fig:tidal}); across the 17 segments,
 however, the detection is significant by three independent combinations:
@@ -409,13 +415,14 @@ on the Yb/Sr ratio that the redefinition of the SI second will rest on.
 The redefinition calls for a matrix of ratios measured by different
 laboratories and mutually agreeing at the few-parts-in-$10^{18}$ level;
 for Yb/Sr only a single determination to date meets the $5\e{-18}$ target
-\cite{aeppli2026nist}, and it differs markedly from earlier reports. To
-our knowledge, the present result is that second determination---the
-second different-species optical-clock ratio at the $5\e{-18}$ level, and
-the first obtained between clocks at \emph{different locations}. The claim
-is a deliberately conservative one: the $0.75\e{-18}$ figure is a
-statistical floor, and we report an independent ratio consistent with the
-existing determinations, not a new most-precise value.
+\cite{aeppli2026nist}, and it differs markedly from earlier reports. The
+present result supplies a second, independently obtained entry to that
+matrix---obtained at a third institution, with a different pair of clocks
+and separate hardware and analysis---and so tests the redefinition on
+evidence the single-campus determination cannot provide. The claim is a
+deliberately conservative one: the $0.75\e{-18}$ figure is a statistical
+floor, and we report an independent ratio consistent with the existing
+determinations, not a new most-precise value.
 
 The same data set also bounds what the comparison can support. The
 bottleneck is no longer the link or the comb, whose contributions are each
