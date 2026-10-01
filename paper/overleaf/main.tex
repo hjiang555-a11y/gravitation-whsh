@@ -206,35 +206,21 @@ segments).
 % src: clock/segment_analysis/batch_summary.csv (tide_rms_hz / F_1550;
 %      median 3.844e-18, min 0.857e-18, max 6.562e-18)
 
+{\sloppy
 At the full theoretical response ($A=-1$, complete trust in the tidal
 data and in general relativity) the tide would shift the ratio by
-$0.44\e{-18}$ (Table~\ref{tab:rduration}). That is small against the
+$0.44\e{-18}$: in fractional-frequency terms the duration-weighted centre
+would move from $1.207\,507\,039\,343\,337\,720\,369\,6$ (raw) to
+$1.207\,507\,039\,343\,337\,720\,810\,8$. That is small against the
 $0.75\e{-18}$ statistical term but comparable to the leading systematics,
 so we do not correct the central value; the tidal term enters the budget
 as an uncertainty item of $<5\e{-19}$, its size set by that full-response
 shift (Table~\ref{tab:budget}). Whether an empirical response below $A=-1$
 is justified is examined in the Discussion (Sec.~\ref{sec:correction}).
-
-\begin{table}[t]
-  \centering
-  \caption{Duration-weighted centre $\Rdur$ under the full theoretical
-  tidal response. The last column is the signed absolute ratio difference
-  from the raw baseline,
-  $\Delta R = \Rdur^{(\mathrm{scenario})} - \Rdur^{(\mathrm{raw})}$,
-  in units of $10^{-18}$; this bounds the effect, it is not the adopted
-  result.}
-  \label{tab:rduration}
-  \begin{tabular}{lccc}
-    \toprule
-    Scenario & $A$ & $\Rdur$ & $\Delta R\ (\e{-18})$ \\
-    \midrule
-    raw       & $0$    & $1.207\,507\,039\,343\,337\,720\,369\,6$ & $0$ \\
-    theory    & $-1$   & $1.207\,507\,039\,343\,337\,720\,810\,8$ & $+0.441$ \\
-    \bottomrule
-  \end{tabular}
-  % src: clock_ratio/tidal_correction/summary.json
-  %      (delta_R theory = 4.411914456944042e-19)
-\end{table}
+\par}
+% src: clock_ratio/tidal_correction/summary.json
+%      (R_duration raw 1.2075070393433377203696, theory 1.2075070393433377208108;
+%       delta_R theory = 4.411914456944042e-19)
 
 % =====================================================================
 
@@ -399,7 +385,7 @@ revised result.
 
 Compensating at the fitted $A=-0.54$ would shift the duration-weighted
 centre by $+0.24\e{-18}$, half the $+0.44\e{-18}$ of the full theoretical
-response (Table~\ref{tab:rduration})---both below the present statistical
+response---both below the present statistical
 uncertainty. The empirical compensation would lower the reduced
 chi-square from $5.42$ (raw) to $4.56$ and the segment-to-segment
 dispersion $\sigma(y_i)$ from $2.980\e{-18}$ to $2.596\e{-18}$
@@ -440,7 +426,7 @@ near-coincidence of the three central values should not be read as a
 three-way agreement at $5\e{-18}$. The choice of uncorrected versus
 tidal-corrected centre, and of Bayesian versus duration-weighted
 averaging, moves any of these deviations by at most $\sim 0.7\e{-18}$
-(Table~\ref{tab:rduration}, Sec.~\ref{sec:correction}), below the
+(Sec.~\ref{sec:correction}), below the
 $5\e{-18}$ scale of interest.
 
 The immediate metrological value of this work is as an independent check
