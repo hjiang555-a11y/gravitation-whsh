@@ -200,33 +200,29 @@ professional 30\,s series combining solid-Earth tide and ocean loading.
 \label{sec:tidal-theory}
 
 The tide modulates the comparison frequency through the gravitational
-redshift, $\dff/f = \dW(t)/c^{2}$, where $\dW(t)$ is the 30\,s
-geopotential-difference series (Sec.~\ref{sec:network}).
-Its segment-averaged rms amplitude ranges from $0.86\e{-18}$ to
-$6.56\e{-18}$ across the 17 segments, with a median of $3.84\e{-18}$.
+redshift, $\dff/f = \dW(t)/c^{2}$, with a segment-averaged rms amplitude
+of $3.84\e{-18}$ (median; range $0.86$--$6.56\e{-18}$ across the 17
+segments).
 % src: clock/segment_analysis/batch_summary.csv (tide_rms_hz / F_1550;
 %      median 3.844e-18, min 0.857e-18, max 6.562e-18)
 
-We do not apply a tidal correction to the headline ratio. The full
-theoretical response ($A=-1$, i.e.\ complete trust in the tidal data and
-in general relativity) would shift the ratio by $0.44\e{-18}$
-(Table~\ref{tab:rduration})---small compared with the present statistical
-term, but of the same order as the leading systematics. The tidal term is
-therefore carried as an uncertainty item of $<5\e{-19}$, set by the
-magnitude of the compensation that the full-response correction would
-apply, and enters the budget (Table~\ref{tab:budget}) rather than the
-central value. Whether an empirical correction beyond the theoretical
-response can be justified is examined in the Discussion
-(Sec.~\ref{sec:correction}).
+At the full theoretical response ($A=-1$, complete trust in the tidal
+data and in general relativity) the tide would shift the ratio by
+$0.44\e{-18}$ (Table~\ref{tab:rduration}). That is small against the
+$0.75\e{-18}$ statistical term but comparable to the leading systematics,
+so we do not correct the central value; the tidal term enters the budget
+as an uncertainty item of $<5\e{-19}$, its size set by that full-response
+shift (Table~\ref{tab:budget}). Whether an empirical response below $A=-1$
+is justified is examined in the Discussion (Sec.~\ref{sec:correction}).
 
 \begin{table}[t]
   \centering
-  \caption{Duration-weighted centre $\Rdur$ under the theoretical tidal
-  response. The last column is the signed absolute ratio difference from
-  the raw baseline,
+  \caption{Duration-weighted centre $\Rdur$ under the full theoretical
+  tidal response. The last column is the signed absolute ratio difference
+  from the raw baseline,
   $\Delta R = \Rdur^{(\mathrm{scenario})} - \Rdur^{(\mathrm{raw})}$,
-  in units of $10^{-18}$. This is an estimate of the effect, not the
-  adopted result.}
+  in units of $10^{-18}$; this bounds the effect, it is not the adopted
+  result.}
   \label{tab:rduration}
   \begin{tabular}{lccc}
     \toprule
@@ -391,54 +387,31 @@ longer integration alone.
 \subsection{Attempted tidal compensation}
 \label{sec:correction}
 
-The tidal term enters the budget as an uncertainty item
-(Sec.~\ref{sec:tidal-theory}); the central value is left uncorrected. We
-now examine whether an empirical compensation could be justified on top
-of the theoretical response. The measured amplitude is
-$A=-0.54\pm0.08$ (Sec.~\ref{sec:detection}), roughly half the full
-theoretical response $A=-1$. There is, however, no independent check
-that this fitted magnitude is the correct response coefficient, so we do
-\emph{not} adopt it as a compensation; the numbers below are reported as
-an estimate of what an empirical correction \emph{would} do, not as a
+The central value is left uncorrected (Sec.~\ref{sec:tidal-theory}). We
+ask whether an empirical response below the theoretical $A=-1$ is
+justified. The measured amplitude is $A=-0.54\pm0.08$
+(Sec.~\ref{sec:detection}), roughly half the theoretical magnitude. No
+independent check establishes this fitted value as the correct response
+coefficient---the fit reproduces the waveform but not the hardware phase
+that fixes the sign convention---so we do not adopt it as a compensation.
+The numbers below bound what such a correction would do, and are not a
 revised result.
 
-Applying the fitted $A=-0.54$ would shift the duration-weighted centre by
-$+0.24\e{-18}$ and, at the full theoretical $A=-1$, by $+0.44\e{-18}$
-  (Table~\ref{tab:rduration-full})---below the present statistical uncertainty.
-The empirical compensation would also lower the reduced chi-square from
-$5.42$ (raw) to $4.56$ and reduce the segment-to-segment dispersion
-$\sigma(y_i)$ from $2.980\e{-18}$ to $2.596\e{-18}$ ($13\%$;
-$12.9\%\pm11.0\%$ by jackknife). The full theoretical response gives a
-larger $\chi^{2}_{\mathrm{red}}$ reduction ($5.42\to3.70$) but a slightly
-\emph{higher} long-term instability, and neither scenario removes the
-residual at long averaging times (Fig.~\ref{fig:correction}). A correction
-that does not share a single rigid phase with the data cannot be
-validated from these statistics alone, so the compensation is reported as
-an effect estimate rather than adopted (Supplementary Information).
+Compensating at the fitted $A=-0.54$ would shift the duration-weighted
+centre by $+0.24\e{-18}$, half the $+0.44\e{-18}$ of the full theoretical
+response (Table~\ref{tab:rduration})---both below the present statistical
+uncertainty. The empirical compensation would lower the reduced
+chi-square from $5.42$ (raw) to $4.56$ and the segment-to-segment
+dispersion $\sigma(y_i)$ from $2.980\e{-18}$ to $2.596\e{-18}$
+($13\%$; $12.9\%\pm11.0\%$ by jackknife). The full theoretical response
+gives a larger $\chi^{2}_{\mathrm{red}}$ reduction ($5.42\to3.70$) but a
+slightly \emph{higher} long-term instability, and neither removes the
+residual at long averaging times (Fig.~\ref{fig:correction}). A
+correction that neither the statistics nor the sign convention can
+validate is reported as an effect estimate rather than adopted
+(Supplementary Information).
 % src: clock_ratio/statistical_methods_tidal.json;
 % src: clock_ratio/tidal_correction/summary.json; docs/METHODOLOGY.md Sec. 9
-
-\begin{table}[t]
-  \centering
-  \caption{Duration-weighted centre $\Rdur$ by scenario. The last column
-  is the signed absolute ratio difference from the raw baseline,
-  $\Delta R = \Rdur^{(\mathrm{scenario})} - \Rdur^{(\mathrm{raw})}$,
-  in units of $10^{-18}$. The empirical row is shown only to bound the
-  magnitude of a possible compensation; it is not adopted.}
-  \label{tab:rduration-full}
-  \begin{tabular}{lccc}
-    \toprule
-    Scenario & $A$ & $\Rdur$ & $\Delta R\ (\e{-18})$ \\
-    \midrule
-    raw       & $0$    & $1.207\,507\,039\,343\,337\,720\,369\,6$ & $0$ \\
-    theory    & $-1$   & $1.207\,507\,039\,343\,337\,720\,810\,8$ & $+0.441$ \\
-    empirical & $-0.54$& $1.207\,507\,039\,343\,337\,720\,607\,8$ & $+0.238$ \\
-    \bottomrule
-  \end{tabular}
-  % src: clock_ratio/tidal_correction/summary.json
-  %      (delta_R theory = 4.411914456944042e-19,
-  %       delta_R empirical = 2.382433806749783e-19)
-\end{table}
 
 \begin{figure}[t]
   \centering
@@ -467,7 +440,7 @@ near-coincidence of the three central values should not be read as a
 three-way agreement at $5\e{-18}$. The choice of uncorrected versus
 tidal-corrected centre, and of Bayesian versus duration-weighted
 averaging, moves any of these deviations by at most $\sim 0.7\e{-18}$
-(Table~\ref{tab:rduration-full}, Sec.~\ref{sec:correction}), below the
+(Table~\ref{tab:rduration}, Sec.~\ref{sec:correction}), below the
 $5\e{-18}$ scale of interest.
 
 The immediate metrological value of this work is as an independent check
