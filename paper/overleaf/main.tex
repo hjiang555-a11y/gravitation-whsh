@@ -95,6 +95,7 @@ gravitational potential at the centimetre level.
 \end{abstract}
 
 % =====================================================================
+
 \section{Introduction}
 % =====================================================================
 Optical lattice and ion clocks now reach self-evaluated fractional
@@ -199,9 +200,15 @@ contributions are:
 \end{itemize}
 
 % =====================================================================
-\section{Experimental setup and data}
+
+
 % =====================================================================
-\label{sec:network}
+\section{Results}
+% =====================================================================
+
+% =====================================================================
+\subsection{Network and observation campaign}
+% =====================================================================
 
 The comparison links a Yb clock at IAPMST in Wuhan to a Sr clock at
 USTC in Shanghai. The two clocks are of different species, at different
@@ -267,42 +274,14 @@ The data span 2026-06-29 to 2026-08-26 (Beijing time).
 % src: docs/NOTATION.md Sec. 6
 
 % =====================================================================
-\section{Clock-ratio determination}
-% =====================================================================
+
+
+% ===== Clock-ratio determination =====
+
+\subsection{Clock-ratio determination}
 \label{sec:methods}
 
-\subsection{Beat-to-ratio inversion}
-Let $b_i(t)$ be the longest valid beat sequence in segment $i$ and let
-$m$ be the global median of the plausible beat values. The segment beat
-deviation is
-\begin{equation}
-  \overline{\delta b}_i = \overline{b_i} - m .
-\end{equation}
-The Sr-side systematic shift $a_i$ and the Yb-side shift $b_{\mathrm{Yb}}$
-combine into the Dr coefficient, and the segment Yb/Sr ratio follows
-from the full inversion
-\begin{equation}
-  R_i = \bigl[\,\mathrm{ratio\_base}_i + \mathrm{Dr}_i\,\bigr]^{-1}
-        \times (1+\delta_g),
-  \qquad \delta_g = -3.1159\e{-15},
-  \label{eq:ratio}
-\end{equation}
-where $\delta_g$ is the static gravitational correction.
-% src: docs/METHODOLOGY.md Sec. 1.3, docs/NOTATION.md Sec. 5;
-%      delta_g = Delta_W/c^2 with Delta_W = 280.04164 m^2/s^2 (levelling doc)
-All ratio arithmetic is carried out at 80-decimal precision
-(\texttt{Decimal80}, mirroring MATLAB \texttt{vpa(...,80)}), because a
-float64 absolute precision of about $2.6\e{-16}$ would destroy
-differences at the $10^{-18}$ level.
 
-The duration-weighted centre of the whole experiment is
-\begin{equation}
-  \Rdur = \frac{\sum_i n_i R_i}{\sum_i n_i},
-  \qquad \sum_i n_i = \num{1008912}.
-  \label{eq:rduration}
-\end{equation}
-
-\subsection{Headline result}
 The headline Yb/Sr result adopted here is the \emph{uncorrected}
 combination of the per-segment ratios (no tidal correction; the static
 geopotential is removed):
@@ -334,7 +313,7 @@ check).
 % src: clock_ratio/correlation_reanalysis_seg9_independent.json
 %      (raw_rederivation_max_rel_diff_vs_ratio_17seg = 0.0)
 
-\subsection{Uncertainty budget}
+
 Table~\ref{tab:budget} lists the uncertainty terms of the ratio. The
 dominant contributions are the Yb-clock evaluation ($1.1\e{-18}$) and
 the static gravitational redshift ($1\e{-18}$, from the
@@ -375,7 +354,7 @@ and remaining systematic contributions.
   % src: clock/clock_tidal_shift.csv (tidal term, rms ~1.999e-18)
 \end{table}
 
-\subsection{Segment scatter}
+
 Figure~\ref{fig:ratio} shows the per-segment deviations
 $y_i = R_i/R_{\mathrm{seg1}} - 1$. The duration-weighted mean is
 $-0.482\e{-18}$ (arithmetic mean $+0.102\e{-18}$) and the segment-to-segment
@@ -395,9 +374,13 @@ scatter is $\sigma(y_i) = 2.98\e{-18}$.
 \end{figure}
 
 % =====================================================================
-\section{Tidal gravitational-redshift detection}
-% =====================================================================
+
+
+% ===== Tidal detection =====
+
+\subsection{Tidal gravitational-redshift detection}
 \label{sec:detection}
+
 
 The tidal geopotential difference $\dW(t)$ changes the comparison
 frequency through Eq.~\eqref{eq:redshift}. Its segment-averaged rms
@@ -464,8 +447,11 @@ $r = +0.518$ ($p = 0.033$).
 \end{figure}
 
 % =====================================================================
-\section{Estimate of the tidal effect}
-% =====================================================================
+
+
+% ===== Tidal effect estimate =====
+
+\subsection{Estimate of the tidal effect}
 \label{sec:correction}
 
 The tidal term is small compared with the present uncertainty
@@ -475,7 +461,8 @@ carried as an uncertainty item (Table~\ref{tab:budget}). This section
 quantifies what the correction \emph{would} do, as an estimate of the
 effect.
 
-\subsection{Fixed-coefficient scenarios}
+
+\subsubsection{Fixed-coefficient scenarios}
 A tidal correction is meaningful only if the corrected residual is no
 longer systematically correlated with the tidal template. We consider
 two fixed-response scenarios rather than refitting the amplitude:
@@ -492,7 +479,8 @@ magnitude). These are \emph{estimates of the effect}, not corrections
 adopted into the result.
 % src: docs/METHODOLOGY.md Sec. 9.1
 
-\subsection{Direction self-check}
+
+\subsubsection{Direction self-check}
 With $A_{\mathrm{fix}}=-0.54$, the segment-mean correlation between the
 residual and the template collapses from $-0.134$ to $+0.003$, the
 signed Stouffer $z$ drops from $-5.16$ to $+0.39$ ($p=0.69$), and the
@@ -505,7 +493,8 @@ correlation, without relying on the not-yet-fixed comb/local-oscillator
 sign factor $s_{\mathrm{beat}}$.
 % src: docs/METHODOLOGY.md Sec. 9.5
 
-\subsection{Magnitude of the effect}
+
+\subsubsection{Magnitude of the effect}
 Had the tide been removed, the duration-weighted centre would shift
 upward from the baseline. Table~\ref{tab:rduration} lists the three
 scenarios; the shift is at most $+0.44\e{-18}$, i.e.\ comparable to but
@@ -546,7 +535,8 @@ below the present uncertainty; they quantify the effect rather than
 redefining the result.
 % src: clock_ratio/statistical_methods_tidal.json (synthesis.methods.R_wls)
 
-\subsection{Internal consistency}
+
+\subsubsection{Internal consistency}
 Table~\ref{tab:chi2} reports the reduced chi-square and the Birge ratio
 for the three scenarios. Removing the tide would reduce
 $\chi^{2}_{\mathrm{red}}$ from $5.424$ (raw) to $3.699$ (theory,
@@ -600,7 +590,8 @@ reference.
   % src: clock_ratio/statistical_methods_tidal.json (synthesis.methods)
 \end{table}
 
-\subsection{Dispersion reduction (effect estimate)}
+
+\subsubsection{Dispersion reduction (effect estimate)}
 The tidal signal is a slow ($\sim$12/24\,h) modulation and mainly affects
 the day-scale inter-segment scatter rather than the short-term
 within-segment OADEV. Using the inter-segment sample standard deviation
@@ -640,9 +631,14 @@ significant improvement.
 \end{figure}
 
 % =====================================================================
-\section{Comparison with other Yb/Sr determinations}
-% =====================================================================
+
+
+
+% ===== Comparison =====
+
+\subsection{Comparison with other Yb/Sr determinations}
 \label{sec:comparison}
+
 
 Table~\ref{tab:compare} places the present result next to the two
 existing Yb/Sr determinations at this accuracy. Our uncorrected centre
@@ -684,9 +680,13 @@ $5\e{-18}$ scale of interest.
 \end{table}
 
 % =====================================================================
-\section{Discussion and caveats}
+
+
 % =====================================================================
+\section{Discussion}
 \label{sec:caveats}
+% =====================================================================
+
 
 \subsection{Interpretation}
 \label{sec:interpretation}
@@ -715,6 +715,7 @@ systematic side: the clock evaluations and a campaign of joint
 geodetic levelling, rather than longer integration alone.
 % src: clock_ratio/statistical_methods_tidal.json (long_term_stability.raw.y_i_std_1e18=2.980);
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.5 (link/comb < 1e-19)
+
 
 \subsection{Contribution to the SI-second redefinition}
 \label{sec:si-second}
@@ -755,6 +756,7 @@ is therefore deliberately the conservative one: an independent ratio
 consistent with the existing determinations at the $5\e{-18}$ level, not
 a new most-precise value.
 
+
 \subsection{Applications and outlook}
 \label{sec:outlook}
 
@@ -774,6 +776,7 @@ multi-node network, with improved link and comb stability and dedicated
 joint levelling, is the natural next step.
 % Position per paper/physics_analysis/NATURE_FRAMEWORK.md Sec. 1 (honest-scope
 % assessment: "prototype node pair", not a coordinate frame).
+
 
 \subsection{Limitations}
 \label{sec:limitations}
@@ -803,6 +806,7 @@ support.
         question.
         % src: docs/METHODOLOGY.md Sec. 9.6
 \end{enumerate}
+
 
 \subsection{Consistency with earlier tidal-correction models}
 \label{sec:tidal-model}
@@ -850,6 +854,7 @@ difference.
 % src: clock_ratio/correlation_reanalysis.csv (pearson_r=0.517648, pearson_p=0.033314);
 % src: clock_ratio/correlation_reanalysis_seg9_independent.json
 
+
 \subsection{What the comparison establishes, and what it suggests}
 \label{sec:logic}
 
@@ -889,8 +894,10 @@ $\tau$.
 % src: clock_ratio/concatenated_stability_long.csv (emp/raw crossover at ~2e4 s)
 
 % =====================================================================
-\section{Conclusion}
-% =====================================================================
+
+
+\subsection{Conclusion}
+\label{sec:conclusion}
 We have reported an inter-city, cross-species optical-clock network:
 an IAPMST Yb clock in Wuhan and a USTC Sr clock in Shanghai, about
 $700$\,km apart, linked through a phase-stabilised telecom fibre. Over
@@ -918,63 +925,13 @@ sensing the time-varying gravitational potential---and as a prototype
 node pair for a future distributed chronometric reference frame.
 
 % =====================================================================
-\appendix
-\section{Statistical combination methods}
-% =====================================================================
-\label{app:methods}
 
-The inter-segment scatter exceeds what the per-segment uncertainties
-$u_i$ alone can explain, so the final ratio is obtained with a
-random-effect model rather than a fixed-effect average. We compare four
-combination methods on the same per-segment $(R_i, u_i)$ input, both for
-the uncorrected baseline and for the two tidal-correction scenarios:
-\begin{itemize}
-  \item \textbf{WLS (fixed effect)}: weights $w_i = 1/u_i^{2}$, no
-        extra scatter; the $u_i$ are taken at face value.
-  \item \textbf{Birge}: the $u_i$ are rescaled by a single factor
-        $B = \sqrt{\chi^{2}_{\mathrm{red}}}$.
-  \item \textbf{Mandel--Paule}: a common excess random variance
-        $\xi^{2}$ is added, $\sigma_i^{2} = u_i^{2} + \xi^{2}$, with
-        $\xi$ solved as a fixed value.
-  \item \textbf{Bayesian hierarchical}: the same observation model as
-        Mandel--Paule, but $\mu$ and $\xi$ are both inferred, so the
-        uncertainty of $\xi$ propagates into the final ratio through the
-        joint posterior (sampled by MCMC).
-\end{itemize}
-All four methods give consistent central values, and the statistical
-uncertainty grows monotonically from WLS through Birge and Mandel--Paule
-to Bayesian (Table~\ref{tab:appendix-methods}); the Bayesian result is
-therefore adopted as the primary statistical uncertainty. The direction
-of change under the tidal correction is the same for all four methods.
-% src: clock_ratio/statistical_methods_tidal.json (synthesis.methods)
-
-\begin{table}[t]
-  \centering
-  \caption{Centre and statistical uncertainty by combination method for
-  the uncorrected baseline, computed in this work's own re-run of the
-  per-segment ratios, in units of $10^{-18}$ (deviations relative
-  to the experiment-side WLS reference $1.207\,507\,039\,343\,337\,721\,3$).
-  The experiment-side analysis reports a slightly different Bayesian
-  statistical term ($0.75\times10^{-18}$; adopted for the headline
-  value), reflecting its own ratio pipeline.}
-  \label{tab:appendix-methods}
-  \begin{tabular}{lcc}
-    \toprule
-    Method & Centre deviation & Statistical $u$ \\
-    \midrule
-    WLS (fixed effect)       & $-0.503$ & $0.275$ \\
-    Mandel--Paule            & $-0.013$ & $0.755$ \\
-    Bayesian hierarchical    & $-0.016$ & $0.800$ \\
-    \bottomrule
-  \end{tabular}
-  % src: clock_ratio/statistical_methods_tidal.json
-  %      (scenarios.raw: u_wls=2.7476e-19, u_mp=7.5501e-19,
-  %       u_stat_bayes=8.0023e-19)
-\end{table}
 
 % =====================================================================
-\section{Full frequency-transfer chain}
-\label{app:freqchain}
+\section{Methods}
+% =====================================================================
+
+\subsection{Experimental setup and frequency transfer}
 % =====================================================================
 
 The main text keeps only the conceptual frequency chain. This appendix
@@ -1043,7 +1000,97 @@ $\mathrm{(Yb/Sr)}_{\mathrm{corr}} = \mathrm{(Yb/Sr)}_{\mathrm{raw}}
 %      delta_g = Delta_W/c^2
 
 % =====================================================================
-\section{Levelling determination of the geopotential difference}
+
+
+\subsection{Beat-to-ratio inversion}
+\label{app:methods-ratio}
+Let $b_i(t)$ be the longest valid beat sequence in segment $i$ and let
+$m$ be the global median of the plausible beat values. The segment beat
+deviation is
+\begin{equation}
+  \overline{\delta b}_i = \overline{b_i} - m .
+\end{equation}
+The Sr-side systematic shift $a_i$ and the Yb-side shift $b_{\mathrm{Yb}}$
+combine into the Dr coefficient, and the segment Yb/Sr ratio follows
+from the full inversion
+\begin{equation}
+  R_i = \bigl[\,\mathrm{ratio\_base}_i + \mathrm{Dr}_i\,\bigr]^{-1}
+        \times (1+\delta_g),
+  \qquad \delta_g = -3.1159\e{-15},
+  \label{eq:ratio}
+\end{equation}
+where $\delta_g$ is the static gravitational correction.
+% src: docs/METHODOLOGY.md Sec. 1.3, docs/NOTATION.md Sec. 5;
+%      delta_g = Delta_W/c^2 with Delta_W = 280.04164 m^2/s^2 (levelling doc)
+All ratio arithmetic is carried out at 80-decimal precision
+(\texttt{Decimal80}, mirroring MATLAB \texttt{vpa(...,80)}), because a
+float64 absolute precision of about $2.6\e{-16}$ would destroy
+differences at the $10^{-18}$ level.
+
+The duration-weighted centre of the whole experiment is
+\begin{equation}
+  \Rdur = \frac{\sum_i n_i R_i}{\sum_i n_i},
+  \qquad \sum_i n_i = \num{1008912}.
+  \label{eq:rduration}
+\end{equation}
+
+
+\subsection{Statistical combination methods}
+\label{app:methods}
+
+The inter-segment scatter exceeds what the per-segment uncertainties
+$u_i$ alone can explain, so the final ratio is obtained with a
+random-effect model rather than a fixed-effect average. We compare four
+combination methods on the same per-segment $(R_i, u_i)$ input, both for
+the uncorrected baseline and for the two tidal-correction scenarios:
+\begin{itemize}
+  \item \textbf{WLS (fixed effect)}: weights $w_i = 1/u_i^{2}$, no
+        extra scatter; the $u_i$ are taken at face value.
+  \item \textbf{Birge}: the $u_i$ are rescaled by a single factor
+        $B = \sqrt{\chi^{2}_{\mathrm{red}}}$.
+  \item \textbf{Mandel--Paule}: a common excess random variance
+        $\xi^{2}$ is added, $\sigma_i^{2} = u_i^{2} + \xi^{2}$, with
+        $\xi$ solved as a fixed value.
+  \item \textbf{Bayesian hierarchical}: the same observation model as
+        Mandel--Paule, but $\mu$ and $\xi$ are both inferred, so the
+        uncertainty of $\xi$ propagates into the final ratio through the
+        joint posterior (sampled by MCMC).
+\end{itemize}
+All four methods give consistent central values, and the statistical
+uncertainty grows monotonically from WLS through Birge and Mandel--Paule
+to Bayesian (Table~\ref{tab:appendix-methods}); the Bayesian result is
+therefore adopted as the primary statistical uncertainty. The direction
+of change under the tidal correction is the same for all four methods.
+% src: clock_ratio/statistical_methods_tidal.json (synthesis.methods)
+
+\begin{table}[t]
+  \centering
+  \caption{Centre and statistical uncertainty by combination method for
+  the uncorrected baseline, computed in this work's own re-run of the
+  per-segment ratios, in units of $10^{-18}$ (deviations relative
+  to the experiment-side WLS reference $1.207\,507\,039\,343\,337\,721\,3$).
+  The experiment-side analysis reports a slightly different Bayesian
+  statistical term ($0.75\times10^{-18}$; adopted for the headline
+  value), reflecting its own ratio pipeline.}
+  \label{tab:appendix-methods}
+  \begin{tabular}{lcc}
+    \toprule
+    Method & Centre deviation & Statistical $u$ \\
+    \midrule
+    WLS (fixed effect)       & $-0.503$ & $0.275$ \\
+    Mandel--Paule            & $-0.013$ & $0.755$ \\
+    Bayesian hierarchical    & $-0.016$ & $0.800$ \\
+    \bottomrule
+  \end{tabular}
+  % src: clock_ratio/statistical_methods_tidal.json
+  %      (scenarios.raw: u_wls=2.7476e-19, u_mp=7.5501e-19,
+  %       u_stat_bayes=8.0023e-19)
+\end{table}
+
+% =====================================================================
+
+
+\subsection{Levelling determination of the geopotential difference}
 \label{app:levelling}
 % =====================================================================
 
@@ -1105,7 +1152,36 @@ $\pm0.085\ \mathrm{m^{2}/s^{2}}$.
 \end{table}
 
 % =====================================================================
-\section{Per-segment data}
+
+
+\subsection{Tidal analysis}
+\label{app:tidal}
+
+The tidal beat template is formed from the professional $30$\,s
+geopotential-difference series, linearly interpolated to the retained
+beat timestamps after shifting the Beijing-time beat windows to UTC. It
+is normalised to the $1550$\,nm transfer frequency,
+$h(t) = F_{1550}\,\dW(t)/c^{2}$ with
+$F_{1550} = N_{1550}^{\mathrm{WH}} f_{\mathrm{rep}} = 193.3992$\,THz,
+\emph{not} to $1/\mathrm{COEF}$ (which would be larger by the Yb/Sr
+factor $\approx 1.2075$ and would bias $A$ low by that factor). Within
+each segment the beat and the template are passed through a $1200$\,s
+triangular window (600\,s step) and, after demeaning, fitted with
+$\mathrm{beat} = A\,\mathrm{tide} + \mathrm{noise}$,
+$A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. The
+cross-segment statistics combine the per-segment amplitudes by precision
+weighting, together with the sign-consistency (binomial), Stouffer
+(sign-agnostic $|z|$) and Fisher combinations.
+% src: docs/METHODOLOGY.md Sec. 5.1-5.3, Sec. 9
+
+For the fixed-coefficient scenarios, the corrected beat is
+$b_{\mathrm{corr}}(t) = b_{\mathrm{raw}}(t) - A\,h(t)$ with $A=-1$
+(theory) or $A=-0.54$ (empirical); the ratio chain is then re-inverted and
+the four combination methods re-applied. The direction self-check and
+the dispersion reduction are reported in the Results.
+
+
+\subsection{Per-segment data}
 \label{app:segments}
 % =====================================================================
 
@@ -1159,7 +1235,9 @@ lets the reproducibility of the ratio be checked directly.
 % src: experiment-side manuscript (光钟比对论文 hj.docx, supplementary S2)
 
 % =====================================================================
-\section{Statistical model details}
+
+
+\subsection{Statistical model details}
 \label{app:stats}
 % =====================================================================
 
@@ -1202,6 +1280,8 @@ posterior.
 % src: experiment-side manuscript (光钟比对论文 hj.docx, supplementary S3.4)
 
 % =====================================================================
+
+
 \section*{Author contributions}
 % =====================================================================
 % PLACEHOLDER: to be completed by the collaboration before submission,
@@ -1211,12 +1291,16 @@ posterior.
 % supervision, project administration, funding acquisition).
 
 % =====================================================================
+
+
 \section*{Competing interests}
 % =====================================================================
 % PLACEHOLDER: to be completed before submission. Declare any competing
 % financial and non-financial interests in relation to this work.
 
 % =====================================================================
+
+
 \section*{Acknowledgements}
 % =====================================================================
 % PLACEHOLDER: to be completed before submission. List funding sources,
@@ -1224,6 +1308,8 @@ posterior.
 % the frequency combs, and the professional tidal series.
 
 % =====================================================================
+
+
 \section*{Data availability}
 % =====================================================================
 The analysis code and derived numeric artifacts are available in the
@@ -1237,6 +1323,8 @@ provided as machine-readable JSON and CSV files.
 % (LICENSE file at repository root).
 
 % =====================================================================
+
+
 \bibliographystyle{plain}
 \bibliography{refs}
 % =====================================================================

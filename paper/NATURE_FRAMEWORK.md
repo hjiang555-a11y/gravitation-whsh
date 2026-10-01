@@ -78,30 +78,38 @@ Redefining the SI second requires frequency ratios of optical clocks measured in
 
 ---
 
-## 3. 论文框架（`main.tex` 当前 8 节 + 4 附录）
+## 3. 论文框架（`main.tex`，Nature Article 版：Introduction + Results + Discussion + Methods）
 
-### 3.1 主文分节
+> **组织原则（Nature Article）**：知识点保留在正文（Results/Discussion），仅**程序性细节**下沉到
+> Methods。故主结果（比值、不确定度预算、潮汐检出、潮汐效应、三方对比）**一律留在正文**，
+> 不下沉；只有推导配方（反演方程、四法合并、水准、潮汐拟合、统计模型）在 Methods。
+> 主文 ~1700 词（Introduction + Results + Discussion），Methods 另计。
+
+### 3.1 正文分节（Main text）
 
 | 节 | 内容与逻辑 | 图/表 |
 |---|---|---|
 | **Abstract** | 见 §1 | — |
-| **1. Introduction**（4 段）| ①光钟精度→引力红移；②网络是使能基础设施、双重目标（物理+秒定义）、CCTF 判据、Yb/Sr 仅一例达标；③光纤链路史（Sr–Sr 1415 km→BACON→NIST→欧洲网络→十钟六国）+ **新颖性缺口**（无异地异种 ≤5×10⁻¹⁸）；④本文网络 + 贡献清单 | — |
-| **2. Experimental setup and data**（2/3 合并）| 两钟、光纤链路（环回净化）、光梳链；静态势差 ΔW；17 段筛选规则；三战役、重启复现性、台风抖动、20% 占空比 | 图 1 入 ED；表 C（逐段）|
-| **3. Clock-ratio determination** | 3.1 拍频→比值反演（Decimal80）；**3.2 主结果（未修正）+ 内部重算**；3.3 **不确定度预算（含潮汐项，总值为 provisional）**；3.4 段间散布 | **Table 1**（预算）；**Fig 1** |
-| **4. Tidal gravitational-redshift detection** | 模板归一化（`F_1550` 非 `1/COEF`）；段内拟合；跨段合并；`6.4σ`、`14/17`、Stouffer、Fisher、`A=−0.5397±0.0843`；段均值相关 `r=+0.518` | **Fig 2** |
-| **5. Estimate of the tidal effect** | 5.1 固定系数情景（theory/empirical）；5.2 方向自检；5.3 幅度；5.4 内部一致性（`χ²`）；5.5 离散度降（`13%`）| **Table 2/3/4**；**Fig 3/4** |
-| **6. Comparison with other Yb/Sr determinations** | 三方并列表 + 偏差（−1.7/+3.3）；三方 ≤5×10⁻¹⁸；口径不敏感（≤0.7×10⁻¹⁸）| **Table 5** |
-| **7. Discussion and caveats** | 7.1 阐释；**7.2 秒定义贡献（含新颖性宣称）**；7.3 应用与展望；7.4 局限（4 条）；7.5 早期潮汐模型一致性；7.6 段 9 敏感性；7.7 两条逻辑结论 | ED 表 |
-| **8. Conclusion** | 主结果 + 总不确定度（provisional）+ 潮汐检出 + 双重用途定位 | — |
+| **Introduction**（无编号）| ①光钟精度→引力红移；②网络是使能基础设施、双重目标（物理+秒定义）、CCTF 判据、Yb/Sr 仅一例达标；③光纤链路史（Sr–Sr 1415 km→BACON→NIST→欧洲网络→十钟六国）+ **新颖性缺口**（无异地异种 ≤5×10⁻¹⁸）；④本文网络 + 贡献清单 | — |
+| **Results** | 见下 5 个子节 | Fig 1–4；Table 1–5 |
+| ├ 2.1 Network and observation campaign | 两钟两城、光纤链路（环回净化）、光梳链；17 段筛选；三战役、重启复现性、台风抖动、20% 占空比 | 逐段表入 Methods |
+| ├ 2.2 Clock-ratio determination | **主结果（未修正）+ 内部重算**；**不确定度预算（含潮汐项，总值 provisional）**；段间散布 | **Table 1**（预算）；**Fig 1** |
+| ├ 2.3 Tidal gravitational-redshift detection | 模板归一化（`F_1550` 非 `1/COEF`）；段内拟合；跨段合并；`6.4σ`、`14/17`、Stouffer、Fisher、`A=−0.5397±0.0843`；段均值相关 `r=+0.518` | **Fig 2** |
+| ├ 2.4 Estimate of the tidal effect | 固定系数情景（theory/empirical）；方向自检；幅度；内部一致性（`χ²`）；离散度降（`13%`）| **Table 2/3/4**；**Fig 3/4** |
+| └ 2.5 Comparison with other Yb/Sr determinations | 并列表 + 偏差（NIST −1.7；欧洲 +3.3，注明其统计不确定度更大，不作一致性主张）；口径不敏感（≤0.7×10⁻¹⁸）| **Table 5** |
+| **Discussion** | 阐释；秒定义贡献（含新颖性宣称）；应用与展望；局限；早期潮汐模型一致性；两条逻辑结论；**Conclusion 折为末段** | ED 表 |
 
-### 3.2 附录（Supplementary）
+### 3.2 Methods（程序性细节）
 
-| 附录 | 内容 |
+| 小节 | 内容 |
 |---|---|
-| **A. Statistical combination methods** | WLS/Birge/Mandel–Paule/贝叶斯四法；表 7 |
-| **B. Full frequency-transfer chain** | 频率关系式 + AOM 表（表 8）|
-| **C. Per-segment data** | 17 段 `n_i` 表（表 9，合计 1 008 912）|
-| **D. Statistical model details** | 观测模型、贝叶斯后验、MCMC、Gelman–Rubin `R̂=1.000` |
+| **Experimental setup and frequency transfer** | 频率关系式 + AOM 表 |
+| **Beat-to-ratio inversion** | 拍频→比值反演方程（Decimal80）|
+| **Statistical combination methods** | WLS/Birge/Mandel–Paule/贝叶斯四法 |
+| **Levelling determination of the geopotential difference** | 1113 km 一等水准 + 五部分位差表 |
+| **Tidal analysis** | 模板归一化、1200-s 拟合、固定系数情景配方 |
+| **Per-segment data** | 17 段 `n_i` 表（合计 1 008 912）|
+| **Statistical model details** | 观测模型、贝叶斯后验、MCMC、Gelman–Rubin `R̂=1.000` |
 
 ### 3.3 图表清单
 
@@ -109,7 +117,7 @@ Redefining the SI second requires frequency ratios of optical clocks measured in
 - **Fig 2** — 逐段潮汐幅度 `A_i` + 合并值 `A=−0.54±0.08`。
 - **Fig 3** — 长期稳定度 `σ(y_i)` 与 `χ²_red`（三情景）。
 - **Fig 4** — 四方法中心值 vs 实验方 WLS / NIST 参考。
-- **Table 1** — 系统不确定度预算（**含潮汐项**）。
+- **Table 1** — 不确定度项（**含潮汐项**）。
 - **Table 2** — `R_duration` 三情景；**Table 3** — `χ²_red`/Birge；**Table 4** — 四方法中心值。
 - **Table 5** — 三方 Yb/Sr 测定对比。
 
