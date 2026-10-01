@@ -225,10 +225,17 @@ shifted by $-8$\,h before the tidal template is evaluated.
 % src: experiment-side manuscript (光钟比对论文 hj.docx, Sec. 2)
 
 The static geopotential difference between the two stations,
-$\dW = 280.049\pm0.083\ \mathrm{m^{2}/s^{2}}$ (a level difference of
-$\approx 28.6$\,m, with Wuhan higher), is obtained by high-precision
-spirit levelling and is applied as a constant correction in the ratio
-calculation. The time-varying tidal geopotential difference is taken
+$\dW = 280.042\pm0.085\ \mathrm{m^{2}/s^{2}}$ (with Wuhan higher), is
+obtained by high-precision spirit levelling over the two clock sites and
+is applied as a constant correction in the ratio calculation. It is
+determined along an $\approx 1113$\,km first-order levelling line between
+the Wuhan benchmark (WS-03) and the Shanghai benchmark (WS-01), with
+simultaneous gravimetry; the benchmark-to-clock-platform and
+platform-to-atom segments are obtained by trigonometrical heighting and
+from the clock design parameters (see Methods).
+% src: paper/武汉-上海水准测量0930R1.docx (WS-03--WS-01 = 296.33022 m^2/s^2;
+%      total 280.04164 m^2/s^2, sigma 0.085 m^2/s^2)
+The time-varying tidal geopotential difference is taken
 from a professional 30\,s ``combined difference'' series (solid Earth
 tide plus ocean loading), with the same direction convention
 $\dW(t) = W(\mathrm{WUHN},t) - W(\mathrm{SHAN},t)$.
@@ -277,11 +284,12 @@ from the full inversion
 \begin{equation}
   R_i = \bigl[\,\mathrm{ratio\_base}_i + \mathrm{Dr}_i\,\bigr]^{-1}
         \times (1+\delta_g),
-  \qquad \delta_g = -3.116\e{-15},
+  \qquad \delta_g = -3.1159\e{-15},
   \label{eq:ratio}
 \end{equation}
 where $\delta_g$ is the static gravitational correction.
-% src: docs/METHODOLOGY.md Sec. 1.3, docs/NOTATION.md Sec. 5
+% src: docs/METHODOLOGY.md Sec. 1.3, docs/NOTATION.md Sec. 5;
+%      delta_g = Delta_W/c^2 with Delta_W = 280.04164 m^2/s^2 (levelling doc)
 All ratio arithmetic is carried out at 80-decimal precision
 (\texttt{Decimal80}, mirroring MATLAB \texttt{vpa(...,80)}), because a
 float64 absolute precision of about $2.6\e{-16}$ would destroy
@@ -330,7 +338,7 @@ check).
 Table~\ref{tab:budget} lists the uncertainty terms of the ratio. The
 dominant contributions are the Yb-clock evaluation ($1.1\e{-18}$) and
 the static gravitational redshift ($1\e{-18}$, from the
-$\pm0.083\ \mathrm{m^{2}/s^{2}}$ levelling uncertainty); the Sr-clock
+$\pm0.085\ \mathrm{m^{2}/s^{2}}$ levelling uncertainty); the Sr-clock
 term is $9.2\e{-19}$, the fibre and comb contributions are each below
 $1\e{-19}$, and the Bayesian statistical term is $0.75\e{-18}$. The
 tidal gravitational-redshift term is carried here as an uncertainty item
@@ -1026,12 +1034,75 @@ the link and comb chains.
 \end{table}
 
 The static geopotential correction is applied at the ratio level: with
-the Shanghai--Wuhan potential difference of
-$280.049\ \mathrm{m^{2}/s^{2}}$, the residual Yb/Sr fractional offset is
-$-3.116\e{-15}$, compensated as
+the Wuhan--Shanghai potential difference of
+$280.04164\ \mathrm{m^{2}/s^{2}}$, the residual Yb/Sr fractional offset is
+$-3.1159\e{-15}$, compensated as
 $\mathrm{(Yb/Sr)}_{\mathrm{corr}} = \mathrm{(Yb/Sr)}_{\mathrm{raw}}
-\times (1+\delta_g)$ with $\delta_g = -3.116\e{-15}$.
-% src: clock/params.json (DELTA_G); docs/METHODOLOGY.md Sec. 1.3
+\times (1+\delta_g)$ with $\delta_g = -3.1159\e{-15}$.
+% src: paper/武汉-上海水准测量0930R1.docx (Delta_W = 280.04164 m^2/s^2);
+%      delta_g = Delta_W/c^2
+
+% =====================================================================
+\section{Levelling determination of the geopotential difference}
+\label{app:levelling}
+% =====================================================================
+
+To fix the static gravitational-redshift correction, the geopotential
+difference between the two clocks' atomic transition positions was
+determined by first-order spirit levelling together with simultaneous
+gravimetry. A levelling line of about $1113$\,km was run between the
+Wuhan benchmark WS-03 (at IAPMST) and the Shanghai benchmark WS-01 (at
+USTC), comprising six first-order routes through Ezhou, Huangshi,
+Huanggang, Lu'an, Hefei, Wuhu, Guangde and Suzhou. Levelling was
+performed with digital levels (Sokkia SDL1X, Trimble DiNi03) and
+bar-coded invar staffs, with sight lengths below $30$\,m and a
+forward--back sight-length difference below $1.0$\,m; gravity was
+observed at every levelling point with two relative gravimeters. The
+levelled normal heights were converted to orthometric heights for the
+geopotential integration. The geopotential difference between the two
+benchmarks follows from
+$\dW_{AB} = -\sum_i g_i\,\Delta H_i$, where $g_i$ is the mean gravity
+and $\Delta H_i$ the orthometric height difference of the $i$-th
+segment.
+
+The two remaining segments connect each benchmark to the corresponding
+atomic transition position. The benchmark-to-optical-platform height
+difference was obtained by trigonometrical heighting (total station),
+and the platform-to-atom segment from the clock design parameters. The
+five partial geopotential differences are listed in
+Table~\ref{tab:levelling}; summed, they give
+$\dW = 280.04164\ \mathrm{m^{2}/s^{2}}$ between the two atomic
+transition positions.
+
+The levelling precision, expressed as the accidental mean error per
+kilometre, is $0.255$\,mm, better than the $0.45$\,mm limit for
+first-order levelling. Propagating the levelling, trigonometrical-heighting
+and platform-to-atom terms yields a total height precision of
+$\pm0.0086$\,m, and hence a geopotential-difference uncertainty of
+$\pm0.085\ \mathrm{m^{2}/s^{2}}$.
+% src: paper/武汉-上海水准测量0930R1.docx (Secs. 1-3; Delta_W = 280.04164 m^2/s^2,
+%      sigma(W) = 0.085 m^2/s^2)
+
+\begin{table}[t]
+  \centering
+  \caption{Partial geopotential differences between the Yb (Wuhan) and
+  Sr (Shanghai) clocks, in $\mathrm{m^{2}/s^{2}}$.}
+  \label{tab:levelling}
+  \begin{tabular}{lr}
+    \toprule
+    Segment & $\Delta W$ ($\mathrm{m^{2}/s^{2}}$) \\
+    \midrule
+    Yb atom $\to$ Yb optical platform        & $+2.65399$ \\
+    Yb platform $\to$ benchmark WS-03        & $-14.51715$ \\
+    Benchmark WS-03 $\to$ benchmark WS-01    & $+296.33022$ \\
+    Benchmark WS-01 $\to$ Sr optical platform & $-1.47246$ \\
+    Sr platform $\to$ Sr atom                & $-2.95296$ \\
+    \midrule
+    Yb atom $\to$ Sr atom (total)            & $+280.04164$ \\
+    \bottomrule
+  \end{tabular}
+  % src: paper/武汉-上海水准测量0930R1.docx (Table 1)
+\end{table}
 
 % =====================================================================
 \section{Per-segment data}
