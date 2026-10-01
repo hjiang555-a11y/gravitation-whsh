@@ -120,12 +120,13 @@ clocks are linked into a single cooperative instrument
 Fibre links have made such comparisons possible. Ultrastable light can
 now be transferred over hundreds to thousands of kilometres with added
 noise below the level of the clocks themselves
-\cite{schioppo2022cavities}, enabling inter-city links
-\cite{lisdat2016network}, multi-species ratio measurements
+\cite{schioppo2022cavities, chen2026dissemination}, enabling inter-city
+links \cite{lisdat2016network}, multi-species ratio measurements
 \cite{beloy2021bacon}, and, most recently, a fibre network spanning
-several countries \cite{pizzocaro2026european}; transportable clocks and
-satellite links have extended comparisons further
-\cite{laurent2015aces, lindvall2025coordinated}. Beyond metrology, such
+several countries \cite{pizzocaro2026european}; transportable clocks,
+satellite links and free-space dissemination have extended comparisons
+further \cite{laurent2015aces, lindvall2025coordinated,
+shen2022freespace}. Beyond metrology, such
 networks also probe fundamental physics, from gravitational waves
 \cite{kolkowitz2016gw} to dark matter and topological defects
 \cite{derevianko2014topological}. Yet the comparisons
@@ -992,6 +993,55 @@ The duration-weighted centre of the whole experiment is
   \qquad \sum_i n_i = \num{1008912}.
   \label{eq:rduration}
 \end{equation}
+
+
+\subsection{Systematic frequency shifts}
+\label{app:systematics}
+
+The ratio inversion removes the known systematic shifts of both clocks
+through the coefficients $a_i$ (Sr side) and $b$ (Yb side). The Yb-side
+correction is a fixed value, $b_{\mathrm{Yb}} = (5.3 - 7.0)\times10^{-18}
+= -1.7\e{-18}$, entering as $\mathrm{coef}_{1156} = (1+b_{\mathrm{Yb}})/2$.
+The Sr-side correction is segment-dependent and is the sum of five terms,
+\begin{equation}
+  a_i = a_{\mathrm{rou},i} + a_{\mathrm{AC},i} + a_{\mathrm{SM},i}
+        + a_{\mathrm{air},i} + a_{\mathrm{BBR},i},
+  \qquad \mathrm{coef}_{1397,i} = \tfrac{1}{2}(1+a_i),
+  \label{eq:shifta}
+\end{equation}
+where $a_{\mathrm{rou}}$ is the lattice light-shift, $a_{\mathrm{AC}}$
+the ac-Stark shift ($+7.444\e{-18}$ in the first campaign, $+8.929\e{-18}$
+in the second), $a_{\mathrm{SM}}$ the second-order Zeeman shift
+($\approx-1.78\e{-16}$ in the first campaign; $-8.925\e{-17}$ in segment 9
+and zero in segments 10--14), $a_{\mathrm{air}}$ the air-refractivity
+correction ($-6.7\e{-19}$) and $a_{\mathrm{BBR}}$ the blackbody-radiation
+shift (zero). Segments 15--17 reuse the constant $a_i$ of segments
+12--14. The per-segment values are stored in the repository
+(\texttt{clock/params.json}); the anomalous \texttt{a\_SM} of segment~9 is
+retained as delivered, without adjustment.
+% src: docs/NOTATION.md Sec. 5.1, clock/params.json (shift_a)
+
+
+\subsection{Per-segment uncertainties}
+\label{app:ui}
+
+Each segment is assigned a statistical uncertainty from the overlapping
+Allan deviation (OADEV) of its fractional frequency series
+$\delta f/F_{1550}$. Over the white-frequency-noise range
+$128\,\mathrm{s} \le \tau \le T/4$ the OADEV follows
+$\sigma_y(\tau) \propto \tau^{-1/2}$; a linear fit of
+$\log\sigma_y$ against $\log\tau$ is extrapolated to the segment length
+$T$ to give $\sigma_y(T)$, and
+\begin{equation}
+  u_i = \sigma_y(T)\,R_i
+  \label{eq:ui}
+\end{equation}
+is the absolute segment uncertainty on $R_i$.
+% src: docs/METHODOLOGY.md Sec. 2.2-2.3
+A flicker floor beyond $\tau \sim 4096$\,s makes this extrapolation
+underestimate the $u_i$ (see Discussion), which is why the four
+combination methods are compared rather than a single $u_i$-weighted mean
+being adopted, and why the excess-scatter term $\xi$ is required.
 
 
 \subsection{Statistical combination methods}
