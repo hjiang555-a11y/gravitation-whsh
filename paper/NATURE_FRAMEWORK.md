@@ -37,7 +37,7 @@
 
 ---
 
-## 1. 摘要（Nature 规范：单段、无引用、无公式，~165 词）
+## 1. 摘要（Nature 规范：单段、无引用、无公式，~182 词）
 
 > **Nature 摘要纪律**：单一连续段落；无小标题；**无引用命令**；**无 display 公式**
 > （数值内联）；~150–200 词；五段式流：背景 → 缺口 → 本文做法 → 发现 → 意义。
@@ -49,14 +49,15 @@
 >    "without a tidal correction"（作者指示：无需强调）。
 > ② **总不确定度占位 `X×10⁻¹⁸`**——部分不确定度项（如 tide model、附加系统项）仍在评估，
 >    会影响总值，故暂不填数字，待定稿再补（勿以 2.8 替代）。
-> ③ **删除欧洲网络比对**——其统计不确定度过大，表面相符属巧合，不作一致性主张；
->    仅表述"与最新 NIST–JILA 结果在 10⁻¹⁸ 量级相符"。本值在完整误差评估后可能在 10⁻¹⁸ 量级变动。
+> ③ **仅与 NIST–JILA 比对**——欧洲网络统计不确定度过大，不作一致性主张；改用
+>    "To our knowledge this is the first cross-species frequency ratio at the 5×10⁻¹⁸
+>    level measured between clocks at different locations"（主宣称）。
 
 ### English（= `main.tex` 当前摘要）
 
-Redefining the SI second requires frequency ratios of optical clocks measured independently by different laboratories, and agreeing to within 5×10⁻¹⁸. Many optical clocks report self-evaluated uncertainties meeting this level, but such claims still await independent verification, and no comparison between clocks in different cities has reached this level. Here we compare an IAPMST ytterbium clock in Wuhan with a USTC strontium clock in Shanghai, about 700 km apart, through a 1350 km fibre link, and measure the Yb/Sr frequency ratio from 58 days (280 h) of coherent operation. Treating the tidal gravitational-redshift term as an uncertainty item, we find a Bayesian statistical uncertainty of 0.75×10⁻¹⁸ and a total uncertainty of X×10⁻¹⁸, giving 1.207 507 039 343 337 721 3(23), which agrees with the latest NIST–JILA result at the 10⁻¹⁸ level. On the same data the tidal redshift modulation is resolved at 6.4σ; removing it would lower the reduced chi-square from 5.42 to 3.70 (32%). An inter-city, cross-species clock network thus both supports the redefinition of the SI second and senses the time-varying gravitational potential at the centimetre level.
+Redefining the SI second requires frequency ratios of optical clocks measured independently by different laboratories, and agreeing to within 5×10⁻¹⁸. Many optical clocks report self-evaluated uncertainties meeting this level, but such claims still await independent verification, and no comparison between clocks in different cities has reached this level. Here we compare an IAPMST ytterbium clock in Wuhan with a USTC strontium clock in Shanghai, about 700 km apart, through a 1350 km fibre link, and measure the Yb/Sr frequency ratio from 58 days (280 h) of coherent operation. Treating the tidal gravitational-redshift term as an uncertainty item, we find a Bayesian statistical uncertainty of 0.75×10⁻¹⁸ and a total uncertainty of X×10⁻¹⁸, giving 1.207 507 039 343 337 721 3(23), whose central value differs from the latest NIST–JILA result by less than 5×10⁻¹⁸. To our knowledge this is the first cross-species frequency ratio at the 5×10⁻¹⁸ level measured between clocks at different locations. On the same data the tidal redshift modulation is resolved at 6.4σ; removing it would lower the reduced chi-square from 5.42 to 3.70 (32%). An inter-city, cross-species clock network thus both supports the redefinition of the SI second and senses the time-varying gravitational potential at the centimetre level.
 
-*（~168 words；五段式：背景 → 缺口 → 做法 → 发现 → 意义）*
+*（~180 words；五段式：背景 → 缺口 → 做法 → 发现 → 意义）*
 
 ### 中文版
 
@@ -148,10 +149,11 @@ Redefining the SI second requires frequency ratios of optical clocks measured in
 
 ---
 
-## 6. 参考文献（`paper/refs.bib`，17 篇，全部被引且解析）
+## 6. 参考文献（`paper/refs.bib`，20 篇，全部被引且解析）
 
 `aeppli2026nist` · `pizzocaro2026european` · `beloy2021bacon` · `arnold2026lu` ·
 `zhang2026ca` · `grotti2018geodesy` · `mcgrew2018geodesy` · `takamoto2020redshift` ·
 `schioppo2022cavities` · `dimarcq2024roadmap` · `riehle2017networks` ·
 `riehle2015redefinition` · `lisdat2016network` · `lindvall2025coordinated` ·
-`derevianko2014topological` · `wcislo2018global` · `sanner2019lorentz`
+`derevianko2014topological` · `wcislo2018global` · `sanner2019lorentz` ·
+`laurent2015aces` · `kolkowitz2016gw` · `roberts2017domain`
