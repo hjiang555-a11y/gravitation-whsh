@@ -12,7 +12,6 @@ figs/         # manuscript figures (raster PNG)
   2.png       # Fig. 2  segment stability and the 17 per-segment ratios
   3.png       # Fig. 3  tidal influence and its correlation
   4.png       # Fig. 4  comparison with previous Yb/Sr determinations
-  figS1_tidal_shift.png     # Methods: session tidal redshift shift dW/c^2
   figS2_correlation.png     # Methods: segment-mean y_i vs tidal shift
   figS3_stability_long.png  # Methods: spliced concatenated stability, long tau
 ```
@@ -39,10 +38,10 @@ pdflatex main.tex
 ## Notes
 
 - The main-text figures are raster PNGs (`figs/1.png`--`4.png`) and the
-  three Methods figures are `figs/figS1_tidal_shift.png`,
-  `figs/figS2_correlation.png` and `figs/figS3_stability_long.png`, all
-  de-interlaced so pdfTeX embeds them without the large-interlaced-PNG
-  memory warning. Vector-PDF variants remain in `clock_ratio/paper_figs/`.
+  two Methods figures are `figs/figS2_correlation.png` and
+  `figs/figS3_stability_long.png`, all de-interlaced so pdfTeX embeds them
+  without the large-interlaced-PNG memory warning. Vector-PDF variants
+  remain in `clock_ratio/paper_figs/`.
 - All bibliography entries are cited and resolve; no undefined references.
 - Placeholders still needing author input are marked in `main.tex` with
   `% PLACEHOLDER:` (Author contributions, Competing interests,
