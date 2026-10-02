@@ -8,10 +8,10 @@ This folder is ready to upload to Overleaf as-is.
 main.tex      # the manuscript (figure paths already flattened to figs/)
 refs.bib      # bibliography (26 entries)
 figs/         # the four manuscript figures (raster PNG)
-  1.png       # Fig. 1  per-segment clock-ratio deviation y_i
-  2.png       # Fig. 2  per-segment tidal amplitude A_i
-  3.png       # Fig. 3  long-term stability sigma(y_i) and chi2_red
-  4.png       # Fig. 4  four-method centres vs experiment WLS / NIST
+  1.png       # Fig. 1  experimental setup (Wuhan Yb - Shanghai Sr fibre link)
+  2.png       # Fig. 2  segment stability and the 17 per-segment ratios
+  3.png       # Fig. 3  tidal influence and its correlation
+  4.png       # Fig. 4  comparison with previous Yb/Sr determinations
 ```
 
 ## How to upload

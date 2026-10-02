@@ -170,9 +170,10 @@ The experiment compares a Yb lattice clock at IAPMST in Wuhan
 species about $700$\,km apart. They are joined by a phase-stabilised
 $1550$\,nm fibre link of single-pass optical length $\approx1350$\,km,
 with loop-back purification at each repeater so that the link
-instability stays below the clock noise beyond $\sim100$\,s (Methods).
-The raw observable is the out-of-loop beat note between the received
-carrier and the local comb, sampled at $1$\,s.
+instability stays below the clock noise beyond $\sim100$\,s
+(Fig.~\ref{fig:setup}; Methods). The raw observable is the out-of-loop
+beat note between the received carrier and the local comb, sampled at
+$1$\,s.
 
 {\sloppy
 Over a $58$-day campaign (2026-06-29 to 2026-08-26), 17 uninterrupted
@@ -195,6 +196,17 @@ ocean loading.
 % src: docs/METHODOLOGY.md Sec. 0.1, docs/NOTATION.md Sec. 6, 8, 9;
 % src: clock_ratio/ratio_17seg.csv; clock_ratio/tidal_correction/summary.json;
 % src: paper/武汉-上海水准测量0930R1.docx; experiment-side manuscript (光钟比对论文 hj.docx, Sec. 2-3)
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{figs/1.png}
+  \caption{Experimental setup. The IAPMST Yb lattice clock in Wuhan and
+  the USTC Sr lattice clock in Shanghai are linked by a phase-stabilised
+  $1550$\,nm fibre of single-pass optical length $\approx1350$\,km, with
+  loop-back purification at each repeater; the out-of-loop beat note
+  between the received carrier and the local comb is the raw observable.}
+  \label{fig:setup}
+\end{figure}
 
 % =====================================================================
 
@@ -262,8 +274,10 @@ evaluation, the total fractional uncertainty is quoted as provisional.
 \end{table}
 
 
-Figure~\ref{fig:ratio} shows the per-segment deviations
-$y_i = R_i/R_{\mathrm{seg1}} - 1$. The duration-weighted mean is
+Figure~\ref{fig:ratio} shows the clock-ratio data behind
+Eq.~\eqref{eq:result-bayes}: the 17 per-segment ratios $R_i$ and the
+segment-to-segment stability. In terms of the deviations
+$y_i = R_i/R_{\mathrm{seg1}} - 1$, the duration-weighted mean is
 $-0.482\e{-18}$ (arithmetic mean $+0.102\e{-18}$) and the segment-to-segment
 scatter is $\sigma(y_i) = 2.98\e{-18}$.
 % src: clock_ratio/correlation_reanalysis.csv
@@ -273,9 +287,11 @@ scatter is $\sigma(y_i) = 2.98\e{-18}$.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.95\linewidth]{figs/1.png}
-  \caption{Per-segment clock-ratio deviation $y_i$ with the
-  duration-weighted mean.}
+  \includegraphics[width=0.95\linewidth]{figs/2.png}
+  \caption{Clock-ratio data. The segment stability and the 17 per-segment
+  Yb/Sr ratios $R_i$ give the deviation $y_i = R_i/R_{\mathrm{seg1}} - 1$
+  whose duration-weighted mean is $-0.482\e{-18}$ and whose
+  segment-to-segment scatter is $\sigma(y_i) = 2.98\e{-18}$.}
   \label{fig:ratio}
 \end{figure}
 
@@ -324,9 +340,13 @@ $p=0.033$).
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.95\linewidth]{figs/2.png}
-  \caption{Per-segment tidal amplitude $A_i$ and the combined value
-  $A=-0.54\pm0.08$.}
+  \includegraphics[width=0.95\linewidth]{figs/3.png}
+  \caption{Tidal influence and its correlation. The tidal modulation of
+  the comparison frequency is resolved at $6.4\sigma$ across the 17
+  segments (combined amplitude $A=-0.54\pm0.08$, at about half the
+  theoretical magnitude), and at the segment-mean level the ratio
+  deviation $y_i$ is positively correlated with the tidal shift
+  $\dff$ (Pearson $r=+0.518$).}
   \label{fig:tidal}
 \end{figure}
 
@@ -367,19 +387,11 @@ $2.980\e{-18}$ to $2.596\e{-18}$ ($13\%$; $12.9\%\pm11.0\%$ by jackknife).
 The full theoretical response gives a larger
 $\chi^{2}_{\mathrm{red}}$ reduction ($5.42\to3.70$) but a slightly
 \emph{higher} long-term instability, and neither removes the residual at
-long averaging times (Fig.~\ref{fig:correction}). Because neither the
+long averaging times. Because neither the
 statistics nor the sign convention validates it, we report the correction
 as an effect estimate rather than adopt it (Supplementary Information).
 % src: clock_ratio/statistical_methods_tidal.json;
 % src: clock_ratio/tidal_correction/summary.json; docs/METHODOLOGY.md Sec. 9
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.95\linewidth]{figs/3.png}
-  \caption{Long-term stability $\sigma(y_i)$ and
-  $\chi^{2}_{\mathrm{red}}$ by scenario.}
-  \label{fig:correction}
-\end{figure}
 
 % =====================================================================
 
@@ -399,7 +411,8 @@ to an equivalent height of about $0.7$\,cm, and the tidal modulation is
 resolved at $6.4\sigma$ across the baseline.
 
 The comparison places the Yb/Sr ratio on the map of independent
-determinations (Table~\ref{tab:compare}). Our uncorrected centre lies
+determinations (Table~\ref{tab:compare}, Fig.~\ref{fig:compare}). Our
+uncorrected centre lies
 $-1.7\e{-18}$ below the NIST--JILA value \cite{aeppli2026nist} and
 $+3.3\e{-18}$ above the European-network value
 \cite{pizzocaro2026european}. The NIST--JILA determination carries a total
@@ -466,9 +479,11 @@ question.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{figs/4.png}
-  \caption{Four-method centres relative to the experiment-side WLS and
-  NIST references.}
-  \label{fig:methods}
+  \caption{Comparison with previous determinations of the Yb/Sr ratio.
+  The combined centres of this work, with the experiment-side WLS and
+  NIST reference values, place the present result alongside the existing
+  independent determinations.}
+  \label{fig:compare}
 \end{figure}
 
 % =====================================================================
