@@ -7,11 +7,11 @@ This folder is ready to upload to Overleaf as-is.
 ```
 main.tex      # the manuscript (figure paths already flattened to figs/)
 refs.bib      # bibliography (26 entries)
-figs/         # the four figures as vector PDFs
-  fig1_ratio_segments.pdf
-  fig2_tidal_detection.pdf
-  fig3_correction.pdf
-  fig4_methods_summary.pdf
+figs/         # the four manuscript figures (raster PNG)
+  1.png       # Fig. 1  per-segment clock-ratio deviation y_i
+  2.png       # Fig. 2  per-segment tidal amplitude A_i
+  3.png       # Fig. 3  long-term stability sigma(y_i) and chi2_red
+  4.png       # Fig. 4  four-method centres vs experiment WLS / NIST
 ```
 
 ## How to upload
@@ -35,8 +35,10 @@ pdflatex main.tex
 
 ## Notes
 
-- Figure files are the vector PDFs; PNG variants (`*.png`, 300 dpi) exist in
-  `clock_ratio/paper_figs/` should you prefer raster images.
+- The four manuscript figures are raster PNGs (`figs/1.png`--`4.png`),
+  de-interlaced so pdfTeX embeds them without the large-interlaced-PNG
+  memory warning. Vector-PDF variants of the same figures remain in
+  `clock_ratio/paper_figs/`.
 - All bibliography entries are cited and resolve; no undefined references.
 - Placeholders still needing author input are marked in `main.tex` with
   `% PLACEHOLDER:` (Author contributions, Competing interests,
