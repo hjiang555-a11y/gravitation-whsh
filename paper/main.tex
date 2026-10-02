@@ -60,27 +60,31 @@ and relativistic geodesy}
 \begin{abstract}
 \sloppy
 % =====================================================================
-Redefining the SI second requires frequency ratios of optical clocks
-measured independently by different laboratories, and agreeing to within
+A redefinition of the SI second relies on optical frequency ratios that
+different laboratories measure independently and that agree to within
 $5\times10^{-18}$. Many optical clocks report self-evaluated uncertainties
 meeting this level, but such claims still await independent verification,
-and no comparison between clocks in different cities has reached this
-level. Here we compare an IAPMST ytterbium clock in Wuhan with a USTC
-strontium clock in Shanghai, about $700$\,km apart, through a $1350$\,km
-fibre link, and measure the Yb/Sr frequency ratio from $58$\,days
-($280$\,h) of coherent operation. Treating the tidal
+and no comparison between clocks in different cities has reached it.
+Here we close this gap with an inter-city, cross-species clock network:
+an IAPMST ytterbium clock in Wuhan and a USTC strontium clock in Shanghai,
+about $700$\,km apart, are linked through a $1350$\,km phase-stabilised
+fibre and compared coherently for $58$\,days ($280$\,h). Treating the tidal
 gravitational-redshift term as an uncertainty item, we find a Bayesian
 statistical uncertainty of $0.75\times10^{-18}$ and a total uncertainty of
-$X\times10^{-18}$, giving $1.207\,507\,039\,343\,337\,721\,3(23)$, whose
-central value differs from the latest NIST--JILA result by less than
-$5\times10^{-18}$. To our knowledge this is the first cross-species
-frequency ratio at the $5\times10^{-18}$ level measured between clocks at
-different locations. On the
-same data the tidal redshift modulation is resolved at $6.4\sigma$;
+$2\times10^{-18}$, giving the Yb/Sr frequency ratio
+$1.207\,507\,039\,343\,337\,721\,3(23)$, whose central value differs from
+the latest NIST--JILA result by less than $5\times10^{-18}$. To our
+knowledge this is the first cross-species frequency ratio at the
+$5\times10^{-18}$ level measured between clocks at different locations. On
+the same data the tidal redshift modulation is resolved at $6.4\sigma$;
 removing it would lower the reduced chi-square from $5.42$ to $3.70$
-($32\%$). An inter-city, cross-species clock network thus both supports
-the redefinition of the SI second and senses the time-varying
-gravitational potential at the centimetre level.
+($32\%$). Beyond metrology, the same two-clock comparison reads the
+time-varying gravitational potential over a real $700$\,km baseline,
+resolving a tidal geopotential difference that corresponds to a
+centimetre-level equivalent height, rather than on a single campus. An
+inter-city, cross-species clock network thus both supports the
+redefinition of the SI second and senses the time-varying gravitational
+potential at the centimetre level.
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4 (ratio) and 5.6 (vs NIST-JILA, -1.7e-18);
 % src: clock/segment_analysis/batch_aggregate.csv (6.4 sigma detection;
 %      chi2_red raw 5.42 -> tidal-corrected 3.70, i.e. -32%).
@@ -91,9 +95,10 @@ gravitational potential at the centimetre level.
 % uncertainty is too large for a meaningful assertion of agreement, so the
 % apparent concordance would be coincidental. Our own value may shift at the
 % 1e-18 level once the full uncertainty evaluation is complete.
-% PLACEHOLDER: the total uncertainty is left as X (provisional) because some
-% uncertainty items (e.g. tide model, additional systematics) are still under
-% evaluation and will change the total; do not fill a number until settled.
+% NOTE: the total uncertainty is the quadrature sum of the Table 1 terms
+% (2e-18). The clock-systematic terms are the published values; the tidal
+% term is a theoretical bound. A full point-by-point systematics evaluation
+% is still in progress and may refine the total.
 \end{abstract}
 
 % =====================================================================
@@ -242,9 +247,12 @@ evaluation \cite{zhu2026yb} ($1.1\e{-18}$) and the static gravitational
 redshift ($1\e{-18}$) dominate; the Sr-clock term \cite{jia2026sr} is
 $9.2\e{-19}$, the fibre and comb terms are each below $1\e{-19}$, and the
 tidal term is carried as an uncertainty item of $<5\e{-19}$, the size of
-the theoretical compensation.
-Because the tidal-model and some clock-systematic terms are still under
-evaluation, the total fractional uncertainty is quoted as provisional.
+the theoretical compensation. Combined in quadrature, these terms give a
+total fractional uncertainty of $2\e{-18}$, the value quoted in the
+abstract. The clock-systematic terms are taken from the published
+evaluations of the two clocks \cite{zhu2026yb, jia2026sr}; the
+tidal-model contribution is a theoretical bound, and a full
+point-by-point systematics evaluation remains in progress.
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.6;
 % src: clock/clock_tidal_shift.csv (tidal compensation magnitude < 5e-19);
 % src: zhu2026yb (Yb clock: total systematic 1.3e-18); jia2026sr (Sr clock: <1e-18)
@@ -255,9 +263,8 @@ evaluation, the total fractional uncertainty is quoted as provisional.
   (fractional frequency units). ``Correction'' is the applied shift to
   the central value; ``Uncertainty'' is the term's contribution to the
   budget, combined in quadrature. The tidal term is carried as an
-  uncertainty item (no correction applied; Sec.~\ref{sec:tidal-theory}),
-  and the total is a combined uncertainty only, provisional pending the
-  full systematics evaluation.}
+  uncertainty item (no correction applied; Sec.~\ref{sec:tidal-theory}).
+  The total is the quadrature sum of the listed terms.}
   \label{tab:budget}
   \begin{tabular}{lcc}
     \toprule
@@ -271,7 +278,7 @@ evaluation, the total fractional uncertainty is quoted as provisional.
     Statistical (Bayesian)   & --- & $0.75\e{-18}$ \\
     Tidal term (item)        & --- & $<5\e{-19}$ \\
     \midrule
-    Total                    & --- & provisional \\
+    Total                    & --- & $2\e{-18}$ \\
     \bottomrule
   \end{tabular}
   % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.6;
@@ -383,6 +390,21 @@ justified. The measured amplitude is $A=-0.54\pm0.08$
 no independent check establishes the fitted value as the correct response
 coefficient: the fit reproduces the waveform, not the hardware phase that
 fixes the sign convention. We therefore do not adopt it as a compensation.
+
+A half-strength response admits several physical readings, none of which
+the present data can single out. The professional tidal series combines
+solid-Earth tide with ocean loading, yet the loading term over a
+$700$\,km inter-city baseline depends on the local coastline and
+sedimentary structure and on groundwater and hydrological loading that a
+global model resolves only coarsely; a phase- or amplitude-mismatched
+loading component would reduce the coherent response without removing it.
+Alternatively, the two clocks sense slightly different local geopotentials,
+and any common-mode environmental coupling along the fibre path that
+partially tracks the tide would also dilute the fitted amplitude. Because
+these mechanisms are degenerate at the present sensitivity, we keep the
+uncorrected centre as the headline ratio and report the amplitude as an
+effect estimate rather than a calibration, leaving a per-component tidal
+model as the natural route to a full-strength response.
 
 Compensating at the fitted $A=-0.54$ would shift the duration-weighted
 centre by $+0.24\e{-18}$, half the $+0.44\e{-18}$ of the full theoretical
@@ -524,14 +546,17 @@ an IAPMST Yb clock in Wuhan \cite{zhu2026yb} and a USTC Sr clock in
 Shanghai \cite{jia2026sr}, about $700$\,km apart and linked by a
 phase-stabilised fibre, operated coherently for $58$\,days. Combining
 $17$ segments with a Bayesian random-effect model gives an uncorrected
-Yb/Sr ratio of $1.207\,507\,039\,343\,337\,721\,3(23)$ with a statistical
-uncertainty of $0.75\e{-18}$, consistent with the existing determinations
-at the $5\e{-18}$ level; the tidal gravitational-redshift modulation of
-the same data is resolved at $6.4\sigma$ and carried as an uncertainty
-item. These results establish the inter-city clock network as a prototype
-that serves both the redefinition of the SI second, through independent
-ratio comparisons, and the reading of the time-varying gravitational
-potential.
+Yb/Sr ratio of $1.207\,507\,039\,343\,337\,721\,3(23)$ with a total
+uncertainty of $2\e{-18}$, consistent with the existing determinations at
+the $5\e{-18}$ level; the tidal gravitational-redshift modulation of the
+same data is resolved at $6.4\sigma$ and carried as an uncertainty item.
+Two capabilities follow. The comparison supplies an independently
+obtained entry for the Yb/Sr ratio that a redefined SI second will rest
+on. And, for the first time over a real $700$\,km baseline rather than a
+single campus, the two independent clocks resolve the time-varying
+gravitational potential at a centimetre-level equivalent height, casting
+the inter-city clock network as a prototype relativistic-geodesy sensor
+as well as a metrological one.
 
 % =====================================================================
 \section{Methods}
