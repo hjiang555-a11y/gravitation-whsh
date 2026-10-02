@@ -169,11 +169,17 @@ The experiment compares a Yb lattice clock at IAPMST in Wuhan
 \cite{jia2026sr}, two institutions and two clock
 species about $700$\,km apart. They are joined by a phase-stabilised
 $1550$\,nm fibre link of single-pass optical length $\approx1350$\,km,
-with loop-back purification at each repeater so that the link
-instability stays below the clock noise beyond $\sim100$\,s
-(Fig.~\ref{fig:setup}; Methods). The raw observable is the out-of-loop
-beat note between the received carrier and the local comb, sampled at
-$1$\,s.
+deployed on paired strands within a single cable duct of a
+telecommunications operator and organised as a cascade of relay stations,
+each carrying a bidirectional erbium-doped fibre amplifier and a
+fibre-noise-cancellation loop. Loop-back purification keeps the link
+instability below the clock noise beyond $\sim100$\,s
+(Fig.~\ref{fig:setup}; Methods). The transfer architecture follows the
+cascaded, bias-corrected optical-frequency-dissemination design
+demonstrated on a $2067$\,km field link \cite{chen2026dissemination}; the
+present link is shorter, which relaxes the accumulated noise. The raw
+observable is the out-of-loop beat note between the received carrier and
+the local comb, sampled at $1$\,s.
 
 {\sloppy
 Over a $58$-day campaign (2026-06-29 to 2026-08-26), 17 uninterrupted
@@ -541,6 +547,19 @@ and the local Yb-referenced comb; every frequency in the chain is derived
 from the comb repetition rate $f_{\mathrm{rep}} =
 f_{\mathrm{ref}}\times\mathrm{DIV20} = 200$\,MHz.
 % src: clock/params.json (FREF=1e7, DIV20=20); docs/METHODOLOGY.md Sec. 7
+
+The fibre link itself is built on the cascaded,
+bias-corrected optical-frequency-dissemination architecture of
+Ref.~\cite{chen2026dissemination}: the route is divided into segments,
+each terminated by a relay station that carries a bidirectional
+erbium-doped fibre amplifier and a fibre-noise-cancellation loop, with the
+round-trip phase noise measured in the radio-frequency domain. Deployed
+on paired strands within a single telecommunications cable duct, the
+present Shanghai--Wuhan route is shorter than the $2067$\,km field link of
+Ref.~\cite{chen2026dissemination}, so the accumulated link noise is
+correspondingly lower; the relay stations used here operate without the
+dedicated sub-hertz noise-purification stage that the longer link
+requires.
 
 At the Shanghai end the Sr clock at $698$\,nm is transferred to a
 $1397$\,nm carrier; at the Wuhan end a second comb links the received
