@@ -680,6 +680,24 @@ A flicker floor beyond $\tau \sim 4096$\,s makes this extrapolation
 underestimate the $u_i$ (see Discussion). This is why we compare four
 combination methods instead of adopting a single $u_i$-weighted mean, and
 why the excess-scatter term $\xi$ below is required rather than optional.
+The long-averaging-time behaviour is shown by the overlapping Allan
+deviation of the seventeen segments spliced end-to-end on one continuous
+$1$\,s record (gaps removed), for the raw, theory and empirical
+scenarios, with Riley--Howe effective-degrees-of-freedom error bars
+(Fig.~\ref{fig:stability-long}).
+% src: clock_ratio/concatenated_stability_long.{md,csv}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figs/figS3_stability_long.png}
+  \caption{Spliced concatenated stability. Overlapping Allan deviation
+  $\sigma_y(\tau)$ of the seventeen segments placed end-to-end on one
+  continuous $1$\,s record (aligned pure-data span $11.7$\,d, gaps
+  removed; $\tau$ up to $4.63$\,d), for the raw ($A=0$), theory
+  ($A=-1$) and empirical ($A=-0.54$) scenarios, with the correction-term
+  curve and Riley--Howe EDF error bars.}
+  \label{fig:stability-long}
+\end{figure}
 
 
 \subsection{Statistical combination methods}
@@ -801,7 +819,8 @@ uncertainty of $\pm0.085\ \mathrm{m^{2}/s^{2}}$.
 \label{app:tidal}
 
 The tidal beat template is formed from the professional $30$\,s
-geopotential-difference series, linearly interpolated to the retained
+geopotential-difference series (Fig.~\ref{fig:tidal-shift}), linearly
+interpolated to the retained
 beat timestamps after shifting the Beijing-time beat windows to UTC. It
 is normalised to the $1550$\,nm transfer frequency,
 $h(t) = F_{1550}\,\dW(t)/c^{2}$ with
@@ -811,7 +830,9 @@ factor $\approx 1.2075$ and would bias $A$ low by that factor. Within
 each segment the beat and the template are passed through a $1200$\,s
 triangular window (600\,s step) and, after demeaning, fitted with
 $\mathrm{beat} = A\,\mathrm{tide} + \mathrm{noise}$,
-$A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. We
+$A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. The
+resulting segment-mean correlation between $y_i$ and $\dff$ is shown in
+Fig.~\ref{fig:corr-scatter}. We
 combine the per-segment amplitudes by precision weighting, together with
 the sign-consistency (binomial), Stouffer (sign-agnostic $|z|$) and
 Fisher combinations.
@@ -826,6 +847,25 @@ are reported in the Results. Because the two amplitudes are fixed rather
 than fitted, and the sign follows a specified response convention (see
 Discussion), we report these scenarios as effect estimates and keep the
 uncorrected centre as the headline ratio.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figs/figS1_tidal_shift.png}
+  \caption{Session tidal gravitational-redshift shift
+  $\dff = \dW/c^{2}$ for each of the 17 segments, from the professional
+  $30$\,s solid-Earth-tide plus ocean-loading series.}
+  \label{fig:tidal-shift}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.75\linewidth]{figs/figS2_correlation.png}
+  \caption{Segment-mean correlation. Clock-ratio deviation
+  $y_i = R_i/R_{\mathrm{seg1}} - 1$ against the session tidal shift
+  $\dff$ for the 17 segments; the ordinary least-squares fit gives the
+  positive correlation reported in the Results.}
+  \label{fig:corr-scatter}
+\end{figure}
 
 
 \subsection{Per-segment data}
