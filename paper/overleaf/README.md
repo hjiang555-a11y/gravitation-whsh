@@ -6,7 +6,7 @@ This folder is ready to upload to Overleaf as-is.
 
 ```
 main.tex      # the manuscript (figure paths already flattened to figs/)
-refs.bib      # bibliography (17 entries)
+refs.bib      # bibliography (26 entries)
 figs/         # the four figures as vector PDFs
   fig1_ratio_segments.pdf
   fig2_tidal_detection.pdf
@@ -37,7 +37,7 @@ pdflatex main.tex
 
 - Figure files are the vector PDFs; PNG variants (`*.png`, 300 dpi) exist in
   `clock_ratio/paper_figs/` should you prefer raster images.
-- All 17 bibliography entries are cited and resolve; no undefined references.
+- All bibliography entries are cited and resolve; no undefined references.
 - Placeholders still needing author input are marked in `main.tex` with
   `% PLACEHOLDER:` (Author contributions, Competing interests,
   Acknowledgements) and `X` for the total uncertainty in the abstract.
