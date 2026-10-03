@@ -79,8 +79,8 @@ naming the artifact it was read from. The anchor numbers were taken from:
 
 - `clock_ratio/tidal_correction/summary.json` - the three
   `R_duration` values and the `delta_R` differences.
-- `clock_ratio/statistical_methods_tidal.json` - WLS/Birge/M-P/Bayesian
-  centres, `chi2_red`, Birge ratios, long-term stability.
+- `clock_ratio/statistical_methods_tidal.json` - regenerated WLS/Birge/M-P/
+  Bayesian centres, `chi2_red`, Birge ratios and long-term stability.
 - `clock_ratio/statistical_methods_tidal_seg9_excluded.json` -
   segment-9-excluded sensitivity.
 - `clock/segment_analysis/batch_aggregate.csv` - detection statistics
@@ -95,12 +95,11 @@ The verified anchor values are:
 - `R_duration(raw) = 1.2075070393433377203696`
 - `R_duration(theory) = 1.2075070393433377208108` (`+0.441e-18`)
 - `R_duration(empirical) = 1.2075070393433377206078` (`+0.238e-18`)
-- WLS deviations vs `1.2075070393433377213`: raw `-0.503e-18`,
-  theory `+0.389e-18`, empirical `-0.041e-18`
-- `chi2_red`: `5.424 / 3.699 / 4.559`
-- Detection: `14/17` same sign (`p=0.013`), Stouffer `|z|=5.87`
-  (`p=4.3e-9`), Fisher `p=2.2e-6`, `A=-0.5397 +/- 0.0843` (`6.4 sigma`)
-- Long-term `sigma(y_i)`: `2.980 / 2.588 / 2.596 x 1e-18`
+- Regenerate all WLS, random-effects and `chi2_red` values after the
+  unit-consistent statistical correction.
+- The historical windowed amplitude estimate is about `A=-0.54`; inferential
+  values must be regenerated from non-overlapping windows and are not a
+  covariance-aware detection claim.
 - Segment-9 excluded correlation: `r=+0.429` (`p=0.098`) vs full
   `+0.518` (`p=0.033`); independent re-derivation max rel diff `= 0`
 

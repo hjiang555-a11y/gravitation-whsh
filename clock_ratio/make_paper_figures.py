@@ -41,8 +41,6 @@ TIDAL_JSON = Path(__file__).resolve().parent / "statistical_methods_tidal.json"
 
 WLS_REF = Decimal("1.2075070393433377213")
 NIST_REF = Decimal("1.2075070393433377230")
-A_FIT = -0.539699
-U_A = 0.084254
 
 # Publication palette (colorblind-safe, muted for print)
 C_NEG = "#1f4e9c"
@@ -112,6 +110,11 @@ def _load_batch():
     return g, A, uA
 
 
+def _load_batch_aggregate() -> tuple[float, float]:
+    metrics = {row["metric"]: row["value"] for row in csv.DictReader(open(BATCH_AGG))}
+    return float(metrics["amplitude_A"]), float(metrics["amplitude_uA"])
+
+
 def ratio_offset_1e18(value: str | Decimal, reference: Decimal) -> float:
     """Subtract near-unity ratios before converting their E-18 difference to float."""
     with localcontext() as context:
@@ -144,15 +147,15 @@ def fig1_ratio():
 
 def fig2_detection():
     g, A, uA = _load_batch()
+    A_fit, u_A = _load_batch_aggregate()
     fig, ax = plt.subplots(figsize=(6.9, 3.1))
     ax.errorbar(g, A, yerr=uA, fmt="o", ms=3.6, lw=0.7, capsize=1.8,
                 elinewidth=0.7, color=C_INK, ecolor=C_GREY, zorder=3)
     ax.axhline(0.0, color=C_GREY, lw=0.6, ls=":", zorder=1)
     ax.axhline(1.0, color=C_NEG2, lw=0.9, ls="--", zorder=2,
                label="full theoretical ($A=+1$)")
-    ax.axhline(A_FIT, color=C_NEG, lw=0.9, zorder=2,
-               label=(f"combined $A={A_FIT:+.2f}\\pm{U_A:.2f}$ "
-                      r"(6.4$\,\sigma$)"))
+    ax.axhline(A_fit, color=C_NEG, lw=0.9, zorder=2,
+               label=f"weighted $A={A_fit:+.2f}\\pm{u_A:.2f}$")
     ax.set_xticks(g)
     ax.set_xlabel("segment index $i$")
     ax.set_ylabel(r"tidal amplitude ratio $A_i$")
