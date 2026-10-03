@@ -58,6 +58,12 @@ and relativistic geodesy}
 \maketitle
 
 % =====================================================================
+% SEGMENT-9-EXCLUDED VARIANT.  This file is an ADDITIVE sensitivity version
+% of main.tex: it keeps the 17-segment manuscript untouched and re-renders
+% the same text with segment 9 removed (16 segments).  Numbers marked
+% "% seg9" below come from clock_ratio/statistical_methods_tidal_seg9_excluded.json
+% and clock_ratio/correlation_reanalysis_seg9_independent.json.
+% =====================================================================
 \begin{abstract}
 \sloppy
 % =====================================================================
@@ -69,10 +75,11 @@ has yet reached it. Here we close this gap with an inter-city,
 cross-species clock network: an IAPMST ytterbium clock in Wuhan and a USTC
 strontium clock in Shanghai, about $700$\,km apart, are linked through a
 $1350$\,km phase-stabilised fibre and compared coherently for $58$\,days
-($280$\,h). Treating the tidal gravitational-redshift term as an
+($274$\,h, 16 segments with segment~9 excluded). Treating the tidal
+gravitational-redshift term as an
 uncertainty item, we obtain the Yb/Sr frequency ratio
-$1.207\,507\,039\,343\,337\,721\,3(23)$, with a statistical uncertainty of
-$0.75\times10^{-18}$ and a total uncertainty of $2\times10^{-18}$, whose
+$1.207\,507\,039\,343\,337\,720\,1(29)$, with a statistical uncertainty of
+$0.88\times10^{-18}$ and a total uncertainty of $2\times10^{-18}$, whose
 central value differs from the latest NIST--JILA result by less than
 $5\times10^{-18}$. The same data show a tidal-template response in the
 windowed beat series; fixed tidal-response scenarios change the
@@ -183,9 +190,9 @@ observable is the out-of-loop beat note between the received carrier and
 the local comb, sampled at $1$\,s.
 
 {\sloppy
-Over a $58$-day campaign (2026-06-29 to 2026-08-26), 17 uninterrupted
-segments yield $1\,008\,912$ valid one-second samples ($280$\,h, a duty
-cycle of about $20\%$), gated by the simultaneous lock of both clocks
+Over a $58$-day campaign (2026-06-29 to 2026-08-26), 16 uninterrupted
+segments (segment 9 excluded) yield $986\,416$ valid one-second samples
+($274$\,h, a duty cycle of about $20\%$), gated by the simultaneous lock of both clocks
 and the comb chain rather than by the link. The two clocks were
 restarted independently between segments in the first campaign, so the
 ratio centre provides a direct reproducibility check and shows no
@@ -226,12 +233,12 @@ ocean loading.
 Combining the per-segment ratios with a random-effect model gives the
 uncorrected Yb/Sr frequency ratio
 \begin{equation}
-  \mathrm{Yb/Sr} = 1.207\,507\,039\,343\,337\,721\,3(23),
+  \mathrm{Yb/Sr} = 1.207\,507\,039\,343\,337\,720\,1(29),
   \label{eq:result-bayes}
 \end{equation}
-% src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4
-with a Bayesian statistical uncertainty of $0.75\e{-18}$ from the clock
-statistical noise alone. The parenthetical $(23)$ is the display
+% seg9: 16-segment value from clock_ratio/statistical_methods_tidal_seg9_excluded.json (raw)
+with a Bayesian statistical uncertainty of $0.88\e{-18}$ from the clock
+statistical noise alone. The parenthetical $(29)$ is the display
 precision of the value string, not the statistical term. The alternative
 tidal-correction scenarios shift the centre by only a few
 $10^{-19}$ relative to the experiment-side tidal-corrected value, and an independent
@@ -270,7 +277,7 @@ full point-by-point systematics evaluation remains in progress.
     Static gravitational redshift & $-3.1\e{-15}$ & $1\e{-18}$ \\
     Fibre transfer           & --- & $<1\e{-19}$ \\
     Comb transfer            & --- & $<1\e{-19}$ \\
-    Statistical (Bayesian)   & --- & $0.75\e{-18}$ \\
+    Statistical (Bayesian)   & --- & $0.88\e{-18}$ \\
     Tidal term (item)        & --- & $<5\e{-19}$ \\
     \midrule
     Total                    & --- & $2\e{-18}$ \\
@@ -283,23 +290,22 @@ full point-by-point systematics evaluation remains in progress.
 
 
 Figure~\ref{fig:ratio} shows the clock-ratio data behind
-Eq.~\eqref{eq:result-bayes}: the 17 per-segment ratios $R_i$ and the
+Eq.~\eqref{eq:result-bayes}: the 16 per-segment ratios $R_i$ and the
 segment-to-segment stability. In terms of the deviations
 $y_i = R_i/R_{\mathrm{seg1}} - 1$, the duration-weighted mean is
-$-0.482\e{-18}$ (arithmetic mean $+0.102\e{-18}$) and the segment-to-segment
-scatter is $\sigma(y_i) = 2.98\e{-18}$.
-% src: clock_ratio/correlation_reanalysis.csv
-%      (weighted_mean_yi_1e18 = -0.481584, arith_mean_yi_1e18 = 0.101758)
-% src: clock_ratio/statistical_methods_tidal.json
-%      (long_term_stability.raw.y_i_std_1e18 = 2.9803)
+$-0.639\e{-18}$ (arithmetic mean $-0.292\e{-18}$) and the segment-to-segment
+scatter is $\sigma(y_i) = 2.58\e{-18}$.
+% seg9: 16-segment values (segment 9 excluded) from ratio_17seg.csv
+%      (duration-weighted mean -0.63866, arithmetic mean -0.2923, sigma 2.5805)
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{figs/2.png}
-  \caption{Clock-ratio data. The segment stability and the 17 per-segment
-  Yb/Sr ratios $R_i$ give the deviation $y_i = R_i/R_{\mathrm{seg1}} - 1$
-  whose duration-weighted mean is $-0.482\e{-18}$ and whose
-  segment-to-segment scatter is $\sigma(y_i) = 2.98\e{-18}$.}
+  \caption{Clock-ratio data. The segment stability and the 16 per-segment
+  Yb/Sr ratios $R_i$ (segment 9 excluded) give the deviation
+  $y_i = R_i/R_{\mathrm{seg1}} - 1$
+  whose duration-weighted mean is $-0.639\e{-18}$ and whose
+  segment-to-segment scatter is $\sigma(y_i) = 2.58\e{-18}$.}
   \label{fig:ratio}
 \end{figure}
 
@@ -340,9 +346,10 @@ correlated-noise model. The historical fitted amplitude was approximately
 %      the non-overlapping-window and validated-interpolation changes).
 and is consistent with a response of roughly half the theoretical magnitude.
 It is not used as a calibrated correction. At the segment-mean level, the ratio deviation $y_i$ is
-positively correlated with the tidal shift $\dff$ (Pearson $r=+0.518$,
-$p=0.033$).
-% src: clock_ratio/correlation_reanalysis.csv (pearson_r=0.517648, pearson_p=0.033314)
+positively correlated with the tidal shift $\dff$ (Pearson $r=+0.429$,
+$p=0.098$).
+% seg9: 16-segment correlation from correlation_reanalysis_seg9_independent.json
+%      (pearson_r=0.428662, pearson_p=0.097585)
 
 \begin{figure}[t]
   \centering
@@ -352,7 +359,7 @@ $p=0.033$).
     magnitude); overlapping-window significance is not interpreted as a
     detection statistic. At the segment-mean level the ratio
   deviation $y_i$ is positively correlated with the tidal shift
-  $\dff$ (Pearson $r=+0.518$).}
+  $\dff$ (Pearson $r=+0.429$).}
   \label{fig:tidal}
 \end{figure}
 
@@ -369,7 +376,7 @@ data and in general relativity) the tide would shift the ratio by
 $0.44\e{-18}$: in fractional-frequency terms the duration-weighted centre
 would move from $1.207\,507\,039\,343\,337\,720\,369\,6$ (raw) to
 $1.207\,507\,039\,343\,337\,720\,810\,8$. That is small against the
-$0.75\e{-18}$ statistical term but comparable to the leading systematics,
+$0.88\e{-18}$ statistical term but comparable to the leading systematics,
 so we do not correct the central value; the tidal term enters the budget
 as an uncertainty item of $<5\e{-19}$, its size set by that full-response
 shift (Table~\ref{tab:budget}).
@@ -403,18 +410,19 @@ Compensating at the fitted $A=-0.54$ would shift the duration-weighted
 centre by $+0.24\e{-18}$, half the $+0.44\e{-18}$ of the full theoretical
 response, both below the present statistical uncertainty. Descriptively,
 the empirical compensation would lower the reduced chi-square from
-$7.91$ (raw) to $6.65$ and the segment-to-segment dispersion
-$\sigma(y_i)$ from $2.980\e{-18}$ to $2.596\e{-18}$
-($13\%$; $12.9\%\pm11.0\%$ by jackknife), while the full theoretical
-response gives a larger $\chi^{2}_{\mathrm{red}}$ reduction
-($7.91\to5.39$) but a slightly \emph{higher} long-term instability;
-neither removes the residual at long averaging times. These are
+$3.91$ (raw) to $4.26$ and the segment-to-segment dispersion
+$\sigma(y_i)$ from $2.580\e{-18}$ to $2.334\e{-18}$
+($9.6\%$), while the full theoretical response gives a larger
+$\sigma(y_i)$ reduction to $2.473\e{-18}$ ($4.2\%$) but a slightly
+\emph{higher} $\chi^{2}_{\mathrm{red}}$ ($3.91\to4.11$); neither removes the
+residual at long averaging times. These are
 descriptive changes in scatter, not a validated correction: because
 neither the statistics nor the sign convention establishes it, the
 amplitude is reported as an effect estimate rather than adopted
 (Supplementary Information).
-% src: clock_ratio/statistical_methods_tidal.json;
-% src: clock_ratio/tidal_correction/summary.json; docs/METHODOLOGY.md Sec. 9
+% seg9: 16-segment values from clock_ratio/statistical_methods_tidal_seg9_excluded.json
+%      (raw chi2_red 3.913 -> theory 4.113 / empirical 4.257;
+%       sigma(y_i): raw 2.5805 -> theory 2.4730 / empirical 2.3336)
 
 % =====================================================================
 
@@ -429,8 +437,8 @@ two cities, joined only by the fibre link and the combs, yet yielding a
 ratio that agrees with the leading independent determinations at the
 $5\e{-18}$ level without any transport of the clocks. And the same data
 set provides a time-varying-potential template response for further
-covariance-aware study; the $0.75\e{-18}$ statistical floor corresponds to
-an equivalent height of about $0.7$\,cm.
+covariance-aware study; the $0.88\e{-18}$ statistical floor corresponds to
+an equivalent height of about $0.8$\,cm.
 
 The comparison places the Yb/Sr ratio on the map of independent
 determinations (Table~\ref{tab:compare}, Fig.~\ref{fig:compare}). Our
@@ -457,14 +465,14 @@ present result adds a second, independently obtained entry to that
 matrix, from a third institution with a different pair of clocks and
 separate hardware and analysis, and so tests the redefinition on evidence
 the single-campus determination cannot provide. We stress that this is a
-conservative claim: the $0.75\e{-18}$ figure is a statistical floor, and
+conservative claim: the $0.88\e{-18}$ figure is a statistical floor, and
 we report a ratio consistent with the existing determinations rather than
 a new most-precise value.
 
 The same data set also bounds what the comparison can support. The
 bottleneck is no longer the link or the comb, whose contributions are each
 below $1\e{-19}$ (Table~\ref{tab:budget}), but the segment-to-segment
-scatter; closing the gap between the $0.75\e{-18}$ statistical floor and
+scatter; closing the gap between the $0.88\e{-18}$ statistical floor and
 the $\sim5\e{-18}$ spread between independent determinations therefore
 requires progress on the systematic side, in the clock evaluations
 \citep{zhu2026yb, jia2026sr} and in joint geodetic levelling, rather than
@@ -650,20 +658,21 @@ $\mathrm{(Yb/Sr)}_{\mathrm{corr}} = \mathrm{(Yb/Sr)}_{\mathrm{raw}}
 % =====================================================================
 
 The comparison spans the $58$-day campaign described in the main text.
-Table~\ref{tab:segments} lists the 17 uninterrupted segments, their
+Table~\ref{tab:segments} lists the 16 uninterrupted segments used in this
+variant (segment~9 excluded), their
 retained sample counts $n_i$ (after endpoint trimming) and measurement
-campaign; the retained total is $\sum_i n_i = 1\,008\,912$ one-second
+campaign; the retained total is $\sum_i n_i = 986\,416$ one-second
 samples. During campaign~1 the Yb and Sr clocks were restarted
 independently between some segments (Yb after segments 4--6; Sr after
 segments 7--8), which lets the reproducibility of the ratio be checked
 directly.
-% src: clock_ratio/ratio_17seg.csv (n_valid); clock_ratio/tidal_correction/summary.json
-% src: experiment-side manuscript (光钟比对论文 hj.docx, supplementary S2)
+% seg9: segment 9 removed; retained total 986 416 s = 1 008 912 - 22 496
+% src: clock_ratio/ratio_17seg.csv (n_valid); clock_ratio/statistical_methods_tidal_seg9_excluded.json
 
 \begin{table}[t]
   \centering
-  \caption{The 17 uninterrupted segments: index, retained samples $n_i$
-  (endpoint-trimmed), and Beijing-time start.}
+  \caption{The 16 uninterrupted segments (segment 9 excluded): index,
+  retained samples $n_i$ (endpoint-trimmed), and Beijing-time start.}
   \label{tab:segments}
   \begin{tabular}{ccl}
     \toprule
@@ -677,7 +686,6 @@ directly.
     6  & $52\,140$  & 2026-07-04 19:30:46 \\
     7  & $39\,526$  & 2026-07-05 13:00:01 \\
     8  & $43\,565$  & 2026-07-06 21:45:16 \\
-    9  & $22\,496$  & 2026-08-07 15:15:00 \\
     10 & $57\,938$  & 2026-08-07 22:15:00 \\
     11 & $35\,824$  & 2026-08-09 00:00:00 \\
     12 & $40\,346$  & 2026-08-10 12:47:06 \\
@@ -687,15 +695,11 @@ directly.
     16 & $147\,640$ & 2026-08-21 23:20:01 \\
     17 & $65\,983$  & 2026-08-25 15:09:41 \\
     \midrule
-    \multicolumn{1}{r}{Total} & $1\,008\,912$ & \\
+    \multicolumn{1}{r}{Total} & $986\,416$ & \\
     \bottomrule
   \end{tabular}
+  % seg9: row 9 (22 496 s) removed from the 17-segment table.
   % src: clock_ratio/ratio_17seg.csv; segment windows in clock/params.json.
-  % NOTE: the experiment-side supplementary table lists slightly larger
-  % per-segment counts totalling 1,009,204 s; the difference (+292 s,
-  % <0.03%) is not yet reconciled and is under review with the experiment
-  % side.  This table reports the endpoint-trimmed counts used in the
-  % analysis of this work.
 \end{table}
 
 % =====================================================================
@@ -725,9 +729,10 @@ about $2.6\e{-16}$ would destroy differences at the $10^{-18}$ level. The
 duration-weighted centre of the whole experiment is
 \begin{equation}
   \Rdur = \frac{\sum_i n_i R_i}{\sum_i n_i},
-  \qquad \sum_i n_i = \num{1008912}.
+  \qquad \sum_i n_i = \num{986416}.
   \label{eq:rduration}
 \end{equation}
+% seg9: retained total 986 416 = 1 008 912 - 22 496 (segment 9 removed)
 % src: docs/METHODOLOGY.md Sec. 1.3, docs/NOTATION.md Sec. 5;
 %      delta_g = Delta_W/c^2 with Delta_W = 280.04164 m^2/s^2 (levelling doc)
 
@@ -858,8 +863,9 @@ uncorrected centre as the headline ratio.
   \includegraphics[width=0.75\linewidth]{figs/figS2_correlation.png}
   \caption{Segment-mean correlation. Clock-ratio deviation
   $y_i = R_i/R_{\mathrm{seg1}} - 1$ against the session tidal shift
-  $\dff$ for the 17 segments; the ordinary least-squares fit gives the
-  positive correlation reported in the Results.}
+  $\dff$ for the 16 segments (segment 9 excluded); the ordinary
+  least-squares fit gives the positive correlation reported in the
+  Results (Pearson $r=+0.43$, $p=0.098$).}
   \label{fig:corr-scatter}
 \end{figure}
 
@@ -937,24 +943,24 @@ under the tidal correction is the same for all four methods.
   \centering
   \caption{Centre and statistical uncertainty by combination method for
   the uncorrected baseline, computed in this work's own re-run of the
-  per-segment ratios, in units of $10^{-18}$ (deviations relative
+  16-segment ratios (segment 9 excluded), in units of $10^{-18}$
+  (deviations relative
   to the experiment-side WLS reference $1.207\,507\,039\,343\,337\,721\,3$).
   The experiment-side analysis reports a slightly different Bayesian
-  statistical term ($0.75\times10^{-18}$; adopted for the headline
-  value), reflecting its own ratio pipeline.}
+  statistical term ($0.88\times10^{-18}$; adopted for this variant's
+  headline value), reflecting its own ratio pipeline.}
   \label{tab:appendix-methods}
   \begin{tabular}{lcc}
     \toprule
     Method & Centre deviation & Statistical $u$ \\
     \midrule
-    WLS (fixed effect)       & $-0.503$ & $0.275$ \\
-    Mandel--Paule            & $-0.013$ & $0.755$ \\
-    Bayesian hierarchical    & $-0.016$ & $0.800$ \\
+    WLS (fixed effect)       & $-1.152$ & $0.286$ \\
+    Mandel--Paule            & $-0.661$ & $0.785$ \\
+    Bayesian hierarchical    & $-0.656$ & $0.879$ \\
     \bottomrule
   \end{tabular}
-  % src: clock_ratio/statistical_methods_tidal.json
-  %      (scenarios.raw: u_wls=2.7476e-19, u_mp=7.5501e-19,
-  %       u_stat_bayes=8.0023e-19)
+  % seg9: 16-segment values from clock_ratio/statistical_methods_tidal_seg9_excluded.json
+  %      (scenarios.raw: u_wls=2.858e-19, u_mp=7.852e-19, u_stat_bayes=8.791e-19)
 \end{table}
 
 % =====================================================================
