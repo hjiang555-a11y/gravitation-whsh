@@ -57,17 +57,12 @@ general-relativistic gravitational redshift leaves an imprint on the comparison 
 
 $$\frac{\Delta f}{f} \;=\; \frac{\Delta W(t)}{c^{2}},$$
 
-with an rms amplitude of about $4.8\times10^{-18}$. After projection onto a 1200 s
-triangular window within each segment, the single-segment signal-to-noise ratio is only
-$\mathrm{SNR}\approx0.28$, so no individual segment is significant (Figure 2). Across
-segments, however, the sign agreement is significant:
-
-$$14/17\ \text{segments same sign}\ (p=0.013),\qquad
-\text{Stouffer }|z|=5.87\ (p=4.3\times10^{-9}),\qquad
-\text{Fisher }p=2.2\times10^{-6}.$$
-
-The fitted amplitude is $A=-0.54\pm0.08$ (about $6.4\sigma$ from zero): the tidal signal is
-detected **with the correct sign and at roughly half the theoretical amplitude**. At the
+with an rms amplitude of about $4.8\times10^{-18}$. The 1200 s triangular windows use a
+600 s step and therefore overlap; the historical IID p values and “sign-agnostic Stouffer”
+score cannot be interpreted as a detection significance. The amplitude point estimate is
+approximately $A=-0.54$ (roughly half the theoretical amplitude); its uncertainty and
+correlation require regeneration from non-overlapping windows and ultimately a
+correlated-noise model. At the
 segment-mean level, $y_i$ is positively correlated with the session tidal shift
 $\Delta f/f$, with Pearson $r=+0.518\ (p=0.033)$.
 
@@ -96,15 +91,10 @@ where `theory` takes $A=-1$ (full trust in the professional tidal data and in re
 gravitation) and `empirical` takes $A=-0.54$ (trust the waveform, use the historical fitted
 amplitude).
 
-**Validity (direction self-check).** After correcting with $A_{\text{fix}}=-0.54$, the
-segment-mean correlation between residual and template collapses from $-0.134$ to $+0.003$,
-the signed Stouffer $z$ drops from $-5.16$ to $+0.39\ (p=0.69)$, and the number of
-negatively correlated segments falls to $8/17$ (random, $p=1.000$); a scan over
-$A_{\text{fix}}$ places the zero of the residual correlation exactly at $-0.54$, consistent
-with the historical precision-weighted amplitude $-0.5397\pm0.084$. This confirms directly,
-from the disappearance of the post-correction correlation, that the **sign and magnitude of
-$A=-0.54$ are both correct**, and it does not rely on the not-yet-fixed comb/local-oscillator
-sign factor $s_{\text{beat}}$.
+**Validity (direction self-check).** The historical scan places a residual-correlation zero
+near $A_{\text{fix}}=-0.54$. This supports that direction as a working convention for fixed
+scenarios, but a demeaned-waveform check neither calibrates the DC part of the undemeaned
+template nor replaces confirmation of the hardware polarity or full tidal geopotential.
 
 **Magnitude.** The correction shifts the duration-weighted centre of the whole experiment up
 from the baseline $1.207\,507\,039\,343\,337\,720\,37$:
@@ -115,18 +105,12 @@ from the baseline $1.207\,507\,039\,343\,337\,720\,37$:
 | theory | $-1$ | $1.207\,507\,039\,343\,337\,720\,81$ | $+0.44$ |
 | empirical | $-0.54$ | $1.207\,507\,039\,343\,337\,720\,61$ | $+0.24$ |
 
-Against the experiment's own point-by-point tidal-corrected reference
-$1.207\,507\,039\,343\,337\,721\,3(23)$, the deviation (**duration-weighted convention**)
-converges from the baseline $-0.93\times10^{-18}$ to $-0.49\times10^{-18}$ for `theory` and
-$-0.69\times10^{-18}$ for `empirical` (both move toward the reference). Under the
-**precision-weighted WLS centre** (weights $1/u_i^2$, the same convention as the experiment),
-the deviations are baseline $-0.50$, `theory` $+0.39$, and `empirical` $-0.04\times10^{-18}$,
-i.e. `empirical` is closest to the reference. Inter-group consistency is measured by
-$\chi^2_{\text{red}}$: baseline $5.42\to$ `theory` $3.70$ ($-31.8\%$), `empirical` $4.56$
-($-15.9\%$); the likelihood ratio $\Delta\chi^2=27.6$ (dof$=1$, $p=1.5\times10^{-7}$, about
-$5.3\sigma$) shows that the compensation improves inter-group consistency **highly
-significantly**. The four statistical combination methods (WLS / Birge / Mandel–Paule /
-Bayesian) give a consistent direction of change (Figure 4).
+The duration-weighted differences from the experiment's point-by-point corrected reference
+can be used as scenario comparisons. Previously reported $\chi^2_{\text{red}}$,
+Mandel--Paule and Bayesian values mixed fractional deviations with absolute uncertainties and
+must be regenerated with unit-consistent statistics. The fixed scenarios also re-estimate
+their uncertainties, so they are not nested likelihood-ratio models and no p value or
+sigma-level is inferred from $\Delta\chi^2$.
 
 > *Source: `clock_ratio/tidal_correction/summary.json`,
 > `clock_ratio/statistical_methods_tidal.json`; direction self-check in

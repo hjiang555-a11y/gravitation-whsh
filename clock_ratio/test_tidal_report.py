@@ -25,9 +25,11 @@ LEGACY: Final = (
     "correlation_reanalysis_seg9_independent.py",
     "correlation_analysis.py", "make_report_figures.py",
     "variant1_30s_tide.py", "variant30s_analysis.py", "segment13_correlation.py",
-    "segment13_triangular.py", "segment6_triangular.py", "make_paper_figures.py",
+    "segment13_triangular.py", "segment6_triangular.py",
     "statistical_methods.py",
     "statistical_methods_tidal.py", "statistical_methods_tidal_seg9.py",
+    "concatenated_stability.py", "concatenated_stability_long.py",
+    "make_paper_figures.py",
     "make_report.py",
 )
 
@@ -196,15 +198,16 @@ def test_navigation_when_baseline_report_is_preserved() -> None:
     assert note in (REPO / "clock_ratio" / "make_report.py").read_text()
 
 
-def test_seg9_exclusion_when_combined_values_are_reduced(tmp_path: Path) -> None:
-    from clock_ratio.statistical_methods_tidal_seg9 import main as seg9_main
+def test_seg9_exclusion_when_combined_values_are_reduced(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import clock_ratio.statistical_methods_tidal_seg9 as seg9
     # Given the actual per-segment source, When re-combining without segment 9,
     # Then every scenario has 16 segments and the source file is untouched.
     source = REPO / "clock_ratio" / "statistical_methods_tidal.json"
     before = source.read_text()
     import json
-    out = REPO / "clock_ratio" / "statistical_methods_tidal_seg9_excluded.json"
-    assert seg9_main() == 0
+    out = tmp_path / "statistical_methods_tidal_seg9_excluded.json"
+    monkeypatch.setattr(seg9, "JSON_PATH", out)
+    assert seg9.main() == 0
     document = json.loads(out.read_text())
     assert set(document["scenarios"]) == {"raw", "theory", "empirical"}
     for scenario in document["scenarios"].values():
@@ -214,23 +217,25 @@ def test_seg9_exclusion_when_combined_values_are_reduced(tmp_path: Path) -> None
     assert source.read_text() == before
 
 
-def test_seg9_correlation_when_original_is_preserved() -> None:
-    from clock_ratio.correlation_reanalysis_seg9_excluded import main as corr_main
+def test_seg9_correlation_when_original_is_preserved(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import clock_ratio.correlation_reanalysis_seg9_excluded as corr
     import csv
     # Given the full 17-segment correlation outputs, When re-running with
     # segment 9 excluded, Then 16 segments are used and the originals are intact.
     orig_csv = REPO / "clock_ratio" / "correlation_reanalysis.csv"
     before = orig_csv.read_text()
-    assert corr_main() == 0
-    reduced = dict(csv.reader(open(REPO / "clock_ratio" / "correlation_reanalysis_seg9_excluded.csv")))
+    monkeypatch.setattr(corr, "OUT_DIR", tmp_path)
+    assert corr.main() == 0
+    reduced = dict(csv.reader(open(tmp_path / "correlation_reanalysis_seg9_excluded.csv")))
     assert reduced["excluded_group"] == "9"
     assert reduced["n_segments"] == "16"
     assert float(reduced["pearson_r"]) == pytest.approx(0.428662, abs=1e-5)
     assert float(reduced["pearson_p"]) > 0.05
-    assert (REPO / "clock_ratio" / "correlation_reanalysis.png").exists()
+    assert (tmp_path / "correlation_reanalysis_seg9_excluded.png").exists()
     assert orig_csv.read_text() == before
 
 
+@pytest.mark.skipif(os.environ.get("RUN_CLOCK_DATA_TESTS") != "1", reason="parent opt-in: load real beat files once")
 def test_seg9_independent_when_recomputes_from_raw_and_matches() -> None:
     from clock_ratio.correlation_reanalysis_seg9_independent import main as indep_main
     import csv

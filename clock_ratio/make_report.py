@@ -28,6 +28,8 @@ CORR_TW_CSV = OUT_DIR / "correlation_reanalysis_timeweighted.csv"
 STAT_JSON = OUT_DIR / "statistical_methods.json"
 STAT_TIDAL_JSON = OUT_DIR / "statistical_methods_tidal.json"
 STAT_TIDAL_SEG9_JSON = OUT_DIR / "statistical_methods_tidal_seg9_excluded.json"
+CONCAT_STABILITY_CSV = OUT_DIR / "concatenated_stability.csv"
+SPLICED_STABILITY_CSV = OUT_DIR / "concatenated_stability_long.csv"
 
 
 def _table(rows: list[dict], path: Path) -> list[dict]:
@@ -45,6 +47,10 @@ def _fmt_e18(x: float) -> str:
     return f"{x:+.3f}"
 
 
+def _optional_table(path: Path) -> list[dict]:
+    return _table([], path) if path.exists() else []
+
+
 def main() -> int:
     ratio = _table([], RATIO_CSV)
     ratio_sum = _table([], RATIO_SUMMARY)
@@ -57,6 +63,8 @@ def main() -> int:
     stat_tidal = json.load(open(STAT_TIDAL_JSON)) if STAT_TIDAL_JSON.exists() else None
     stat_tidal_seg9 = (json.load(open(STAT_TIDAL_SEG9_JSON))
                        if STAT_TIDAL_SEG9_JSON.exists() else None)
+    concatenated_stability = _optional_table(CONCAT_STABILITY_CSV)
+    spliced_stability = _optional_table(SPLICED_STABILITY_CSV)
 
     # headline numbers: segment-1 baseline vs duration-weighted experiment value
     ratio_sum_map = {r["field"]: r["value"] for r in ratio_sum}
@@ -83,8 +91,8 @@ def main() -> int:
 
     A = float(agg["amplitude_A"])
     uA = float(agg["amplitude_uA"])
-    zagn = float(agg["stouffer_z_agn"])
-    p_agn = float(agg["stouffer_p_agn"])
+    z_sign = float(agg["stouffer_z_sign"])
+    p_sign = float(agg["stouffer_p_sign"])
     neg = int(agg["negative_r_segments"])
 
     pear_r = float(corr["pearson_r"])
@@ -126,9 +134,9 @@ def main() -> int:
     L.append(f"1. **整个实验的钟比值（时长加权中心值）**：R_duration = `{R_duration_18}`，与 NIST "
              f"`{ratio_sum_map['NIST_reference']}(37)` 差 {d_dur_nist:+.2f}×10⁻¹⁸，与实验方 WLS "
              f"`{WLS}(23)` 差 {d_dur_wls:+.2f}×10⁻¹⁸。逐段 y_i ∈ [{y_min:.1f}, {y_max:.1f}]×10⁻¹⁸。")
-    L.append(f"2. **段内分析跨段合并（核心检出）**：{neg}/17 段同号，符号无关 Stouffer "
-             f"|z| = **{zagn:.2f}**（p = {p_agn:.1e}），幅度比 **A = {A:+.2f}±{uA:.2f}**"
-             f"（{abs(A)/uA:.1f}σ），潮汐以正确方向、约一半幅度被检出。")
+    L.append(f"2. **段内分析跨段合并（描述性）**：{neg}/17 段同号，带符号 Stouffer "
+             f"z = **{z_sign:+.2f}**（p = {p_sign:.1e}），幅度比 **A = {A:+.2f}±{uA:.2f}**。"
+             "p 值与不确定度来自不重叠窗口，仍应结合时序相关性审慎解释。")
     L.append(f"3. **段均值相关**：y_i 与会话潮汐频移 Δf/f 正相关，段等权重 Pearson r = "
              f"**{pear_r:+.3f}**（p = {pear_p:.3f}），Spearman ρ = {rho:+.3f}（p = {rho_p:.3f}）；"
              f"时间等权重（时长加权）Pearson r = {tw_r:+.3f}（p = {tw_r_p:.3f}，n_eff = {tw_neff:.1f}）。")
@@ -192,10 +200,10 @@ def main() -> int:
     L.append("")
     L.append("逐段幅度比 A（`beat = A·tide + noise`）：")
     L.append("")
-    L.append("| 组 | 时长 h | A | u_A | r | p |")
-    L.append("|---|---|---|---|---|---|")
+    L.append("| 组 | 时长 h | 重叠 / 推断窗口数 | A | u_A | r | p |")
+    L.append("|---|---|---|---|---|---|---|")
     for r in batch:
-        L.append(f"| {r['group']} | {float(r['hours']):.1f} | {float(r['A']):+.2f} | "
+        L.append(f"| {r['group']} | {float(r['hours']):.1f} | {r['n_pts']} / {r['n_inference_pts']} | {float(r['A']):+.2f} | "
                  f"{float(r['u_A']):.2f} | {float(r['r']):+.3f} | {float(r['p']):.3f} |")
     L.append("")
     L.append("![逐段幅度比 A 森林图](../clock/segment_analysis/batch_forest.png)")
@@ -203,8 +211,8 @@ def main() -> int:
     L.append("![逐段拍频 vs 潮汐共享轴](../clock/segment_analysis/batch_shared_axis.png)")
     L.append("")
     L.append(f"**跨段合并**：{neg}/17 段同号（二项 p={float(agg['binomial_p']):.4f}），")
-    L.append(f"符号无关 Stouffer |z|={zagn:.2f}（p={p_agn:.1e}），"
-             f"幅度比 A = {A:+.2f}±{uA:.2f}（{abs(A)/uA:.1f}σ）。")
+    L.append(f"带符号 Stouffer z={z_sign:+.2f}（p={p_sign:.1e}），"
+             f"幅度比 A = {A:+.2f}±{uA:.2f}。不使用无效的“符号无关 Stouffer”显著性。")
     L.append("")
     L.append("---")
     L.append("")
@@ -246,7 +254,7 @@ def main() -> int:
     L.append("| 维度 | 结果 |")
     L.append("|---|---|")
     L.append(f"| 整个实验 Yb/Sr 值 | R_duration = {R_duration_18}，与实验方 WLS 差 {d_dur_wls:+.2f}×10⁻¹⁸ |")
-    L.append(f"| 段内跨段合并 | {neg}/17 同号，Stouffer \\|z\\|={zagn:.2f}（p={p_agn:.1e}），A={A:+.2f}±{uA:.2f} |")
+    L.append(f"| 段内跨段合并 | {neg}/17 同号，带符号 Stouffer z={z_sign:+.2f}（p={p_sign:.1e}），A={A:+.2f}±{uA:.2f} |")
     L.append(f"| 段均值相关性 | 段等权重 Pearson r = {pear_r:+.3f}（p={pear_p:.3f}）；"
              f"时间等权重 r = {tw_r:+.3f}（p={tw_r_p:.3f}） |")
     L.append(f"| 整体修正量 | Δf/f = {w_mean_dff:+.3f}×10⁻¹⁸ |")
@@ -404,7 +412,8 @@ def main() -> int:
                 L.append("不改变 §6 所述 u_i 不可靠、不作最终不确定度声明的口径。")
                 L.append("")
 
-            # significance of the chi2_red reduction, from goodness_of_fit
+            # Fixed scenarios with separately re-estimated uncertainties are not
+            # nested likelihood-ratio models.  Keep only descriptive changes.
             gof = synth.get("goodness_of_fit")
             if gof is not None and "chi2" in stat_tidal["scenarios"]["raw"]:
                 raw_s = stat_tidal["scenarios"]["raw"]
@@ -412,29 +421,21 @@ def main() -> int:
                 em_s = stat_tidal["scenarios"]["empirical"]
                 dchi2_th = raw_s["chi2"] - th_s["chi2"]
                 dchi2_em = raw_s["chi2"] - em_s["chi2"]
-                from scipy import stats as _st
-                p_lr_th = _st.chi2.sf(dchi2_th, 1)
-                p_lr_em = _st.chi2.sf(dchi2_em, 1)
-                L.append("### 7.3 χ²_red 下降的显著性")
+                L.append("### 7.3 χ² 变化的描述性比较")
                 L.append("")
                 L.append(f"理论（A=−1）补偿令 χ²_red 从 {raw_s['chi2_red']:.3f} 降到 "
-                         f"{th_s['chi2_red']:.3f}（−31.8%），经验（A=−0.54）降到 "
-                         f"{em_s['chi2_red']:.3f}（−15.9%）。用两个口径衡量其显著性：")
+                         f"{th_s['chi2_red']:.3f}，经验（A=−0.54）为 "
+                         f"{em_s['chi2_red']:.3f}。")
                 L.append("")
-                L.append("**口径一：似然比 Δχ²（把「加回潮汐」当作 1 参数模型扩展）**。")
                 L.append(f"theory 的 χ² 从 {raw_s['chi2']:.2f} 降到 {th_s['chi2']:.2f}，"
-                         f"Δχ² = {dchi2_th:.2f}（dof=1），p = {p_lr_th:.2e}（等效 {_st.norm.ppf(1-p_lr_th/2):.1f}σ）；")
+                         f"Δχ² = {dchi2_th:.2f}；")
                 L.append(f"empirical 的 χ² 从 {raw_s['chi2']:.2f} 降到 {em_s['chi2']:.2f}，"
-                         f"Δχ² = {dchi2_em:.2f}（dof=1），p = {p_lr_em:.2e}（等效 {_st.norm.ppf(1-p_lr_em/2):.1f}σ）。")
-                L.append("即潮汐补偿对拟合的改善**高度显著**（远过 5σ / 3.7σ）。")
+                         f"Δχ² = {dchi2_em:.2f}。")
                 L.append("")
-                L.append("**口径二：补偿本身并非全解**。三个情景自己的 χ² 拟合优度 p 值仍都 ≪ 0.05")
-                L.append(f"（raw {raw_s['p_chi2']:.1e}、theory {th_s['p_chi2']:.1e}、"
-                         f"empirical {em_s['p_chi2']:.1e}），组间**超额散布**等效显著度从 raw 的 "
-                         f"{_st.norm.ppf(1-raw_s['p_chi2']/2):.1f}σ 降到 theory 的 {_st.norm.ppf(1-th_s['p_chi2']/2):.1f}σ。")
-                L.append("也就是说：理论补偿**显著改善**了组间一致性，但**没有消除全部**超额散布——")
-                L.append("残余 χ²_red≈3.7 意味着除潮汐外仍有未建模的组间随机过程。这一点与 §6 的")
-                L.append("u_i 不可靠结论一致，故改善的显著性不等同于「已完全解释组间散布」。")
+                L.append("这些是固定系数情景之间的描述性差异，且每个情景分别重新估计了不确定度；")
+                L.append("它们不是嵌套似然比，不能换算为 χ²₁ 的 p 值或 σ 显著性。各情景的")
+                L.append("χ²_red 仍大于 1，结合 §6 的 OADEV 外推局限，不能将该变化解释为潮汐模型")
+                L.append("已经解释全部组间散布。")
                 L.append("")
 
         # ---- segment-9 exclusion sensitivity (additive; never replaces §7) ----
@@ -487,6 +488,47 @@ def main() -> int:
             L.append("> §7 的 χ²_red 改善与长期稳定度结论都应谨慎解读。数值来源")
             L.append("> [statistical_methods_tidal_seg9_excluded.json]"
                      "(statistical_methods_tidal_seg9_excluded.json)。")
+            L.append("")
+
+    if concatenated_stability or spliced_stability:
+        L.append("---")
+        L.append("")
+        L.append("## 9. 拼接序列稳定度（独立附加结果）")
+        L.append("")
+        L.append("段间样本标准差与 Allan 偏差测量不同对象。本节从 CSV 产物再生稳定度摘要；"
+                 "不以 OADEV 充当 SEM，也不生成新的显著性声明。")
+        L.append("")
+        if concatenated_stability:
+            raw_runs = [row for row in concatenated_stability if row["scenario"] == "raw"]
+            L.append("### 9.1 保留真实间断的拼接")
+            L.append("")
+            L.append(f"该版本保持真实时间断点，包含 {len(raw_runs)} 个 τ 点；"
+                     "仅在连续 1 s 片段内计算重叠 Allan 偏差。详见"
+                     " [concatenated_stability.md](concatenated_stability.md)。")
+            L.append("")
+        if spliced_stability:
+            L.append("### 9.2 端到端拼接（探索性频域视角）")
+            L.append("")
+            L.append("端到端版本移除了段间空档，因此长 τ 会混合不同测量战役；它是补充视角，"
+                     "不替代保留间断的结果。")
+            L.append("")
+            L.append("| τ (s) | raw σ_y | theory σ_y | empirical σ_y | n_pairs |")
+            L.append("|---|---|---|---|---|")
+            by_key = {(row["series"], int(row["tau_s"])): row for row in spliced_stability}
+            shared_taus = sorted(
+                {int(row["tau_s"]) for row in spliced_stability if row["series"] == "raw"}
+                & {int(row["tau_s"]) for row in spliced_stability if row["series"] == "theory"}
+                & {int(row["tau_s"]) for row in spliced_stability if row["series"] == "empirical"})
+            for tau in (128, 3600, 7200, 32768, 86400, 400000):
+                if tau in shared_taus:
+                    raw = by_key[("raw", tau)]
+                    theory = by_key[("theory", tau)]
+                    empirical = by_key[("empirical", tau)]
+                    L.append(f"| {tau} | {raw['sigma_y']} | {theory['sigma_y']} | "
+                             f"{empirical['sigma_y']} | {raw['n_pairs']} |")
+            L.append("")
+            L.append("完整 τ 网格与 EDF 误差栏见 [concatenated_stability_long.md]"
+                     "(concatenated_stability_long.md)。")
             L.append("")
 
     out = OUT_DIR / "EXPERIMENT_REPORT.md"
