@@ -89,12 +89,12 @@ gravitational potential over the real $700$\,km baseline, resolving a
 tidal geopotential difference at centimetre-level equivalent height rather
 than on a single campus. Such a network thus both supports the redefinition
 of the SI second and senses the time-varying gravitational potential.
-% src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4 (ratio) and 5.6 (vs NIST-JILA, -1.7e-18);
-% src: clock/segment_analysis/batch_aggregate.csv (recomputed overlap-aware diagnostics);
-%      clock_ratio/statistical_methods_tidal.json (descriptive fixed-scenario comparison).
-% NOTE: headline ratio is the UNCORRECTED centre 1.207...7213(23); the
-% tidal-corrected Bayesian centre is 1.207...7215(23) (reported in the main
-% text). The 0.75e-18 statistical term is clock statistical noise only.
+% seg9: 16-segment variant (segment 9 excluded). Headline ratio is the
+%      UNCORRECTED centre 1.207...7201(29); the 0.88e-18 statistical term is
+%      clock statistical noise only.
+% src: clock_ratio/statistical_methods_tidal_seg9_excluded.json (raw scenario);
+%      clock_ratio/correlation_reanalysis_seg9_independent.json;
+%      clock/segment_analysis/batch_aggregate.csv (recomputed overlap-aware diagnostics).
 % The European-network comparison is deliberately omitted: its statistical
 % uncertainty is too large for a meaningful assertion of agreement, so the
 % apparent concordance would be coincidental. Our own value may shift at the
@@ -319,10 +319,10 @@ scatter is $\sigma(y_i) = 2.58\e{-18}$.
 
 The tide modulates the comparison frequency through the gravitational
 redshift, $\dff/f = \dW(t)/c^{2}$, with a segment-averaged rms amplitude
-of $3.84\e{-18}$ (median; range $0.86$--$6.56\e{-18}$ across the 17
+of $3.90\e{-18}$ (median; range $2.00$--$6.56\e{-18}$ across the 16
 segments).
-% src: clock/segment_analysis/batch_summary.csv (tide_rms_hz / F_1550;
-%      median 3.844e-18, min 0.857e-18, max 6.562e-18)
+% seg9: 16-segment tide_rms/F_1550 (segment 9 excluded); median 3.895e-18,
+%      min 1.997e-18, max 6.562e-18
 
 After both the beat and a tidal template are passed through a
 $1200$\,s triangular window and demeaned, each segment is fitted with
@@ -443,8 +443,8 @@ an equivalent height of about $0.8$\,cm.
 The comparison places the Yb/Sr ratio on the map of independent
 determinations (Table~\ref{tab:compare}, Fig.~\ref{fig:compare}). Our
 uncorrected centre lies
-$-1.7\e{-18}$ below the NIST--JILA value \citep{aeppli2026nist} and
-$+3.3\e{-18}$ above the European-network value
+$-2.9\e{-18}$ below the NIST--JILA value \citep{aeppli2026nist} and
+$+2.1\e{-18}$ above the European-network value
 \citep{pizzocaro2026european}. The NIST--JILA determination carries a total
 uncertainty at the few-parts-in-$10^{18}$ level, so our difference from it
 is below the $5\e{-18}$ target; the European-network central value is
@@ -495,15 +495,14 @@ question.
     \toprule
     Determination & Yb/Sr & Deviation & Ref. \\
     \midrule
-    NIST--JILA       & $1.207\,507\,039\,343\,337\,7230(37)$ & $-1.7$ & \citep{aeppli2026nist} \\
-    This work        & $1.207\,507\,039\,343\,337\,721\,3(23)$ & $0$    & --- \\
-    European network & $1.207\,507\,039\,343\,337\,718(32)$  & $+3.3$ & \citep{pizzocaro2026european} \\
+    NIST--JILA       & $1.207\,507\,039\,343\,337\,7230(37)$ & $-2.9$ & \citep{aeppli2026nist} \\
+    This work        & $1.207\,507\,039\,343\,337\,720\,1(29)$ & $0$    & --- \\
+    European network & $1.207\,507\,039\,343\,337\,718(32)$  & $+2.1$ & \citep{pizzocaro2026european} \\
     \bottomrule
   \end{tabular}
-  % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4 (this work, uncorrected);
-  % src: refs.bib aeppli2026nist / pizzocaro2026european (cross-checks).
-  % Deviations verified in Decimal80: 1.2075070393433377213 - 1.2075070393433377230 = -1.70e-18,
-  %                                     1.2075070393433377213 - 1.207507039343337718  = +3.30e-18.
+  % seg9: 16-segment "this work" ratio ...7201(29); deviations vs NIST/EUR recomputed
+  %      in Decimal80: 1.2075070393433377201 - 1.2075070393433377230 = -2.90e-18,
+  %                     1.2075070393433377201 - 1.207507039343337718  = +2.10e-18.
 \end{table}
 
 \begin{figure}[t]
@@ -547,8 +546,8 @@ We have demonstrated an inter-city, cross-species optical-clock network:
 an IAPMST Yb clock in Wuhan \citep{zhu2026yb} and a USTC Sr clock in
 Shanghai \citep{jia2026sr}, about $700$\,km apart and linked by a
 phase-stabilised fibre, operated coherently for $58$\,days. Combining
-$17$ segments with a Bayesian random-effect model gives an uncorrected
-Yb/Sr ratio of $1.207\,507\,039\,343\,337\,721\,3(23)$ with a total
+$16$ segments with a Bayesian random-effect model gives an uncorrected
+Yb/Sr ratio of $1.207\,507\,039\,343\,337\,720\,1(29)$ with a total
 uncertainty of $2\e{-18}$, consistent with the existing determinations at
 the $5\e{-18}$ level. The tidal gravitational-redshift template response is
 carried as an uncertainty item, pending a covariance-aware detection analysis.
