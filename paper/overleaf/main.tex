@@ -557,6 +557,13 @@ as well as a metrological one.
 \section{Methods}
 % =====================================================================
 
+We describe the measurement and its analysis in three groups: the
+apparatus and the link (§``Experimental setup and frequency transfer''),
+the data set (§``Observation campaign and per-segment data''), and the
+analysis chain that turns the raw beat into the reported ratio---the
+ratio inversion, the systematic and geopotential corrections, the tidal
+treatment, and the statistical combination of the per-segment results.
+
 \subsection{Experimental setup and frequency transfer}
 % =====================================================================
 
@@ -627,14 +634,70 @@ their roles in the link and comb chains.
   \end{tabular}
 \end{table}
 
-The static geopotential correction is applied at the ratio level: with
-the Wuhan--Shanghai potential difference of
-$280.04164\ \mathrm{m^{2}/s^{2}}$, the residual Yb/Sr fractional offset is
-$-3.1159\e{-15}$, compensated as
+The static geopotential difference between the two clocks,
+$\dW = 280.04164\ \mathrm{m^{2}/s^{2}}$, is applied at the ratio level as a
+constant correction $\delta_g = \dW/c^{2} = -3.1159\e{-15}$ (fixed by the
+levelling described below):
 $\mathrm{(Yb/Sr)}_{\mathrm{corr}} = \mathrm{(Yb/Sr)}_{\mathrm{raw}}
-\times (1+\delta_g)$ with $\delta_g = -3.1159\e{-15}$.
+\times (1+\delta_g)$.
 % src: paper/武汉-上海水准测量0930R1.docx (Delta_W = 280.04164 m^2/s^2);
 %      delta_g = Delta_W/c^2
+
+% =====================================================================
+
+
+\subsection{Observation campaign and per-segment data}
+\label{app:segments}
+% =====================================================================
+
+The comparison spans the $58$-day campaign described in the main text.
+Table~\ref{tab:segments} lists the 17 uninterrupted segments, their
+retained sample counts $n_i$ (after endpoint trimming) and measurement
+campaign; the retained total is $\sum_i n_i = 1\,008\,912$ one-second
+samples. During campaign~1 the Yb and Sr clocks were restarted
+independently between some segments (Yb after segments 4--6; Sr after
+segments 7--8), which lets the reproducibility of the ratio be checked
+directly.
+% src: clock_ratio/ratio_17seg.csv (n_valid); clock_ratio/tidal_correction/summary.json
+% src: experiment-side manuscript (光钟比对论文 hj.docx, supplementary S2)
+
+\begin{table}[t]
+  \centering
+  \caption{The 17 uninterrupted segments: index, retained samples $n_i$
+  (endpoint-trimmed), and Beijing-time start.}
+  \label{tab:segments}
+  \begin{tabular}{ccl}
+    \toprule
+    Segment & $n_i$ (s) & Start (Beijing) \\
+    \midrule
+    1  & $68\,009$  & 2026-06-29 10:06:28 \\
+    2  & $29\,481$  & 2026-06-30 12:00:01 \\
+    3  & $42\,891$  & 2026-07-01 15:58:41 \\
+    4  & $64\,280$  & 2026-07-02 14:00:01 \\
+    5  & $19\,532$  & 2026-07-03 17:34:22 \\
+    6  & $52\,140$  & 2026-07-04 19:30:46 \\
+    7  & $39\,526$  & 2026-07-05 13:00:01 \\
+    8  & $43\,565$  & 2026-07-06 21:45:16 \\
+    9  & $22\,496$  & 2026-08-07 15:15:00 \\
+    10 & $57\,938$  & 2026-08-07 22:15:00 \\
+    11 & $35\,824$  & 2026-08-09 00:00:00 \\
+    12 & $40\,346$  & 2026-08-10 12:47:06 \\
+    13 & $152\,994$ & 2026-08-11 05:30:00 \\
+    14 & $68\,618$  & 2026-08-13 18:56:58 \\
+    15 & $57\,649$  & 2026-08-21 00:40:03 \\
+    16 & $147\,640$ & 2026-08-21 23:20:01 \\
+    17 & $65\,983$  & 2026-08-25 15:09:41 \\
+    \midrule
+    \multicolumn{1}{r}{Total} & $1\,008\,912$ & \\
+    \bottomrule
+  \end{tabular}
+  % src: clock_ratio/ratio_17seg.csv; segment windows in clock/params.json.
+  % NOTE: the experiment-side supplementary table lists slightly larger
+  % per-segment counts totalling 1,009,204 s; the difference (+292 s,
+  % <0.03%) is not yet reconciled and is under review with the experiment
+  % side.  This table reports the endpoint-trimmed counts used in the
+  % analysis of this work.
+\end{table}
 
 % =====================================================================
 
@@ -697,6 +760,108 @@ retained as delivered, without adjustment. The component evaluations
 follow the published assessments of the two clocks
 \cite{zhu2026yb, jia2026sr}.
 % src: docs/NOTATION.md Sec. 5.1, clock/params.json (shift_a)
+
+
+\subsection{Levelling determination of the geopotential difference}
+\label{app:levelling}
+
+The static gravitational-redshift correction $\delta_g$ entering the ratio
+inversion is fixed by the geopotential difference between the two clocks'
+atomic transition positions, determined by first-order spirit levelling
+together with simultaneous gravimetry. A levelling line of about $1113$\,km
+was run between the Wuhan benchmark WS-03 (at IAPMST) and the Shanghai
+benchmark WS-01 (at USTC), comprising six first-order routes through
+Ezhou, Huangshi, Huanggang, Lu'an, Hefei, Wuhu, Guangde and Suzhou.
+Levelling was performed with digital levels (Sokkia SDL1X, Trimble
+DiNi03) and bar-coded invar staffs, with sight lengths below $30$\,m and a
+forward--back sight-length difference below $1.0$\,m; gravity was
+observed at every levelling point with two relative gravimeters. The
+levelled normal heights were converted to orthometric heights for the
+geopotential integration, and the geopotential difference between the two
+benchmarks follows from $\dW_{AB} = -\sum_i g_i\,\Delta H_i$, where $g_i$
+is the mean gravity and $\Delta H_i$ the orthometric height difference of
+the $i$-th segment.
+
+Two further segments connect each benchmark to the corresponding atomic
+transition position: the benchmark-to-optical-platform height difference
+was obtained by trigonometrical heighting (total station), and the
+platform-to-atom segment from the clock design parameters. The five
+partial geopotential differences are listed in Table~\ref{tab:levelling}
+and sum to $\dW = 280.04164\ \mathrm{m^{2}/s^{2}}$ between the two atomic
+transition positions. The levelling precision, expressed as the
+accidental mean error per kilometre, is $0.255$\,mm, better than the
+$0.45$\,mm limit for first-order levelling. Propagating the levelling,
+trigonometrical-heighting and platform-to-atom terms yields a total
+height precision of $\pm0.0086$\,m, and hence a geopotential-difference
+uncertainty of $\pm0.085\ \mathrm{m^{2}/s^{2}}$.
+% src: paper/武汉-上海水准测量0930R1.docx (Secs. 1-3; Delta_W = 280.04164 m^2/s^2,
+%      sigma(W) = 0.085 m^2/s^2)
+
+\begin{table}[t]
+  \centering
+  \caption{Partial geopotential differences between the Yb (Wuhan) and
+  Sr (Shanghai) clocks, in $\mathrm{m^{2}/s^{2}}$.}
+  \label{tab:levelling}
+  \begin{tabular}{lr}
+    \toprule
+    Segment & $\Delta W$ ($\mathrm{m^{2}/s^{2}}$) \\
+    \midrule
+    Yb atom $\to$ Yb optical platform        & $+2.65399$ \\
+    Yb platform $\to$ benchmark WS-03        & $-14.51715$ \\
+    Benchmark WS-03 $\to$ benchmark WS-01    & $+296.33022$ \\
+    Benchmark WS-01 $\to$ Sr optical platform & $-1.47246$ \\
+    Sr platform $\to$ Sr atom                & $-2.95296$ \\
+    \midrule
+    Yb atom $\to$ Sr atom (total)            & $+280.04164$ \\
+    \bottomrule
+  \end{tabular}
+  % src: paper/武汉-上海水准测量0930R1.docx (Table 1)
+\end{table}
+
+% =====================================================================
+
+
+\subsection{Tidal analysis}
+\label{app:tidal}
+
+The tidal beat template is formed from the professional $30$\,s
+geopotential-difference series, linearly interpolated to the retained
+beat timestamps after shifting the Beijing-time beat windows to UTC. It
+is normalised to the $1550$\,nm transfer frequency,
+$h(t) = F_{1550}\,\dW(t)/c^{2}$ with
+$F_{1550} = N_{1550}^{\mathrm{WH}} f_{\mathrm{rep}} = 193.3992$\,THz,
+\emph{not} to $1/\mathrm{COEF}$, which would be larger by the Yb/Sr
+factor $\approx 1.2075$ and would bias $A$ low by that factor. Within
+each segment the beat and the template are passed through a $1200$\,s
+triangular window (600\,s step) and, after demeaning, fitted with
+$\mathrm{beat} = A\,\mathrm{tide} + \mathrm{noise}$,
+$A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. The
+resulting segment-mean correlation between $y_i$ and $\dff$ is shown in
+Fig.~\ref{fig:corr-scatter}. We
+combine the per-segment amplitudes by precision weighting, together with
+the sign-consistency (binomial), Stouffer (sign-agnostic $|z|$) and
+Fisher combinations.
+% src: docs/METHODOLOGY.md Sec. 5.1-5.3, Sec. 9
+
+For the fixed-coefficient scenarios we apply the correction to the beat
+before re-inverting the ratio, $b_{\mathrm{corr}}(t) =
+b_{\mathrm{raw}}(t) - A\,h(t)$ with $A=-1$ (theory) or $A=-0.54$
+(empirical); the ratio chain is then re-inverted and the four combination
+methods re-applied. The direction self-check and the dispersion reduction
+are reported in the Results. Because the two amplitudes are fixed rather
+than fitted, and the sign follows a specified response convention (see
+Discussion), we report these scenarios as effect estimates and keep the
+uncorrected centre as the headline ratio.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.75\linewidth]{figs/figS2_correlation.png}
+  \caption{Segment-mean correlation. Clock-ratio deviation
+  $y_i = R_i/R_{\mathrm{seg1}} - 1$ against the session tidal shift
+  $\dff$ for the 17 segments; the ordinary least-squares fit gives the
+  positive correlation reported in the Results.}
+  \label{fig:corr-scatter}
+\end{figure}
 
 
 \subsection{Per-segment uncertainties}
@@ -790,163 +955,6 @@ under the tidal correction is the same for all four methods.
   % src: clock_ratio/statistical_methods_tidal.json
   %      (scenarios.raw: u_wls=2.7476e-19, u_mp=7.5501e-19,
   %       u_stat_bayes=8.0023e-19)
-\end{table}
-
-% =====================================================================
-
-
-\subsection{Levelling determination of the geopotential difference}
-\label{app:levelling}
-
-The static gravitational-redshift correction is fixed by the geopotential
-difference between the two clocks' atomic transition positions,
-determined by first-order spirit levelling together with simultaneous
-gravimetry. A levelling line of about $1113$\,km was run between the
-Wuhan benchmark WS-03 (at IAPMST) and the Shanghai benchmark WS-01 (at
-USTC), comprising six first-order routes through Ezhou, Huangshi,
-Huanggang, Lu'an, Hefei, Wuhu, Guangde and Suzhou. Levelling was
-performed with digital levels (Sokkia SDL1X, Trimble DiNi03) and
-bar-coded invar staffs, with sight lengths below $30$\,m and a
-forward--back sight-length difference below $1.0$\,m; gravity was
-observed at every levelling point with two relative gravimeters. The
-levelled normal heights were converted to orthometric heights for the
-geopotential integration, and the geopotential difference between the two
-benchmarks follows from $\dW_{AB} = -\sum_i g_i\,\Delta H_i$, where $g_i$
-is the mean gravity and $\Delta H_i$ the orthometric height difference of
-the $i$-th segment.
-
-Two further segments connect each benchmark to the corresponding atomic
-transition position: the benchmark-to-optical-platform height difference
-was obtained by trigonometrical heighting (total station), and the
-platform-to-atom segment from the clock design parameters. The five
-partial geopotential differences are listed in Table~\ref{tab:levelling}
-and sum to $\dW = 280.04164\ \mathrm{m^{2}/s^{2}}$ between the two atomic
-transition positions. The levelling precision, expressed as the
-accidental mean error per kilometre, is $0.255$\,mm, better than the
-$0.45$\,mm limit for first-order levelling. Propagating the levelling,
-trigonometrical-heighting and platform-to-atom terms yields a total
-height precision of $\pm0.0086$\,m, and hence a geopotential-difference
-uncertainty of $\pm0.085\ \mathrm{m^{2}/s^{2}}$.
-% src: paper/武汉-上海水准测量0930R1.docx (Secs. 1-3; Delta_W = 280.04164 m^2/s^2,
-%      sigma(W) = 0.085 m^2/s^2)
-
-\begin{table}[t]
-  \centering
-  \caption{Partial geopotential differences between the Yb (Wuhan) and
-  Sr (Shanghai) clocks, in $\mathrm{m^{2}/s^{2}}$.}
-  \label{tab:levelling}
-  \begin{tabular}{lr}
-    \toprule
-    Segment & $\Delta W$ ($\mathrm{m^{2}/s^{2}}$) \\
-    \midrule
-    Yb atom $\to$ Yb optical platform        & $+2.65399$ \\
-    Yb platform $\to$ benchmark WS-03        & $-14.51715$ \\
-    Benchmark WS-03 $\to$ benchmark WS-01    & $+296.33022$ \\
-    Benchmark WS-01 $\to$ Sr optical platform & $-1.47246$ \\
-    Sr platform $\to$ Sr atom                & $-2.95296$ \\
-    \midrule
-    Yb atom $\to$ Sr atom (total)            & $+280.04164$ \\
-    \bottomrule
-  \end{tabular}
-  % src: paper/武汉-上海水准测量0930R1.docx (Table 1)
-\end{table}
-
-% =====================================================================
-
-
-\subsection{Tidal analysis}
-\label{app:tidal}
-
-The tidal beat template is formed from the professional $30$\,s
-geopotential-difference series, linearly interpolated to the retained
-beat timestamps after shifting the Beijing-time beat windows to UTC. It
-is normalised to the $1550$\,nm transfer frequency,
-$h(t) = F_{1550}\,\dW(t)/c^{2}$ with
-$F_{1550} = N_{1550}^{\mathrm{WH}} f_{\mathrm{rep}} = 193.3992$\,THz,
-\emph{not} to $1/\mathrm{COEF}$, which would be larger by the Yb/Sr
-factor $\approx 1.2075$ and would bias $A$ low by that factor. Within
-each segment the beat and the template are passed through a $1200$\,s
-triangular window (600\,s step) and, after demeaning, fitted with
-$\mathrm{beat} = A\,\mathrm{tide} + \mathrm{noise}$,
-$A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. The
-resulting segment-mean correlation between $y_i$ and $\dff$ is shown in
-Fig.~\ref{fig:corr-scatter}. We
-combine the per-segment amplitudes by precision weighting, together with
-the sign-consistency (binomial), Stouffer (sign-agnostic $|z|$) and
-Fisher combinations.
-% src: docs/METHODOLOGY.md Sec. 5.1-5.3, Sec. 9
-
-For the fixed-coefficient scenarios we apply the correction to the beat
-before re-inverting the ratio, $b_{\mathrm{corr}}(t) =
-b_{\mathrm{raw}}(t) - A\,h(t)$ with $A=-1$ (theory) or $A=-0.54$
-(empirical); the ratio chain is then re-inverted and the four combination
-methods re-applied. The direction self-check and the dispersion reduction
-are reported in the Results. Because the two amplitudes are fixed rather
-than fitted, and the sign follows a specified response convention (see
-Discussion), we report these scenarios as effect estimates and keep the
-uncorrected centre as the headline ratio.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.75\linewidth]{figs/figS2_correlation.png}
-  \caption{Segment-mean correlation. Clock-ratio deviation
-  $y_i = R_i/R_{\mathrm{seg1}} - 1$ against the session tidal shift
-  $\dff$ for the 17 segments; the ordinary least-squares fit gives the
-  positive correlation reported in the Results.}
-  \label{fig:corr-scatter}
-\end{figure}
-
-
-\subsection{Per-segment data}
-\label{app:segments}
-% =====================================================================
-
-Table~\ref{tab:segments} lists the 17 uninterrupted segments with their
-retained sample counts $n_i$ (after endpoint trimming) and measurement
-campaign; the retained total is $\sum_i n_i = 1\,008\,912$ one-second
-samples. During campaign~1 the Yb and Sr clocks were restarted
-independently between some segments (Yb after segments 4--6; Sr after
-segments 7--8), which lets the reproducibility of the ratio be checked
-directly.
-% src: clock_ratio/ratio_17seg.csv (n_valid); clock_ratio/tidal_correction/summary.json
-% src: experiment-side manuscript (光钟比对论文 hj.docx, supplementary S2)
-
-\begin{table}[t]
-  \centering
-  \caption{The 17 uninterrupted segments: index, retained samples $n_i$
-  (endpoint-trimmed), and Beijing-time start.}
-  \label{tab:segments}
-  \begin{tabular}{ccl}
-    \toprule
-    Segment & $n_i$ (s) & Start (Beijing) \\
-    \midrule
-    1  & $68\,009$  & 2026-06-29 10:06:28 \\
-    2  & $29\,481$  & 2026-06-30 12:00:01 \\
-    3  & $42\,891$  & 2026-07-01 15:58:41 \\
-    4  & $64\,280$  & 2026-07-02 14:00:01 \\
-    5  & $19\,532$  & 2026-07-03 17:34:22 \\
-    6  & $52\,140$  & 2026-07-04 19:30:46 \\
-    7  & $39\,526$  & 2026-07-05 13:00:01 \\
-    8  & $43\,565$  & 2026-07-06 21:45:16 \\
-    9  & $22\,496$  & 2026-08-07 15:15:00 \\
-    10 & $57\,938$  & 2026-08-07 22:15:00 \\
-    11 & $35\,824$  & 2026-08-09 00:00:00 \\
-    12 & $40\,346$  & 2026-08-10 12:47:06 \\
-    13 & $152\,994$ & 2026-08-11 05:30:00 \\
-    14 & $68\,618$  & 2026-08-13 18:56:58 \\
-    15 & $57\,649$  & 2026-08-21 00:40:03 \\
-    16 & $147\,640$ & 2026-08-21 23:20:01 \\
-    17 & $65\,983$  & 2026-08-25 15:09:41 \\
-    \midrule
-    \multicolumn{1}{r}{Total} & $1\,008\,912$ & \\
-    \bottomrule
-  \end{tabular}
-  % src: clock_ratio/ratio_17seg.csv; segment windows in clock/params.json.
-  % NOTE: the experiment-side supplementary table lists slightly larger
-  % per-segment counts totalling 1,009,204 s; the difference (+292 s,
-  % <0.03%) is not yet reconciled and is under review with the experiment
-  % side.  This table reports the endpoint-trimmed counts used in the
-  % analysis of this work.
 \end{table}
 
 % =====================================================================
