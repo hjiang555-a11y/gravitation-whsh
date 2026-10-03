@@ -21,6 +21,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{geometry}
+\usepackage[super,sort&compress]{natbib}
 \usepackage[hidelinks]{hyperref}
 
 % siunitx is optional: this TeX Live install does not ship it.
@@ -102,42 +103,42 @@ of the SI second and senses the time-varying gravitational potential.
 % =====================================================================
 Optical clocks now measure frequency well enough to sense the
 gravitational redshift over a height difference of a centimetre
-\cite{mcgrew2018geodesy}, with self-evaluated fractional uncertainties
-below $10^{-18}$ \cite{arnold2026lu, zhang2026ca} and two-clock
+\citep{mcgrew2018geodesy}, with self-evaluated fractional uncertainties
+below $10^{-18}$ \citep{arnold2026lu, zhang2026ca} and two-clock
 stabilities approaching $10^{-18}$ within an hour
-\cite{oelker2019stability}, and their accuracy is driving two goals at
+\citep{oelker2019stability}, and their accuracy is driving two goals at
 once: redefining the SI second on an optical transition and reading the
 Earth's gravitational potential from clock comparisons
-\cite{dimarcq2024roadmap, grotti2018geodesy}. Both goals, however,
+\citep{dimarcq2024roadmap, grotti2018geodesy}. Both goals, however,
 depend on a capability that a single laboratory cannot provide. The best
 clocks are not transportable, so their claimed accuracy can only be
 confirmed by comparing them with one another over long distances. This
 has motivated the concept of a clock \emph{network}, in which separate
 clocks are linked into a single cooperative instrument
-\cite{riehle2017networks, komar2014quantumnetwork}.
+\citep{riehle2017networks, komar2014quantumnetwork}.
 
 Fibre links have made such comparisons possible. Ultrastable light can
 now be transferred over hundreds to thousands of kilometres with added
 noise below the level of the clocks themselves
-\cite{schioppo2022cavities, chen2026dissemination}, enabling inter-city
-links \cite{lisdat2016network}, multi-species ratio measurements
-\cite{beloy2021bacon}, and, most recently, a fibre network spanning
-several countries \cite{pizzocaro2026european}; transportable clocks,
+\citep{schioppo2022cavities, chen2026dissemination}, enabling inter-city
+links \citep{lisdat2016network}, multi-species ratio measurements
+\citep{beloy2021bacon}, and, most recently, a fibre network spanning
+several countries \citep{pizzocaro2026european}; transportable clocks,
 satellite links and free-space dissemination have extended comparisons
-further \cite{laurent2015aces, lindvall2025coordinated,
+further \citep{laurent2015aces, lindvall2025coordinated,
 shen2022freespace}. Beyond metrology, such
 networks also probe fundamental physics, from gravitational waves
-\cite{kolkowitz2016gw} to dark matter and topological defects
-\cite{derevianko2014topological}. Yet the comparisons
+\citep{kolkowitz2016gw} to dark matter and topological defects
+\citep{derevianko2014topological}. Yet the comparisons
 reported so far fall short of what a redefined second requires. The
 CCTF roadmap calls for optical frequency ratios measured independently
 in different institutes and agreeing at the few-parts-in-$10^{18}$ level,
 whose closure also validates the estimated uncertainties
-\cite{dimarcq2024roadmap, riehle2015redefinition}: the only
+\citep{dimarcq2024roadmap, riehle2015redefinition}: the only
 cross-species ratio reported at this level was measured over a short
 baseline between two clock laboratories in the same city
-\cite{aeppli2026nist}, and the widest networks have not yet reached
-$5\e{-18}$ \cite{lindvall2025coordinated}.
+\citep{aeppli2026nist}, and the widest networks have not yet reached
+$5\e{-18}$ \citep{lindvall2025coordinated}.
 
 It therefore remains unclear whether two clocks of different species,
 built at different institutions and separated by hundreds of kilometres
@@ -163,8 +164,8 @@ modulation of the ratio at $6.4\sigma$.
 % =====================================================================
 
 The experiment compares a Yb lattice clock at IAPMST in Wuhan
-\cite{zhu2026yb} with a Sr lattice clock at USTC in Shanghai
-\cite{jia2026sr}, two institutions and two clock
+\citep{zhu2026yb} with a Sr lattice clock at USTC in Shanghai
+\citep{jia2026sr}, two institutions and two clock
 species about $700$\,km apart. They are joined by a phase-stabilised
 $1550$\,nm fibre link of single-pass optical length $\approx1350$\,km,
 deployed on paired strands within a single cable duct of a
@@ -174,7 +175,7 @@ fibre-noise-cancellation loop. Loop-back purification keeps the link
 instability below the clock noise beyond $\sim100$\,s
 (Fig.~\ref{fig:setup}; Methods). The transfer architecture follows the
 cascaded, bias-corrected optical-frequency-dissemination design
-demonstrated on a $2067$\,km field link \cite{chen2026dissemination}; the
+demonstrated on a $2067$\,km field link \citep{chen2026dissemination}; the
 present link is shorter, which relaxes the accumulated noise. The raw
 observable is the out-of-loop beat note between the received carrier and
 the local comb, sampled at $1$\,s.
@@ -236,13 +237,13 @@ re-derivation from the raw beat files reproduces the per-segment ratios
 exactly (Methods).
 
 Table~\ref{tab:budget} lists the uncertainty terms. The Yb-clock
-evaluation \cite{zhu2026yb} ($1.1\e{-18}$) and the static gravitational
-redshift ($1\e{-18}$) dominate; the Sr-clock term \cite{jia2026sr} is
+evaluation \citep{zhu2026yb} ($1.1\e{-18}$) and the static gravitational
+redshift ($1\e{-18}$) dominate; the Sr-clock term \citep{jia2026sr} is
 $9.2\e{-19}$, the fibre and comb terms are each below $1\e{-19}$, and the
 tidal term is carried as an uncertainty item of $<5\e{-19}$, the size of
 the theoretical compensation. Combined in quadrature these terms give a
 total fractional uncertainty of $2\e{-18}$. The clock-systematic terms
-are the published evaluations of the two clocks \cite{zhu2026yb,
+are the published evaluations of the two clocks \citep{zhu2026yb,
 jia2026sr}, and the tidal-model contribution is a theoretical bound; a
 full point-by-point systematics evaluation remains in progress.
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4-5.6;
@@ -421,7 +422,7 @@ rather than adopted (Supplementary Information).
 \label{sec:caveats}
 
 Two features set this network apart. It is inter-city and cross-species:
-two clock species \cite{zhu2026yb, jia2026sr}, at two institutions and
+two clock species \citep{zhu2026yb, jia2026sr}, at two institutions and
 two cities, joined only by the fibre link and the combs, yet yielding a
 ratio that agrees with the leading independent determinations at the
 $5\e{-18}$ level without any transport of the clocks. And the same data
@@ -433,9 +434,9 @@ the baseline.
 The comparison places the Yb/Sr ratio on the map of independent
 determinations (Table~\ref{tab:compare}, Fig.~\ref{fig:compare}). Our
 uncorrected centre lies
-$-1.7\e{-18}$ below the NIST--JILA value \cite{aeppli2026nist} and
+$-1.7\e{-18}$ below the NIST--JILA value \citep{aeppli2026nist} and
 $+3.3\e{-18}$ above the European-network value
-\cite{pizzocaro2026european}. The NIST--JILA determination carries a total
+\citep{pizzocaro2026european}. The NIST--JILA determination carries a total
 uncertainty at the few-parts-in-$10^{18}$ level, so our difference from it
 is below the $5\e{-18}$ target; the European-network central value is
 quoted for completeness rather than as an independent agreement test,
@@ -450,7 +451,7 @@ on the Yb/Sr ratio that the redefinition of the SI second will rest on.
 That redefinition calls for a matrix of ratios measured by different
 laboratories and mutually agreeing at the few-parts-in-$10^{18}$ level;
 for Yb/Sr only a single determination to date meets the $5\e{-18}$ target
-\cite{aeppli2026nist}, and it differs markedly from earlier reports. The
+\citep{aeppli2026nist}, and it differs markedly from earlier reports. The
 present result adds a second, independently obtained entry to that
 matrix, from a third institution with a different pair of clocks and
 separate hardware and analysis, and so tests the redefinition on evidence
@@ -465,7 +466,7 @@ below $1\e{-19}$ (Table~\ref{tab:budget}), but the segment-to-segment
 scatter; closing the gap between the $0.75\e{-18}$ statistical floor and
 the $\sim5\e{-18}$ spread between independent determinations therefore
 requires progress on the systematic side, in the clock evaluations
-\cite{zhu2026yb, jia2026sr} and in joint geodetic levelling, rather than
+\citep{zhu2026yb, jia2026sr} and in joint geodetic levelling, rather than
 longer integration alone. Two further limits should be read with the
 result: the per-segment uncertainties $u_i$ are unreliable (an OADEV
 extrapolation that underestimates by roughly $30$--$40\%$, with anomalous
@@ -485,9 +486,9 @@ question.
     \toprule
     Determination & Yb/Sr & Deviation & Ref. \\
     \midrule
-    NIST--JILA       & $1.207\,507\,039\,343\,337\,7230(37)$ & $-1.7$ & \cite{aeppli2026nist} \\
+    NIST--JILA       & $1.207\,507\,039\,343\,337\,7230(37)$ & $-1.7$ & \citep{aeppli2026nist} \\
     This work        & $1.207\,507\,039\,343\,337\,721\,3(23)$ & $0$    & --- \\
-    European network & $1.207\,507\,039\,343\,337\,718(32)$  & $+3.3$ & \cite{pizzocaro2026european} \\
+    European network & $1.207\,507\,039\,343\,337\,718(32)$  & $+3.3$ & \citep{pizzocaro2026european} \\
     \bottomrule
   \end{tabular}
   % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4 (this work, uncorrected);
@@ -523,8 +524,8 @@ link and comb stability and dedicated joint levelling, is the natural
 next step.
 
 Beyond geodesy, the same network reaches into fundamental physics, where
-clock comparisons constrain dark-matter couplings \cite{wcislo2018global,
-roberts2017domain} and test Lorentz symmetry \cite{sanner2019lorentz};
+clock comparisons constrain dark-matter couplings \citep{wcislo2018global,
+roberts2017domain} and test Lorentz symmetry \citep{sanner2019lorentz};
 realizing that reach on an inter-city baseline is an open question
 motivated by the present sensitivity.
 % Position per paper/physics_analysis/NATURE_FRAMEWORK.md Sec. 1.
@@ -534,8 +535,8 @@ motivated by the present sensitivity.
 \label{sec:conclusion}
 
 We have demonstrated an inter-city, cross-species optical-clock network:
-an IAPMST Yb clock in Wuhan \cite{zhu2026yb} and a USTC Sr clock in
-Shanghai \cite{jia2026sr}, about $700$\,km apart and linked by a
+an IAPMST Yb clock in Wuhan \citep{zhu2026yb} and a USTC Sr clock in
+Shanghai \citep{jia2026sr}, about $700$\,km apart and linked by a
 phase-stabilised fibre, operated coherently for $58$\,days. Combining
 $17$ segments with a Bayesian random-effect model gives an uncorrected
 Yb/Sr ratio of $1.207\,507\,039\,343\,337\,721\,3(23)$ with a total
@@ -574,13 +575,13 @@ f_{\mathrm{ref}}\times\mathrm{DIV20} = 200$\,MHz.
 
 The fibre link itself is built on the cascaded,
 bias-corrected optical-frequency-dissemination architecture of
-Ref.~\cite{chen2026dissemination}: the route is divided into segments,
+Ref.~\citep{chen2026dissemination}: the route is divided into segments,
 each terminated by a relay station that carries a bidirectional
 erbium-doped fibre amplifier and a fibre-noise-cancellation loop, with the
 round-trip phase noise measured in the radio-frequency domain. Deployed
 on paired strands within a single telecommunications cable duct, the
 present Shanghai--Wuhan route is shorter than the $2067$\,km field link of
-Ref.~\cite{chen2026dissemination}, so the accumulated link noise is
+Ref.~\citep{chen2026dissemination}, so the accumulated link noise is
 correspondingly lower; the relay stations used here operate without the
 dedicated sub-hertz noise-purification stage that the longer link
 requires.
@@ -594,8 +595,8 @@ fundamental beam. The clock-laser frequency relations are
   \qquad a = a_{\mathrm{dens}} + a_{\mathrm{lat}} + a_{Z^2} + a_{\mathrm{BGC}}, \\
   f_{\mathrm{comb}}^{1156} &= \tfrac{1}{2}\,(1+b)\,f_{\mathrm{Yb}},
 \end{align}
-where $a$ collects the Sr-side systematic corrections \cite{jia2026sr} and
-$b$ the Yb-side correction \cite{zhu2026yb} ($b_{\mathrm{Yb}} =
+where $a$ collects the Sr-side systematic corrections \citep{jia2026sr} and
+$b$ the Yb-side correction \citep{zhu2026yb} ($b_{\mathrm{Yb}} =
 -1.7\e{-18}$; the internal components are listed below and in the
 repository). Table~\ref{tab:aom} gives the AOM frequency offsets and
 their roles in the link and comb chains.
@@ -755,7 +756,7 @@ shift (zero). Segments 15--17 reuse the constant $a_i$ of segments
 (\texttt{clock/params.json}); the anomalous \texttt{a\_SM} of segment~9 is
 retained as delivered, without adjustment. The component evaluations
 follow the published assessments of the two clocks
-\cite{zhu2026yb, jia2026sr}.
+\citep{zhu2026yb, jia2026sr}.
 % src: docs/NOTATION.md Sec. 5.1, clock/params.json (shift_a)
 
 
@@ -1072,7 +1073,7 @@ and the statistical-model details and MCMC convergence diagnostics
 % =====================================================================
 
 
-\bibliographystyle{plain}
+\bibliographystyle{unsrtnat}
 \bibliography{refs}
 % =====================================================================
 
