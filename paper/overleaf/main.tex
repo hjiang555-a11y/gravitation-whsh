@@ -74,16 +74,17 @@ uncertainty item, we obtain the Yb/Sr frequency ratio
 $1.207\,507\,039\,343\,337\,721\,3(23)$, with a statistical uncertainty of
 $0.75\times10^{-18}$ and a total uncertainty of $2\times10^{-18}$, whose
 central value differs from the latest NIST--JILA result by less than
-$5\times10^{-18}$. On the same data the tidal redshift modulation is
-resolved at $6.4\sigma$; removing it lowers the reduced chi-square from
-$5.42$ to $3.70$ ($32\%$). The two clocks also read the time-varying
+$5\times10^{-18}$. The same data show a tidal-template response in the
+windowed beat series; fixed tidal-response scenarios change the
+inter-segment scatter descriptively but are not used to correct the headline
+ratio. The two clocks also read the time-varying
 gravitational potential over the real $700$\,km baseline, resolving a
 tidal geopotential difference at centimetre-level equivalent height rather
 than on a single campus. Such a network thus both supports the redefinition
 of the SI second and senses the time-varying gravitational potential.
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4 (ratio) and 5.6 (vs NIST-JILA, -1.7e-18);
-% src: clock/segment_analysis/batch_aggregate.csv (6.4 sigma detection;
-%      chi2_red raw 5.42 -> tidal-corrected 3.70, i.e. -32%).
+% src: clock/segment_analysis/batch_aggregate.csv (recomputed overlap-aware diagnostics);
+%      clock_ratio/statistical_methods_tidal.json (descriptive fixed-scenario comparison).
 % NOTE: headline ratio is the UNCORRECTED centre 1.207...7213(23); the
 % tidal-corrected Bayesian centre is 1.207...7215(23) (reported in the main
 % text). The 0.75e-18 statistical term is clock statistical noise only.
@@ -148,8 +149,9 @@ Wuhan to a strontium lattice clock at USTC in Shanghai, about
 $700$\,km apart, through a $1350$\,km phase-stabilised fibre, and
 operate them coherently for $58$\,days. Treating the tidal
 gravitational-redshift term as an uncertainty item, we obtain a Yb/Sr
-ratio consistent with the existing determinations and detect the tidal
-modulation of the ratio at $6.4\sigma$.
+ratio consistent with the existing determinations and observe a
+tidal-template response that requires covariance-aware follow-up before a
+formal detection claim.
 
 % =====================================================================
 
@@ -230,9 +232,9 @@ uncorrected Yb/Sr frequency ratio
 % src: experiment-side PDF (clock/潮汐修正后的比值计算.pdf) Sec. 5.4
 with a Bayesian statistical uncertainty of $0.75\e{-18}$ from the clock
 statistical noise alone. The parenthetical $(23)$ is the display
-precision of the value string, not the statistical term. Removing the
-static geopotential shifts the centre by only $0.2\e{-18}$ relative to
-the experiment-side tidal-corrected value, and an independent
+precision of the value string, not the statistical term. The alternative
+tidal-correction scenarios shift the centre by only a few
+$10^{-19}$ relative to the experiment-side tidal-corrected value, and an independent
 re-derivation from the raw beat files reproduces the per-segment ratios
 exactly (Methods).
 
@@ -324,22 +326,20 @@ $\Ffifteen=193.40$\,THz, not to the ratio-conversion coefficient
 $1/\mathrm{COEF}\approx233.53$\,THz; the two differ by the Yb/Sr factor
 $1.2075$, so the choice of reference sets the amplitude scale and must be
 accounted for before comparing $A$ with other tidal analyses (Methods). A
-single segment reaches only $\mathrm{SNR}\approx0.28$, so no segment is
-individually significant (Fig.~\ref{fig:tidal}); across the 17 segments,
-however, the detection is significant by three independent combinations:
-14/17 segments share the same sign ($p=0.013$), the Stouffer
-sign-agnostic $|z|=5.87$ ($p=4.3\e{-9}$), and Fisher
-$p=2.2\e{-6}$. The precision-weighted amplitude,
+single segment reaches only $\mathrm{SNR}\approx0.28$. The 600-s-step
+windows overlap, so they cannot be used as independent samples for the
+historical p values or ``sign-agnostic Stouffer'' score. The amplitude point
+estimate uses all windows; its uncertainty and per-segment correlation are
+now evaluated from non-overlapping 1200-s windows, pending a full
+correlated-noise model. The historical fitted amplitude was approximately
 \begin{equation}
-  A = -0.5397 \pm 0.0843 \quad (\approx 6.4\sigma\ \text{from zero}),
+  A \approx -0.54,
   \label{eq:Afit}
 \end{equation}
-% src: clock/segment_analysis/batch_aggregate.csv
-%      (amplitude_A=-0.539699, amplitude_uA=0.084254, amplitude_sigma=6.405625;
-%       negative_r_segments=14, binomial_p=1.272583e-02,
-%       stouffer_z_agn=5.873404, fisher_p=2.153570e-06)
-is detected with the correct sign at roughly half the theoretical
-magnitude. At the segment-mean level, the ratio deviation $y_i$ is
+% src: clock/segment_analysis/batch_aggregate.csv (must be regenerated after
+%      the non-overlapping-window and validated-interpolation changes).
+and is consistent with a response of roughly half the theoretical magnitude.
+It is not used as a calibrated correction. At the segment-mean level, the ratio deviation $y_i$ is
 positively correlated with the tidal shift $\dff$ (Pearson $r=+0.518$,
 $p=0.033$).
 % src: clock_ratio/correlation_reanalysis.csv (pearson_r=0.517648, pearson_p=0.033314)
@@ -347,10 +347,10 @@ $p=0.033$).
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{figs/3.png}
-  \caption{Tidal influence and its correlation. The tidal modulation of
-  the comparison frequency is resolved at $6.4\sigma$ across the 17
-  segments (combined amplitude $A=-0.54\pm0.08$, at about half the
-  theoretical magnitude), and at the segment-mean level the ratio
+  \caption{Tidal influence and its correlation. The 1200-s-window fit gives
+    a historical amplitude estimate near $A=-0.54$ (about half the theoretical
+    magnitude); overlapping-window significance is not interpreted as a
+    detection statistic. At the segment-mean level the ratio
   deviation $y_i$ is positively correlated with the tidal shift
   $\dff$ (Pearson $r=+0.518$).}
   \label{fig:tidal}
@@ -426,10 +426,9 @@ two clock species \citep{zhu2026yb, jia2026sr}, at two institutions and
 two cities, joined only by the fibre link and the combs, yet yielding a
 ratio that agrees with the leading independent determinations at the
 $5\e{-18}$ level without any transport of the clocks. And the same data
-set senses the time-varying gravitational potential, the $0.75\e{-18}$
-statistical floor corresponding to an equivalent height of about
-$0.7$\,cm and the tidal modulation being resolved at $6.4\sigma$ across
-the baseline.
+set provides a time-varying-potential template response for further
+covariance-aware study; the $0.75\e{-18}$ statistical floor corresponds to
+an equivalent height of about $0.7$\,cm.
 
 The comparison places the Yb/Sr ratio on the map of independent
 determinations (Table~\ref{tab:compare}, Fig.~\ref{fig:compare}). Our
@@ -541,8 +540,8 @@ phase-stabilised fibre, operated coherently for $58$\,days. Combining
 $17$ segments with a Bayesian random-effect model gives an uncorrected
 Yb/Sr ratio of $1.207\,507\,039\,343\,337\,721\,3(23)$ with a total
 uncertainty of $2\e{-18}$, consistent with the existing determinations at
-the $5\e{-18}$ level; the tidal gravitational-redshift modulation of the
-same data is resolved at $6.4\sigma$ and carried as an uncertainty item.
+the $5\e{-18}$ level. The tidal gravitational-redshift template response is
+carried as an uncertainty item, pending a covariance-aware detection analysis.
 Two capabilities follow. The comparison supplies an independently
 obtained entry for the Yb/Sr ratio that a redefined SI second will rest
 on. And, for the first time over a real $700$\,km baseline rather than a
@@ -837,8 +836,9 @@ $A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. The
 resulting segment-mean correlation between $y_i$ and $\dff$ is shown in
 Fig.~\ref{fig:corr-scatter}. We
 combine the per-segment amplitudes by precision weighting, together with
-the sign-consistency (binomial), Stouffer (sign-agnostic $|z|$) and
-Fisher combinations.
+the sign-consistency (binomial), signed Stouffer and Fisher summaries.
+The inferential inputs use non-overlapping windows; no sign-agnostic
+Stouffer significance is assigned.
 % src: docs/METHODOLOGY.md Sec. 5.1-5.3, Sec. 9
 
 For the fixed-coefficient scenarios we apply the correction to the beat

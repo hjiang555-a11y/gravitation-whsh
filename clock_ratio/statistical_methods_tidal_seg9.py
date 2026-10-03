@@ -40,7 +40,7 @@ def scenario_result_from_rows(scenario: dict, rows: list[dict]) -> dict:
     import numpy as np
     u = np.array([r["u_i"] for r in rows])
     yy = np.array([r["y_i_1e18"] for r in rows]) * 1e-18
-    comb = combine(yy, u)
+    comb = combine(yy, u, float(Decimal(scenario["R_seg1"])))
     with localcontext() as ctx:
         ctx.prec = 80
         R0 = Decimal(scenario["R_seg1"])

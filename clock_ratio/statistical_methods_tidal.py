@@ -30,10 +30,10 @@ from decimal import Decimal, localcontext
 from pathlib import Path
 
 import numpy as np
-from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock import shared as s  # noqa: E402
+from clock_ratio.statistical_combination import combine  # noqa: E402
 from clock_ratio.statistical_methods import extrapolate_u, oadev  # noqa: E402
 from clock_ratio.tidal_analysis import (  # noqa: E402
     SCENARIOS, AnalysisError, Segment, TideGrid, analyze_segment, select_segments,
@@ -46,80 +46,6 @@ JSON_PATH = OUT_DIR / "statistical_methods_tidal.json"
 def corrected_beat(segment: Segment, h: np.ndarray, coefficient: Decimal) -> np.ndarray:
     """b_corr = b_raw - A*h for a fixed response coefficient (A < 0 adds template)."""
     return segment.beat - float(coefficient) * h
-
-
-def combine(yy: np.ndarray, u: np.ndarray) -> dict[str, float]:
-    """WLS / Birge / Mandel-Paule / Bayesian on (y_i, u_i). Same math as statistical_methods."""
-    w = 1.0 / u**2
-    y_wls = float(np.sum(w * yy) / np.sum(w))
-    u_wls = float(1.0 / np.sqrt(np.sum(w)))
-
-    dof = len(yy) - 1
-    chi2 = float(np.sum(((yy - y_wls) / u) ** 2))
-    chi2_red = chi2 / dof
-    p_chi2 = float(stats.chi2.sf(chi2, dof))
-    birge = float(np.sqrt(chi2_red))
-    u_birge = birge * u_wls
-
-    def chi2_red_mp(xi: float) -> float:
-        v = u**2 + xi**2
-        ww = 1.0 / v
-        yw = float(np.sum(ww * yy) / np.sum(ww))
-        return float(np.sum(((yy - yw) / np.sqrt(v)) ** 2) / dof)
-
-    lo, hi = 0.0, 1e-16
-    for _ in range(200):
-        mid = (lo + hi) / 2
-        if chi2_red_mp(mid) > 1.0:
-            lo = mid
-        else:
-            hi = mid
-    xi_mp = (lo + hi) / 2
-    v = u**2 + xi_mp**2
-    ww = 1.0 / v
-    y_mp = float(np.sum(ww * yy) / np.sum(ww))
-    u_mp = float(1.0 / np.sqrt(np.sum(ww)))
-
-    xi_grid = np.geomspace(1e-20, 1e-16, 200)
-    logpost = []
-    for xi in xi_grid:
-        var = u**2 + xi**2
-        num = np.sum(yy / var)
-        den = np.sum(1.0 / var)
-        mu_hat = num / den
-        logL = -0.5 * np.sum((yy - mu_hat) ** 2 / var + np.log(2 * np.pi * var))
-        logpost.append(logL - np.log(xi))
-    logpost = np.array(logpost) - np.array(logpost).max()
-    post = np.exp(logpost)
-    post /= post.sum()
-
-    mu_samples = []
-    for xi, p in zip(xi_grid, post):
-        var = u**2 + xi**2
-        mhat = np.sum(yy / var) / np.sum(1.0 / var)
-        s2 = 1.0 / np.sum(1.0 / var)
-        mu_samples.append((mhat, s2, p))
-    mu_post_mean = float(np.sum([p * m for m, _s2, p in mu_samples]))
-    mu_post_var = float(np.sum([p * (s2 + (m - mu_post_mean) ** 2) for m, s2, p in mu_samples]))
-    mu_post_sd = float(np.sqrt(mu_post_var))
-    xi_post_mean = float(np.sum(xi_grid * post))
-
-    return {
-        "y_wls": y_wls,
-        "u_wls": u_wls,
-        "chi2": chi2,
-        "dof": dof,
-        "chi2_red": chi2_red,
-        "p_chi2": p_chi2,
-        "birge_ratio": birge,
-        "u_birge": u_birge,
-        "xi_mp": xi_mp,
-        "y_mp": y_mp,
-        "u_mp": u_mp,
-        "mu_bayes": mu_post_mean,
-        "u_stat_bayes": mu_post_sd,
-        "xi_bayes": xi_post_mean,
-    }
 
 
 SYNTHESIS_METHODS = ("R_wls", "R_mp", "R_bayes")
@@ -202,7 +128,7 @@ def scenario_result(segments: tuple[Segment, ...], tide: TideGrid,
 
     u = np.array([r["u_i"] for r in rows])
     yy = np.array([r["y_i_1e18"] for r in rows]) * 1e-18
-    comb = combine(yy, u)
+    comb = combine(yy, u, float(R_seg1))
 
     with localcontext() as ctx:
         ctx.prec = 80

@@ -86,7 +86,7 @@ def spliced_oadev(y: np.ndarray, taus_s) -> list[dict]:
     points = []
     for tau in taus_s:
         m = int(tau)
-        n_pairs = n - 2 * m
+        n_pairs = n - 2 * m + 1
         if n_pairs <= 0:
             points.append({"tau_s": m, "n_pairs": 0, "sigma_y": None, "u_sigma": None})
             continue

@@ -17,7 +17,7 @@ Replicates the MATLAB processing convention (YbSr_NISTstyle_14bin_full_analysis)
   point-sampled at window centres while the beat is window-averaged).
 - The tidal data is the professionally supplied 30-s "综合差" (ΔW, UTC)
   interpolated to the 1-s grid (Beijing -> UTC, −8 h) and converted to beat Hz
-  via COEF.
+  with the validated 1550-nm normalization.
 - The amplitude A in  beat = A * tide + noise  is fitted (A=+1 means the tidal
   redshift appears at full expected amplitude).
 
@@ -40,9 +40,10 @@ from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from clock.shared import (  # noqa: E402
-    C, COEF, F_1550, EXCLUDE_RANGES, GROUPS, JUMP_THRESHOLD, RESULTS_CSV,
-    TIDAL_COLUMN, UTC_OFFSET, load_beat, load_tide, longest_valid_span,
+    F_1550, EXCLUDE_RANGES, GROUPS, JUMP_THRESHOLD, UTC_OFFSET, load_beat,
+    load_tide, longest_valid_span,
 )
+from clock_ratio.tidal_analysis import TideGrid  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parent
 
@@ -64,14 +65,18 @@ def triangular_window(x: np.ndarray, window: int, stride: int) -> np.ndarray:
     return out
 
 
-def tidal_beat(t_stamps_utc: np.ndarray, t_tide: np.ndarray, tot: np.ndarray) -> np.ndarray:
-    t_sec = (t_tide - np.datetime64("1970-01-01")).astype(int)
-    s_sec = (t_stamps_utc - np.datetime64("1970-01-01")).astype(int)
-    dw = np.interp(s_sec, t_sec, tot)
-    return dw / C**2 * F_1550  # beat Hz (normalize to 1550nm light, not 1/COEF)
+def tidal_beat(t_stamps_beijing: np.ndarray, tide: TideGrid) -> np.ndarray:
+    """Return validated/interpolated 1550-nm tidal beat samples.
+
+    TideGrid rejects out-of-coverage queries and interpolation across missing
+    30-second grid points instead of silently clamping or bridging them.
+    """
+    return tide.beat_at(t_stamps_beijing)
 
 
-def fit_amplitude(beat: np.ndarray, tide: np.ndarray) -> dict[str, float]:
+def fit_amplitude(
+    beat: np.ndarray, tide: np.ndarray, inference_beat: np.ndarray, inference_tide: np.ndarray,
+) -> dict[str, float]:
     # Demean BOTH: the beat is already mean-subtracted, and the tidal data
     # carries a non-zero session-mean (DC) that must be excluded too. Fitting
     # the demeaned pair is equivalent to fitting beat = A*tide + intercept, and
@@ -79,18 +84,25 @@ def fit_amplitude(beat: np.ndarray, tide: np.ndarray) -> dict[str, float]:
     b = beat - beat.mean()
     t = tide - tide.mean()
     A = float(np.dot(t, b) / np.dot(t, t))
-    resid = b - A * t
-    dof = len(b) - 1
+    bi = inference_beat - inference_beat.mean()
+    ti = inference_tide - inference_tide.mean()
+    if len(bi) < 3 or np.dot(ti, ti) == 0:
+        raise ValueError("at least three non-overlapping, nonconstant windows are required for inference")
+    Ai = float(np.dot(ti, bi) / np.dot(ti, ti))
+    resid = bi - Ai * ti
+    dof = len(bi) - 2
     sigma2 = float(np.dot(resid, resid) / dof)
-    u_A = float(np.sqrt(sigma2 / np.dot(t, t)))
-    r = float(np.corrcoef(beat, tide)[0, 1])
-    p = float(stats.pearsonr(beat, tide).pvalue)
-    return {"A": A, "u_A": u_A, "r": r, "p": p, "n": len(beat)}
+    u_A = float(np.sqrt(sigma2 / np.dot(ti, ti)))
+    r = float(np.corrcoef(inference_beat, inference_tide)[0, 1])
+    p = float(stats.pearsonr(inference_beat, inference_tide).pvalue)
+    return {"A": A, "u_A": u_A, "r": r, "p": p, "n": len(beat),
+            "n_inference": len(inference_beat)}
 
 
 def main() -> int:
     T, B = load_beat()
     t_tide, tot = load_tide()
+    tide_grid = TideGrid(t_tide, tot)
 
     excl = np.zeros(len(T), dtype=bool)
     for s, e in EXCLUDE_RANGES:
@@ -145,12 +157,20 @@ def main() -> int:
         # the beat: build the 1-s tidal series over the same run, then integrate
         # with triangular_window so the tidal "measurement" shares the beat's
         # windowing (fair amplitude/r comparison, not centre-point sampling).
-        tide_1s = tidal_beat(t_run - UTC_OFFSET, t_tide, tot)
+        tide_1s = tidal_beat(t_run, tide_grid)
         tide_tri = triangular_window(tide_1s - tide_1s.mean(), WINDOW, STRIDE)
         tide_tri = tide_tri[: len(beat_tri)]
+        beat_inference = triangular_window(beat_norm, WINDOW, WINDOW)
+        tide_inference = triangular_window(tide_1s - tide_1s.mean(), WINDOW, WINDOW)
         t_tri = t_run[WINDOW // 2 :: STRIDE][: len(beat_tri)]
         tide = tide_tri
-        fit = fit_amplitude(beat_tri, tide)
+        try:
+            fit = fit_amplitude(beat_tri, tide, beat_inference, tide_inference)
+        except ValueError:
+            results.append({"group": idx, "A": np.nan, "u_A": np.nan, "note": "独立窗过少"})
+            print(f"{idx:>2} {str(t_run[0])[5:16]:<18} {len(b_run)/3600:>6.2f} "
+                  f"{n_jump:>5} {'(独立窗过少)':>8}")
+            continue
 
         results.append({
             "group": idx,
@@ -159,6 +179,7 @@ def main() -> int:
             "hours": len(b_run) / 3600,
             "n_jump": n_jump,
             "n_pts": len(beat_tri),
+            "n_inference_pts": fit["n_inference"],
             "A": fit["A"],
             "u_A": fit["u_A"],
             "r": fit["r"],
@@ -180,7 +201,7 @@ def main() -> int:
         w = csv.writer(f)
         w.writerow([
             "group", "t_start_beijing", "t_end_beijing", "hours",
-            "n_jump", "n_pts", "A", "u_A", "A_over_uA", "r", "p",
+            "n_jump", "n_pts", "n_inference_pts", "A", "u_A", "A_over_uA", "r", "p",
             "tide_rms_hz", "noise_std_hz",
         ])
         for r in results:
@@ -189,7 +210,7 @@ def main() -> int:
             else:
                 w.writerow([
                     r["group"], r["t_start"], r["t_end"], f"{r['hours']:.3f}",
-                    r["n_jump"], r["n_pts"],
+                    r["n_jump"], r["n_pts"], r["n_inference_pts"],
                     f"{r['A']:.4f}", f"{r['u_A']:.4f}", f"{r['A']/r['u_A']:.2f}",
                     f"{r['r']:.4f}", f"{r['p']:.4f}",
                     f"{r['tide_rms']:.3e}", f"{r['noise_std']:.3e}",
@@ -252,10 +273,9 @@ def main() -> int:
     print(f"Wrote {OUT_DIR / 'batch_shared_axis.png'}")
 
     # ---- cross-segment aggregation (reproducible headline statistics) ----
-    # Combine the per-segment results into the sign-agnostic significance
-    # figures cited throughout the reports: negative-segment count + binomial
-    # test, Stouffer / Fisher combined p-values, Fisher-z weighted mean r, and
-    # precision-weighted amplitude ratio A.
+    # Combine independent-window per-segment results.  Do not sum absolute
+    # normal scores: that "sign-agnostic Stouffer" construction has no
+    # standard-normal null distribution.
     _ok = [r for r in results if "r" in r and not np.isnan(r["r"])]
     _rs = np.array([r["r"] for r in _ok])
     _ps = np.array([r["p"] for r in _ok])
@@ -267,9 +287,8 @@ def main() -> int:
     _binom_p = stats.binomtest(_neg, len(_rs), 0.5).pvalue
     _z_sign = np.array([stats.norm.ppf(1 - pp / 2) * np.sign(rr)
                         for rr, pp in zip(_rs, _ps)])
-    # Sign-agnostic Stouffer: combine the two-sided |z| scores of each segment
-    # (z_i = ppf(1 - p_i/2), always positive), summed and renormed by 1/sqrt(n).
-    _z_agn = np.sum(stats.norm.ppf(1 - _ps / 2)) / np.sqrt(len(_rs))
+    _stouffer_z_sign = float(np.sum(_z_sign) / np.sqrt(len(_rs)))
+    _stouffer_p_sign = float(2 * stats.norm.cdf(-abs(_stouffer_z_sign)))
     _chi2 = -2.0 * np.sum(np.log(_p_eps))
     _fisher_p = stats.chi2.sf(_chi2, 2 * len(_rs))
     _w = _ns - 3.0
@@ -279,9 +298,8 @@ def main() -> int:
     _uAbar = float(1.0 / np.sqrt(np.sum(_wg)))
     print(f"\n=== cross-segment aggregation ({len(_rs)} segments) ===")
     print(f"negative r segments : {_neg}/{len(_rs)}  (binomial two-sided p = {_binom_p:.4f})")
-    print(f"Stouffer (sign)     : z = {np.sum(_z_sign)/np.sqrt(len(_rs)):+.2f}  "
-          f"(p = {2*stats.norm.cdf(-abs(np.sum(_z_sign)/np.sqrt(len(_rs)))):.2e})")
-    print(f"Stouffer (|z|)      : |z| = {_z_agn:.2f}  (p = {2*stats.norm.cdf(-_z_agn):.2e})")
+    print(f"Stouffer (sign)     : z = {_stouffer_z_sign:+.2f}  "
+          f"(p = {_stouffer_p_sign:.2e})")
     print(f"Fisher              : chi2 = {_chi2:.1f} (df={2*len(_rs)})  p = {_fisher_p:.2e}")
     print(f"Fisher-z weighted r : {_rbar:+.4f}")
     print(f"amplitude A (1/uA^2) : {_Abar:+.4f} +/- {_uAbar:.4f}  ({abs(_Abar)/_uAbar:.2f} sigma)")
@@ -294,9 +312,8 @@ def main() -> int:
         w.writerow(["n_segments", len(_rs)])
         w.writerow(["negative_r_segments", _neg])
         w.writerow(["binomial_p", f"{_binom_p:.6e}"])
-        w.writerow(["stouffer_z_sign", f"{np.sum(_z_sign)/np.sqrt(len(_rs)):+.6f}"])
-        w.writerow(["stouffer_z_agn", f"{_z_agn:.6f}"])
-        w.writerow(["stouffer_p_agn", f"{2*stats.norm.cdf(-_z_agn):.6e}"])
+        w.writerow(["stouffer_z_sign", f"{_stouffer_z_sign:+.6f}"])
+        w.writerow(["stouffer_p_sign", f"{_stouffer_p_sign:.6e}"])
         w.writerow(["fisher_chi2", f"{_chi2:.6f}"])
         w.writerow(["fisher_p", f"{_fisher_p:.6e}"])
         w.writerow(["fisher_z_weighted_r", f"{_rbar:+.6f}"])
@@ -319,15 +336,16 @@ def main() -> int:
         uAs = np.array([r["u_A"] for r in subset])
         neg = int((rs < 0).sum())
         peps = np.clip(ps, 1e-14, None)
-        zagn = np.sum(stats.norm.ppf(1 - peps / 2)) / np.sqrt(len(rs))
+        zsign = np.sum([stats.norm.ppf(1 - pp / 2) * np.sign(rr)
+                         for rr, pp in zip(rs, ps)]) / np.sqrt(len(rs))
         wg = 1.0 / uAs**2
         abar = float(np.sum(As * wg) / np.sum(wg))
         uabar = float(1.0 / np.sqrt(np.sum(wg)))
         binom = stats.binomtest(neg, len(rs), 0.5).pvalue
-        print(f"{label:24s} n={len(rs):2d}  neg={neg}/{len(rs)}  |z|={zagn:.2f}  "
+        print(f"{label:24s} n={len(rs):2d}  neg={neg}/{len(rs)}  z_sign={zsign:+.2f}  "
               f"A={abar:+.2f}±{uabar:.2f}  二项p={binom:.4f}")
 
-    print("\n=== robustness: subset sensitivity (符号无关 |z| & 精度加权 A) ===")
+    print("\n=== robustness: subset sensitivity (signed Stouffer & precision-weighted A) ===")
     # 全 17 段
     _summarize(_okd, "全部 17 段")
     # 去掉组 9（短窗口离群）

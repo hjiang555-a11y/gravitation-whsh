@@ -39,13 +39,13 @@ from decimal import Decimal
 from pathlib import Path
 
 import numpy as np
-from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock.shared import (  # noqa: E402
     EXCLUDE_RANGES, F_1550, GROUPS, JUMP_THRESHOLD, RESULTS_CSV,
     load_beat, load_tide, longest_valid_span,
 )
+from clock_ratio.statistical_combination import combine  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parent
 C = 299792458.0
@@ -141,6 +141,7 @@ def main() -> int:
     ratio_rows = list(csv.DictReader(open(OUT_DIR / "ratio_17seg.csv")))
     R = {int(r["group"]): Decimal(r["YbSr_R"]) for r in ratio_rows}
     y = {int(r["group"]): Decimal(r["y_i_1e18"]) for r in ratio_rows}
+    R0 = R[1]  # segment-1 ratio (Decimal), as the y_i baseline reference
 
     for r in rows:
         g = r["group"]
@@ -148,75 +149,26 @@ def main() -> int:
         r["u_i"] = float(Decimal(str(r["u_frac"])) * Rg)  # absolute ratio uncertainty
         r["y_i"] = float(y[g])                            # ×1e-18
 
-    # ---- WLS ----
+    # ---- unit-consistent WLS / Birge / Mandel-Paule / Bayesian ----
+    # y_i is fractional relative to R0 while u_i is absolute in ratio units.
+    # combine() converts every uncertainty to the y_i unit before fitting.
     u = np.array([r["u_i"] for r in rows])
     yy = np.array([r["y_i"] for r in rows]) * 1e-18
-    w = 1.0 / u ** 2
-    y_wls = np.sum(w * yy) / np.sum(w)
-    u_wls = 1.0 / np.sqrt(np.sum(w))
-
-    # ---- chi2 / Birge ----
-    chi2 = np.sum(((yy - y_wls) / u) ** 2)
-    dof = len(rows) - 1
-    chi2_red = chi2 / dof
-    p_chi2 = stats.chi2.sf(chi2, dof)
-    birge = np.sqrt(chi2_red)
-    u_birge = birge * u_wls
-
-    # ---- Mandel-Paule (iterative xi) ----
-    def chi2_red_mp(xi):
-        u_eff2 = u ** 2 + xi ** 2
-        ww = 1.0 / u_eff2
-        yw = np.sum(ww * yy) / np.sum(ww)
-        return np.sum(((yy - yw) / np.sqrt(u_eff2)) ** 2) / dof
-
-    lo, hi = 0.0, 1e-16
-    for _ in range(200):
-        mid = (lo + hi) / 2
-        if chi2_red_mp(mid) > 1.0:
-            lo = mid
-        else:
-            hi = mid
-    xi_mp = (lo + hi) / 2
-    u_eff2 = u ** 2 + xi_mp ** 2
-    ww = 1.0 / u_eff2
-    y_mp = np.sum(ww * yy) / np.sum(ww)
-    u_mp = 1.0 / np.sqrt(np.sum(ww))
-
-    # ---- Bayesian (grid posterior over mu, xi) ----
-    # marginalize xi over a log grid, Gaussian likelihood per segment with
-    # effective variance u_i^2 + xi^2
-    xi_grid = np.geomspace(1e-20, 1e-16, 200)
-    logpost = []
-    for xi in xi_grid:
-        var = u ** 2 + xi ** 2
-        num = np.sum(yy / var)
-        den = np.sum(1.0 / var)
-        mu_hat = num / den
-        logL = -0.5 * np.sum((yy - mu_hat) ** 2 / var + np.log(2 * np.pi * var))
-        logpost.append(logL - np.log(xi))  # Jeffreys prior on xi (scale)
-    logpost = np.array(logpost)
-    logpost -= logpost.max()
-    post = np.exp(logpost)
-    post /= post.sum()
-
-    # marginal posteriors
-    mu_map = None
-    mu_mean = 0.0
-    mu_var_part = 0.0
-    # for mu, condition on each xi
-    mu_samples = []
-    xi_samples = []
-    for k, xi in enumerate(xi_grid):
-        var = u ** 2 + xi ** 2
-        mhat = np.sum(yy / var) / np.sum(1.0 / var)
-        s2 = 1.0 / np.sum(1.0 / var)
-        mu_samples.append((mhat, s2, post[k]))
-    # posterior mean & SD of mu (marginalized over xi)
-    mu_post_mean = np.sum([p * m for m, s2, p in mu_samples])
-    mu_post_var = np.sum([p * (s2 + (m - mu_post_mean) ** 2) for m, s2, p in mu_samples])
-    mu_post_sd = np.sqrt(mu_post_var)
-    xi_post_mean = np.sum(xi_grid * post)
+    combined = combine(yy, u, float(R0))
+    y_wls = combined["y_wls"]
+    u_wls = combined["u_wls"]
+    chi2 = combined["chi2"]
+    dof = combined["dof"]
+    chi2_red = combined["chi2_red"]
+    p_chi2 = combined["p_chi2"]
+    birge = combined["birge_ratio"]
+    u_birge = combined["u_birge"]
+    xi_mp = combined["xi_mp"]
+    y_mp = combined["y_mp"]
+    u_mp = combined["u_mp"]
+    mu_post_mean = combined["mu_bayes"]
+    mu_post_sd = combined["u_stat_bayes"]
+    xi_post_mean = combined["xi_bayes"]
 
     # ---- Gravitational (tidal) correction, per-method weights ----
     # The tidal correction of each segment is Δf/f = ΔW_i/c² (from
@@ -252,7 +204,6 @@ def main() -> int:
     # questions and must not be conflated.
     # R[1] is Decimal; reconstruct each center as R0 × (1 + y) in Decimal so the
     # e-19-level y does NOT get swallowed by float64 (error-1 discipline).
-    R0 = R[1]  # segment-1 ratio (Decimal), as the y_i baseline reference
     y_wls_d = Decimal(repr(float(y_wls)))
     y_mp_d = Decimal(repr(float(y_mp)))
     mu_d = Decimal(repr(float(mu_post_mean)))

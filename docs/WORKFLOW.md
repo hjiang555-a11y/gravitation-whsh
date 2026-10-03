@@ -135,9 +135,6 @@ python clock/segment13_correlation.py
 python clock/segment_analysis/segment13_triangular.py
 python clock/segment_analysis/segment6_triangular.py
 
-# 11b. 论文配图（附加结果，写入 clock_ratio/paper_figs/；见 docs/PAPER_DRAFT.md）
-python clock_ratio/make_paper_figures.py
-
 # 12. 历史 Allan 稳定度及统计合并（oadev 名称的算法注释见 METHODOLOGY §2）
 python clock_ratio/statistical_methods.py
 
@@ -147,11 +144,18 @@ python clock_ratio/statistical_methods_tidal.py
 # 12c. 段9剔除敏感性检查（附加结果，不替代 12b；见 METHODOLOGY §11）
 python clock_ratio/statistical_methods_tidal_seg9.py
 
-# 13–14. 独立潮汐比较及独立报告
+# 13. 两种拼接稳定度（报告 §9 的输入）
+python clock_ratio/concatenated_stability.py
+python clock_ratio/concatenated_stability_long.py
+
+# 14. 论文配图（必须在 statistical_methods_tidal.py 之后）
+python clock_ratio/make_paper_figures.py
+
+# 15–16. 独立潮汐比较及独立报告
 python clock_ratio/tidal_correction.py
 python clock_ratio/make_tidal_report.py
 
-# 15. 自动生成旧分析总报告
+# 17. 自动生成总报告
 python clock_ratio/make_report.py
 #   输出: clock_ratio/EXPERIMENT_REPORT.md
 ```

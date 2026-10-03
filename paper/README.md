@@ -11,18 +11,17 @@ the Wuhan (Yb) - Shanghai (Sr) optical-clock comparison.
   2.2 Theoretical tidal influence → 2.3 Tidal gravitational-redshift
   detection → 2.4 Clock-ratio determination. Discussion:
   3.1 Attempted tidal compensation → 3.2 Clock-comparison synthesis.
-- **Placeholders / open items** — many sections will be revised later:
-  abstract total uncertainty is left as `X×10⁻¹⁸`; `tab:budget` Total row
-  is `provisional`; the tidal term is carried as an uncertainty item
-  `<5e-19` (theoretical bound), with no empirical compensation adopted.
-- Do not treat the `X` and `provisional` placeholders as errors.
+- **Open items** — authors and affiliations remain provisional. The tidal
+  template response is an effect estimate only: its covariance-aware
+  significance and the interpretation of the supplied height-equivalent
+  tide series remain to be confirmed.
 
 ## Files
 
 | File | Purpose |
 |---|---|
 | `main.tex` | Full article: abstract, introduction, results, discussion, methods, back matter, references. |
-| `refs.bib` | BibTeX entries (24 references, all cited and resolving; see below). |
+| `refs.bib` | BibTeX entries (26 references; see below). |
 | `overleaf/` + `overleaf-upload.zip` | Self-contained Overleaf upload (main.tex with `figs/` paths, refs.bib, figures). |
 | `README.md` | This file. |
 
@@ -47,7 +46,7 @@ show as `?` until `bibtex` and the second `pdflatex` pass run.
 
 - Class: plain `article` (11pt, a4paper). No `revtex4-2` dependency.
 - Required packages: `fontenc`, `inputenc`, `amsmath`, `amssymb`,
-  `graphicx`, `booktabs`, `geometry`, `hyperref`.
+  `graphicx`, `booktabs`, `geometry`, `natbib`, `hyperref`.
 - `siunitx` is **optional**. The preamble loads it only if present
   (`\IfFileExists{siunitx.sty}`); otherwise it defines `\SI` and `\num`
   fallbacks. This TeX Live 2023 (Debian) install does **not** ship
@@ -55,21 +54,21 @@ show as `?` until `bibtex` and the second `pdflatex` pass run.
 
 ## Figures
 
-The four figures are `\includegraphics` references to existing vector PDF
-files:
+The manuscript embeds six local PNG figures:
 
 ```
-../clock_ratio/paper_figs/fig1_ratio_segments.pdf
-../clock_ratio/paper_figs/fig2_tidal_detection.pdf
-../clock_ratio/paper_figs/fig3_correction.pdf
-../clock_ratio/paper_figs/fig4_methods_summary.pdf
+figs/1.png
+figs/2.png
+figs/3.png
+figs/4.png
+figs/figS2_correlation.png
+figs/figS3_stability_long.png
 ```
 
-Both PNG (300 dpi raster) and vector PDF versions exist in the repository
-(`clock_ratio/paper_figs/figN_*.{png,pdf}`). The LaTeX source uses the
-vector PDFs; each `\includegraphics` line carries a comment naming the PNG
-fallback. To build with the PNGs instead, edit the four
-`\includegraphics` lines in `main.tex` to use `.png`.
+The source uses paths relative to `paper/`. The four publication-oriented
+figures are generated in `clock_ratio/paper_figs/`; the manuscript copies
+used for submission live under `paper/figs/`. Regenerate those source
+artifacts before refreshing their manuscript copies.
 
 ## Verified vs placeholder
 

@@ -9,7 +9,7 @@
 >
 > **两条铁律**：
 > ① 主结果**不做潮汐修正**；潮汐项作为**不确定度预算项**列出。
-> ② 潮汐检出**不降级**——仍是独立结果（`6.4σ`）。
+> ② 潮汐模板响应仍是独立结果，但其显著性须以不重叠窗/协方差模型重建。
 
 ---
 
@@ -27,9 +27,9 @@
 | 三方符合度 | **≤ 5 × 10⁻¹⁸**（秒重定义目标水平）| 本库计算 |
 | 站点重力势差 | `ΔW = +280.049 ± 0.083 m²/s²`（`Δh ≈ +28.6 m`），水准测量 | `delta_g` 反推 |
 | **不确定度预算（含潮汐）** | 统计 `0.75` + 钟系统 `1.4` + 静态引力 `1.0` + **潮汐 `2.0`** ⇒ **总 `2.8 × 10⁻¹⁸`** | 实验方 PDF §5.6 + `clock_tidal_shift.csv` |
-| 潮汐调制检出 | **`6.4σ`**；14/17 同号；Stouffer `\|z\| = 5.87`；`A = −0.5397 ± 0.0843` | `batch_aggregate.csv` |
+| 潮汐模板响应 | 历史幅度点估计 `A≈−0.54`；显著性待当前分析重建 | `batch_aggregate.csv` |
 | 段间离散度（若修正）| `2.980 → 2.596 × 10⁻¹⁸`（约 **13%**，`12.9% ± 11.0%`）| `statistical_methods_tidal.json` |
-| 约化卡方 | `5.42 → 3.70`（−32%），**段 9 主导**（剔除段 9 后反号 +5.1%）| `statistical_methods_tidal.json` |
+| 约化卡方 | 旧产物混合分数偏差与绝对不确定度；重建后再报告 | `statistical_methods_tidal.json` |
 
 **新颖性核验**（对照 `refs.bib`）：Aeppli 2026（Yb/Sr ≤3.2×10⁻¹⁸）**同园区**；
 欧洲网络（Pizzocaro 2026）最佳 **7.7×10⁻¹⁸**（未达 5×10⁻¹⁸）；BACON 2021（6–8×10⁻¹⁸）**同园区**。
@@ -47,21 +47,20 @@
 > **三处刻意保留**：
 > ① **不强调"未做修正"**——潮汐项直接表述为"carried as an uncertainty item"，不写
 >    "without a tidal correction"（作者指示：无需强调）。
-> ② **总不确定度占位 `X×10⁻¹⁸`**——部分不确定度项（如 tide model、附加系统项）仍在评估，
->    会影响总值，故暂不填数字，待定稿再补（勿以 2.8 替代）。
+> ② **潮汐模板边界**——完整潮汐势差与相关噪声模型仍待确认；不从当前模板响应给出 σ 级检出。
 > ③ **仅与 NIST–JILA 比对**——欧洲网络统计不确定度过大，不作一致性主张；改用
 >    "To our knowledge this is the first cross-species frequency ratio at the 5×10⁻¹⁸
 >    level measured between clocks at different locations"（主宣称）。
 
 ### English（= `main.tex` 当前摘要）
 
-Redefining the SI second requires frequency ratios of optical clocks measured independently by different laboratories, and agreeing to within 5×10⁻¹⁸. Many optical clocks report self-evaluated uncertainties meeting this level, but such claims still await independent verification, and no comparison between clocks in different cities has reached this level. Here we compare an IAPMST ytterbium clock in Wuhan with a USTC strontium clock in Shanghai, about 700 km apart, through a 1350 km fibre link, and measure the Yb/Sr frequency ratio from 58 days (280 h) of coherent operation. Treating the tidal gravitational-redshift term as an uncertainty item, we find a Bayesian statistical uncertainty of 0.75×10⁻¹⁸ and a total uncertainty of X×10⁻¹⁸, giving 1.207 507 039 343 337 721 3(23), whose central value differs from the latest NIST–JILA result by less than 5×10⁻¹⁸. To our knowledge this is the first cross-species frequency ratio at the 5×10⁻¹⁸ level measured between clocks at different locations. On the same data the tidal redshift modulation is resolved at 6.4σ; removing it would lower the reduced chi-square from 5.42 to 3.70 (32%). An inter-city, cross-species clock network thus both supports the redefinition of the SI second and senses the time-varying gravitational potential at the centimetre level.
+Redefining the SI second requires frequency ratios of optical clocks measured independently by different laboratories, and agreeing to within 5×10⁻¹⁸. Many optical clocks report self-evaluated uncertainties meeting this level, but such claims still await independent verification, and no comparison between clocks in different cities has reached this level. Here we compare an IAPMST ytterbium clock in Wuhan with a USTC strontium clock in Shanghai, about 700 km apart, through a 1350 km fibre link, and measure the Yb/Sr frequency ratio from 58 days (280 h) of coherent operation. Treating the tidal gravitational-redshift term as an uncertainty item, we find a Bayesian statistical uncertainty of 0.75×10⁻¹⁸ and a total uncertainty of 2×10⁻¹⁸, giving 1.207 507 039 343 337 721 3(23), whose central value differs from the latest NIST–JILA result by less than 5×10⁻¹⁸. The same data show a tidal-template response, whose formal significance awaits covariance-aware analysis. An inter-city, cross-species clock network thus both supports the redefinition of the SI second and motivates time-varying-potential studies.
 
 *（~180 words；五段式：背景 → 缺口 → 做法 → 发现 → 意义）*
 
 ### 中文版
 
-重新定义国际单位制「秒」，需要由不同实验室独立测量、并在 5×10⁻¹⁸ 以内相符的光钟频率比。许多光钟**自评估**不确定度已达该水平，但这些声明仍有待独立验证；且尚无位于不同城市的钟之间的比对达到该水平。本文比较相距约 700 公里的中科院精密测量院（IAPMST，武汉）镱钟与中科大（USTC，上海）锶钟，两者经 1350 公里光纤链路连接，基于 58 天（280 小时）相干运行数据测定其 Yb/Sr 频率比。将潮汐引力红移项作为不确定度项，得到贝叶斯统计不确定度 0.75×10⁻¹⁸、总不确定度 `X×10⁻¹⁸`（占位），比值为 1.207 507 039 343 337 721 3(23)，与最新 NIST–JILA 结果在 10⁻¹⁸ 量级相符。同一数据在 6.4σ 显著度分辨出潮汐红移调制；若将其扣除，约化卡方由 5.42 降至 3.70（降幅 32%）。跨城、跨种光钟网络由此既支撑秒重定义，又以厘米级精度感知时变引力势。
+重新定义国际单位制「秒」，需要由不同实验室独立测量、并在 5×10⁻¹⁸ 以内相符的光钟频率比。许多光钟**自评估**不确定度已达该水平，但这些声明仍有待独立验证；且尚无位于不同城市的钟之间的比对达到该水平。本文比较相距约 700 公里的中科院精密测量院（IAPMST，武汉）镱钟与中科大（USTC，上海）锶钟，两者经 1350 公里光纤链路连接，基于 58 天（280 小时）相干运行数据测定其 Yb/Sr 频率比。将潮汐引力红移项作为不确定度项，得到贝叶斯统计不确定度 0.75×10⁻¹⁸、总不确定度 2×10⁻¹⁸，比值为 1.207 507 039 343 337 721 3(23)，与最新 NIST–JILA 结果在 10⁻¹⁸ 量级相符。同一数据呈现潮汐模板响应，其正式显著性仍待协方差感知分析。跨城、跨种光钟网络由此既支撑秒重定义，也为时变引力势研究提供候选平台。
 
 **关键词：** 光钟网络；秒定义重定义；Yb/Sr 频率比；跨城光纤链路；引力红移；潮汐势
 
@@ -73,7 +72,7 @@ Redefining the SI second requires frequency ratios of optical clocks measured in
    ①基础物理（引力红移、暗物质、洛伦兹）与 ②计量（秒重定义）。
 2. **缝隙**：CCTF 路线图要求「≥3 个不同机构独立测同一跃迁比、`Δν/ν ≲ 5×10⁻¹⁸`，≥5 个非单位比各由不同机构复测两次」（`dimarcq2024roadmap`）——单实验室无法满足。Yb/Sr 迄今**仅一例**达标（NIST–JILA，**同园区**）。
 3. **问题**：跨城、跨机构、跨种的 Yb–Sr 网络，能否给出达 5×10⁻¹⁸ 的独立比值，并在同一数据上分辨潮汐调制？
-4. **发现**：58 天 / 17 段 / 1 008 912 样本；`Yb/Sr = 1.207…7213(23)`（未修正）；与 NIST（−1.7）、欧洲（+3.3）在 ≤5×10⁻¹⁸ 内一致；含潮汐总预算 `2.8×10⁻¹⁸`；潮汐调制 **6.4σ**（14/17 同号，Stouffer 5.87）。
+4. **发现**：58 天 / 17 段 / 1 008 912 样本；`Yb/Sr = 1.207…7213(23)`（未修正）；与 NIST（−1.7）、欧洲（+3.3）在 ≤5×10⁻¹⁸ 内一致；潮汐模板响应的历史点估计约为 `A≈−0.54`，正式推断待重建。
 5. **阐释**：**第二例达 5×10⁻¹⁸ 的异种比值、首例异地点实现**；瓶颈已非链路/光梳（各 <1×10⁻¹⁹），而是钟系统评估与大地联测。
 6. **意义**：支撑秒重定义的独立比对；展示厘米级（`0.75×10⁻¹⁸ ≈ 0.7 cm`）引力势敏感度；作为未来分布式计时参考网络的**原型节点对**（体系声称仅作展望）。
 
@@ -95,7 +94,7 @@ Redefining the SI second requires frequency ratios of optical clocks measured in
 | **Results** | 见下 5 个子节 | Fig 1–4；Table 1–5 |
 | ├ 2.1 Network and observation campaign | 两钟两城、光纤链路（环回净化）、光梳链；17 段筛选；三战役、重启复现性、台风抖动、20% 占空比 | 逐段表入 Methods |
 | ├ 2.2 Clock-ratio determination | **主结果（未修正）+ 内部重算**；**不确定度预算（含潮汐项，总值 provisional）**；段间散布 | **Table 1**（预算）；**Fig 1** |
-| ├ 2.3 Tidal gravitational-redshift detection | 模板归一化（`F_1550` 非 `1/COEF`）；段内拟合；跨段合并；`6.4σ`、`14/17`、Stouffer、Fisher、`A=−0.5397±0.0843`；段均值相关 `r=+0.518` | **Fig 2** |
+| ├ 2.3 Tidal gravitational-redshift response | 模板归一化（`F_1550` 非 `1/COEF`）；段内拟合；历史 `A≈−0.54`；以不重叠窗/协方差模型重建推断；段均值相关 `r=+0.518` | **Fig 2** |
 | ├ 2.4 Estimate of the tidal effect | 固定系数情景（theory/empirical）；方向自检；幅度；内部一致性（`χ²`）；离散度降（`13%`）| **Table 2/3/4**；**Fig 3/4** |
 | └ 2.5 Comparison with other Yb/Sr determinations | 并列表 + 偏差（NIST −1.7；欧洲 +3.3，注明其统计不确定度更大，不作一致性主张）；口径不敏感（≤0.7×10⁻¹⁸）| **Table 5** |
 | **Discussion** | 阐释；秒定义贡献（含新颖性宣称）；应用与展望；局限；早期潮汐模型一致性；两条逻辑结论；**Conclusion 折为末段** | ED 表 |

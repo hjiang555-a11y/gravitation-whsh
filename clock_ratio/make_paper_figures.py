@@ -20,6 +20,7 @@ from __future__ import annotations
 import csv
 import json
 import sys
+from decimal import Decimal, localcontext
 from pathlib import Path
 
 import matplotlib
@@ -38,8 +39,8 @@ BATCH_AGG = Path(__file__).resolve().parent.parent / "clock" / "segment_analysis
 CORR_CSV = Path(__file__).resolve().parent / "correlation_reanalysis.csv"
 TIDAL_JSON = Path(__file__).resolve().parent / "statistical_methods_tidal.json"
 
-WLS_REF = 1.2075070393433377213
-NIST_REF = 1.2075070393433377230
+WLS_REF = Decimal("1.2075070393433377213")
+NIST_REF = Decimal("1.2075070393433377230")
 A_FIT = -0.539699
 U_A = 0.084254
 
@@ -109,6 +110,13 @@ def _load_batch():
     uA = np.array([float(r["u_A"]) for r in rows])
     g = np.array([int(r["group"]) for r in rows])
     return g, A, uA
+
+
+def ratio_offset_1e18(value: str | Decimal, reference: Decimal) -> float:
+    """Subtract near-unity ratios before converting their E-18 difference to float."""
+    with localcontext() as context:
+        context.prec = 80
+        return float((Decimal(value) - reference) * Decimal("1e18"))
 
 
 def fig1_ratio():
@@ -210,11 +218,11 @@ def fig4_methods():
     x = np.arange(len(methods))
     colors = {"raw": C_GREY, "theory": C_NEG, "empirical": C_POS}
     for j, k in enumerate(keys):
-        dev = [(float(sc[k][m]) - WLS_REF) * 1e18 for m in methods]
+        dev = [ratio_offset_1e18(sc[k][m], WLS_REF) for m in methods]
         ax.bar(x + (j - 1) * width, dev, width, label=k, color=colors[k],
                edgecolor=C_INK, linewidth=0.3)
     ax.axhline(0, color=C_INK, lw=0.6)
-    nist_dev = (NIST_REF - WLS_REF) * 1e18
+    nist_dev = ratio_offset_1e18(NIST_REF, WLS_REF)
     ax.axhline(nist_dev, color=C_NEG2, lw=0.9, ls="--",
                label=f"NIST ref ({nist_dev:+.2f})")
     ax.set_xticks(x); ax.set_xticklabels(mlabels)
