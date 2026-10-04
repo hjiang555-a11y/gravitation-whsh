@@ -120,11 +120,13 @@ about a clock, not a test of it: the systematics that enter every such
 budget---the model of the local environment, the geoid, the transfer,
 the reference used to correct gravity---are shared by construction within
 one laboratory, so only a clock that shares none of them can expose a
-correlated error. Reproducing a frequency ratio across independent
-instruments is therefore the criterion a redefined second imposes, and
+correlated error. The redefinition is therefore a question of agreement,
+not of precision: three independent clocks agreeing to $5\times10^{-18}$
+carry more weight than one clock claiming $10^{-19}$ on its own
+\citep{dimarcq2024roadmap}. Reproducing a frequency ratio across
+independent instruments is the criterion a redefined second imposes, and
 linking distant clocks into a cooperative \emph{network}
-\citep{riehle2017networks, komar2014quantumnetwork} is how it is met
-\citep{dimarcq2024roadmap}.
+\citep{riehle2017networks, komar2014quantumnetwork} is how it is met.
 
 Phase-stabilised fibre has made such comparisons possible: ultrastable
 light now crosses hundreds to thousands of kilometres with added noise
@@ -132,20 +134,24 @@ below the clocks themselves \citep{schioppo2022cavities,
 chen2026dissemination}, enabling inter-city links
 \citep{lisdat2016network}, multi-species ratio measurements
 \citep{beloy2021bacon}, and, most recently, a fibre network spanning
-several countries \citep{pizzocaro2026european}. Yet the two requirements
-of a redefined second have never been met together outside a single city.
-Cross-species agreement at the few-parts-in-$10^{18}$ level has so far
-required clocks that share a city---and hence a geoid model, a tidal
-phase and a transfer environment---while the longest fibre links have
-compared identical species
-\citep{aeppli2026nist, lindvall2025coordinated, pizzocaro2026european}.
-Distance is not a figure of merit in itself; it is the practical way to
-strip away the shared assumptions a single site cannot vary, so that
-agreement at the level the redefinition demands tests the error budgets
-rather than the infrastructure that was common to both. The same
-separation is what makes the comparison a measurement of gravity as well
-as of time: across a large geopotential difference the tidal term, a
-correction in any single-laboratory budget, becomes a resolvable signal.
+several countries \citep{pizzocaro2026european}. Progress, however, has
+been one-sided. Same-species comparisons across long fibre links are the
+most mature \citep{lisdat2016network, lindvall2025coordinated,
+pizzocaro2026european}; cross-species agreement at the
+few-parts-in-$10^{18}$ level has so far required clocks that share a
+city---and hence a geoid model, a tidal phase and a transfer
+environment---as in the Boulder network \citep{beloy2021bacon,
+aeppli2026nist}; and the only intercontinental comparison, by very long
+baseline interferometry, reaches just $\sim2\times10^{-16}$
+\citep{pizzocaro2021vlbi}. The requirements of a redefined second have
+therefore never been met together outside a single city. Distance is not
+a figure of merit in itself; it is the practical way to strip away the
+shared assumptions a single site cannot vary, so that agreement at the
+level the redefinition demands tests the error budgets rather than the
+infrastructure that was common to both. The same separation is what makes
+the comparison a measurement of gravity as well as of time: across a
+large geopotential difference the tidal term, a correction in any
+single-laboratory budget, becomes a resolvable signal.
 
 Here we close this gap. We link an ytterbium lattice clock at IAPMST in
 Wuhan to a strontium lattice clock at USTC in Shanghai, about
@@ -441,7 +447,13 @@ ratio that agrees with the leading independent determinations at the
 $5\e{-18}$ level without any transport of the clocks. And the same data
 set provides a time-varying-potential template response for further
 covariance-aware study; the $0.88\e{-18}$ statistical floor corresponds to
-an equivalent height of about $0.8$\,cm.
+an equivalent height of about $0.8$\,cm. Clock-based gravity has advanced
+from the $33$\,cm static-redshift measurement of Chou et al.
+\citep{chou2010redshift}, through transportable-clock campaigns over
+hundreds of metres \citep{takamoto2020redshift, grotti2018geodesy} and the
+resolution of the redshift across a millimetre-scale sample
+\citep{bothwell2022redshift}, to the present inter-city baseline, where
+the potential difference varies in time.
 
 The comparison places the Yb/Sr ratio on the map of independent
 determinations (Table~\ref{tab:compare}, Fig.~\ref{fig:compare}). Our
@@ -474,11 +486,17 @@ a new most-precise value.
 
 The same data set also bounds what the comparison can support. The
 bottleneck is no longer the link or the comb, whose contributions are each
-below $1\e{-19}$ (Table~\ref{tab:budget}), but the segment-to-segment
+below $1\e{-19}$ (Table~\ref{tab:budget}): bidirectional noise
+cancellation removes the non-reciprocal path-length terms, whose residual
+now sits near the $10^{-21}$ floor \citep{schioppo2022cavities,
+chen2026dissemination}, and the remaining limitation of long fibre links
+is environmental and polarisation noise rather than the compensation
+scheme. The limit here is instead the segment-to-segment
 scatter; closing the gap between the $0.88\e{-18}$ statistical floor and
 the $\sim5\e{-18}$ spread between independent determinations therefore
 requires progress on the systematic side, in the clock evaluations
-\citep{zhu2026yb, jia2026sr} and in joint geodetic levelling, rather than
+\citep{zhu2026yb, jia2026sr} and in joint geodetic levelling
+\citep{denker2018geodetic}, rather than
 longer integration alone. Two further limits should be read with the
 result: the per-segment uncertainties $u_i$ are unreliable (an OADEV
 extrapolation that underestimates by roughly $30$--$40\%$, with anomalous
