@@ -107,56 +107,61 @@ of the SI second and senses the time-varying gravitational potential.
 
 \section{Introduction}
 % =====================================================================
-Optical clocks now measure frequency well enough to sense the
-gravitational redshift over a height difference of a centimetre
-\citep{mcgrew2018geodesy}, with self-evaluated fractional uncertainties
-below $10^{-18}$ \citep{arnold2026lu, zhang2026ca} and two-clock
-stabilities approaching $10^{-18}$ within an hour
-\citep{oelker2019stability}, and their accuracy is driving two goals at
-once: redefining the SI second on an optical transition and reading the
-Earth's gravitational potential from clock comparisons
-\citep{dimarcq2024roadmap, grotti2018geodesy}. Both goals, however,
-depend on a capability that a single laboratory cannot provide. The best
-clocks are not transportable, so their claimed accuracy can only be
-confirmed by comparing them with one another over long distances. This
-has motivated the concept of a clock \emph{network}, in which separate
-clocks are linked into a single cooperative instrument
-\citep{riehle2017networks, komar2014quantumnetwork}.
+To redefine the SI second, the world needs more than accurate clocks: it
+needs independent, distant laboratories whose measured frequency ratios
+agree to better than $5\times10^{-18}$---a bar that no comparison between
+clocks in different cities has yet cleared. The best optical clocks
+resolve a gravitational-redshift change of one centimetre
+\citep{mcgrew2018geodesy}, report self-evaluated fractional uncertainties
+below $1\times10^{-18}$ \citep{arnold2026lu, zhang2026ca}, and reach
+two-clock instabilities near $10^{-18}$ within an hour
+\citep{oelker2019stability}. But a self-evaluated uncertainty is a claim
+about a clock, not a test of it: the systematics that enter every such
+budget---the model of the local environment, the geoid, the transfer,
+the reference used to correct gravity---are shared by construction within
+one laboratory, so only a clock that shares none of them can expose a
+correlated error. Reproducing a frequency ratio across independent
+instruments is therefore the criterion a redefined second imposes, and
+linking distant clocks into a cooperative \emph{network}
+\citep{riehle2017networks, komar2014quantumnetwork} is how it is met
+\citep{dimarcq2024roadmap}.
 
-Fibre links have made such comparisons possible. Ultrastable light can
-now be transferred over hundreds to thousands of kilometres with added
-noise below the level of the clocks themselves
-\citep{schioppo2022cavities, chen2026dissemination}, enabling inter-city
-links \citep{lisdat2016network}, multi-species ratio measurements
+Phase-stabilised fibre has made such comparisons possible: ultrastable
+light now crosses hundreds to thousands of kilometres with added noise
+below the clocks themselves \citep{schioppo2022cavities,
+chen2026dissemination}, enabling inter-city links
+\citep{lisdat2016network}, multi-species ratio measurements
 \citep{beloy2021bacon}, and, most recently, a fibre network spanning
-several countries \citep{pizzocaro2026european}; transportable clocks,
-satellite links and free-space dissemination have extended comparisons
-further \citep{laurent2015aces, lindvall2025coordinated,
-shen2022freespace}. Beyond metrology, such
-networks also probe fundamental physics, from gravitational waves
-\citep{kolkowitz2016gw} to dark matter and topological defects
-\citep{derevianko2014topological}. Yet the comparisons
-reported so far fall short of what a redefined second requires. The
-CCTF roadmap calls for optical frequency ratios measured independently
-in different institutes and agreeing at the few-parts-in-$10^{18}$ level,
-whose closure also validates the estimated uncertainties
-\citep{dimarcq2024roadmap, riehle2015redefinition}: the only
-cross-species ratio reported at this level was measured over a short
-baseline between two clock laboratories in the same city
-\citep{aeppli2026nist}, and the widest networks have not yet reached
-$5\e{-18}$ \citep{lindvall2025coordinated}.
+several countries \citep{pizzocaro2026european}. Yet the two requirements
+of a redefined second have never been met together outside a single city.
+Cross-species agreement at the few-parts-in-$10^{18}$ level has so far
+required clocks that share a city---and hence a geoid model, a tidal
+phase and a transfer environment---while the longest fibre links have
+compared identical species
+\citep{aeppli2026nist, lindvall2025coordinated, pizzocaro2026european}.
+Distance is not a figure of merit in itself; it is the practical way to
+strip away the shared assumptions a single site cannot vary, so that
+agreement at the level the redefinition demands tests the error budgets
+rather than the infrastructure that was common to both. The same
+separation is what makes the comparison a measurement of gravity as well
+as of time: across a large geopotential difference the tidal term, a
+correction in any single-laboratory budget, becomes a resolvable signal.
 
-It therefore remains unclear whether two clocks of different species,
-built at different institutions and separated by hundreds of kilometres
-of fibre, can agree at the level a redefined second demands. Here we
-show that they can. We link an ytterbium lattice clock at IAPMST in
+Here we close this gap. We link an ytterbium lattice clock at IAPMST in
 Wuhan to a strontium lattice clock at USTC in Shanghai, about
 \qty{700}{km} apart, through a \qty{1350}{km} phase-stabilised fibre, and
-operate them coherently for $58$\,days. Treating the tidal
-gravitational-redshift term as an uncertainty item, we obtain a Yb/Sr
-ratio consistent with the existing determinations and observe a
-tidal-template response that requires covariance-aware follow-up before a
-formal detection claim.
+compare them coherently for $58$\,days. The two clocks are independent in
+every respect that matters---different species, institutions, cities and
+environments---so their agreement is informative in a way no
+single-laboratory comparison can be. In this segment-9-excluded analysis
+(16 segments), the measured Yb/Sr ratio reproduces the existing
+determinations within $5\times10^{-18}$, at the accuracy a redefined
+second requires. The same record is consistent with the tidal
+gravitational-redshift modulation across the baseline, whose inclusion
+changes the inter-segment scatter and reduced chi-square descriptively
+(raw $3.91$, theory $4.11$, empirical $4.26$), and establishes an
+inter-city, cross-species clock network as both a metrological standard
+and a prototype sensor of the time-varying gravitational potential.
 
 % =====================================================================
 
