@@ -24,14 +24,12 @@
 \usepackage[super,sort&compress]{natbib}
 \usepackage[hidelinks]{hyperref}
 
-% siunitx is optional: this TeX Live install does not ship it.
-% Define plain fallbacks first, then let siunitx override them if present.
-\newcommand{\SI}[2]{#1\,#2}
-\newcommand{\num}[1]{#1}
-\IfFileExists{siunitx.sty}{%
-  \usepackage{siunitx}%
-  \sisetup{detect-all,separate-uncertainty=true}%
-}{}
+% siunitx provides SI-unit and uncertainty typography.  This TeX Live 2023
+% install does not ship it, so a compatible copy (v3.3.10, 2024-01-25) is
+% installed in the user tree (~/texmf/tex/latex/siunitx).  Load it directly;
+% do not pre-define \num/\qty fallbacks (they would clash with siunitx).
+\usepackage{siunitx}
+\sisetup{detect-all,separate-uncertainty=true}
 
 \geometry{margin=2.5cm}
 
@@ -73,9 +71,9 @@ $5\times10^{-18}$. Many optical clocks report self-evaluated uncertainties
 meeting this level, but no comparison between clocks in different cities
 has yet reached it. Here we close this gap with an inter-city,
 cross-species clock network: an IAPMST ytterbium clock in Wuhan and a USTC
-strontium clock in Shanghai, about $700$\,km apart, are linked through a
-$1350$\,km phase-stabilised fibre and compared coherently for $58$\,days
-($274$\,h, 16 segments with segment~9 excluded). Treating the tidal
+strontium clock in Shanghai, about \qty{700}{km} apart, are linked through a
+\qty{1350}{km} phase-stabilised fibre and compared coherently for $58$\,days
+(\qty{274}{h}, 16 segments with segment~9 excluded). Treating the tidal
 gravitational-redshift term as an
 uncertainty item, we obtain the Yb/Sr frequency ratio
 $1.207\,507\,039\,343\,337\,720\,1(29)$, with a statistical uncertainty of
@@ -85,7 +83,7 @@ $5\times10^{-18}$. The same data show a tidal-template response in the
 windowed beat series; fixed tidal-response scenarios change the
 inter-segment scatter descriptively but are not used to correct the headline
 ratio. The two clocks also read the time-varying
-gravitational potential over the real $700$\,km baseline, resolving a
+gravitational potential over the real \qty{700}{km} baseline, resolving a
 tidal geopotential difference at centimetre-level equivalent height rather
 than on a single campus. Such a network thus both supports the redefinition
 of the SI second and senses the time-varying gravitational potential.
@@ -153,7 +151,7 @@ built at different institutions and separated by hundreds of kilometres
 of fibre, can agree at the level a redefined second demands. Here we
 show that they can. We link an ytterbium lattice clock at IAPMST in
 Wuhan to a strontium lattice clock at USTC in Shanghai, about
-$700$\,km apart, through a $1350$\,km phase-stabilised fibre, and
+\qty{700}{km} apart, through a \qty{1350}{km} phase-stabilised fibre, and
 operate them coherently for $58$\,days. Treating the tidal
 gravitational-redshift term as an uncertainty item, we obtain a Yb/Sr
 ratio consistent with the existing determinations and observe a
@@ -175,24 +173,24 @@ formal detection claim.
 The experiment compares a Yb lattice clock at IAPMST in Wuhan
 \citep{zhu2026yb} with a Sr lattice clock at USTC in Shanghai
 \citep{jia2026sr}, two institutions and two clock
-species about $700$\,km apart. They are joined by a phase-stabilised
-$1550$\,nm fibre link of single-pass optical length $\approx1350$\,km,
+species about \qty{700}{km} apart. They are joined by a phase-stabilised
+\qty{1550}{nm} fibre link of single-pass optical length $\approx1350$\,km,
 deployed on paired strands within a single cable duct of a
 telecommunications operator and organised as a cascade of relay stations,
 each carrying a bidirectional erbium-doped fibre amplifier and a
 fibre-noise-cancellation loop. Loop-back purification keeps the link
-instability below the clock noise beyond $\sim100$\,s
+instability below the clock noise beyond \qty{\sim100}{s}
 (Fig.~\ref{fig:setup}; Methods). The transfer architecture follows the
 cascaded, bias-corrected optical-frequency-dissemination design
-demonstrated on a $2067$\,km field link \citep{chen2026dissemination}; the
+demonstrated on a \qty{2067}{km} field link \citep{chen2026dissemination}; the
 present link is shorter, which relaxes the accumulated noise. The raw
 observable is the out-of-loop beat note between the received carrier and
-the local comb, sampled at $1$\,s.
+the local comb, sampled at \qty{1}{s}.
 
 {\sloppy
 Over a $58$-day campaign (2026-06-29 to 2026-08-26), 16 uninterrupted
 segments (segment 9 excluded) yield $986\,416$ valid one-second samples
-($274$\,h, a duty cycle of about $20\%$), gated by the simultaneous lock of both clocks
+(\qty{274}{h}, a duty cycle of about $20\%$), gated by the simultaneous lock of both clocks
 and the comb chain rather than by the link. The two clocks were
 restarted independently between segments in the first campaign, so the
 ratio centre provides a direct reproducibility check and shows no
@@ -204,7 +202,7 @@ static-redshift term (Table~\ref{tab:budget}). For the metrological
 result we treat the time-varying tidal geopotential difference,
 $\dW(t) = W_{\mathrm{WUHN}}(t) - W_{\mathrm{SHAN}}(t)$, as an
 uncertainty item (Sec.~\ref{sec:tidal-theory}), taking its waveform
-from a professional 30\,s series that combines solid-Earth tide and
+from a professional \qty{30}{s} series that combines solid-Earth tide and
 ocean loading.
 \par}
 % src: docs/METHODOLOGY.md Sec. 0.1, docs/NOTATION.md Sec. 6, 8, 9;
@@ -216,7 +214,7 @@ ocean loading.
   \includegraphics[width=0.95\linewidth]{figs/1.png}
   \caption{Experimental setup. The IAPMST Yb lattice clock in Wuhan and
   the USTC Sr lattice clock in Shanghai are linked by a phase-stabilised
-  $1550$\,nm fibre of single-pass optical length $\approx1350$\,km, with
+  \qty{1550}{nm} fibre of single-pass optical length $\approx1350$\,km, with
   loop-back purification at each repeater; the out-of-loop beat note
   between the received carrier and the local comb is the raw observable.}
   \label{fig:setup}
@@ -325,11 +323,11 @@ segments).
 %      min 1.997e-18, max 6.562e-18
 
 After both the beat and a tidal template are passed through a
-$1200$\,s triangular window and demeaned, each segment is fitted with
+\qty{1200}{s} triangular window and demeaned, each segment is fitted with
 $A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. The
-template is normalised to the $1550$\,nm transfer frequency
-$\Ffifteen=193.40$\,THz, not to the ratio-conversion coefficient
-$1/\mathrm{COEF}\approx233.53$\,THz; the two differ by the Yb/Sr factor
+template is normalised to the \qty{1550}{nm} transfer frequency
+$\Ffifteen=\qty{193.40}{THz}$, not to the ratio-conversion coefficient
+$1/\mathrm{COEF}\approx\qty{233.53}{THz}$; the two differ by the Yb/Sr factor
 $1.2075$, so the choice of reference sets the amplitude scale and must be
 accounted for before comparing $A$ with other tidal analyses (Methods). A
 single segment reaches only $\mathrm{SNR}\approx0.28$. The 600-s-step
@@ -394,7 +392,7 @@ fixes the sign convention. We therefore do not adopt it as a compensation.
 A half-strength response admits several physical readings, none of which
 the present data can single out. The professional tidal series combines
 solid-Earth tide with ocean loading, yet the loading term over a
-$700$\,km inter-city baseline depends on the local coastline and
+\qty{700}{km} inter-city baseline depends on the local coastline and
 sedimentary structure and on groundwater and hydrological loading that a
 global model resolves only coarsely; a phase- or amplitude-mismatched
 loading component would reduce the coherent response without removing it.
@@ -544,7 +542,7 @@ motivated by the present sensitivity.
 
 We have demonstrated an inter-city, cross-species optical-clock network:
 an IAPMST Yb clock in Wuhan \citep{zhu2026yb} and a USTC Sr clock in
-Shanghai \citep{jia2026sr}, about $700$\,km apart and linked by a
+Shanghai \citep{jia2026sr}, about \qty{700}{km} apart and linked by a
 phase-stabilised fibre, operated coherently for $58$\,days. Combining
 $16$ segments with a Bayesian random-effect model gives an uncorrected
 Yb/Sr ratio of $1.207\,507\,039\,343\,337\,720\,1(29)$ with a total
@@ -553,7 +551,7 @@ the $5\e{-18}$ level. The tidal gravitational-redshift template response is
 carried as an uncertainty item, pending a covariance-aware detection analysis.
 Two capabilities follow. The comparison supplies an independently
 obtained entry for the Yb/Sr ratio that a redefined SI second will rest
-on. And, for the first time over a real $700$\,km baseline rather than a
+on. And, for the first time over a real \qty{700}{km} baseline rather than a
 single campus, the two independent clocks resolve the time-varying
 gravitational potential at a centimetre-level equivalent height, casting
 the inter-city clock network as a prototype relativistic-geodesy sensor
@@ -575,7 +573,7 @@ treatment, and the statistical combination of the per-segment results.
 
 The main text keeps only the conceptual frequency chain; here we record
 the symbol conventions that make the inversion reproducible. The
-observable is the beat between the received $1550$\,nm transfer carrier
+observable is the beat between the received \qty{1550}{nm} transfer carrier
 and the local Yb-referenced comb; every frequency in the chain is derived
 from the comb repetition rate $f_{\mathrm{rep}} =
 f_{\mathrm{ref}}\times\mathrm{DIV20} = 200$\,MHz.
@@ -588,15 +586,15 @@ each terminated by a relay station that carries a bidirectional
 erbium-doped fibre amplifier and a fibre-noise-cancellation loop, with the
 round-trip phase noise measured in the radio-frequency domain. Deployed
 on paired strands within a single telecommunications cable duct, the
-present Shanghai--Wuhan route is shorter than the $2067$\,km field link of
+present Shanghai--Wuhan route is shorter than the \qty{2067}{km} field link of
 Ref.~\citep{chen2026dissemination}, so the accumulated link noise is
 correspondingly lower; the relay stations used here operate without the
 dedicated sub-hertz noise-purification stage that the longer link
 requires.
 
-At the Shanghai end the Sr clock at $698$\,nm is transferred to a
-$1397$\,nm carrier; at the Wuhan end a second comb links the received
-$1550$\,nm carrier to the Yb clock at $578$\,nm through a $1156$\,nm
+At the Shanghai end the Sr clock at \qty{698}{nm} is transferred to a
+\qty{1397}{nm} carrier; at the Wuhan end a second comb links the received
+\qty{1550}{nm} carrier to the Yb clock at \qty{578}{nm} through a \qty{1156}{nm}
 fundamental beam. The clock-laser frequency relations are
 \begin{align}
   f_{\mathrm{comb}}^{1397} &= \tfrac{1}{2}\,(1+a)\,f_{\mathrm{Sr}},
@@ -771,13 +769,13 @@ follow the published assessments of the two clocks
 The static gravitational-redshift correction $\delta_g$ entering the ratio
 inversion is fixed by the geopotential difference between the two clocks'
 atomic transition positions, determined by first-order spirit levelling
-together with simultaneous gravimetry. A levelling line of about $1113$\,km
+together with simultaneous gravimetry. A levelling line of about \qty{1113}{km}
 was run between the Wuhan benchmark WS-03 (at IAPMST) and the Shanghai
 benchmark WS-01 (at USTC), comprising six first-order routes through
 Ezhou, Huangshi, Huanggang, Lu'an, Hefei, Wuhu, Guangde and Suzhou.
 Levelling was performed with digital levels (Sokkia SDL1X, Trimble
-DiNi03) and bar-coded invar staffs, with sight lengths below $30$\,m and a
-forward--back sight-length difference below $1.0$\,m; gravity was
+DiNi03) and bar-coded invar staffs, with sight lengths below \qty{30}{m} and a
+forward--back sight-length difference below \qty{1.0}{m}; gravity was
 observed at every levelling point with two relative gravimeters. The
 levelled normal heights were converted to orthometric heights for the
 geopotential integration, and the geopotential difference between the two
@@ -792,8 +790,8 @@ platform-to-atom segment from the clock design parameters. The five
 partial geopotential differences are listed in Table~\ref{tab:levelling}
 and sum to $\dW = 280.04164\ \mathrm{m^{2}/s^{2}}$ between the two atomic
 transition positions. The levelling precision, expressed as the
-accidental mean error per kilometre, is $0.255$\,mm, better than the
-$0.45$\,mm limit for first-order levelling. Propagating the levelling,
+accidental mean error per kilometre, is \qty{0.255}{mm}, better than the
+\qty{0.45}{mm} limit for first-order levelling. Propagating the levelling,
 trigonometrical-heighting and platform-to-atom terms yields a total
 height precision of $\pm0.0086$\,m, and hence a geopotential-difference
 uncertainty of $\pm0.085\ \mathrm{m^{2}/s^{2}}$.
@@ -827,16 +825,16 @@ uncertainty of $\pm0.085\ \mathrm{m^{2}/s^{2}}$.
 \subsection{Tidal analysis}
 \label{app:tidal}
 
-The tidal beat template is formed from the professional $30$\,s
+The tidal beat template is formed from the professional \qty{30}{s}
 geopotential-difference series, linearly interpolated to the retained
 beat timestamps after shifting the Beijing-time beat windows to UTC. It
-is normalised to the $1550$\,nm transfer frequency,
+is normalised to the \qty{1550}{nm} transfer frequency,
 $h(t) = F_{1550}\,\dW(t)/c^{2}$ with
-$F_{1550} = N_{1550}^{\mathrm{WH}} f_{\mathrm{rep}} = 193.3992$\,THz,
+$F_{1550} = N_{1550}^{\mathrm{WH}} f_{\mathrm{rep}} = \qty{193.3992}{THz}$,
 \emph{not} to $1/\mathrm{COEF}$, which would be larger by the Yb/Sr
 factor $\approx 1.2075$ and would bias $A$ low by that factor. Within
-each segment the beat and the template are passed through a $1200$\,s
-triangular window (600\,s step) and, after demeaning, fitted with
+each segment the beat and the template are passed through a \qty{1200}{s}
+triangular window (\qty{600}{s} step) and, after demeaning, fitted with
 $\mathrm{beat} = A\,\mathrm{tide} + \mathrm{noise}$,
 $A = \sum(\mathrm{tide}\cdot\mathrm{beat})/\sum\mathrm{tide}^{2}$. The
 resulting segment-mean correlation between $y_i$ and $\dff$ is shown in
@@ -891,7 +889,7 @@ combination methods instead of adopting a single $u_i$-weighted mean, and
 why the excess-scatter term $\xi$ below is required rather than optional.
 The long-averaging-time behaviour is shown by the overlapping Allan
 deviation of the seventeen segments spliced end-to-end on one continuous
-$1$\,s record (gaps removed), for the raw, theory and empirical
+\qty{1}{s} record (gaps removed), for the raw, theory and empirical
 scenarios, with Riley--Howe effective-degrees-of-freedom error bars
 (Fig.~\ref{fig:stability-long}).
 % src: clock_ratio/concatenated_stability_long.{md,csv}
@@ -901,7 +899,7 @@ scenarios, with Riley--Howe effective-degrees-of-freedom error bars
   \includegraphics[width=0.85\linewidth]{figs/figS3_stability_long.png}
   \caption{Spliced concatenated stability. Overlapping Allan deviation
   $\sigma_y(\tau)$ of the seventeen segments placed end-to-end on one
-  continuous $1$\,s record (aligned pure-data span $11.7$\,d, gaps
+  continuous \qty{1}{s} record (aligned pure-data span $11.7$\,d, gaps
   removed; $\tau$ up to $4.63$\,d), for the raw ($A=0$), theory
   ($A=-1$) and empirical ($A=-0.54$) scenarios, with the correction-term
   curve and Riley--Howe EDF error bars.}
