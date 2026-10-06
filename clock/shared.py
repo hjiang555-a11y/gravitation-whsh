@@ -26,16 +26,29 @@ from pathlib import Path
 
 import numpy as np
 
+from clock.data_provenance import load_beat_file
+
 # Decimal arithmetic at 80 significant digits mirrors the MATLAB vpa(...,80):
 # the clock ratio R ~ 1.2 and segment-to-segment differences are ~1-5e-18, which
 # float64 (abs eps ~2.6e-16) would destroy.
 getcontext().prec = 80
 
 # --------------------------------------------------------------------------
-# Paths (relative to the repo root)
+# Paths (relative to the repo root unless a worktree needs a read-only fallback)
 # --------------------------------------------------------------------------
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = REPO_ROOT / "clock" / "data" / "环外数据（第八列数据）"
+RAW_DATA_SUBDIR = Path("clock") / "data" / "环外数据（第八列数据）"
+
+
+def _resolve_data_dir() -> Path:
+    for base in (REPO_ROOT, *REPO_ROOT.parents):
+        candidate = base / RAW_DATA_SUBDIR
+        if candidate.is_dir():
+            return candidate
+    return REPO_ROOT / RAW_DATA_SUBDIR
+
+
+DATA_DIR = _resolve_data_dir()
 RESULTS_CSV = REPO_ROOT / "results" / "professional_tidal_delta_30s.csv"
 TIDAL_COLUMN = "total_tidal_delta_m2_s2_surface"
 PARAMS_JSON = Path(__file__).resolve().parent / "params.json"
@@ -134,16 +147,16 @@ def load_beat() -> tuple[np.ndarray, np.ndarray]:
     files = (sorted(DATA_DIR.glob("Freq_B_2_2606*.txt"))
              + sorted(DATA_DIR.glob("Freq_B_2_2607*.txt"))
              + sorted(DATA_DIR.glob("Freq_B_2_2608*.txt")))
+    if not files:
+        raise ValueError(f"no raw beat data files found in {DATA_DIR}")
     t_all, b_all = [], []
     for f in files:
-        b = np.loadtxt(f, usecols=(10,))
-        t0 = first_stamp(f)
-        t = t0 + np.arange(len(b), dtype="int64").astype("timedelta64[s]")
+        t, b = load_beat_file(f)
         t_all.append(t)
         b_all.append(b)
     t = np.concatenate(t_all)
     b = np.concatenate(b_all)
-    order = np.argsort(t.astype("int64"))
+    order = np.argsort(t.astype("int64"), kind="stable")
     return t[order], b[order]
 
 
