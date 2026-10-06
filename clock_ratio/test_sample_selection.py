@@ -163,6 +163,25 @@ def test_callers_share_identical_selected_segments(monkeypatch: pytest.MonkeyPat
             np.testing.assert_array_equal(actual_segment.beat, expected_segment.beat)
 
 
+def test_build_sample_ledger_rejects_output_dir_matching_clock_data_override(
+    tmp_path: pytest.TempPathFactory,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from typer.testing import CliRunner
+
+    from clock import build_sample_ledger
+
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir()
+    monkeypatch.setenv("CLOCK_DATA_DIR", str(raw_dir))
+
+    result = CliRunner().invoke(build_sample_ledger.app, ["--output-dir", str(raw_dir)])
+
+    assert result.exit_code != 0
+    assert "protected raw-data directory" in result.output
+
+
+
 def test_build_sample_ledger_cli_writes_diagnostics_and_time_quality(
     tmp_path: pytest.TempPathFactory,
     monkeypatch: pytest.MonkeyPatch,

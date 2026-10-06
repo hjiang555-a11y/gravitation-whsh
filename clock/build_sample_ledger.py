@@ -46,9 +46,15 @@ def list_raw_beat_files(data_dir: Path | None = None) -> tuple[Path, ...]:
     return tuple(files)
 
 
-def load_selected_segments() -> tuple[SelectedSegment, ...]:
+def load_selected_segments(raw_data_dir: Path | None = None) -> tuple[SelectedSegment, ...]:
     """Load the shared retained segments used by all clock-ratio callers."""
-    return select_segments(*shared.load_beat(), DEFAULT_SELECTION_PLAN)
+    original_data_dir = shared.DATA_DIR
+    if raw_data_dir is not None:
+        shared.DATA_DIR = raw_data_dir
+    try:
+        return select_segments(*shared.load_beat(), DEFAULT_SELECTION_PLAN)
+    finally:
+        shared.DATA_DIR = original_data_dir
 
 
 def computed_total_final(segments: tuple[SelectedSegment, ...]) -> int:
@@ -100,8 +106,13 @@ def _serialize_quality(quality: TimestampQuality) -> dict[str, Any]:
     }
 
 
-def build_time_quality_report(raw_files: tuple[Path, ...], segments: tuple[SelectedSegment, ...]) -> dict[str, Any]:
-    base_dir = configured_data_dir()
+def build_time_quality_report(
+    raw_files: tuple[Path, ...],
+    segments: tuple[SelectedSegment, ...],
+    *,
+    raw_data_dir: Path,
+) -> dict[str, Any]:
+    base_dir = raw_data_dir.resolve()
     return {
         "computed_total_final": computed_total_final(segments),
         "computed_total_status": "established",
@@ -117,9 +128,9 @@ def build_time_quality_report(raw_files: tuple[Path, ...], segments: tuple[Selec
     }
 
 
-def validate_output_dir(output_dir: Path) -> Path:
+def validate_output_dir(output_dir: Path, *, raw_data_dir: Path) -> Path:
     target = output_dir.resolve()
-    if target.is_relative_to(shared.DATA_DIR):
+    if target.is_relative_to(raw_data_dir.resolve()):
         raise ValueError(f"protected raw-data directory: {target}")
     allowed_root = shared.REPO_ROOT / "results" / "audit-v1"
     if target.is_relative_to(shared.REPO_ROOT) and not target.is_relative_to(allowed_root):
@@ -160,19 +171,14 @@ def _write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
 @app.command()
 def main(output_dir: Path = typer.Option(..., exists=False, file_okay=False, dir_okay=True)) -> None:
     try:
-        target = validate_output_dir(output_dir)
         data_dir = configured_data_dir()
+        target = validate_output_dir(output_dir, raw_data_dir=data_dir)
         raw_files = list_raw_beat_files(data_dir)
         if not raw_files:
             raise ValueError(f"no raw beat data files found in {data_dir}")
-        original_data_dir = shared.DATA_DIR
-        shared.DATA_DIR = data_dir
-        try:
-            segments = load_selected_segments()
-        finally:
-            shared.DATA_DIR = original_data_dir
+        segments = load_selected_segments(data_dir)
         rows = build_sample_ledger_rows(segments)
-        report = build_time_quality_report(raw_files, segments)
+        report = build_time_quality_report(raw_files, segments, raw_data_dir=data_dir)
         target.mkdir(parents=True, exist_ok=True)
         _write_csv_atomic(target / OUTPUT_FILENAMES[0], rows)
         _write_json_atomic(target / OUTPUT_FILENAMES[1], report)
