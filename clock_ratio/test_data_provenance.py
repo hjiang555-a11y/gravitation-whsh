@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import json
+import os
 from pathlib import Path
 
 import numpy as np
+import pytest
+from typer.testing import CliRunner
 
-from clock.build_parameter_ledger import build_parameter_records
+from clock import shared
+from clock.build_parameter_ledger import app, build_parameter_records, validate_output_dir
 from clock.data_provenance import inspect_timestamp_labels, sha256_file
 from clock.shared import load_beat
 from clock_ratio.evidence import EvidenceStatus
@@ -21,6 +26,8 @@ FIXTURE_COLUMNS = [
     "9999995.0",
     "33623141.0",
 ]
+RUNNER = CliRunner()
+LEVELLING_SOURCE = "docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md"
 
 
 def write_beat_fixture(tmp_path: Path, labels: list[str]) -> Path:
@@ -103,3 +110,59 @@ def test_load_beat_preserves_file_order_for_duplicate_timestamps(tmp_path: Path,
         base + np.array([0, 0, 0, 1, 1, 1, 2, 2]).astype("timedelta64[s]"),
     )
     np.testing.assert_array_equal(beat, np.array([10.0, 20.0, 30.0, 11.0, 21.0, 31.0, 12.0, 22.0]))
+
+
+
+def test_parameter_ledger_writes_explicit_levelling_conflicts(tmp_path: Path) -> None:
+    output_dir = tmp_path / "ledger"
+    result = RUNNER.invoke(app, ["--output-dir", str(output_dir)])
+    assert result.exit_code == 0, result.output
+
+    records = build_parameter_records(Path("clock/params.json"))
+    expected = {
+        "levelling_raw_observations",
+        "levelling_reduction_process",
+        "levelling_uncertainty_propagation",
+    }
+    levelling_records = [record for record in records if record.name in expected]
+    assert {record.name for record in levelling_records} == expected
+    assert {record.source_path for record in levelling_records} == {LEVELLING_SOURCE}
+    assert {record.status for record in levelling_records} == {EvidenceStatus.external_unverified}
+    assert {str(record.value) for record in levelling_records} == {"0"}
+
+    conflicts = json.loads((output_dir / "parameter_conflicts.json").read_text(encoding="utf-8"))
+    levelling_conflicts = [row for row in conflicts if row["name"] in expected]
+    assert {row["name"] for row in levelling_conflicts} == expected
+    assert {row["source_path"] for row in levelling_conflicts} == {LEVELLING_SOURCE}
+    assert {row["status"] for row in levelling_conflicts} == {EvidenceStatus.external_unverified.value}
+
+
+@pytest.mark.parametrize("target", [shared.REPO_ROOT / "paper", shared.DATA_DIR])
+def test_validate_output_dir_rejects_protected_trees(target: Path) -> None:
+    with pytest.raises(ValueError, match="protected"):
+        validate_output_dir(target, Path("clock/params.json"))
+
+
+
+def test_validate_output_dir_rejects_collision_with_params_input(tmp_path: Path) -> None:
+    params_path = tmp_path / "parameter_ledger.csv"
+    params_path.write_text(Path("clock/params.json").read_text(encoding="utf-8"), encoding="utf-8")
+    with pytest.raises(ValueError, match="params"):
+        validate_output_dir(tmp_path, params_path)
+
+
+@pytest.mark.parametrize("kind", ["symlink", "hardlink"])
+def test_validate_output_dir_rejects_linked_output_files(tmp_path: Path, kind: str) -> None:
+    victim = tmp_path / "victim.csv"
+    victim.write_text("unchanged", encoding="utf-8")
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    target = output_dir / "parameter_ledger.csv"
+    if kind == "symlink":
+        target.symlink_to(victim)
+    else:
+        os.link(victim, target)
+
+    with pytest.raises(ValueError, match="symlink|independent regular file"):
+        validate_output_dir(output_dir, Path("clock/params.json"))
+    assert victim.read_text(encoding="utf-8") == "unchanged"

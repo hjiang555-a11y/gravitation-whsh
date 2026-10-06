@@ -11,6 +11,7 @@ from typing import Any
 
 import typer
 
+from clock import shared
 from clock.data_provenance import ParameterEvidence
 from clock_ratio.evidence import EvidenceStatus
 
@@ -19,6 +20,9 @@ COMPONENT_NAMES = ("a_rou", "a_AC", "a_SM", "a_air", "a_BBR")
 INHERITED_GROUPS = (15, 16, 17)
 INHERITED_FROM_GROUP = 12
 PARAMS_DEFAULT = Path("clock/params.json")
+OUTPUT_FILENAMES = ("parameter_ledger.csv", "parameter_conflicts.json")
+ALLOWED_REPO_OUTPUT_ROOT = shared.REPO_ROOT / "results" / "audit-v1"
+LEVELLING_SOURCE = Path("docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md")
 
 
 def _load_params(path: Path) -> dict[str, Any]:
@@ -61,6 +65,43 @@ def _segment_record(name: str, group: int, value: str, source_path: str) -> Para
         status=status,
         note=note,
     )
+
+
+def _levelling_records() -> tuple[ParameterEvidence, ...]:
+    source_path = LEVELLING_SOURCE.as_posix()
+    return (
+        _record(
+            "levelling_raw_observations",
+            None,
+            "0",
+            unit="missing-source",
+            source_path=source_path,
+            inherited_from_group=None,
+            status=EvidenceStatus.external_unverified,
+            note="Repository docs treat levelling documents as external read-only sources, but no raw observations are present here.",
+        ),
+        _record(
+            "levelling_reduction_process",
+            None,
+            "0",
+            unit="missing-source",
+            source_path=source_path,
+            inherited_from_group=None,
+            status=EvidenceStatus.external_unverified,
+            note="Repository docs explicitly state that the levelling reduction is not yet reproducible from code in this repo.",
+        ),
+        _record(
+            "levelling_uncertainty_propagation",
+            None,
+            "0",
+            unit="missing-source",
+            source_path=source_path,
+            inherited_from_group=None,
+            status=EvidenceStatus.external_unverified,
+            note="Repository docs require levelling uncertainty propagation evidence, but no executable source is present here.",
+        ),
+    )
+
 
 
 def build_parameter_records(params_path: Path) -> tuple[ParameterEvidence, ...]:
@@ -110,10 +151,36 @@ def build_parameter_records(params_path: Path) -> tuple[ParameterEvidence, ...]:
             source_path=source_path,
             inherited_from_group=None,
             status=EvidenceStatus.pending_verification,
-            note="Static gravitational correction is executable, but its leveling provenance is document-only in this repository.",
+            note="Static gravitational correction is executable, but its levelling provenance is not closed inside this repository.",
         )
     )
+    records.extend(_levelling_records())
     return tuple(records)
+
+
+def validate_output_dir(output_dir: Path, params_path: Path) -> Path:
+    target = output_dir.resolve()
+    params_resolved = params_path.resolve()
+
+    if target.is_relative_to(shared.DATA_DIR):
+        raise ValueError(f"protected raw-data directory: {target}")
+    if target.is_relative_to(shared.REPO_ROOT / "paper"):
+        raise ValueError(f"protected paper directory: {target}")
+    if target.is_relative_to(shared.REPO_ROOT) and not target.is_relative_to(ALLOWED_REPO_OUTPUT_ROOT):
+        raise ValueError(f"protected repository source/legacy output directory: {target}")
+    if target.exists() and not target.is_dir():
+        raise ValueError(f"output directory is not a directory: {target}")
+
+    for filename in OUTPUT_FILENAMES:
+        path = target / filename
+        if path.resolve(strict=False) == params_resolved:
+            raise ValueError(f"output filename collides with params input: {path}")
+        if path.is_symlink():
+            raise ValueError(f"output filename is a symlink: {path}")
+        if path.exists() and (not path.is_file() or path.stat().st_nlink > 1):
+            raise ValueError(f"output filename is not an independent regular file: {path}")
+    return target
+
 
 
 def _serialize_record(record: ParameterEvidence) -> dict[str, Any]:
@@ -156,13 +223,18 @@ def main(
     output_dir: Path = typer.Option(..., exists=False, file_okay=False, dir_okay=True),
     params_path: Path = typer.Option(PARAMS_DEFAULT, exists=True, dir_okay=False),
 ) -> None:
-    output_dir.mkdir(parents=True, exist_ok=True)
-    records = build_parameter_records(params_path)
-    ledger_path = output_dir / "parameter_ledger.csv"
-    conflicts_path = output_dir / "parameter_conflicts.json"
-    _write_csv(ledger_path, records)
-    conflicts = [_serialize_record(record) for record in records if record.status is not EvidenceStatus.established]
-    _write_json(conflicts_path, conflicts)
+    try:
+        target = validate_output_dir(output_dir, params_path)
+        target.mkdir(parents=True, exist_ok=True)
+        records = build_parameter_records(params_path)
+        ledger_path = target / "parameter_ledger.csv"
+        conflicts_path = target / "parameter_conflicts.json"
+        _write_csv(ledger_path, records)
+        conflicts = [_serialize_record(record) for record in records if record.status is not EvidenceStatus.established]
+        _write_json(conflicts_path, conflicts)
+    except (OSError, ValueError) as error:
+        typer.echo(f"Error: {error}", err=True)
+        raise typer.Exit(code=1) from error
 
 
 if __name__ == "__main__":
