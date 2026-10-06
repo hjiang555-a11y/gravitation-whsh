@@ -16,12 +16,28 @@ from typer.testing import CliRunner
 
 from clock import shared
 from clock.shared import load_beat
+from clock_ratio.compute_ratio import compute_ratio_rows
 from clock_ratio.tidal_analysis import SelectionPlan, select_segments
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "clock_ratio" / "tidal_correction.py"
 EXPECTED_GROUPS = tuple(range(1, 18))
 EXPECTED_TOTAL_VALID = 1_008_912
+
+
+def reference_ratio_from_comb_chain(mean_dm: Decimal, shift_a: Decimal, global_median: Decimal) -> Decimal:
+    sr_multiplier = (Decimal(1) + shift_a) / Decimal(2)
+    measured_delta = (
+        shared.COEF1156 / shared.N1156
+        * (mean_dm / shared.FREF / shared.DIV20)
+        / (sr_multiplier / shared.N1397 * (shared.N1550 + Decimal(8) / Decimal(25)))
+    )
+    numerator_count = shared.N1550_WH + Decimal(26) / Decimal(20) + global_median / shared.FREF / shared.DIV20
+    baseline_sr_yb = (
+        shared.COEF1156 / shared.N1156 * numerator_count
+        / (sr_multiplier / shared.N1397 * (shared.N1550 + Decimal(8) / Decimal(25)))
+    )
+    return Decimal(1) / (baseline_sr_yb + measured_delta) * (Decimal(1) + shared.DELTA_G)
 
 
 def test_help_when_invoked_from_other_directory(tmp_path: Path) -> None:
@@ -193,3 +209,27 @@ def test_real_data_characterization() -> None:
     assert sum(len(s.beat) for s in segments) == EXPECTED_TOTAL_VALID
     assert all(s.times.shape == s.beat.shape for s in segments)
     assert all(s.times[0] <= s.times[-1] for s in segments)
+
+
+@pytest.mark.skipif(os.getenv("RUN_CLOCK_DATA_TESTS") != "1", reason="requires private raw data")
+def test_ratio_bounds_equal_actual_retained_bounds() -> None:
+    segments = select_segments(*load_beat(), SelectionPlan())
+    rows = compute_ratio_rows(segments)
+    for segment, row in zip(segments, rows, strict=True):
+        assert row.t_start == str(segment.times[0])
+        assert row.t_end == str(segment.times[-1])
+        assert row.n_valid == len(segment.beat)
+
+
+@pytest.mark.skipif(os.getenv("RUN_CLOCK_DATA_TESTS") != "1", reason="requires private raw data")
+def test_ratio_rows_match_independent_comb_chain_formula() -> None:
+    segments = select_segments(*load_beat(), SelectionPlan())
+    rows = compute_ratio_rows(segments)
+    assert tuple(row.group for row in rows) == EXPECTED_GROUPS
+    for segment, row in zip(segments, rows, strict=True):
+        expected = reference_ratio_from_comb_chain(
+            shared.to_dec(float(np.mean(segment.beat))) - segment.m_dec,
+            segment.shift_a,
+            segment.m_dec,
+        )
+        assert abs(row.ratio - expected) < Decimal("1e-75")

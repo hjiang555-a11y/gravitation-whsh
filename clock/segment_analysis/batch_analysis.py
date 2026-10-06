@@ -39,10 +39,8 @@ import numpy as np
 from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from clock.shared import (  # noqa: E402
-    F_1550, EXCLUDE_RANGES, GROUPS, JUMP_THRESHOLD, UTC_OFFSET, load_beat,
-    load_tide, longest_valid_span,
-)
+from clock.shared import F_1550, load_beat, load_tide  # noqa: E402
+from clock.sample_selection import DEFAULT_SELECTION_PLAN, SelectedSegment, select_segments  # noqa: E402
 from clock_ratio.tidal_analysis import TideGrid  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parent
@@ -99,57 +97,32 @@ def fit_amplitude(
             "n_inference": len(inference_beat)}
 
 
+def load_selected_segments() -> tuple[SelectedSegment, ...]:
+    """Load the shared retained segments used by all clock-ratio callers."""
+    return select_segments(*load_beat(), DEFAULT_SELECTION_PLAN)
+
+
 def main() -> int:
-    T, B = load_beat()
+    segments = load_selected_segments()
     t_tide, tot = load_tide()
     tide_grid = TideGrid(t_tide, tot)
-
-    excl = np.zeros(len(T), dtype=bool)
-    for s, e in EXCLUDE_RANGES:
-        excl |= (T >= np.datetime64(s)) & (T <= np.datetime64(e))
 
     results = []
     print(f"{'g':>2} {'最长段起(北京)':<18} {'时长h':>6} {'跳点':>5} "
           f"{'积分点':>6} {'A':>8} {'u_A':>7} {'A/u_A':>7} {'r':>7} {'p':>8}")
     print("-" * 92)
 
-    for idx, (s, e) in enumerate(GROUPS, 1):
-        S = np.datetime64(s)
-        E = np.datetime64(e)
-        in_win = (T >= S) & (T < E)
-        t_seg = T[in_win]
-        b_seg = B[in_win]
-        ex_seg = excl[in_win]
-
-        if len(b_seg) == 0:
-            results.append({"group": idx, "A": np.nan, "u_A": np.nan, "note": "无数据"})
-            print(f"{idx:>2} {'(无数据)':<18} {'—':>6}")
-            continue
-
-        # robust median over physically plausible beat values (excludes saturation)
-        plausible = (b_seg > 3e7) & (b_seg < 4e7) & ~ex_seg
-        if not plausible.any():
-            results.append({"group": idx, "A": np.nan, "u_A": np.nan, "note": "无有效值"})
-            print(f"{idx:>2} {'(无有效值)':<18} {'—':>6}")
-            continue
-        med = np.median(b_seg[plausible])
-
-        valid = plausible & (np.abs(b_seg - med) < JUMP_THRESHOLD)
-        n_jump = int(plausible.sum()) - int(valid.sum())
-
-        span = longest_valid_span(valid)
-        if span is None:
-            results.append({"group": idx, "A": np.nan, "u_A": np.nan, "note": "无连续段"})
-            print(f"{idx:>2} {'(无连续段)':<18} {'—':>6}")
-            continue
-        t_run = t_seg[span[0] : span[1] + 1]
-        b_run = b_seg[span[0] : span[1] + 1]
+    for segment in segments:
+        diagnostics = segment.diagnostics
+        t_run = segment.times
+        b_run = segment.beat
+        n_jump = diagnostics.n_plausible - diagnostics.n_jump_valid
 
         beat_norm = b_run - b_run.mean()
         beat_tri = triangular_window(beat_norm, WINDOW, STRIDE)
         if len(beat_tri) < 5:
-            results.append({"group": idx, "A": np.nan, "u_A": np.nan, "note": "过短"})
-            print(f"{idx:>2} {str(t_run[0])[5:16]:<18} {len(b_run)/3600:>6.2f} "
+            results.append({"group": segment.group, "A": np.nan, "u_A": np.nan, "note": "过短"})
+            print(f"{segment.group:>2} {str(t_run[0])[5:16]:<18} {len(b_run)/3600:>6.2f} "
                   f"{n_jump:>5} {'(过短)':>8}")
             continue
 
@@ -167,13 +140,13 @@ def main() -> int:
         try:
             fit = fit_amplitude(beat_tri, tide, beat_inference, tide_inference)
         except ValueError:
-            results.append({"group": idx, "A": np.nan, "u_A": np.nan, "note": "独立窗过少"})
-            print(f"{idx:>2} {str(t_run[0])[5:16]:<18} {len(b_run)/3600:>6.2f} "
+            results.append({"group": segment.group, "A": np.nan, "u_A": np.nan, "note": "独立窗过少"})
+            print(f"{segment.group:>2} {str(t_run[0])[5:16]:<18} {len(b_run)/3600:>6.2f} "
                   f"{n_jump:>5} {'(独立窗过少)':>8}")
             continue
 
         results.append({
-            "group": idx,
+            "group": segment.group,
             "t_start": str(t_run[0]),
             "t_end": str(t_run[-1]),
             "hours": len(b_run) / 3600,
@@ -191,7 +164,7 @@ def main() -> int:
             "tide": tide,
         })
 
-        print(f"{idx:>2} {str(t_run[0])[5:16]:<18} {len(b_run)/3600:>6.2f} {n_jump:>5} "
+        print(f"{segment.group:>2} {str(t_run[0])[5:16]:<18} {len(b_run)/3600:>6.2f} {n_jump:>5} "
               f"{len(beat_tri):>6} {fit['A']:>+8.2f} {fit['u_A']:>7.2f} "
               f"{fit['A']/fit['u_A']:>+7.2f} {fit['r']:>+7.3f} {fit['p']:>8.3f}")
 

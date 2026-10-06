@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from decimal import Decimal
+import csv
+import json
 
 import numpy as np
 import pytest
@@ -9,6 +11,7 @@ from clock import shared as s
 from clock.sample_selection import (
     DEFAULT_SELECTION_PLAN,
     EndpointScreen,
+    SelectedSegment,
     SelectionDiagnostics,
     SelectionPlan,
     endpoint_screen_indices,
@@ -123,3 +126,118 @@ def test_select_segments_keeps_longest_index_span_even_with_time_gap() -> None:
     np.testing.assert_array_equal(segment.beat, beat[1:-1])
     assert segment.diagnostics.source_span_start == 0
     assert segment.diagnostics.source_span_stop == 9
+
+
+def test_callers_share_identical_selected_segments(monkeypatch: pytest.MonkeyPatch) -> None:
+    from clock.segment_analysis import batch_analysis
+    from clock_ratio import compute_ratio, tidal_correction
+
+    times = np.datetime64("2026-01-01T08:00:00") + np.arange(9).astype("timedelta64[s]")
+    beat = np.full(9, 33_000_000.0)
+    plan = SelectionPlan(
+        groups=((str(times[0]), str(times[-1] + np.timedelta64(1, "s"))),),
+        shifts=(s.SHIFT_A[0],),
+        exclusions=(),
+    )
+
+    def loader() -> tuple[np.ndarray, np.ndarray]:
+        return times, beat
+
+    monkeypatch.setattr(compute_ratio, "load_beat", loader)
+    monkeypatch.setattr(batch_analysis, "load_beat", loader)
+    monkeypatch.setattr(tidal_correction.shared, "load_beat", loader)
+    monkeypatch.setattr(compute_ratio, "DEFAULT_SELECTION_PLAN", plan)
+    monkeypatch.setattr(batch_analysis, "DEFAULT_SELECTION_PLAN", plan)
+    monkeypatch.setattr(tidal_correction, "DEFAULT_SELECTION_PLAN", plan)
+
+    ratio_segments = compute_ratio.load_selected_segments()
+    batch_segments = batch_analysis.load_selected_segments()
+    tidal_segments = tidal_correction.load_selected_segments()
+
+    assert tuple(segment.group for segment in ratio_segments) == (1,)
+    for actual in (batch_segments, tidal_segments):
+        for expected_segment, actual_segment in zip(ratio_segments, actual, strict=True):
+            assert actual_segment.group == expected_segment.group
+            assert len(actual_segment.beat) == len(expected_segment.beat)
+            np.testing.assert_array_equal(actual_segment.times, expected_segment.times)
+            np.testing.assert_array_equal(actual_segment.beat, expected_segment.beat)
+
+
+def test_build_sample_ledger_cli_writes_diagnostics_and_time_quality(
+    tmp_path: pytest.TempPathFactory,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from typer.testing import CliRunner
+
+    from clock import build_sample_ledger
+
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir()
+    raw_file = raw_dir / "Freq_B_2_260601_demo.txt"
+    raw_file.write_text(
+        "# demo\n"
+        "260601 080000 0 0 0 0 0 0 0 0 33000000\n"
+        "260601 080001 0 0 0 0 0 0 0 0 33000001\n"
+        "260601 080002 0 0 0 0 0 0 0 0 33000002\n",
+        encoding="utf-8",
+    )
+    retained_times = np.array(["2026-06-01T08:00:01", "2026-06-01T08:00:02"], dtype="datetime64[s]")
+    retained_beat = np.array([33_000_000.0, 33_000_001.0])
+    retained_times.setflags(write=False)
+    retained_beat.setflags(write=False)
+    diagnostics = SelectionDiagnostics(
+        n_window=3,
+        n_excluded=0,
+        n_plausible=3,
+        n_jump_valid=3,
+        n_longest_span=3,
+        n_removed_start=1,
+        n_removed_end=0,
+        n_final=2,
+        source_span_start=0,
+        source_span_stop=3,
+    )
+    segment = SelectedSegment(
+        group=1,
+        times=retained_times,
+        beat=retained_beat,
+        m_dec=Decimal("33000000"),
+        shift_a=s.SHIFT_A[0],
+        raw_mean=float(retained_beat.mean()),
+        rem_start=1,
+        rem_end=0,
+        diagnostics=diagnostics,
+    )
+
+    monkeypatch.setattr(build_sample_ledger.shared, "DATA_DIR", raw_dir)
+    monkeypatch.setattr(build_sample_ledger.shared, "load_beat", lambda: (retained_times, retained_beat))
+    monkeypatch.setattr(build_sample_ledger, "select_segments", lambda times, beat, plan=DEFAULT_SELECTION_PLAN: (segment,))
+
+    output_dir = tmp_path / "out"
+    result = CliRunner().invoke(build_sample_ledger.app, ["--output-dir", str(output_dir)])
+
+    assert result.exit_code == 0, result.output
+    with (output_dir / "sample_ledger.csv").open(encoding="utf-8", newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    assert rows == [{
+        "group": "1",
+        "n_window": "3",
+        "n_excluded": "0",
+        "n_plausible": "3",
+        "n_jump_valid": "3",
+        "n_longest_span": "3",
+        "n_removed_start": "1",
+        "n_removed_end": "0",
+        "n_final": "2",
+        "source_span_start": "0",
+        "source_span_stop": "3",
+        "retained_start_beijing": "2026-06-01T08:00:01",
+        "retained_end_beijing": "2026-06-01T08:00:02",
+    }]
+    payload = json.loads((output_dir / "time_quality.json").read_text(encoding="utf-8"))
+    assert len(payload["files"]) == 1
+    entry = payload["files"][0]
+    assert entry["digest"]["relative_path"] == raw_file.name
+    assert entry["digest"]["sha256"]
+    assert entry["timestamp_quality"]["n_rows"] == 3
+    assert entry["timestamp_quality"]["n_parse_errors"] == 0

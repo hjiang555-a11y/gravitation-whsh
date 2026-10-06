@@ -20,7 +20,13 @@ import typer
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock import shared
 from clock_ratio.tidal_analysis import (
-    SCENARIOS, AnalysisError, SegmentResult, TideGrid, analyze_segment, select_segments,
+    DEFAULT_SELECTION_PLAN,
+    SCENARIOS,
+    AnalysisError,
+    SegmentResult,
+    TideGrid,
+    analyze_segment,
+    select_segments,
 )
 from clock_ratio.tidal_stability import continuous_runs, duration_summary, oadev, tau_grid
 
@@ -182,16 +188,20 @@ def write_outputs(results: tuple[SegmentResult, ...], output_dir: Path) -> None:
     (target / FILENAMES[2]).write_text(summary_text + "\n", encoding="utf-8")
 
 
+def load_selected_segments():
+    """Load the shared retained segments used by all clock-ratio callers."""
+    return select_segments(*shared.load_beat(), DEFAULT_SELECTION_PLAN)
+
+
 @app.command()
 def main(output_dir: Annotated[Path, typer.Option(help="Independent output directory; legacy/source roots are protected.")] = DEFAULT_OUTPUT) -> None:
     """Compare raw clocks with fixed A=-1 and A=-0.54 tidal corrections."""
     try:
         target = validate_output_dir(output_dir)
         try:
-            times, beat = shared.load_beat()
+            segments = load_selected_segments()
         except (OSError, ValueError) as error:
             raise AnalysisError(f"raw beat data could not be loaded from {shared.DATA_DIR}: {error}") from error
-        segments = select_segments(times, beat)
         try:
             tide = TideGrid(*shared.load_tide())
         except (OSError, ValueError, KeyError) as error:
