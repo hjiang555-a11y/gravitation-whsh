@@ -6,9 +6,11 @@ import pytest
 
 from clock_ratio.statistical_combination import combine
 
+REFERENCE_RATIO = 1.2075070393433377
+
 
 def test_chi2_when_deviations_are_fractional_and_uncertainties_are_absolute() -> None:
-    reference = 1.2075070393433377
+    reference = REFERENCE_RATIO
     y = np.array([-4.0, 0.0, 5.0]) * 1e-18
     u_absolute = np.array([1.0, 2.0, 1.5]) * 1e-18
     result = combine(y, u_absolute, reference)
@@ -37,7 +39,7 @@ def test_bayesian_combination_is_finite_after_log_space_marginalization() -> Non
     result = combine(
         np.array([-2.0, 0.5, 3.0]) * 1e-18,
         np.array([1.0, 1.2, 0.9]) * 1e-18,
-        1.2075070393433377,
+        REFERENCE_RATIO,
     )
 
     for field in ("mu_bayes", "u_stat_bayes", "xi_bayes"):

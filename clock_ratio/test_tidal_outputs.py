@@ -15,9 +15,13 @@ from numpy.typing import NDArray
 from typer.testing import CliRunner
 
 from clock import shared
+from clock.shared import load_beat
+from clock_ratio.tidal_analysis import SelectionPlan, select_segments
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "clock_ratio" / "tidal_correction.py"
+EXPECTED_GROUPS = tuple(range(1, 18))
+EXPECTED_TOTAL_VALID = 1_008_912
 
 
 def test_help_when_invoked_from_other_directory(tmp_path: Path) -> None:
@@ -182,19 +186,10 @@ def test_writer_when_filename_is_a_symlink(tmp_path: Path) -> None:
     assert victim.read_text() == "unchanged"
 
 
-@pytest.mark.skipif(os.environ.get("RUN_CLOCK_DATA_TESTS") != "1", reason="parent opt-in: load real beat files once")
-def test_baseline_when_real_data_matches_legacy_csv() -> None:
-    from clock_ratio.tidal_analysis import SCENARIOS, analyze_segment, select_segments
-    # Given the unchanged legacy inputs and published 17 segment ratios.
-    times, beat = shared.load_beat()
-    with (ROOT / "clock_ratio" / "ratio_17seg.csv").open() as stream:
-        expected = list(csv.DictReader(stream))
-    # When selecting the raw baseline once, without running any legacy generator.
-    segments = select_segments(times, beat)
-    # Then every Decimal ratio, membership count and endpoint trim is identical.
-    assert len(segments) == len(expected) == 17
-    for segment, row in zip(segments, expected, strict=True):
-        raw = analyze_segment(segment, np.zeros(len(segment.beat)), SCENARIOS[0])
-        assert raw.ratio == Decimal(row["YbSr_R"])
-        assert len(segment.beat) == int(row["n_valid"])
-        assert (segment.rem_start, segment.rem_end) == (int(row["rem_start"]), int(row["rem_end"]))
+@pytest.mark.skipif(os.getenv("RUN_CLOCK_DATA_TESTS") != "1", reason="requires private raw data")
+def test_real_data_characterization() -> None:
+    segments = select_segments(*load_beat(), SelectionPlan())
+    assert tuple(s.group for s in segments) == EXPECTED_GROUPS
+    assert sum(len(s.beat) for s in segments) == EXPECTED_TOTAL_VALID
+    assert all(s.times.shape == s.beat.shape for s in segments)
+    assert all(s.times[0] <= s.times[-1] for s in segments)

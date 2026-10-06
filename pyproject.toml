@@ -1,0 +1,22 @@
+[project]
+name = "gravitation-whsh"
+version = "0.1.0"
+description = "Reproducible Wuhan-Shanghai optical-clock comparison analysis"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "numpy>=2.0,<3",
+  "scipy>=1.14,<2",
+  "matplotlib>=3.9,<4",
+  "pydantic>=2.10,<3",
+  "typer>=0.15,<1",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.3,<9"]
+weather = ["meteostat>=1.6,<2"]
+
+[tool.pytest.ini_options]
+testpaths = ["clock_ratio"]
+python_files = ["test_*.py"]
+pythonpath = ["."]
+addopts = "-ra"
