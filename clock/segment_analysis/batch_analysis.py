@@ -42,6 +42,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from clock.shared import F_1550, load_beat, load_tide  # noqa: E402
 from clock.sample_selection import DEFAULT_SELECTION_PLAN, SelectedSegment, select_segments  # noqa: E402
 from clock_ratio.tidal_analysis import TideGrid  # noqa: E402
+from clock_ratio.windowing import AmplitudeFit, fit_demeaned_amplitude, triangular_average  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parent
 
@@ -50,17 +51,9 @@ STRIDE = 600   # one point every 600 s (50% overlap)
 
 
 def triangular_window(x: np.ndarray, window: int, stride: int) -> np.ndarray:
-    k = np.arange(window)
-    tri = 1.0 - np.abs(2 * k - (window - 1)) / (window + 1)
-    tri = tri / tri.sum()
     if len(x) < window:
         return np.array([])
-    n_out = (len(x) - window) // stride + 1
-    out = np.empty(n_out)
-    for i in range(n_out):
-        start = i * stride
-        out[i] = float(np.dot(tri, x[start : start + window]))
-    return out
+    return triangular_average(x, width=window, stride=stride)
 
 
 def tidal_beat(t_stamps_beijing: np.ndarray, tide: TideGrid) -> np.ndarray:
@@ -74,27 +67,11 @@ def tidal_beat(t_stamps_beijing: np.ndarray, tide: TideGrid) -> np.ndarray:
 
 def fit_amplitude(
     beat: np.ndarray, tide: np.ndarray, inference_beat: np.ndarray, inference_tide: np.ndarray,
-) -> dict[str, float]:
+) -> AmplitudeFit:
     # Demean BOTH: the beat is already mean-subtracted, and the tidal data
     # carries a non-zero session-mean (DC) that must be excluded too. Fitting
-    # the demeaned pair is equivalent to fitting beat = A*tide + intercept, and
-    # yields A = r * sigma_beat / sigma_tide (sign consistent with r).
-    b = beat - beat.mean()
-    t = tide - tide.mean()
-    A = float(np.dot(t, b) / np.dot(t, t))
-    bi = inference_beat - inference_beat.mean()
-    ti = inference_tide - inference_tide.mean()
-    if len(bi) < 3 or np.dot(ti, ti) == 0:
-        raise ValueError("at least three non-overlapping, nonconstant windows are required for inference")
-    Ai = float(np.dot(ti, bi) / np.dot(ti, ti))
-    resid = bi - Ai * ti
-    dof = len(bi) - 2
-    sigma2 = float(np.dot(resid, resid) / dof)
-    u_A = float(np.sqrt(sigma2 / np.dot(ti, ti)))
-    r = float(np.corrcoef(inference_beat, inference_tide)[0, 1])
-    p = float(stats.pearsonr(inference_beat, inference_tide).pvalue)
-    return {"A": A, "u_A": u_A, "r": r, "p": p, "n": len(beat),
-            "n_inference": len(inference_beat)}
+    # the demeaned pair is equivalent to fitting beat = A*tide + intercept.
+    return fit_demeaned_amplitude(beat, tide, inference_beat, inference_tide)
 
 
 def load_selected_segments() -> tuple[SelectedSegment, ...]:
@@ -152,11 +129,11 @@ def main() -> int:
             "hours": len(b_run) / 3600,
             "n_jump": n_jump,
             "n_pts": len(beat_tri),
-            "n_inference_pts": fit["n_inference"],
-            "A": fit["A"],
-            "u_A": fit["u_A"],
-            "r": fit["r"],
-            "p": fit["p"],
+            "n_inference_pts": fit.n_inference,
+            "A": fit.amplitude,
+            "u_A": fit.uncertainty,
+            "r": fit.pearson_r,
+            "p": fit.pearson_p,
             "tide_rms": float(tide.std()),
             "noise_std": float(beat_tri.std()),
             "beat_tri": beat_tri,
@@ -165,8 +142,8 @@ def main() -> int:
         })
 
         print(f"{segment.group:>2} {str(t_run[0])[5:16]:<18} {len(b_run)/3600:>6.2f} {n_jump:>5} "
-              f"{len(beat_tri):>6} {fit['A']:>+8.2f} {fit['u_A']:>7.2f} "
-              f"{fit['A']/fit['u_A']:>+7.2f} {fit['r']:>+7.3f} {fit['p']:>8.3f}")
+              f"{len(beat_tri):>6} {fit.amplitude:>+8.2f} {fit.uncertainty:>7.2f} "
+              f"{fit.amplitude/fit.uncertainty:>+7.2f} {fit.pearson_r:>+7.3f} {fit.pearson_p:>8.3f}")
 
     # ---- summary CSV ----
     csv_path = OUT_DIR / "batch_summary.csv"
