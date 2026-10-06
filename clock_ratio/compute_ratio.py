@@ -31,10 +31,10 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock.shared import (  # noqa: E402
-    COEF1156, DELTA_G, DIV20, EXCLUDE_RANGES, FREF, GROUPS,
-    JUMP_THRESHOLD, N1156, N1397, N1550, N1550_WH, SHIFT_A,
-    D_7_25, D_1_25, load_beat, longest_valid_span, to_dec,
+    EXCLUDE_RANGES, GROUPS, JUMP_THRESHOLD, SHIFT_A, load_beat,
+    longest_valid_span, to_dec,
 )
+from clock_ratio.ratio_model import full_ratio  # noqa: E402
 
 # The ratio R ~ 1.2 and the segment-to-segment differences are ~1-5e-18; kept in
 # decimal 80-digit arithmetic (set in clock.shared) to match MATLAB's vpa(...,80).
@@ -64,18 +64,6 @@ def endpoint_screen(x):
         hi -= 1
         n_end += 1
     return x[lo: hi + 1], n_start, n_end
-
-
-def full_ratio(mean_dm_dec, shift_dec, m_dec):
-    coef1397 = (Decimal(1) + shift_dec) / Decimal(2)
-    den = coef1397 / N1397 * (N1550 + D_7_25 + D_1_25)
-    dr = COEF1156 / N1156 * (mean_dm_dec / FREF / DIV20) / den
-    NN = N1550_WH + Decimal(26) / Decimal(20) + m_dec / FREF / DIV20
-    NN2 = N1550 + Decimal(8) / Decimal(25)
-    ratio_base = COEF1156 / N1156 * NN / (coef1397 / N1397 * NN2)
-    sryb_raw = ratio_base + dr
-    ybsr_raw = Decimal(1) / sryb_raw
-    return ybsr_raw * (Decimal(1) + DELTA_G)
 
 
 def main():

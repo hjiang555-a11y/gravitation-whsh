@@ -13,7 +13,8 @@ import numpy as np
 from numpy.typing import NDArray
 
 from clock import shared as s
-from clock_ratio.compute_ratio import endpoint_screen, full_ratio
+from clock_ratio.compute_ratio import endpoint_screen
+from clock_ratio.ratio_model import full_ratio
 
 FloatArray = NDArray[np.float64]
 TimeArray = NDArray[np.datetime64]

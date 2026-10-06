@@ -9,7 +9,7 @@ import pytest
 from numpy.typing import NDArray
 
 from clock import shared as s
-from clock_ratio.compute_ratio import full_ratio
+from clock_ratio.ratio_model import full_ratio
 from clock_ratio.tidal_analysis import (
     SCENARIOS, Scenario, SelectionPlan, TideGrid, analyze_segment, select_segments,
 )
@@ -21,6 +21,17 @@ def selection_fixture() -> tuple[NDArray[np.datetime64], NDArray[np.float64], Se
     plan = SelectionPlan(((str(times[0]), str(times[-1] + np.timedelta64(1, "s"))),),
                          (s.SHIFT_A[0],), ())
     return times, beat, plan
+
+
+def test_full_ratio_preserves_decimal_precision() -> None:
+    value = full_ratio(
+        Decimal("35123456.789012345678"),
+        Decimal("-1.25e-16"),
+        Decimal("35120000.123456789012"),
+    )
+    assert value == Decimal(
+        "1.2075068107011621015629815674298061716812946748966460855865936187804241395717995"
+    )
 
 
 def test_selection_when_raw_endpoints_are_trimmed() -> None:
