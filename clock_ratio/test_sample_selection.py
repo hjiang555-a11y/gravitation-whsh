@@ -163,22 +163,27 @@ def test_callers_share_identical_selected_segments(monkeypatch: pytest.MonkeyPat
             np.testing.assert_array_equal(actual_segment.beat, expected_segment.beat)
 
 
-def test_build_sample_ledger_rejects_output_dir_matching_clock_data_override(
+def test_build_sample_ledger_rejects_override_and_canonical_raw_dirs_but_allows_audit_staging(
     tmp_path: pytest.TempPathFactory,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from typer.testing import CliRunner
-
     from clock import build_sample_ledger
 
-    raw_dir = tmp_path / "raw"
-    raw_dir.mkdir()
-    monkeypatch.setenv("CLOCK_DATA_DIR", str(raw_dir))
+    override_raw_dir = tmp_path / "override-raw"
+    override_raw_dir.mkdir()
+    canonical_raw_dir = tmp_path / "canonical-raw"
+    canonical_raw_dir.mkdir()
+    monkeypatch.setenv("CLOCK_DATA_DIR", str(override_raw_dir))
+    monkeypatch.setattr(build_sample_ledger.shared, "DATA_DIR", canonical_raw_dir)
 
-    result = CliRunner().invoke(build_sample_ledger.app, ["--output-dir", str(raw_dir)])
+    resolved_override = build_sample_ledger.configured_data_dir()
 
-    assert result.exit_code != 0
-    assert "protected raw-data directory" in result.output
+    with pytest.raises(ValueError, match="protected raw-data directory"):
+        build_sample_ledger.validate_output_dir(override_raw_dir, raw_data_dir=resolved_override)
+    with pytest.raises(ValueError, match="protected raw-data directory"):
+        build_sample_ledger.validate_output_dir(canonical_raw_dir, raw_data_dir=resolved_override)
+    staging = build_sample_ledger.shared.REPO_ROOT / "results" / "audit-v1" / "staging"
+    assert build_sample_ledger.validate_output_dir(staging, raw_data_dir=resolved_override) == staging.resolve()
 
 
 

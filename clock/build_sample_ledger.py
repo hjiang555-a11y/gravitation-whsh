@@ -130,7 +130,8 @@ def build_time_quality_report(
 
 def validate_output_dir(output_dir: Path, *, raw_data_dir: Path) -> Path:
     target = output_dir.resolve()
-    if target.is_relative_to(raw_data_dir.resolve()):
+    protected_raw_dirs = {raw_data_dir.resolve(), shared.DATA_DIR.resolve()}
+    if any(target.is_relative_to(protected_dir) for protected_dir in protected_raw_dirs):
         raise ValueError(f"protected raw-data directory: {target}")
     allowed_root = shared.REPO_ROOT / "results" / "audit-v1"
     if target.is_relative_to(shared.REPO_ROOT) and not target.is_relative_to(allowed_root):
