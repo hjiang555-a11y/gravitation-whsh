@@ -235,6 +235,22 @@ def test_build_sample_ledger_cli_writes_diagnostics_and_time_quality(
         "retained_end_beijing": "2026-06-01T08:00:02",
     }]
     payload = json.loads((output_dir / "time_quality.json").read_text(encoding="utf-8"))
+    assert payload["computed_total_final"] == 2
+    assert payload["computed_total_status"] == "established"
+    assert payload["external_reported_totals"] == [
+        {
+            "value": 1009022,
+            "status": "pending-verification",
+            "source_path": "archive/CONCLUSION_17.md",
+            "note": "Historical trimmed-total claim retained for reconciliation only; no authoritative per-segment allocation exists in the current analysis code.",
+        },
+        {
+            "value": 1009204,
+            "status": "pending-verification",
+            "source_path": "paper/main.tex",
+            "note": "Historical manuscript count retained for reconciliation only; no authoritative per-segment allocation exists in the current analysis code.",
+        },
+    ]
     assert len(payload["files"]) == 1
     entry = payload["files"][0]
     assert entry["digest"]["relative_path"] == raw_file.name
