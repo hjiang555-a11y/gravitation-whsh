@@ -71,6 +71,8 @@ def test_parameter_ledger_flags_sensitive_and_inherited_groups() -> None:
     records = build_parameter_records(Path("clock/params.json"))
     seg9 = next(r for r in records if r.group == 9 and r.name == "a_SM")
     assert seg9.status is EvidenceStatus.pending_verification
+    seg9_total = next(r for r in records if r.group == 9 and r.name == "shift_a")
+    assert seg9_total.status is EvidenceStatus.pending_verification
     inherited = [r for r in records if r.group in (15, 16, 17) and r.name == "shift_a"]
     assert {r.inherited_from_group for r in inherited} == {12}
     assert all(r.status is EvidenceStatus.pending_verification for r in inherited)

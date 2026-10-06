@@ -72,12 +72,16 @@ def build_parameter_records(params_path: Path) -> tuple[ParameterEvidence, ...]:
     for group in range(1, 18):
         source_index = INHERITED_FROM_GROUP - 1 if group in INHERITED_GROUPS else group - 1
         components: dict[str, Decimal] = {}
+        component_records: list[ParameterEvidence] = []
         for name in COMPONENT_NAMES:
             value = shift[name][source_index]
             component = _segment_record(name, group, value, source_path)
             records.append(component)
+            component_records.append(component)
             components[name] = component.value
         total = sum(components.values(), Decimal(0))
+        inherited = group in INHERITED_GROUPS
+        derived_pending = any(component.status is not EvidenceStatus.established for component in component_records)
         records.append(
             ParameterEvidence(
                 name="shift_a",
@@ -85,11 +89,13 @@ def build_parameter_records(params_path: Path) -> tuple[ParameterEvidence, ...]:
                 value=total,
                 unit="fractional",
                 source_path=source_path,
-                inherited_from_group=INHERITED_FROM_GROUP if group in INHERITED_GROUPS else None,
-                status=(EvidenceStatus.pending_verification if group in INHERITED_GROUPS else EvidenceStatus.established),
+                inherited_from_group=INHERITED_FROM_GROUP if inherited else None,
+                status=(EvidenceStatus.pending_verification if derived_pending else EvidenceStatus.established),
                 note=(
                     "Inherited total shift_a from group 12 because groups 15-17 have no separate executable source."
-                    if group in INHERITED_GROUPS
+                    if inherited
+                    else "Derived from params.json components; pending because at least one constituent still needs verification."
+                    if derived_pending
                     else "Sum of executable shift_a components from params.json."
                 ),
             )
