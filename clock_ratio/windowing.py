@@ -46,8 +46,13 @@ def triangular_average(
         raise ValueError("triangular averaging requires finite samples")
 
     weights = triangular_weights(width, scheme=scheme)
-    denominator = float(weights.sum())
     starts = range(0, x.size - width + 1, stride)
+    if scheme == "historical-triangular":
+        # Historical order: normalize first, then np.dot with the normalized
+        # weights as the FIRST operand (bit-for-bit 44abd1a compatibility).
+        normalized = weights / weights.sum()
+        return np.array([float(np.dot(normalized, x[s:s + width])) for s in starts])
+    denominator = float(weights.sum())
     return np.array([np.dot(x[s:s + width], weights) / denominator for s in starts], dtype=float)
 
 
