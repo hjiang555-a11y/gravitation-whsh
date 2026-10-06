@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Literal
 
 import numpy as np
 from scipy import stats
 
 from clock.sample_selection import FloatArray
+
+
+WindowScheme = Literal["historical-triangular", "numpy-bartlett"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,13 +22,30 @@ class AmplitudeFit:
     n_inference: int
 
 
-def triangular_average(x: FloatArray, *, width: int, stride: int) -> FloatArray:
+def triangular_weights(width: int, *, scheme: WindowScheme) -> FloatArray:
+    if width < 2:
+        raise ValueError("triangular window width must be at least 2")
+    if scheme == "historical-triangular":
+        k = np.arange(width, dtype=float)
+        return 1.0 - np.abs(2 * k - (width - 1)) / (width + 1)
+    if scheme == "numpy-bartlett":
+        return np.bartlett(width)
+    raise ValueError(f"unknown triangular window scheme: {scheme}")
+
+
+def triangular_average(
+    x: FloatArray,
+    *,
+    width: int,
+    stride: int,
+    scheme: WindowScheme = "historical-triangular",
+) -> FloatArray:
     if x.ndim != 1 or width < 2 or stride < 1 or x.size < width:
         raise ValueError("invalid triangular window request")
     if not np.isfinite(x).all():
         raise ValueError("triangular averaging requires finite samples")
 
-    weights = np.bartlett(width)
+    weights = triangular_weights(width, scheme=scheme)
     denominator = float(weights.sum())
     starts = range(0, x.size - width + 1, stride)
     return np.array([np.dot(x[s:s + width], weights) / denominator for s in starts], dtype=float)

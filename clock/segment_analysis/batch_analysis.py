@@ -53,7 +53,7 @@ STRIDE = 600   # one point every 600 s (50% overlap)
 def triangular_window(x: np.ndarray, window: int, stride: int) -> np.ndarray:
     if len(x) < window:
         return np.array([])
-    return triangular_average(x, width=window, stride=stride)
+    return triangular_average(x, width=window, stride=stride, scheme="historical-triangular")
 
 
 def tidal_beat(t_stamps_beijing: np.ndarray, tide: TideGrid) -> np.ndarray:
