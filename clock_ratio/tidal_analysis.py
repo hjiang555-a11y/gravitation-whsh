@@ -10,84 +10,18 @@ from decimal import Decimal, localcontext
 from typing import Final, Literal
 
 import numpy as np
-from numpy.typing import NDArray
 
 from clock import shared as s
-from clock_ratio.compute_ratio import endpoint_screen
+from clock.sample_selection import (
+    AnalysisError,
+    DEFAULT_SELECTION_PLAN,
+    FloatArray,
+    SelectionPlan,
+    SelectedSegment as Segment,
+    TimeArray,
+    select_segments,
+)
 from clock_ratio.ratio_model import full_ratio
-
-FloatArray = NDArray[np.float64]
-TimeArray = NDArray[np.datetime64]
-Windows = tuple[tuple[str, str], ...]
-
-
-class AnalysisError(ValueError):
-    """A source or analysis contract failed, with a human-readable detail."""
-
-    def __init__(self, detail: str) -> None:
-        self.detail = detail
-        super().__init__(detail)
-
-
-@dataclass(frozen=True, slots=True)
-class SelectionPlan:
-    groups: Windows = tuple(s.GROUPS)
-    shifts: tuple[Decimal, ...] = tuple(s.SHIFT_A)
-    exclusions: Windows = tuple(s.EXCLUDE_RANGES)
-
-
-@dataclass(frozen=True, slots=True)
-class Segment:
-    group: int
-    times: TimeArray
-    beat: FloatArray
-    m_dec: Decimal
-    shift_a: Decimal
-    raw_mean: float
-    rem_start: int
-    rem_end: int
-
-
-def select_segments(times: TimeArray, beat: FloatArray,
-                    plan: SelectionPlan = SelectionPlan()) -> tuple[Segment, ...]:
-    """Reproduce compute_ratio.main selection, including its index-span rule."""
-    if times.ndim != 1 or beat.ndim != 1 or len(times) != len(beat) or not len(beat):
-        raise AnalysisError("raw beat data must be nonempty aligned 1-D arrays")
-    if np.isnat(times).any() or np.any(np.diff(times) < np.timedelta64(0, "s")):
-        raise AnalysisError("raw timestamps must be finite and sorted (duplicates allowed)")
-    if not plan.groups or len(plan.groups) != len(plan.shifts):
-        raise AnalysisError("segment windows and shifts must be nonempty and aligned")
-    excluded = np.zeros(len(times), dtype=bool)
-    for start, end in plan.exclusions:
-        excluded |= (times >= np.datetime64(start)) & (times <= np.datetime64(end))
-    clean = beat.copy()
-    clean[excluded] = np.nan
-    plausible_global = (clean > 3e7) & (clean < 4e7)
-    if not plausible_global.any():
-        raise AnalysisError("raw beat data contain no plausible unexcluded samples")
-    m_dec = s.to_dec(float(np.nanmedian(clean[plausible_global])))
-    segments: list[Segment] = []
-    for k, (start, end) in enumerate(plan.groups):
-        inside = (times >= np.datetime64(start)) & (times < np.datetime64(end))
-        t_seg, b_seg = times[inside], beat[inside]
-        plausible = (b_seg > 3e7) & (b_seg < 4e7) & ~excluded[inside]
-        if not plausible.any():
-            raise AnalysisError(f"segment {k + 1}: missing or empty plausible raw data")
-        median = float(np.median(b_seg[plausible]))
-        valid = plausible & (np.abs(b_seg - median) < s.JUMP_THRESHOLD)
-        span = s.longest_valid_span(valid)
-        if span is None:
-            raise AnalysisError(f"segment {k + 1}: no valid raw span")
-        kept, rem_start, rem_end = endpoint_screen(b_seg[span[0]:span[1] + 1])
-        if not len(kept):
-            raise AnalysisError(f"segment {k + 1}: empty after raw endpoint screen")
-        retained_times = t_seg[span[0] + rem_start:span[1] + 1 - rem_end].copy()
-        retained_beat = kept.copy()
-        retained_times.setflags(write=False)
-        retained_beat.setflags(write=False)
-        segments.append(Segment(k + 1, retained_times, retained_beat, m_dec,
-                                plan.shifts[k], float(kept.mean()), rem_start, rem_end))
-    return tuple(segments)
 
 
 @dataclass(frozen=True, slots=True)

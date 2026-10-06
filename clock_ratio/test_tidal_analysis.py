@@ -44,6 +44,10 @@ def test_selection_when_raw_endpoints_are_trimmed() -> None:
     assert (segment.rem_start, segment.rem_end) == (1, 1)
     np.testing.assert_array_equal(segment.times, times[1:-1])
     np.testing.assert_array_equal(segment.beat, beat[1:-1])
+    assert segment.diagnostics.n_longest_span == 9
+    assert segment.diagnostics.n_final == 7
+    assert segment.diagnostics.source_span_start == 0
+    assert segment.diagnostics.source_span_stop == 9
     assert len(result.fluctuations) == 7
     assert segment.times.flags.writeable is False
     assert segment.beat.flags.writeable is False
@@ -123,6 +127,9 @@ def test_selection_when_exclusions_and_window_bounds_are_inclusive() -> None:
     # Then invalid/excluded values do not contaminate the median or samples.
     assert segment.m_dec == Decimal("33000000.0")
     np.testing.assert_array_equal(segment.times, times[2:8])
+    assert segment.diagnostics.n_window == 8
+    assert segment.diagnostics.n_excluded == 2
+    assert segment.diagnostics.n_final == 6
 
 
 def test_selection_when_valid_rows_have_time_gaps() -> None:
@@ -135,6 +142,8 @@ def test_selection_when_valid_rows_have_time_gaps() -> None:
     # Then ratio membership retains samples on both sides of the gap.
     assert len(segment.beat) == 7
     np.testing.assert_array_equal(segment.times, times[1:-1])
+    assert segment.diagnostics.source_span_start == 0
+    assert segment.diagnostics.source_span_stop == 9
 
 
 @pytest.mark.parametrize("beat", [[], [1.0] * 9, [33_000_000., 33_000_002.]])
