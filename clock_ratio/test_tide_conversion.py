@@ -2,14 +2,16 @@
 from __future__ import annotations
 
 import csv
+import json
 import os
 from decimal import Decimal
 from pathlib import Path
+from zipfile import ZIP_DEFLATED, ZipFile
 
 import pytest
 from typer.testing import CliRunner
 
-from clock import shared
+from clock_ratio import tide_conversion
 from clock_ratio.tide_conversion import (
     CONVERTED_FILENAME,
     DIFF_FILENAME,
@@ -18,14 +20,20 @@ from clock_ratio.tide_conversion import (
     compare_tide_csv,
     convert_height_mm_to_potential,
     convert_workbook,
-    validate_output_dir,
 )
 
 
-ROOT = Path(__file__).resolve().parents[1]
+def staging_repo_root(tmp_path: Path) -> Path:
+    root = tmp_path / "repo"
+    (root / "results" / "audit-v1" / "staging").mkdir(parents=True)
+    return root
 
 
-def write_demo_workbook(path: Path) -> None:
+def staging_output_csv(repo_root: Path, name: str = "demo") -> Path:
+    return repo_root / "results" / "audit-v1" / "staging" / name / CONVERTED_FILENAME
+
+
+def write_demo_workbook(path: Path, rows: list[tuple[str, Decimal, Decimal, Decimal, Decimal, Decimal]] | None = None) -> None:
     from openpyxl import Workbook
 
     workbook = Workbook()
@@ -41,12 +49,12 @@ def write_demo_workbook(path: Path) -> None:
     sheet["F2"] = "SHA"
     sheet["H2"] = "CAS-SHA"
 
-    rows = [
+    data_rows = rows or [
         ("20260620000000", Decimal("10.0"), Decimal("9.0"), Decimal("-2.0"), Decimal("1.0"), Decimal("-2.0")),
         ("20260620000030", Decimal("5.5"), Decimal("5.0"), Decimal("-1.0"), Decimal("0.5"), Decimal("-1.0")),
         ("20260620000100", Decimal("3.0"), Decimal("6.0"), Decimal("0.0"), Decimal("2.0"), Decimal("-5.0")),
     ]
-    for row_index, (stamp, solid_cas, solid_sha, ocean_cas, ocean_sha, combined) in enumerate(rows, start=3):
+    for row_index, (stamp, solid_cas, solid_sha, ocean_cas, ocean_sha, combined) in enumerate(data_rows, start=3):
         sheet[f"A{row_index}"] = stamp
         sheet[f"B{row_index}"] = float(solid_cas)
         sheet[f"C{row_index}"] = float(solid_sha)
@@ -57,6 +65,29 @@ def write_demo_workbook(path: Path) -> None:
         sheet[f"J{row_index}"] = float(combined)
 
     workbook.save(path)
+
+
+def patch_cell_text(path: Path, cell_ref: str, text: str) -> None:
+    with ZipFile(path) as archive:
+        members = {name: archive.read(name) for name in archive.namelist()}
+    sheet_xml = members["xl/worksheets/sheet1.xml"].decode("utf-8")
+    marker = f'r="{cell_ref}"'
+    start = sheet_xml.index(marker)
+    value_start = sheet_xml.index("<v>", start) + 3
+    value_end = sheet_xml.index("</v>", value_start)
+    sheet_xml = sheet_xml[:value_start] + text + sheet_xml[value_end:]
+    members["xl/worksheets/sheet1.xml"] = sheet_xml.encode("utf-8")
+    with ZipFile(path, "w", compression=ZIP_DEFLATED) as archive:
+        for name, payload in members.items():
+            archive.writestr(name, payload)
+
+
+def write_csv(path: Path, rows: list[tuple[str, str]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.writer(stream)
+        writer.writerow(["timestamp_utc", "total_tidal_delta_m2_s2_surface"])
+        writer.writerows(rows)
 
 
 def test_height_difference_conversion_preserves_direction() -> None:
@@ -70,10 +101,16 @@ def test_height_difference_conversion_preserves_direction() -> None:
     assert convert_height_mm_to_potential(Decimal("-1"), config) == Decimal("-0.009794")
 
 
-def test_convert_workbook_writes_expected_utc_grid_from_comprehensive_difference_column(tmp_path: Path) -> None:
-    workbook_path = tmp_path / "professional.xlsx"
-    output_csv = tmp_path / CONVERTED_FILENAME
+def test_convert_workbook_writes_expected_utc_grid_from_comprehensive_difference_column(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = staging_repo_root(tmp_path)
+    monkeypatch.setattr(tide_conversion, "_protected_repo_roots", lambda: (repo_root.resolve(),))
+    workbook_path = repo_root / "clock" / "professional.xlsx"
+    workbook_path.parent.mkdir(parents=True)
     write_demo_workbook(workbook_path)
+    output_csv = staging_output_csv(repo_root)
 
     summary = convert_workbook(workbook_path, output_csv)
 
@@ -103,25 +140,95 @@ def test_convert_workbook_writes_expected_utc_grid_from_comprehensive_difference
     }
 
 
+def test_convert_workbook_reads_cached_decimal_text_without_binary_tail(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = staging_repo_root(tmp_path)
+    monkeypatch.setattr(tide_conversion, "_protected_repo_roots", lambda: (repo_root.resolve(),))
+    workbook_path = repo_root / "clock" / "precision.xlsx"
+    workbook_path.parent.mkdir(parents=True)
+    write_demo_workbook(
+        workbook_path,
+        rows=[("20260620000000", Decimal("0.0"), Decimal("30.0"), Decimal("0.4219"), Decimal("2.0"), Decimal("-31.5781"))],
+    )
+    patch_cell_text(workbook_path, "J3", "-31.5781000000000001")
+    output_csv = staging_output_csv(repo_root, name="precision")
+
+    convert_workbook(workbook_path, output_csv)
+
+    with output_csv.open(encoding="utf-8", newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    assert rows == [{
+        "timestamp_utc": "2026-06-20T00:00:00Z",
+        "total_tidal_delta_m2_s2_surface": "-0.3092759114000000009794",
+    }]
+
+
+def test_convert_workbook_rejects_non_staging_and_colliding_outputs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = staging_repo_root(tmp_path)
+    monkeypatch.setattr(tide_conversion, "_protected_repo_roots", lambda: (repo_root.resolve(),))
+    workbook_path = repo_root / "clock" / "professional.xlsx"
+    workbook_path.parent.mkdir(parents=True)
+    write_demo_workbook(workbook_path)
+
+    with pytest.raises(ValueError, match="staging"):
+        convert_workbook(workbook_path, repo_root / "results" / "audit-v1" / CONVERTED_FILENAME)
+    with pytest.raises(ValueError, match="collides with protected input"):
+        convert_workbook(workbook_path, workbook_path)
+
+
+@pytest.mark.parametrize("kind", ["symlink", "hardlink"])
+def test_convert_workbook_rejects_linked_output_files(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+) -> None:
+    repo_root = staging_repo_root(tmp_path)
+    monkeypatch.setattr(tide_conversion, "_protected_repo_roots", lambda: (repo_root.resolve(),))
+    workbook_path = repo_root / "clock" / "professional.xlsx"
+    workbook_path.parent.mkdir(parents=True)
+    write_demo_workbook(workbook_path)
+    victim = tmp_path / "victim.csv"
+    victim.write_text("unchanged", encoding="utf-8")
+    output_csv = staging_output_csv(repo_root, name="linked")
+    output_csv.parent.mkdir(parents=True)
+    if kind == "symlink":
+        output_csv.symlink_to(victim)
+    else:
+        os.link(victim, output_csv)
+
+    with pytest.raises(ValueError, match="symlink|independent regular file"):
+        convert_workbook(workbook_path, output_csv)
+    assert victim.read_text(encoding="utf-8") == "unchanged"
+
+
 def test_compare_tide_csv_reports_first_difference_and_max_abs_deltas(tmp_path: Path) -> None:
     converted = tmp_path / CONVERTED_FILENAME
-    converted.write_text(
-        "timestamp_utc,total_tidal_delta_m2_s2_surface\n"
-        "2026-06-20T00:00:00Z,-0.019588\n"
-        "2026-06-20T00:00:30Z,-0.009794\n",
-        encoding="utf-8",
+    write_csv(
+        converted,
+        [
+            ("2026-06-20T00:00:00Z", "-0.019588"),
+            ("2026-06-20T00:00:30Z", "-0.009794"),
+        ],
     )
     reference = tmp_path / "reference.csv"
-    reference.write_text(
-        "timestamp_utc,total_tidal_delta_m2_s2_surface\n"
-        "2026-06-20T00:00:30Z,-0.019500\n"
-        "2026-06-20T00:01:00Z,-0.009700\n",
-        encoding="utf-8",
+    write_csv(
+        reference,
+        [
+            ("2026-06-20T00:00:30Z", "-0.019500"),
+            ("2026-06-20T00:01:00Z", "-0.009700"),
+        ],
     )
 
     summary = compare_tide_csv(converted, reference)
 
-    assert summary["row_count"] == 2
+    assert summary["converted_row_count"] == 2
+    assert summary["reference_row_count"] == 2
+    assert summary["common_prefix_row_count"] == 2
     assert summary["first_timestamp_utc"] == "2026-06-20T00:00:00Z"
     assert summary["last_timestamp_utc"] == "2026-06-20T00:00:30Z"
     assert summary["max_abs_time_diff_s"] == 30
@@ -135,55 +242,53 @@ def test_compare_tide_csv_reports_first_difference_and_max_abs_deltas(tmp_path: 
         "time_diff_s": 30,
         "value_diff": "-0.000088",
     }
+    assert summary["first_extra_converted_row"] is None
+    assert summary["first_extra_reference_row"] is None
 
 
-def test_validate_output_dir_rejects_protected_paths_and_input_collisions(tmp_path: Path) -> None:
-    workbook_path = tmp_path / "professional.xlsx"
-    reference_csv = tmp_path / "reference.csv"
-    workbook_path.write_text("placeholder", encoding="utf-8")
-    reference_csv.write_text("placeholder", encoding="utf-8")
-
-    with pytest.raises(ValueError, match="protected repository source/legacy output directory"):
-        validate_output_dir(ROOT / "results", workbook_path=workbook_path, compare_csv=reference_csv)
-
-    collision_dir = tmp_path / "collision"
-    collision_dir.mkdir()
-    with pytest.raises(ValueError, match="collides with input"):
-        validate_output_dir(collision_dir, workbook_path=workbook_path, compare_csv=collision_dir / CONVERTED_FILENAME)
-
-
-@pytest.mark.parametrize("kind", ["symlink", "hardlink"])
-def test_validate_output_dir_rejects_linked_output_files(tmp_path: Path, kind: str) -> None:
-    victim = tmp_path / "victim.csv"
-    victim.write_text("unchanged", encoding="utf-8")
-    workbook_path = tmp_path / "professional.xlsx"
-    reference_csv = tmp_path / "reference.csv"
-    workbook_path.write_text("workbook", encoding="utf-8")
-    reference_csv.write_text("reference", encoding="utf-8")
-    output_dir = tmp_path / "out"
-    output_dir.mkdir()
-    target = output_dir / CONVERTED_FILENAME
-    if kind == "symlink":
-        target.symlink_to(victim)
-    else:
-        os.link(victim, target)
-
-    with pytest.raises(ValueError, match="symlink|independent regular file"):
-        validate_output_dir(output_dir, workbook_path=workbook_path, compare_csv=reference_csv)
-    assert victim.read_text(encoding="utf-8") == "unchanged"
-
-
-def test_cli_writes_conversion_copy_and_diff_report(tmp_path: Path) -> None:
-    workbook_path = tmp_path / "professional.xlsx"
-    write_demo_workbook(workbook_path)
+def test_compare_tide_csv_reports_row_count_mismatches_without_raising(tmp_path: Path) -> None:
+    converted = tmp_path / CONVERTED_FILENAME
+    write_csv(converted, [("2026-06-20T00:00:00Z", "-0.019588")])
     reference = tmp_path / "reference.csv"
-    reference.write_text(
-        "timestamp_utc,total_tidal_delta_m2_s2_surface\n"
-        "2026-06-20T00:00:00Z,-0.019588\n"
-        "2026-06-20T00:00:30Z,-0.009794\n"
-        "2026-06-20T00:01:00Z,-0.048970\n",
-        encoding="utf-8",
+    write_csv(
+        reference,
+        [
+            ("2026-06-20T00:00:00Z", "-0.019588"),
+            ("2026-06-20T00:00:30Z", "-0.009794"),
+        ],
     )
+
+    summary = compare_tide_csv(converted, reference)
+
+    assert summary["converted_row_count"] == 1
+    assert summary["reference_row_count"] == 2
+    assert summary["common_prefix_row_count"] == 1
+    assert summary["first_extra_converted_row"] is None
+    assert summary["first_extra_reference_row"] == {
+        "row_number": 2,
+        "reference_timestamp_utc": "2026-06-20T00:00:30Z",
+        "reference_value": "-0.009794",
+    }
+
+
+def test_cli_writes_diff_report_before_exiting_on_row_count_mismatch(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = staging_repo_root(tmp_path)
+    monkeypatch.setattr(tide_conversion, "_protected_repo_roots", lambda: (repo_root.resolve(),))
+    workbook_path = repo_root / "clock" / "professional.xlsx"
+    workbook_path.parent.mkdir(parents=True)
+    write_demo_workbook(workbook_path)
+    reference = repo_root / "results" / "professional_tidal_delta_30s.csv"
+    write_csv(
+        reference,
+        [
+            ("2026-06-20T00:00:00Z", "-0.019588"),
+            ("2026-06-20T00:00:30Z", "-0.009794"),
+        ],
+    )
+    output_dir = repo_root / "results" / "audit-v1" / "staging" / "cli"
 
     result = CliRunner().invoke(
         app,
@@ -193,9 +298,17 @@ def test_cli_writes_conversion_copy_and_diff_report(tmp_path: Path) -> None:
             "--compare",
             str(reference),
             "--output-dir",
-            str(tmp_path / "audit"),
+            str(output_dir),
         ],
     )
 
-    assert result.exit_code == 0, result.output
-    assert {path.name for path in (tmp_path / "audit").iterdir()} == {CONVERTED_FILENAME, DIFF_FILENAME}
+    assert result.exit_code != 0
+    assert {path.name for path in output_dir.iterdir()} == {CONVERTED_FILENAME, DIFF_FILENAME}
+    payload = json.loads((output_dir / DIFF_FILENAME).read_text(encoding="utf-8"))
+    assert payload["comparison_summary"]["converted_row_count"] == 3
+    assert payload["comparison_summary"]["reference_row_count"] == 2
+    assert payload["comparison_summary"]["first_extra_converted_row"] == {
+        "row_number": 3,
+        "converted_timestamp_utc": "2026-06-20T00:01:00Z",
+        "converted_value": "-0.04897",
+    }

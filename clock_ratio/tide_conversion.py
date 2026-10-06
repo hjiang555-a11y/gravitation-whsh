@@ -10,6 +10,8 @@ from decimal import Decimal
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Literal
+from xml.etree import ElementTree as ET
+from zipfile import ZipFile
 
 import typer
 from openpyxl import load_workbook
@@ -33,6 +35,12 @@ COMBINED_HEADER_PREFIX = "综合差"
 STEP_TOLERANCE_MM = Decimal("1e-9")
 DEFAULT_WORKBOOK = Path("clock") / "武汉-上海潮汐结果（0620-0910）-30秒间隔数据.xlsx"
 DEFAULT_COMPARE = Path("results") / CONVERTED_FILENAME
+XML_NS = {"a": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+PKG_NS = {"r": "http://schemas.openxmlformats.org/package/2006/relationships"}
+WB_NS = {
+    "a": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+    "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+}
 app = typer.Typer(add_completion=False, pretty_exceptions_enable=False)
 
 
@@ -88,6 +96,10 @@ def _protected_repo_roots() -> tuple[Path, ...]:
     return tuple(sorted(roots))
 
 
+def _allowed_staging_roots() -> tuple[Path, ...]:
+    return tuple(repo_root / "results" / "audit-v1" / "staging" for repo_root in _protected_repo_roots())
+
+
 def _resolve_cli_path(path: Path) -> Path:
     if path.is_absolute():
         return path.resolve()
@@ -103,6 +115,28 @@ def _resolve_cli_path(path: Path) -> Path:
 
 def _decimal_to_str(value: Decimal) -> str:
     return format(value.normalize(), "f")
+
+
+def _same_inode(path: Path, other: Path) -> bool:
+    try:
+        return path.exists() and other.exists() and path.samefile(other)
+    except OSError:
+        return False
+
+
+def _validate_output_file(path: Path, *, protected_inputs: tuple[Path, ...]) -> Path:
+    if path.is_symlink():
+        raise ValueError(f"output filename is a symlink: {path}")
+    target = path.parent.resolve(strict=False) / path.name
+    resolved_inputs = tuple(input_path.resolve() for input_path in protected_inputs)
+    for protected_input in resolved_inputs:
+        if target == protected_input or _same_inode(path, protected_input):
+            raise ValueError(f"output path collides with protected input: {target}")
+    if not any(target.is_relative_to(root) for root in _allowed_staging_roots()):
+        raise ValueError(f"output path must stay under results/audit-v1/staging: {target}")
+    if path.exists() and (not path.is_file() or path.stat().st_nlink > 1):
+        raise ValueError(f"output filename is not an independent regular file: {path}")
+    return target
 
 
 def _write_csv_atomic(path: Path, rows: tuple[ConvertedRow, ...]) -> None:
@@ -126,35 +160,102 @@ def _write_json_atomic(path: Path, payload: dict[str, object]) -> None:
     temp_path.replace(path)
 
 
-def _parse_workbook_timestamp(raw: object) -> str:
-    if raw is None:
-        raise ConversionError("missing timestamp in workbook")
-    if isinstance(raw, datetime):
-        moment = raw
-    else:
-        text = str(raw).strip()
-        if text.endswith(".0"):
-            text = text[:-2]
-        try:
-            moment = datetime.strptime(text, "%Y%m%d%H%M%S")
-        except ValueError as error:
-            raise ConversionError(f"invalid workbook timestamp: {raw}") from error
+def _parse_workbook_timestamp(raw: str) -> str:
+    text = raw.strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    try:
+        moment = datetime.strptime(text, "%Y%m%d%H%M%S")
+    except ValueError as error:
+        raise ConversionError(f"invalid workbook timestamp: {raw}") from error
     return moment.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _parse_decimal(raw: object, *, label: str) -> Decimal:
-    if raw is None or str(raw).strip() == "":
+def _parse_decimal(raw: str | None, *, label: str) -> Decimal:
+    if raw is None or raw.strip() == "":
         raise ConversionError(f"missing numeric value for {label}")
-    return Decimal(str(raw))
+    return Decimal(raw)
 
 
-def _validate_headers(sheet, config: TideConversionConfig) -> None:
+def _first_sheet_member(workbook_path: Path) -> str:
+    with ZipFile(workbook_path) as archive:
+        workbook_xml = ET.fromstring(archive.read("xl/workbook.xml"))
+        rels_xml = ET.fromstring(archive.read("xl/_rels/workbook.xml.rels"))
+    sheets = workbook_xml.find("a:sheets", WB_NS)
+    if sheets is None or not list(sheets):
+        raise ConversionError(f"workbook has no sheets: {workbook_path}")
+    first_sheet = list(sheets)[0]
+    rel_id = first_sheet.get("{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id")
+    if rel_id is None:
+        raise ConversionError(f"workbook sheet is missing a relationship id: {workbook_path}")
+    for rel in rels_xml.findall("r:Relationship", PKG_NS):
+        if rel.get("Id") == rel_id:
+            target = rel.get("Target")
+            if target is None:
+                break
+            if target.startswith("/"):
+                return target.removeprefix("/")
+            if target.startswith("xl/"):
+                return target
+            return f"xl/{target}"
+    raise ConversionError(f"could not resolve the first worksheet XML for {workbook_path}")
+
+
+def _shared_strings(archive: ZipFile) -> list[str]:
+    if "xl/sharedStrings.xml" not in archive.namelist():
+        return []
+    root = ET.fromstring(archive.read("xl/sharedStrings.xml"))
+    values: list[str] = []
+    for item in root.findall("a:si", XML_NS):
+        values.append("".join(text.text or "" for text in item.iterfind(".//a:t", XML_NS)))
+    return values
+
+
+def _sheet_cells(workbook_path: Path) -> dict[int, dict[str, str]]:
+    workbook = load_workbook(workbook_path, read_only=True, data_only=True)
+    try:
+        if not workbook.sheetnames:
+            raise ConversionError(f"workbook has no visible sheets: {workbook_path}")
+    finally:
+        workbook.close()
+    sheet_member = _first_sheet_member(workbook_path)
+    with ZipFile(workbook_path) as archive:
+        shared_strings = _shared_strings(archive)
+        root = ET.fromstring(archive.read(sheet_member))
+    rows: dict[int, dict[str, str]] = {}
+    for row in root.findall(".//a:sheetData/a:row", XML_NS):
+        row_index = int(row.attrib["r"])
+        values: dict[str, str] = {}
+        for cell in row.findall("a:c", XML_NS):
+            ref = cell.attrib.get("r")
+            if ref is None:
+                continue
+            column = "".join(ch for ch in ref if ch.isalpha())
+            cell_type = cell.attrib.get("t")
+            if cell_type == "inlineStr":
+                text = "".join(node.text or "" for node in cell.iterfind(".//a:t", XML_NS))
+            else:
+                value_node = cell.find("a:v", XML_NS)
+                if value_node is None or value_node.text is None:
+                    continue
+                text = value_node.text
+                if cell_type == "s":
+                    text = shared_strings[int(text)]
+            values[column] = text
+        if values:
+            rows[row_index] = values
+    return rows
+
+
+def _validate_headers(rows: dict[int, dict[str, str]], config: TideConversionConfig) -> None:
     for cell, expected_prefix in EXPECTED_HEADERS.items():
-        value = sheet[cell].value
-        if value is None or not str(value).startswith(expected_prefix):
+        row_index = int("".join(ch for ch in cell if ch.isdigit()))
+        column = "".join(ch for ch in cell if ch.isalpha())
+        value = rows.get(row_index, {}).get(column)
+        if value is None or not value.startswith(expected_prefix):
             raise ConversionError(f"unexpected workbook header at {cell}: {value!r}")
-    combined = sheet["J1"].value
-    if combined is None or not str(combined).startswith(config.source_column):
+    combined = rows.get(1, {}).get("J")
+    if combined is None or not combined.startswith(config.source_column):
         raise ConversionError(f"unexpected workbook header at J1: {combined!r}")
 
 
@@ -163,44 +264,37 @@ def convert_height_mm_to_potential(value_mm: Decimal, config: TideConversionConf
 
 
 def _rows_from_workbook(workbook_path: Path, config: TideConversionConfig) -> tuple[ConvertedRow, ...]:
-    workbook = load_workbook(workbook_path, read_only=True, data_only=True)
-    try:
-        sheet = workbook.active
-        _validate_headers(sheet, config)
-        converted: list[ConvertedRow] = []
-        previous_stamp: datetime | None = None
-        seen_stamps: set[str] = set()
-        for row_number, row in enumerate(sheet.iter_rows(min_row=3, max_col=10, values_only=True), start=3):
-            if not any(value is not None and str(value).strip() != "" for value in row):
-                continue
-            stamp = _parse_workbook_timestamp(row[0])
-            if stamp in seen_stamps:
-                raise ConversionError(f"duplicate UTC timestamp at workbook row {row_number}: {stamp}")
-            seen_stamps.add(stamp)
-            moment = datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ")
-            if previous_stamp is not None:
-                delta_s = int((moment - previous_stamp).total_seconds())
-                if delta_s != config.expected_step_s:
-                    raise ConversionError(
-                        f"non-{config.expected_step_s}s step at workbook row {row_number}: {delta_s}s"
-                    )
-            previous_stamp = moment
-            solid_delta = _parse_decimal(row[1], label=f"B{row_number}") - _parse_decimal(row[2], label=f"C{row_number}")
-            ocean_delta = _parse_decimal(row[4], label=f"E{row_number}") - _parse_decimal(row[5], label=f"F{row_number}")
-            combined_delta = _parse_decimal(row[9], label=f"J{row_number}")
-            if abs((solid_delta + ocean_delta) - combined_delta) > STEP_TOLERANCE_MM:
-                raise ConversionError(f"combined difference mismatch at workbook row {row_number}")
-            converted.append(
-                ConvertedRow(
-                    timestamp_utc=stamp,
-                    total_tidal_delta_m2_s2_surface=convert_height_mm_to_potential(combined_delta, config),
-                )
+    rows = _sheet_cells(workbook_path)
+    _validate_headers(rows, config)
+    converted: list[ConvertedRow] = []
+    previous_stamp: datetime | None = None
+    seen_stamps: set[str] = set()
+    for row_number in sorted(index for index in rows if index >= 3):
+        row = rows[row_number]
+        stamp = _parse_workbook_timestamp(row.get("A", ""))
+        if stamp in seen_stamps:
+            raise ConversionError(f"duplicate UTC timestamp at workbook row {row_number}: {stamp}")
+        seen_stamps.add(stamp)
+        moment = datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ")
+        if previous_stamp is not None:
+            delta_s = int((moment - previous_stamp).total_seconds())
+            if delta_s != config.expected_step_s:
+                raise ConversionError(f"non-{config.expected_step_s}s step at workbook row {row_number}: {delta_s}s")
+        previous_stamp = moment
+        solid_delta = _parse_decimal(row.get("B"), label=f"B{row_number}") - _parse_decimal(row.get("C"), label=f"C{row_number}")
+        ocean_delta = _parse_decimal(row.get("E"), label=f"E{row_number}") - _parse_decimal(row.get("F"), label=f"F{row_number}")
+        combined_delta = _parse_decimal(row.get("J"), label=f"J{row_number}")
+        if abs((solid_delta + ocean_delta) - combined_delta) > STEP_TOLERANCE_MM:
+            raise ConversionError(f"combined difference mismatch at workbook row {row_number}")
+        converted.append(
+            ConvertedRow(
+                timestamp_utc=stamp,
+                total_tidal_delta_m2_s2_surface=convert_height_mm_to_potential(combined_delta, config),
             )
-        if not converted:
-            raise ConversionError(f"no tide rows found in workbook: {workbook_path}")
-        return tuple(converted)
-    finally:
-        workbook.close()
+        )
+    if not converted:
+        raise ConversionError(f"no tide rows found in workbook: {workbook_path}")
+    return tuple(converted)
 
 
 def convert_workbook(
@@ -208,9 +302,11 @@ def convert_workbook(
     output_csv: Path,
     config: TideConversionConfig = DEFAULT_CONFIG,
 ) -> dict[str, object]:
-    rows = _rows_from_workbook(workbook_path, config)
-    output_csv.parent.mkdir(parents=True, exist_ok=True)
-    _write_csv_atomic(output_csv, rows)
+    workbook_resolved = workbook_path.resolve()
+    output_path = _validate_output_file(output_csv, protected_inputs=(workbook_resolved,))
+    rows = _rows_from_workbook(workbook_resolved, config)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    _write_csv_atomic(output_path, rows)
     return {
         "row_count": len(rows),
         "first_timestamp_utc": rows[0].timestamp_utc,
@@ -251,6 +347,14 @@ def _load_csv_rows(path: Path, *, config: TideConversionConfig) -> tuple[Convert
     return tuple(converted)
 
 
+def _extra_row_payload(row_number: int, row: ConvertedRow, *, prefix: str) -> dict[str, object]:
+    return {
+        "row_number": row_number,
+        f"{prefix}_timestamp_utc": row.timestamp_utc,
+        f"{prefix}_value": _decimal_to_str(row.total_tidal_delta_m2_s2_surface),
+    }
+
+
 def compare_tide_csv(
     converted_csv: Path,
     reference_csv: Path,
@@ -258,10 +362,13 @@ def compare_tide_csv(
 ) -> dict[str, object]:
     converted_rows = _load_csv_rows(converted_csv, config=config)
     reference_rows = _load_csv_rows(reference_csv, config=config)
+    common_prefix_row_count = min(len(converted_rows), len(reference_rows))
     max_abs_time_diff_s = 0
     max_abs_value_diff = Decimal(0)
     first_inconsistent_row: dict[str, object] | None = None
-    for row_number, (converted, reference) in enumerate(zip(converted_rows, reference_rows, strict=False), start=1):
+    for row_number in range(1, common_prefix_row_count + 1):
+        converted = converted_rows[row_number - 1]
+        reference = reference_rows[row_number - 1]
         converted_moment = datetime.strptime(converted.timestamp_utc, "%Y-%m-%dT%H:%M:%SZ")
         reference_moment = datetime.strptime(reference.timestamp_utc, "%Y-%m-%dT%H:%M:%SZ")
         time_diff_s = int((converted_moment - reference_moment).total_seconds())
@@ -278,40 +385,39 @@ def compare_tide_csv(
                 "time_diff_s": abs(time_diff_s),
                 "value_diff": _decimal_to_str(value_diff),
             }
-    if len(converted_rows) != len(reference_rows):
-        raise ConversionError(
-            f"row-count mismatch: converted={len(converted_rows)} reference={len(reference_rows)}"
+    first_extra_converted_row = None
+    if len(converted_rows) > common_prefix_row_count:
+        first_extra_converted_row = _extra_row_payload(
+            common_prefix_row_count + 1,
+            converted_rows[common_prefix_row_count],
+            prefix="converted",
+        )
+    first_extra_reference_row = None
+    if len(reference_rows) > common_prefix_row_count:
+        first_extra_reference_row = _extra_row_payload(
+            common_prefix_row_count + 1,
+            reference_rows[common_prefix_row_count],
+            prefix="reference",
         )
     return {
-        "row_count": len(converted_rows),
+        "converted_row_count": len(converted_rows),
+        "reference_row_count": len(reference_rows),
+        "common_prefix_row_count": common_prefix_row_count,
         "first_timestamp_utc": converted_rows[0].timestamp_utc,
         "last_timestamp_utc": converted_rows[-1].timestamp_utc,
         "max_abs_time_diff_s": max_abs_time_diff_s,
         "max_abs_value_diff": _decimal_to_str(max_abs_value_diff),
         "first_inconsistent_row": first_inconsistent_row,
+        "first_extra_converted_row": first_extra_converted_row,
+        "first_extra_reference_row": first_extra_reference_row,
     }
 
 
-def validate_output_dir(output_dir: Path, *, workbook_path: Path, compare_csv: Path) -> Path:
-    target = output_dir.resolve()
-    protected_inputs = {workbook_path.resolve(), compare_csv.resolve()}
-    protected_roots = _protected_repo_roots()
-    allowed_roots = tuple(repo_root / "results" / "audit-v1" for repo_root in protected_roots)
-    if not any(target.is_relative_to(allowed_root) for allowed_root in allowed_roots):
-        for repo_root in protected_roots:
-            if target.is_relative_to(repo_root):
-                raise ValueError(f"protected repository source/legacy output directory: {target}")
-    if target.exists() and not target.is_dir():
-        raise ValueError(f"output directory is not a directory: {target}")
-    for filename in OUTPUT_FILENAMES:
-        path = target / filename
-        if path.resolve(strict=False) in protected_inputs:
-            raise ValueError(f"output filename collides with input: {path}")
-        if path.is_symlink():
-            raise ValueError(f"output filename is a symlink: {path}")
-        if path.exists() and (not path.is_file() or path.stat().st_nlink > 1):
-            raise ValueError(f"output filename is not an independent regular file: {path}")
-    return target
+def _comparison_has_mismatch(summary: dict[str, object]) -> bool:
+    return any(
+        summary[key] is not None
+        for key in ("first_inconsistent_row", "first_extra_converted_row", "first_extra_reference_row")
+    )
 
 
 @app.command()
@@ -323,10 +429,13 @@ def main(
     try:
         input_path = _resolve_cli_path(input)
         compare_path = _resolve_cli_path(compare)
-        target = validate_output_dir(output_dir, workbook_path=input_path, compare_csv=compare_path)
-        target.mkdir(parents=True, exist_ok=True)
-        conversion_summary = convert_workbook(input_path, target / CONVERTED_FILENAME)
-        comparison_summary = compare_tide_csv(target / CONVERTED_FILENAME, compare_path)
+        output_root = output_dir.resolve()
+        converted_path = output_root / CONVERTED_FILENAME
+        diff_path = output_root / DIFF_FILENAME
+        conversion_summary = convert_workbook(input_path, converted_path)
+        comparison_summary = compare_tide_csv(converted_path, compare_path)
+        _validate_output_file(diff_path, protected_inputs=(input_path.resolve(), compare_path.resolve(), converted_path.resolve()))
+        diff_path.parent.mkdir(parents=True, exist_ok=True)
         report = {
             "config": {
                 "gravity_m_s2": _decimal_to_str(DEFAULT_CONFIG.gravity_m_s2),
@@ -340,15 +449,15 @@ def main(
             "conversion_summary": conversion_summary,
             "comparison_summary": comparison_summary,
         }
-        _write_json_atomic(target / DIFF_FILENAME, report)
-        if comparison_summary["first_inconsistent_row"] is not None:
+        _write_json_atomic(diff_path, report)
+        if _comparison_has_mismatch(comparison_summary):
             raise ConversionError(
-                "converted workbook does not match the tracked CSV; see diff report for the first inconsistent row"
+                "converted workbook does not match the tracked CSV; see diff report for the first inconsistent or extra row"
             )
     except (ConversionError, OSError, ValueError) as error:
         typer.echo(f"Error: {error}", err=True)
         raise typer.Exit(code=1) from error
-    typer.echo(f"Wrote converted tide CSV and diff report to {target}")
+    typer.echo(f"Wrote converted tide CSV and diff report to {output_root}")
 
 
 if __name__ == "__main__":
