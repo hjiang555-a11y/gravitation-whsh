@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import csv
 import json
 import os
+import subprocess
 from pathlib import Path
 
 import numpy as np
@@ -128,19 +130,56 @@ def test_parameter_ledger_writes_explicit_levelling_conflicts(tmp_path: Path) ->
     assert {record.name for record in levelling_records} == expected
     assert {record.source_path for record in levelling_records} == {LEVELLING_SOURCE}
     assert {record.status for record in levelling_records} == {EvidenceStatus.external_unverified}
-    assert {str(record.value) for record in levelling_records} == {"0"}
+    assert all(record.value is None for record in levelling_records)
+
+    with (output_dir / "parameter_ledger.csv").open(encoding="utf-8", newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    levelling_rows = [row for row in rows if row["name"] in expected]
+    assert {row["name"] for row in levelling_rows} == expected
+    assert {row["value"] for row in levelling_rows} == {""}
 
     conflicts = json.loads((output_dir / "parameter_conflicts.json").read_text(encoding="utf-8"))
     levelling_conflicts = [row for row in conflicts if row["name"] in expected]
     assert {row["name"] for row in levelling_conflicts} == expected
     assert {row["source_path"] for row in levelling_conflicts} == {LEVELLING_SOURCE}
     assert {row["status"] for row in levelling_conflicts} == {EvidenceStatus.external_unverified.value}
+    assert all(row["value"] is None for row in levelling_conflicts)
 
 
 @pytest.mark.parametrize("target", [shared.REPO_ROOT / "paper", shared.DATA_DIR])
-def test_validate_output_dir_rejects_protected_trees(target: Path) -> None:
+def test_validate_output_dir_rejects_current_worktree_protected_trees(target: Path) -> None:
     with pytest.raises(ValueError, match="protected"):
         validate_output_dir(target, Path("clock/params.json"))
+
+
+
+def test_validate_output_dir_rejects_main_checkout_protected_trees() -> None:
+    common_dir = subprocess.run(
+        ["git", "-C", str(shared.REPO_ROOT), "rev-parse", "--git-common-dir"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    main_root = Path(common_dir).resolve().parent
+    for target in (main_root / "paper", main_root / "clock"):
+        with pytest.raises(ValueError, match="protected"):
+            validate_output_dir(target, Path("clock/params.json"))
+
+
+
+def test_validate_output_dir_allows_results_audit_roots() -> None:
+    common_dir = subprocess.run(
+        ["git", "-C", str(shared.REPO_ROOT), "rev-parse", "--git-common-dir"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    main_root = Path(common_dir).resolve().parent
+    for target in (
+        shared.REPO_ROOT / "results" / "audit-v1" / "staging",
+        main_root / "results" / "audit-v1" / "staging",
+    ):
+        assert validate_output_dir(target, Path("clock/params.json")) == target.resolve()
 
 
 

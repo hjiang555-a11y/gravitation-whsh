@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import csv
 import json
+import subprocess
 from dataclasses import asdict
 from decimal import Decimal
 from pathlib import Path
@@ -21,8 +22,34 @@ INHERITED_GROUPS = (15, 16, 17)
 INHERITED_FROM_GROUP = 12
 PARAMS_DEFAULT = Path("clock/params.json")
 OUTPUT_FILENAMES = ("parameter_ledger.csv", "parameter_conflicts.json")
-ALLOWED_REPO_OUTPUT_ROOT = shared.REPO_ROOT / "results" / "audit-v1"
 LEVELLING_SOURCE = Path("docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md")
+
+
+def _main_checkout_root() -> Path | None:
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(shared.REPO_ROOT), "rev-parse", "--git-common-dir"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return None
+    common_dir = Path(result.stdout.strip())
+    if not common_dir.is_absolute():
+        common_dir = (shared.REPO_ROOT / common_dir).resolve()
+    else:
+        common_dir = common_dir.resolve()
+    return common_dir.parent
+
+
+
+def _protected_repo_roots() -> tuple[Path, ...]:
+    roots = {shared.REPO_ROOT.resolve()}
+    main_root = _main_checkout_root()
+    if main_root is not None:
+        roots.add(main_root.resolve())
+    return tuple(sorted(roots))
 
 
 def _load_params(path: Path) -> dict[str, Any]:
@@ -30,12 +57,12 @@ def _load_params(path: Path) -> dict[str, Any]:
         return json.load(stream)
 
 
-def _record(name: str, group: int | None, value: str, *, unit: str, source_path: str,
+def _record(name: str, group: int | None, value: str | None, *, unit: str, source_path: str,
             inherited_from_group: int | None, status: EvidenceStatus, note: str) -> ParameterEvidence:
     return ParameterEvidence(
         name=name,
         group=group,
-        value=Decimal(value),
+        value=Decimal(value) if value is not None else None,
         unit=unit,
         source_path=source_path,
         inherited_from_group=inherited_from_group,
@@ -73,7 +100,7 @@ def _levelling_records() -> tuple[ParameterEvidence, ...]:
         _record(
             "levelling_raw_observations",
             None,
-            "0",
+            None,
             unit="missing-source",
             source_path=source_path,
             inherited_from_group=None,
@@ -83,7 +110,7 @@ def _levelling_records() -> tuple[ParameterEvidence, ...]:
         _record(
             "levelling_reduction_process",
             None,
-            "0",
+            None,
             unit="missing-source",
             source_path=source_path,
             inherited_from_group=None,
@@ -93,7 +120,7 @@ def _levelling_records() -> tuple[ParameterEvidence, ...]:
         _record(
             "levelling_uncertainty_propagation",
             None,
-            "0",
+            None,
             unit="missing-source",
             source_path=source_path,
             inherited_from_group=None,
@@ -164,10 +191,13 @@ def validate_output_dir(output_dir: Path, params_path: Path) -> Path:
 
     if target.is_relative_to(shared.DATA_DIR):
         raise ValueError(f"protected raw-data directory: {target}")
-    if target.is_relative_to(shared.REPO_ROOT / "paper"):
-        raise ValueError(f"protected paper directory: {target}")
-    if target.is_relative_to(shared.REPO_ROOT) and not target.is_relative_to(ALLOWED_REPO_OUTPUT_ROOT):
-        raise ValueError(f"protected repository source/legacy output directory: {target}")
+
+    protected_roots = _protected_repo_roots()
+    allowed_output_roots = tuple(repo_root / "results" / "audit-v1" for repo_root in protected_roots)
+    if not any(target.is_relative_to(allowed_root) for allowed_root in allowed_output_roots):
+        for repo_root in protected_roots:
+            if target.is_relative_to(repo_root):
+                raise ValueError(f"protected repository source/legacy output directory: {target}")
     if target.exists() and not target.is_dir():
         raise ValueError(f"output directory is not a directory: {target}")
 
@@ -185,7 +215,7 @@ def validate_output_dir(output_dir: Path, params_path: Path) -> Path:
 
 def _serialize_record(record: ParameterEvidence) -> dict[str, Any]:
     payload = asdict(record)
-    payload["value"] = str(record.value)
+    payload["value"] = None if record.value is None else str(record.value)
     payload["status"] = record.status.value
     return payload
 

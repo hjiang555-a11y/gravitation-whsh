@@ -30,7 +30,7 @@ class FileDigest:
 class ParameterEvidence:
     name: str
     group: int | None
-    value: Decimal
+    value: Decimal | None
     unit: str
     source_path: str
     inherited_from_group: int | None
