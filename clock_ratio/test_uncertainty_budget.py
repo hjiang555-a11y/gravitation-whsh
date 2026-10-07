@@ -267,3 +267,20 @@ def test_phase_one_budget_blocks_final_total():
     assert result.total_standard_uncertainty is None
     assert float(result.known_quadrature) == pytest.approx(7.5e-19, rel=1e-15)
     assert result.status is EvidenceStatus.pending_verification
+
+
+def test_statistical_status_override():
+    # Given: an explicit supported-with-limitations status for the statistical component.
+    components = build_phase_one_components(
+        statistical_uncertainty=Decimal("7.5e-19"),
+        statistical_status=EvidenceStatus.supported_with_limitations,
+    )
+    statistical = next(c for c in components if c.name == "statistical")
+
+    # Then: the override wins over the legacy derived status.
+    assert statistical.status is EvidenceStatus.supported_with_limitations
+    assert statistical.standard_uncertainty == Decimal("7.5e-19")
+
+    # And: the default keeps the legacy derived status.
+    default = build_phase_one_components(statistical_uncertainty=Decimal("7.5e-19"))
+    assert next(c for c in default if c.name == "statistical").status is EvidenceStatus.established

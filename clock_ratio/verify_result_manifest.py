@@ -41,7 +41,7 @@ def main(
 ) -> None:
     try:
         verify_path(manifest, root=root)
-    except ManifestError as error:
+    except (ManifestError, OSError) as error:
         typer.echo(f"Error: {error}", err=True)
         raise typer.Exit(code=1) from error
     typer.echo(f"OK {manifest}")

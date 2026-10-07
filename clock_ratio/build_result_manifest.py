@@ -26,6 +26,7 @@ from pydantic import ValidationError
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock import shared  # noqa: E402
+from clock.data_provenance import TimestampQuality, timestamp_quality_status  # noqa: E402
 from clock_ratio.evidence import EvidenceStatus  # noqa: E402
 from clock_ratio.result_manifest import (  # noqa: E402
     BudgetComponentModel,
@@ -128,6 +129,11 @@ def _scenario_from_payload(
             raise ManifestError(f"{source}: per_segment must be a non-empty list")
         if not all(isinstance(row, Mapping) for row in rows):
             raise ManifestError(f"{source}: malformed per_segment row")
+        for row in rows:
+            if "status" not in row:
+                raise ManifestError(
+                    f"{source}: per-segment row missing per-segment status; regenerate staging"
+                )
         reference = Decimal(str(payload["R_seg1"]))
         groups = tuple(int(row["group"]) for row in rows)
         n_valid = tuple(
@@ -136,6 +142,7 @@ def _scenario_from_payload(
         ratios = tuple(
             _reconstructed_ratio(reference, float(row["y_i_1e18"])) for row in rows
         )
+        statuses = tuple(EvidenceStatus(str(row["status"])) for row in rows)
         combination = CombinationManifest(
             R_seg1=str(payload["R_seg1"]),
             R_wls=str(payload["R_wls"]),
@@ -178,6 +185,7 @@ def _scenario_from_payload(
         duration_weighted_ratio=str(duration),
         segment_ratios=tuple(str(ratio) for ratio in ratios),
         segment_n_valid=n_valid,
+        segment_statuses=statuses,
         combination=combination,
     )
 
@@ -238,8 +246,12 @@ def _tide_method_manifest(diff_document: Mapping[str, object]) -> TideMethodMani
 
 def _uncertainty_budget_model(
     statistical_uncertainty: Decimal,
+    statistical_status: EvidenceStatus | None = None,
 ) -> UncertaintyBudgetModel:
-    components = build_phase_one_components(statistical_uncertainty=statistical_uncertainty)
+    components = build_phase_one_components(
+        statistical_uncertainty=statistical_uncertainty,
+        statistical_status=statistical_status,
+    )
     try:
         budget = combine_uncertainty_budget(components, np.eye(len(components)))
     except ValueError as error:
@@ -310,7 +322,9 @@ def build_manifest(
                 provider=None,
                 command=(),
                 distributable=None,
-                status=EvidenceStatus.established,
+                status=timestamp_quality_status(
+                    TimestampQuality(**entry["timestamp_quality"])
+                ),
             )
             for entry in entries
         )
@@ -347,8 +361,16 @@ def build_manifest(
         raise ManifestError("professional_tidal_delta_30s.diff.json: document must be an object")
     tide_method = _tide_method_manifest(diff_document)
 
+    # Budget: propagate the worst per-segment model status of the primary
+    # scenario (any non-established segment flags the statistical component).
+    worst_status = (
+        EvidenceStatus.supported_with_limitations
+        if any(status is not EvidenceStatus.established for status in primary_16.segment_statuses)
+        else EvidenceStatus.established
+    )
     uncertainty_budget = _uncertainty_budget_model(
-        Decimal(str(primary_16.combination.u_stat_bayes))
+        Decimal(str(primary_16.combination.u_stat_bayes)),
+        statistical_status=worst_status,
     )
 
     product_sha256 = {record.relative_path: record.sha256 for record in products}

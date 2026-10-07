@@ -133,6 +133,7 @@ def _make_scenario(groups: tuple[int, ...], *, scenario: str = "raw") -> Statist
         duration_weighted_ratio=str(duration),
         segment_ratios=tuple(str(ratio) for ratio in ratios),
         segment_n_valid=n_valid,
+        segment_statuses=tuple(EvidenceStatus.established for _ in groups),
         combination=combination,
     )
 
@@ -199,6 +200,8 @@ def _scenario_payload(groups: tuple[int, ...], *, reference: str) -> dict[str, o
                 "u_i": 1.0e-16,
                 "y_i_1e18": 0.1 * group,
                 "n_valid": 1000 + group,
+                "status": "established",
+                "fit_slope": -0.5,
             }
             for group in groups
         ],
@@ -259,7 +262,22 @@ def _write_synthetic_staging(tmp_path: Path) -> tuple[Path, Path, Path]:
         json.dumps(
             {
                 "computed_total_final": 100,
-                "files": [{"digest": digest, "timestamp_quality": {}}],
+                "files": [
+                    {
+                        "digest": digest,
+                        "timestamp_quality": {
+                            "n_rows": 100,
+                            "n_parse_errors": 0,
+                            "n_duplicates": 0,
+                            "n_reversals": 0,
+                            "n_gaps": 0,
+                            "max_gap_s": 1.0,
+                            "max_abs_jitter_s": 0.0,
+                            "first_label_utc8": "2026-01-01T00:00:00+08:00",
+                            "last_label_utc8": "2026-01-01T00:01:39+08:00",
+                        },
+                    }
+                ],
             }
         ),
         encoding="utf-8",
@@ -398,6 +416,31 @@ def test_reconcile_rejects_nonfinite_float() -> None:
     broken = manifest.primary_16.model_copy(update={"combination": combination})
     with pytest.raises(ManifestError):
         reconcile_manifest(manifest.model_copy(update={"primary_16": broken}))
+
+
+def test_reconcile_rejects_segment_statuses_length_mismatch() -> None:
+    manifest = make_valid_manifest()
+    broken = manifest.primary_16.model_copy(
+        update={"segment_statuses": manifest.primary_16.segment_statuses[:-1]}
+    )
+    with pytest.raises(ManifestError, match="rule 5"):
+        reconcile_manifest(manifest.model_copy(update={"primary_16": broken}))
+
+
+def test_reconcile_rejects_nonfinite_segment_ratio() -> None:
+    manifest = make_valid_manifest()
+    ratios = (*manifest.primary_16.segment_ratios[:-1], "Infinity")
+    broken = manifest.primary_16.model_copy(update={"segment_ratios": ratios})
+    with pytest.raises(ManifestError, match="rule 5"):
+        reconcile_manifest(manifest.model_copy(update={"primary_16": broken}))
+
+
+def test_reconcile_rejects_correlation_row_count_mismatch() -> None:
+    manifest = make_valid_manifest()
+    correlation = manifest.uncertainty_budget.correlation[:-1]
+    budget = manifest.uncertainty_budget.model_copy(update={"correlation": correlation})
+    with pytest.raises(ManifestError, match="rule 8"):
+        reconcile_manifest(manifest.model_copy(update={"uncertainty_budget": budget}))
 
 
 def test_reconcile_rejects_established_component_without_uncertainty() -> None:

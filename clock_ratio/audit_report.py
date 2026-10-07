@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock_ratio.evidence import EvidenceStatus  # noqa: E402
 from clock_ratio.result_manifest import (  # noqa: E402
     ManifestError,
+    ProvenanceRecord,
     ResultManifest,
     StatisticalScenarioManifest,
     UncertaintyBudgetModel,
@@ -57,7 +58,7 @@ def _bool(flag: bool) -> str:
     return "是" if flag else "否"
 
 
-def _product(manifest: ResultManifest, relative_path: str):
+def _product(manifest: ResultManifest, relative_path: str) -> ProvenanceRecord:
     for record in manifest.products:
         if record.relative_path == relative_path:
             return record
@@ -158,6 +159,19 @@ def _section_segment9(manifest: ResultManifest) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _restricted_model_line(scenario: StatisticalScenarioManifest) -> str:
+    limited = [
+        group
+        for group, status in zip(scenario.included_groups, scenario.segment_statuses)
+        if status is not EvidenceStatus.established
+    ]
+    total = len(scenario.segment_statuses)
+    detail = (
+        f"（组 {'、'.join(str(group) for group in limited)}）" if limited else "（无）"
+    )
+    return f"- 模型受限段（拟合状态非 established）：{len(limited)}/{total}{detail}"
+
+
 def _scenario_section(
     number: int,
     title: str,
@@ -193,6 +207,7 @@ def _scenario_section(
         f"段数：{scenario.n_segments}",
         f"- 包含段：{included}",
         f"- 排除段：{excluded}",
+        _restricted_model_line(scenario),
         f"- 时长加权比值（duration_weighted_ratio）：`{scenario.duration_weighted_ratio}`",
         f"- 总样本（total_samples）：{scenario.total_samples}；"
         f"等式 `total_samples == Σ segment_n_valid`：{_verdict(closed)}",
@@ -305,7 +320,7 @@ def _section_covariance_pointer() -> str:
         "",
         "协方差感知的 GLS 与块自助（block-bootstrap）验证已在阶段一中实现并复核；其覆盖"
         "诊断未嵌入本清单模式，因此本报告不复述其数值。证据与复核记录见提交 "
-        f"`{_COVARIANCE_COMMITS}`。",
+        f"`{_COVARIANCE_COMMITS}`；文本对照存档见 `docs/audit/`（task-07/09/10/12）。",
     ]
     return "\n".join(lines) + "\n"
 
@@ -317,7 +332,7 @@ def _section_old_new_pointer() -> str:
         "估计量与聚合方式的新旧审计（块均值改为 gap-safe OADEV；情景统一；协方差列）已在"
         "任务 7/9/10/12 中记录并复核；本清单模式不嵌入历史基线数值，因此本报告不复述其"
         "数值。证据见提交 "
-        f"`{_OLD_NEW_COMMITS}`。",
+        f"`{_OLD_NEW_COMMITS}`；文本对照存档见 `docs/audit/`（task-07/09/10/12）。",
     ]
     return "\n".join(lines) + "\n"
 

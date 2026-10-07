@@ -229,6 +229,42 @@ def test_seg9_exclusion_when_combined_values_are_reduced(tmp_path: Path, monkeyp
     assert source.read_text() == before
 
 
+def test_decode_scenario_when_row_status_is_present_or_absent() -> None:
+    from clock_ratio.evidence import EvidenceStatus
+    from clock_ratio.statistical_methods_tidal_seg9 import decode_scenario
+    # Given a minimal payload whose first row carries the model-disclosure fields.
+    payload = {
+        "R_seg1": "1.20750703934333772037",
+        "per_segment": [
+            {
+                "group": 1, "T_s": 68009.0, "u_frac": 1e-16, "u_i": 1e-16,
+                "y_i_1e18": 0.0, "n_valid": 68009,
+                "status": "established", "fit_slope": -0.5,
+            },
+            {
+                "group": 2, "T_s": 29481.0, "u_frac": 1e-16, "u_i": 1e-16,
+                "y_i_1e18": 0.1, "n_valid": 29481,
+                "status": "established", "fit_slope": -0.5,
+            },
+        ],
+    }
+    # When decoding, Then the stored status/fit_slope are used.
+    decoded = decode_scenario("raw", payload)
+    first = decoded.segments[0].uncertainty
+    assert first.status is EvidenceStatus.established
+    assert first.fit_slope == -0.5
+
+    # And an old-schema payload without those fields keeps the sentinel.
+    legacy_rows = [
+        {key: value for key, value in row.items() if key not in ("status", "fit_slope")}
+        for row in payload["per_segment"]
+    ]
+    legacy = decode_scenario("raw", {"R_seg1": payload["R_seg1"], "per_segment": legacy_rows})
+    legacy_first = legacy.segments[0].uncertainty
+    assert legacy_first.status == "supported-with-limitations"
+    assert legacy_first.fit_slope is None
+
+
 def test_seg9_correlation_when_original_is_preserved(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     import clock_ratio.correlation_reanalysis_seg9_excluded as corr
     import csv

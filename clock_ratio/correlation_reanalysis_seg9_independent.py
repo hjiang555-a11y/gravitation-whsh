@@ -71,7 +71,6 @@ def recompute_ratios() -> list[dict]:
             screen = endpoint_screen_indices(d_long)
         except ValueError:
             continue
-        rem_start, rem_end = screen.removed_start, screen.removed_end
         d_long = d_long[screen.start:screen.stop]
         shift_dec = to_dec(SHIFT_A[kk])
         mean_dm_dec = to_dec(d_long.mean()) - m_dec

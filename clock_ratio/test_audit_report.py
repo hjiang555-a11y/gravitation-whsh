@@ -9,6 +9,7 @@ from typer.testing import CliRunner
 
 from clock_ratio import audit_report
 from clock_ratio.audit_report import app, render_audit_report, write_report_atomic
+from clock_ratio.evidence import EvidenceStatus
 from clock_ratio.result_manifest import ManifestError, write_manifest_atomic
 from clock_ratio.test_result_manifest import make_valid_manifest
 
@@ -53,6 +54,29 @@ def test_render_includes_membership_and_loo_rows() -> None:
     segment9_section = text.split("## 3. ", 1)[1].split("## 4.", 1)[0]
     assert "第 9 段" in segment9_section
     assert "排除" in segment9_section
+
+
+def test_render_includes_restricted_model_status_counts() -> None:
+    manifest = make_valid_manifest()
+    text = render_audit_report(manifest)
+    assert "模型受限段" in text
+    assert f"模型受限段（拟合状态非 established）：0/{manifest.primary_16.n_segments}（无）" in text
+    assert f"模型受限段（拟合状态非 established）：0/{manifest.sensitivity_17.n_segments}（无）" in text
+    statuses = list(manifest.primary_16.segment_statuses)
+    limited_group = manifest.primary_16.included_groups[-1]
+    statuses[-1] = EvidenceStatus.supported_with_limitations
+    changed = manifest.model_copy(
+        update={
+            "primary_16": manifest.primary_16.model_copy(
+                update={"segment_statuses": tuple(statuses)}
+            )
+        }
+    )
+    changed_text = render_audit_report(changed)
+    assert (
+        f"模型受限段（拟合状态非 established）：1/{manifest.primary_16.n_segments}（组 {limited_group}）"
+        in changed_text
+    )
 
 
 def test_write_report_atomic_replaces_and_is_deterministic(tmp_path: Path) -> None:

@@ -94,6 +94,7 @@ class StatisticalScenarioManifest(BaseModel):
     duration_weighted_ratio: str
     segment_ratios: tuple[str, ...]
     segment_n_valid: tuple[int, ...]
+    segment_statuses: tuple[EvidenceStatus, ...]
     combination: CombinationManifest
 
 
@@ -150,7 +151,7 @@ class UncertaintyBudgetModel(BaseModel):
 class ResultManifest(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    schema_version: Literal["1.0"] = "1.0"
+    schema_version: Literal["1.0", "1.1"] = "1.1"
     git_commit: str
     dirty: bool
     python: str
@@ -198,6 +199,7 @@ def _check_scenario(scenario: StatisticalScenarioManifest, *, label: str) -> Non
         == len(scenario.included_groups)
         == len(scenario.segment_ratios)
         == len(scenario.segment_n_valid)
+        == len(scenario.segment_statuses)
     ):
         raise ManifestError(f"rule 5: {label} segment counts are inconsistent")
     if scenario.total_samples != sum(scenario.segment_n_valid):
@@ -208,17 +210,25 @@ def _check_scenario(scenario: StatisticalScenarioManifest, *, label: str) -> Non
     if total == 0:
         raise ManifestError(f"rule 5: {label} has zero total retained samples")
     try:
+        parsed_ratios = tuple(Decimal(ratio) for ratio in scenario.segment_ratios)
+    except (ArithmeticError, ValueError) as error:
+        raise ManifestError(f"rule 5: {label} segment values are not Decimal-parsable: {error}") from error
+    if not all(ratio.is_finite() for ratio in parsed_ratios):
+        raise ManifestError(f"rule 5: {label} has a non-finite segment ratio")
+    try:
         with localcontext() as context:
             context.prec = 80
             recomputed = sum(
                 (
-                    Decimal(n) * Decimal(ratio)
-                    for ratio, n in zip(scenario.segment_ratios, scenario.segment_n_valid)
+                    Decimal(n) * ratio
+                    for ratio, n in zip(parsed_ratios, scenario.segment_n_valid)
                 ),
                 Decimal(0),
             ) / Decimal(total)
     except (ArithmeticError, ValueError) as error:
         raise ManifestError(f"rule 5: {label} segment values are not Decimal-parsable: {error}") from error
+    if not recomputed.is_finite():
+        raise ManifestError(f"rule 5: {label} recomputed duration is not finite")
     if str(recomputed) != scenario.duration_weighted_ratio:
         raise ManifestError(
             f"rule 5: {label} duration_weighted_ratio does not match the segment recomputation"
@@ -292,6 +302,18 @@ def reconcile_manifest(manifest: ResultManifest) -> None:
 
     # Rule 8: uncertainty budget decimals and consistency.
     budget = manifest.uncertainty_budget
+    correlation = budget.correlation
+    n_components = len(budget.components)
+    if len(correlation) != n_components or any(
+        len(row) != n_components for row in correlation
+    ):
+        raise ManifestError(
+            "rule 8: correlation matrix must be square and match the component count"
+        )
+    if any(not math.isfinite(value) for row in correlation for value in row):
+        raise ManifestError("rule 8: correlation matrix entries must be finite")
+    if any(abs(correlation[index][index] - 1.0) > 1e-12 for index in range(n_components)):
+        raise ManifestError("rule 8: correlation matrix diagonal entries must be 1.0")
     for component in budget.components:
         _finite_decimal(component.correction, label=f"component {component.name!r} correction")
         _finite_decimal(

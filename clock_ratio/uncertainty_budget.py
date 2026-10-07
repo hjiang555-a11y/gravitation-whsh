@@ -148,13 +148,20 @@ def combine_uncertainty_budget(
 
 def build_phase_one_components(
     statistical_uncertainty: Decimal | None = None,
+    statistical_status: EvidenceStatus | None = None,
 ) -> tuple[BudgetComponent, ...]:
-    """Phase-one budget inputs: no component gets invented closed evidence."""
-    statistical_status = (
-        EvidenceStatus.established
-        if statistical_uncertainty is not None
-        else EvidenceStatus.pending_verification
-    )
+    """Phase-one budget inputs: no component gets invented closed evidence.
+
+    ``statistical_status`` overrides the legacy derived status for the
+    ``statistical`` component when provided; ``None`` preserves the current
+    behavior (established iff an uncertainty is supplied).
+    """
+    if statistical_status is None:
+        statistical_status = (
+            EvidenceStatus.established
+            if statistical_uncertainty is not None
+            else EvidenceStatus.pending_verification
+        )
     return (
         BudgetComponent(
             name="statistical",

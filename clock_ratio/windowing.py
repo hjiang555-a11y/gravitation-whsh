@@ -106,7 +106,7 @@ class CovarianceAwareFit:
     standard_error: float
     ci_low: float
     ci_high: float
-    method: Literal["nonoverlap-ols", "gls", "block-bootstrap"]
+    method: Literal["gls", "block-bootstrap"]
     n_windows: int
     effective_n: float
 

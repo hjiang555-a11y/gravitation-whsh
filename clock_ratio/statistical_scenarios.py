@@ -57,7 +57,7 @@ class ScenarioSegmentResult:
 
 @dataclass(frozen=True, slots=True)
 class StatisticalScenarioResult:
-    scenario: str
+    scenario: ScenarioKey
     coefficient: float
     included_groups: tuple[int, ...]
     excluded_groups: tuple[int, ...]

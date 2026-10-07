@@ -28,6 +28,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock.sample_selection import AnalysisError  # noqa: E402
+from clock_ratio.evidence import EvidenceStatus  # noqa: E402
 from clock_ratio.segment_uncertainty import SegmentUncertainty  # noqa: E402
 from clock_ratio.statistical_methods_tidal import scenario_document  # noqa: E402
 from clock_ratio.statistical_scenarios import (  # noqa: E402
@@ -56,8 +57,11 @@ def decode_scenario(key: str, payload: Mapping[str, object]) -> StatisticalScena
     ``T_s`` (the retained-sample count in the legacy artifact).  The per-segment
     ratio is reconstructed as ``R_seg1 * (1 + y_i)`` in an 80-digit Decimal
     context; the fractional uncertainty is decoded from the stored ``u_i``.
-    Diagnostic-only fields the artifact never carried (runs, tau grid, fit)
-    stay empty and the uncertainty is flagged ``supported-with-limitations``.
+    When a row carries the model-disclosure fields (``status``, ``fit_slope``)
+    they are decoded (status mapped via ``EvidenceStatus``); rows without them
+    (old-schema artifacts) keep the sentinel ``supported-with-limitations`` and
+    ``fit_slope=None``.  Diagnostic-only fields the artifact never carried
+    (runs, tau grid, fit intercept) stay empty.
     """
     scenario = SCENARIO_BY_KEY.get(key)
     if scenario is None:
@@ -78,14 +82,23 @@ def decode_scenario(key: str, payload: Mapping[str, object]) -> StatisticalScena
             u_i = Decimal(str(row["u_i"]))
         except (KeyError, TypeError, ValueError) as error:
             raise AnalysisError(f"{key}: malformed per_segment row: {error}") from error
+        if "status" in row:
+            try:
+                status: EvidenceStatus | str = EvidenceStatus(str(row["status"]))
+            except ValueError as error:
+                raise AnalysisError(f"{key}: unknown per-segment status: {error}") from error
+            fit_slope = row.get("fit_slope")
+        else:
+            status = "supported-with-limitations"
+            fit_slope = None
         with localcontext() as context:
             context.prec = 80
             ratio = reference * (Decimal(1) + Decimal(repr(y_i)) * Decimal("1e-18"))
             u_fractional = float(u_i / ratio)
         uncertainty = SegmentUncertainty(
             group=group, n_valid=n_valid, n_runs=0, taus_s=(), sigma_y=(),
-            fit_slope=None, fit_intercept=None, u_fractional=u_fractional,
-            status="supported-with-limitations",
+            fit_slope=fit_slope, fit_intercept=None, u_fractional=u_fractional,
+            status=status,
         )
         facts.append(ScenarioSegmentResult(
             group=group, ratio=ratio, deviation=y_i * 1e-18,

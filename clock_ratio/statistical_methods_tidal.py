@@ -33,6 +33,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from clock import shared as s  # noqa: E402
 from clock.sample_selection import AnalysisError, select_segments  # noqa: E402
+from clock_ratio.evidence import EvidenceStatus  # noqa: E402
 from clock_ratio.statistical_scenarios import (  # noqa: E402
     StatisticalScenarioResult,
     analyze_scenarios,
@@ -56,7 +57,8 @@ def scenario_document(result: StatisticalScenarioResult, coefficient: Decimal) -
 
     The schema (and key names) matches the historical artifact so downstream
     consumers (`make_report.py`, `make_paper_figures.py`) keep working; the
-    per-segment rows gain ``n_valid`` on top of the legacy field set.
+    per-segment rows gain ``n_valid`` plus the model-status disclosure fields
+    ``status`` (plain value string, never ``str(enum)``) and ``fit_slope``.
     """
     combination = result.combination
     with localcontext() as context:
@@ -73,6 +75,8 @@ def scenario_document(result: StatisticalScenarioResult, coefficient: Decimal) -
             "u_i": u_absolute(fact),
             "y_i_1e18": y_i_1e18(fact, reference),
             "n_valid": fact.n_valid,
+            "status": EvidenceStatus(fact.uncertainty.status).value,
+            "fit_slope": fact.uncertainty.fit_slope,
         }
         for fact in result.segments
     ]
