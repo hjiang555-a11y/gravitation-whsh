@@ -10,20 +10,23 @@ compute_ratio.py. Output is a SEPARATE result set alongside the original.
 Method (aligned with clock/潮汐修正后的比值计算.pdf and the MATLAB source
 YbSr_NISTstyle_14bin_full_analysis_20260824.m):
 
-  1. Per segment: take the longest jump-free trace (drop >10 Hz from median,
-     mask exclude_ranges), then endpoint-screen (1% peak-to-peak).
-  2. OADEV: overlapping Allan deviation of the beat in fractional frequency
-     (normalized to F_1550 = N1550_WH·f_rep = 193.3992 THz, the 1550 nm light).
-     Fit 128 s <= tau <= 0.25*T on log-log, require white-noise slope ~-1/2,
-     then extrapolate to tau = T (T = segment valid duration) -> sigma_y(T).
+  1. Per segment: shared gap-aware selection (select_segments: longest
+     jump-free span, endpoint-screen 1% peak-to-peak).
+  2. Gap-safe OADEV: TRUE overlapping Allan deviation of the beat fractional
+     frequency (normalized to F_1550 = N1550_WH·f_rep = 193.3992 THz), computed
+     by clock_ratio.segment_uncertainty inside the prespecified window
+     128 s <= tau <= 0.25*T with T = longest gap-free run, fit to
+     log sigma_y = a + b·log tau and extrapolated to tau = T. Underdetermined
+     fits and non-white slopes are flagged; the longest tau is never reused.
   3. u_i = sigma_y(T) * R_i  (per-segment clock-ratio statistical uncertainty).
-  4. Combined values:
-       - WLS:       y = Σ w_i y_i / Σ w_i,  w_i = 1/u_i^2,  u = 1/sqrt(Σ w_i)
-       - Birge:     B = sqrt(chi2_red),  u = B * u_WLS
-       - Mandel-P:  u_i,eff^2 = u_i^2 + xi^2, solve chi2_red(xi)=1  ->  xi, u
-       - Bayesian:  posterior over (mu, xi) via grid/MCMC, marginalize
-  5. Gravitational correction (whole-experiment total): duration-weighted mean
+  4. Combined values via the typed core: WLS / Birge / Mandel-Paule / Bayesian.
+  5. Gravitational correction (whole-experiment total): per-method weighted mean
      of Δf/f = ΔW/c² (same as correlation_reanalysis).
+
+The historical block-mean estimator is preserved as `legacy_block_deviation`
+(alias `oadev` for statistical_methods_tidal.py) for comparison; it is NOT
+true OADEV and its numeric difference from the new estimator is an algorithm
+change, not a physics signal.
 
 Outputs:
   clock_ratio/statistical_methods.csv   (per-segment u_i, and the 4 combined values)
@@ -35,38 +38,36 @@ from __future__ import annotations
 import csv
 import json
 import sys
+from collections.abc import Mapping, Sequence
+from dataclasses import replace
 from decimal import Decimal
 from pathlib import Path
 
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from clock.shared import (  # noqa: E402
-    EXCLUDE_RANGES, F_1550, GROUPS, JUMP_THRESHOLD, RESULTS_CSV,
-    load_beat, load_tide, longest_valid_span,
+from clock.sample_selection import (  # noqa: E402
+    DEFAULT_SELECTION_PLAN, AnalysisError, SelectedSegment, select_segments,
 )
-from clock_ratio.statistical_combination import combine  # noqa: E402
+from clock.shared import F_1550, GROUPS, load_beat, load_tide  # noqa: E402
+from clock_ratio.segment_uncertainty import (  # noqa: E402
+    SegmentUncertainty, StabilityFitConfig, estimate_segment_uncertainty,
+)
+from clock_ratio.statistical_models import (  # noqa: E402
+    CombinationResult, SegmentEstimate, combine_estimates,
+)
+from clock_ratio.tidal_stability import continuous_runs  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parent
 C = 299792458.0
 
 
-def endpoint_screen(x):
-    center = np.median(x)
-    peak2peak = x.max() - x.min()
-    thr = peak2peak * 0.01
-    lo, hi = 0, len(x) - 1
-    while lo <= hi and abs(x[lo] - center) > thr:
-        lo += 1
-    while hi >= lo and abs(x[hi] - center) > thr:
-        hi -= 1
-    return x[lo: hi + 1]
-
-
-def oadev(x: np.ndarray, tau0: int = 1) -> tuple[np.ndarray, np.ndarray]:
-    """Overlapping Allan deviation of fractional-frequency data.
+def legacy_block_deviation(x: np.ndarray, tau0: int = 1) -> tuple[np.ndarray, np.ndarray]:
+    """Legacy block-mean deviation of fractional-frequency data (NOT true OADEV).
 
     x is the FRACTIONAL frequency (beat / F_1550). Returns (tau, sigma_y) arrays.
+    Uses non-overlapping block means and the differences of consecutive windows;
+    retained only for the historical comparison and the tidal caller.
     """
     x = np.asarray(x, dtype=float)
     out_tau, out_sig = [], []
@@ -89,6 +90,12 @@ def oadev(x: np.ndarray, tau0: int = 1) -> tuple[np.ndarray, np.ndarray]:
     return np.array(out_tau), np.array(out_sig)
 
 
+# Compatibility alias: clock_ratio.statistical_methods_tidal.py imports `oadev`
+# from here (Task 10 migrates that caller). This block-mean estimator is NOT
+# true overlapping Allan deviation; the audit result uses segment_uncertainty.
+oadev = legacy_block_deviation
+
+
 def extrapolate_u(tau, sig, T):
     """Fit log(sigma) = a + b*log(tau) over 128s<=tau<=T/4, extrapolate to T."""
     mask = (tau >= 128) & (tau <= max(128, T / 4)) & (sig > 0)
@@ -104,71 +111,76 @@ def extrapolate_u(tau, sig, T):
     return float(np.exp(a + b * lT))
 
 
-def segment_traces():
-    """Yield (i, d_long, T) for each segment's longest valid trace."""
-    T_all, B = load_beat()
-    excl = np.zeros(len(T_all), dtype=bool)
-    for s, e in EXCLUDE_RANGES:
-        excl |= (T_all >= np.datetime64(s)) & (T_all <= np.datetime64(e))
-    for kk, (s, e) in enumerate(GROUPS):
-        S, E = np.datetime64(s), np.datetime64(e)
-        in_win = (T_all >= S) & (T_all < E)
-        b_seg = B[in_win]
-        ex_seg = excl[in_win]
-        plausible = (b_seg > 3e7) & (b_seg < 4e7) & ~ex_seg
-        if not plausible.any():
-            continue
-        med = float(np.median(b_seg[plausible]))
-        valid = plausible & (np.abs(b_seg - med) < JUMP_THRESHOLD)
-        span = longest_valid_span(valid)
-        if span is None:
-            continue
-        d_long = b_seg[span[0]: span[1] + 1]
-        d_long = endpoint_screen(d_long)
-        yield kk + 1, d_long, len(d_long)
+def analyze_raw_statistics(
+    segments: Sequence[SelectedSegment],
+    ratios: Mapping[int, Decimal],
+    config: StabilityFitConfig,
+) -> tuple[tuple[SegmentUncertainty, ...], CombinationResult]:
+    """Pure per-segment gap-safe fit and combination; no file I/O.
+
+    y_i = R_g / R_1 - 1 (fractional, segment-1 baseline) and u_i = u_frac * R_g
+    (absolute ratio). A segment without a defined u_fractional aborts the whole
+    analysis -- fail-fast, never a silent exclusion.
+    """
+    if 1 not in ratios:
+        raise AnalysisError("segment-1 ratio is required as the y_i baseline")
+    reference = ratios[1]
+    results: list[SegmentUncertainty] = []
+    estimates: list[SegmentEstimate] = []
+    for segment in segments:
+        if segment.group not in ratios:
+            raise AnalysisError(f"segment {segment.group}: missing clock ratio")
+        fractional = (segment.beat - segment.beat.mean()) / F_1550
+        fit = estimate_segment_uncertainty(segment.times, fractional, config)
+        if fit.u_fractional is None:
+            raise AnalysisError(
+                f"segment {segment.group}: fewer than three usable OADEV fit "
+                "points; refusing a silent longest-tau fallback")
+        fit = replace(fit, group=segment.group)
+        ratio = ratios[segment.group]
+        results.append(fit)
+        estimates.append(SegmentEstimate(
+            group=segment.group,
+            ratio=ratio,
+            deviation=float(ratio / reference - Decimal(1)),
+            u_absolute=float(Decimal(repr(fit.u_fractional)) * ratio),
+        ))
+    return tuple(results), combine_estimates(estimates, reference)
 
 
 def main() -> int:
-    # ---- per-segment OADEV -> u_i ----
-    rows = []
-    for idx, d_long, T in segment_traces():
-        frac = (d_long - d_long.mean()) / F_1550  # fractional frequency, demeaned
-        tau, sig = oadev(frac)
-        sig_T = extrapolate_u(tau, sig, T) if len(tau) else np.nan
-        rows.append({"group": idx, "T_s": T, "u_frac": sig_T})
+    # ---- per-segment gap-safe OADEV -> u_i ----
+    times, beat = load_beat()
+    segments = select_segments(times, beat, DEFAULT_SELECTION_PLAN)
 
-    # load R_i (clock ratio) to convert u_frac -> u_i = sig_T * R_i
+    # load R_i (clock ratio): u_frac -> u_i = u_frac * R_i, y_i = R_i/R_1 - 1
     ratio_rows = list(csv.DictReader(open(OUT_DIR / "ratio_17seg.csv")))
     R = {int(r["group"]): Decimal(r["YbSr_R"]) for r in ratio_rows}
-    y = {int(r["group"]): Decimal(r["y_i_1e18"]) for r in ratio_rows}
     R0 = R[1]  # segment-1 ratio (Decimal), as the y_i baseline reference
 
-    for r in rows:
-        g = r["group"]
-        Rg = R[g]
-        r["u_i"] = float(Decimal(str(r["u_frac"])) * Rg)  # absolute ratio uncertainty
-        r["y_i"] = float(y[g])                            # ×1e-18
+    results, combined = analyze_raw_statistics(segments, R, StabilityFitConfig())
 
-    # ---- unit-consistent WLS / Birge / Mandel-Paule / Bayesian ----
-    # y_i is fractional relative to R0 while u_i is absolute in ratio units.
-    # combine() converts every uncertainty to the y_i unit before fitting.
-    u = np.array([r["u_i"] for r in rows])
-    yy = np.array([r["y_i"] for r in rows]) * 1e-18
-    combined = combine(yy, u, float(R0))
-    y_wls = combined["y_wls"]
-    u_wls = combined["u_wls"]
-    chi2 = combined["chi2"]
-    dof = combined["dof"]
-    chi2_red = combined["chi2_red"]
-    p_chi2 = combined["p_chi2"]
-    birge = combined["birge_ratio"]
-    u_birge = combined["u_birge"]
-    xi_mp = combined["xi_mp"]
-    y_mp = combined["y_mp"]
-    u_mp = combined["u_mp"]
-    mu_post_mean = combined["mu_bayes"]
-    mu_post_sd = combined["u_stat_bayes"]
-    xi_post_mean = combined["xi_bayes"]
+    rows = []
+    for segment, result in zip(segments, results, strict=True):
+        longest_run = max((stop - start for start, stop in continuous_runs(segment.times)),
+                          default=0)
+        u_i = float(Decimal(repr(result.u_fractional)) * R[segment.group])
+        rows.append({"group": segment.group, "T_s": longest_run,
+                     "u_frac": result.u_fractional, "u_i": u_i})
+
+    u_wls = combined.u_wls
+    chi2 = combined.chi2
+    dof = combined.dof
+    chi2_red = combined.chi2_red
+    p_chi2 = combined.p_chi2
+    birge = combined.birge_ratio
+    u_birge = combined.u_birge
+    xi_mp = combined.xi_mp
+    y_mp = combined.y_mp
+    u_mp = combined.u_mp
+    mu_post_mean = combined.mu_bayes
+    mu_post_sd = combined.u_stat_bayes
+    xi_post_mean = combined.xi_bayes
 
     # ---- Gravitational (tidal) correction, per-method weights ----
     # The tidal correction of each segment is Δf/f = ΔW_i/c² (from
@@ -204,7 +216,7 @@ def main() -> int:
     # questions and must not be conflated.
     # R[1] is Decimal; reconstruct each center as R0 × (1 + y) in Decimal so the
     # e-19-level y does NOT get swallowed by float64 (error-1 discipline).
-    y_wls_d = Decimal(repr(float(y_wls)))
+    y_wls_d = Decimal(repr(float(combined.y_wls)))
     y_mp_d = Decimal(repr(float(y_mp)))
     mu_d = Decimal(repr(float(mu_post_mean)))
     result = {
@@ -227,7 +239,7 @@ def main() -> int:
         "grav_birge": grav_birge,
         "grav_mp": grav_mp,
         "grav_bayes": grav_bayes,
-        "y_wls_precision_1e18": float(y_wls * 1e18),
+        "y_wls_precision_1e18": float(combined.y_wls * 1e18),
     }
 
     # ---- write CSV ----

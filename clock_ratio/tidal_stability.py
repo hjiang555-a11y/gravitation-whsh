@@ -8,7 +8,8 @@ from math import isfinite, sqrt
 
 import numpy as np
 
-from clock_ratio.tidal_analysis import AnalysisError, FloatArray, SegmentResult, TimeArray
+from clock.sample_selection import AnalysisError, FloatArray, TimeArray
+from clock_ratio.tidal_analysis import SegmentResult
 
 
 @dataclass(frozen=True, slots=True)
