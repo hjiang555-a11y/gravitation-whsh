@@ -1,0 +1,6 @@
+baseline_exit=0
+current_exit=0
+batch_summary.csv: no diff
+batch_aggregate.csv: no diff
+batch_forest.png: baseline=d86802ba3c965f1a2ab7c0a0e6e313295f10c150adc75f63cb9ae608da7d8261 current=d86802ba3c965f1a2ab7c0a0e6e313295f10c150adc75f63cb9ae608da7d8261
+batch_shared_axis.png: baseline=a89e7491bea21109e22cf775b501b13f1aec215e657ac83daa84d69f9d500da3 current=a89e7491bea21109e22cf775b501b13f1aec215e657ac83daa84d69f9d500da3

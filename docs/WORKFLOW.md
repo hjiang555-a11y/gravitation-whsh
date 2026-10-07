@@ -54,6 +54,10 @@ uv run python -m clock_ratio.audit_report --manifest results/audit-v1/verified/m
 （`ANALYSIS_AUDIT.md`）仅从已验证的清单生成，不重新读取原始数据。其下的 §2.1–2.2
 其余入口保留为诊断用途。
 
+当审计在 git worktree 内运行、而原始数据位于主检出（main checkout）时，已验证清单的
+`inputs[].relative_path` 会包含 `../../../clock/...`；在主检出中重跑会将这些路径正常化，
+且用 `--root` 复核时必须与生成该清单时的检出布局一致——这一布局差异不是篡改。
+
 ### 2.1 只运行新增潮汐分析（保留旧产物时推荐）
 
 **Legacy 诊断入口**：§2.1–2.2 的旧模式（`python run_all.py`、`--tidal-only`）保留历史行为，

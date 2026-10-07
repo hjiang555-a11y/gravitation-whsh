@@ -1,0 +1,55 @@
+# Task 10 old-vs-new audit (d63d8c6 old code vs new unified scenario layer)
+# old tidal baseline: /tmp/opencode/tidal_measure.json (legacy block oadev + extrapolate_u)
+# new tidal output  : /tmp/opencode/task10_tidal_new.json (gap-safe estimator via statistical_scenarios)
+# old seg9 baseline : /tmp/opencode/tidal_seg9_measure.json (old seg9 on tracked source)
+# new seg9 output   : /tmp/opencode/task10_seg9_new.json (adapter decode -> exclude_groups)
+
+tidal top-level keys old=['metadata', 'scenarios', 'synthesis']
+tidal top-level keys new=['metadata', 'scenarios', 'synthesis']
+tidal keys missing from new: NONE
+tidal keys added in new: NONE
+scenario-block keys missing in new: NONE
+scenario-block keys added in new: NONE
+per_segment keys missing in new: NONE
+per_segment keys added in new: ['n_valid']
+synthesis keys missing in new: NONE
+synthesis methods missing: NONE
+synthesis gof fields missing: NONE
+
+## per-segment u shift (new vs old, %)
+raw: min=-32.1% max=+75.2%
+theory: min=-23.4% max=+71.5%
+empirical: min=-24.0% max=+73.7%
+
+## combined-value deltas (new - old)
+[raw]
+  chi2_red 7.907942 -> 5.241484  (-33.7%)
+  u_wls    2.747620e-19 -> 3.278134e-19  (+19.3%)
+  xi_mp    3.130391e-18 -> 3.061948e-18  (-2.2%)
+  R_wls    1.2075070393433377207971 -> 1.2075070393433377203508
+[theory]
+  chi2_red 5.393596 -> 5.774833  (+7.1%)
+  u_wls    3.344606e-19 -> 3.201369e-19  (-4.3%)
+  xi_mp    2.715459e-18 -> 2.760202e-18  (+1.6%)
+  R_wls    1.2075070393433377216885 -> 1.2075070393433377215261
+[empirical]
+  chi2_red 6.647490 -> 5.772408  (-13.2%)
+  u_wls    3.046221e-19 -> 3.011724e-19  (-1.1%)
+  xi_mp    2.778646e-18 -> 2.746769e-18  (-1.1%)
+  R_wls    1.2075070393433377212591 -> 1.2075070393433377209498
+
+## seg9 adapter
+seg9 scenario keys missing: NONE; added: NONE
+seg9 top-level keys: old=['metadata', 'scenarios', 'synthesis'] new=['leave_one_out', 'metadata', 'scenarios', 'synthesis']
+[raw] n=16->16 excluded=9->9
+  chi2_red 3.913460 -> 3.913460; u_wls 2.858406e-19 -> 2.858406e-19
+[theory] n=16->16 excluded=9->9
+  chi2_red 4.113063 -> 4.113063; u_wls 3.546917e-19 -> 3.546917e-19
+[empirical] n=16->16 excluded=9->9
+  chi2_red 4.256521 -> 4.256521; u_wls 3.199392e-19 -> 3.199392e-19
+seg9 max combined-field relative drift: 4.441e-16 (theory.chi2_red)
+  R_wls 1.207507039343337720148136 -> 1.207507039343337720148136
+  R_wls 1.207507039343337721102833 -> 1.207507039343337721102833
+  R_wls 1.207507039343337720621382 -> 1.207507039343337720621382
+seg9 leave_one_out groups: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
+

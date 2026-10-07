@@ -1,0 +1,47 @@
+=== Task 12 old-vs-new batch_analysis comparison ===
+old source: git show c996e6d:clock/segment_analysis/batch_analysis.py (frozen copy in /tmp/task12_old_new)
+new source: worktree clock/segment_analysis/batch_analysis.py (covariance columns appended)
+old OUT_DIR: /tmp/task12_old_new/old
+new OUT_DIR: /tmp/task12_old_new/new
+
+old main() exit: 0   stderr bytes: 0
+new main() exit: 0   stderr bytes: 0
+
+[header] old (14 fields): group,t_start_beijing,t_end_beijing,hours,n_jump,n_pts,n_inference_pts,A,u_A,A_over_uA,r,p,tide_rms_hz,noise_std_hz
+[header] new (21 fields): group,t_start_beijing,t_end_beijing,hours,n_jump,n_pts,n_inference_pts,A,u_A,A_over_uA,r,p,tide_rms_hz,noise_std_hz,cov_method,cov_A,cov_u_A,cov_ci_low,cov_ci_high,cov_n_windows,cov_effective_n
+[header] new == old + cov columns in order: True
+[rows] groups: 17; old-field mismatches: 0
+[rows] per-group new cov fields:
+  g 1: gls,-0.8478,1.3558,-3.5050,1.8094,56,335159.56
+  g 2: gls,-0.8572,1.7985,-4.3822,2.6678,24,109421.80
+  g 3: gls,-0.9911,0.7777,-2.5154,0.5333,35,175717.68
+  g 4: gls,-0.2793,0.7761,-1.8003,1.2418,53,263238.69
+  g 5: gls,-1.6636,1.5687,-4.7381,1.4110,16,73622.03
+  g 6: gls,-0.0923,1.6388,-3.3042,3.1196,43,270317.80
+  g 7: gls,-0.5897,1.9870,-4.4842,3.3047,32,194848.54
+  g 8: gls,0.5923,2.2064,-3.7321,4.9167,36,210028.36
+  g 9: gls,1.5937,7.9595,-14.0069,17.1943,18,93622.63
+  g10: gls,-0.7912,0.9635,-2.6797,1.0973,48,210192.29
+  g11: gls,-0.8600,4.0839,-8.8643,7.1442,29,163679.96
+  g12: gls,-0.1827,3.1798,-6.4149,6.0496,33,205296.10
+  g13: gls,-0.3162,0.4583,-1.2145,0.5821,127,674473.38
+  g14: gls,-1.0410,0.8457,-2.6985,0.6166,57,291710.84
+  g15: gls,0.0357,1.8461,-3.5826,3.6540,48,245749.45
+  g16: gls,0.0049,1.0340,-2.0218,2.0315,123,639657.87
+  g17: gls,-0.0728,1.2182,-2.4604,2.3149,54,293295.64
+
+[aggregate] pre-existing rows byte-equal: True (11 metric rows + header)
+[aggregate] appended rows:
+  cov_method,gls
+  cov_n_segments,17
+  cov_amplitude_A,-0.506756
+  cov_amplitude_uA,0.260668
+  cov_amplitude_sigma,1.944065
+
+[png] batch_forest.png: old=d86802ba3c965f1a... new=d86802ba3c965f1a... EQUAL
+[png] batch_shared_axis.png: old=a89e7491bea21109... new=a89e7491bea21109... EQUAL
+[png] all PNGs byte-equal: True
+
+[stdout] byte-equal after temp-path normalization: True
+
+VERDICT: PASS (headers=True, rows=True, aggregate=True, pngs_equal=True, stdout=True)
