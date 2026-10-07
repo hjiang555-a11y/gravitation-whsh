@@ -21,3 +21,4 @@ testpaths = ["clock_ratio"]
 python_files = ["test_*.py"]
 pythonpath = ["."]
 addopts = "-ra"
+markers = ["slow: long-running coverage simulations"]

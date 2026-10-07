@@ -42,7 +42,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from clock.shared import F_1550, load_beat, load_tide  # noqa: E402
 from clock.sample_selection import DEFAULT_SELECTION_PLAN, SelectedSegment, select_segments  # noqa: E402
 from clock_ratio.tidal_analysis import TideGrid  # noqa: E402
-from clock_ratio.windowing import AmplitudeFit, fit_demeaned_amplitude, triangular_average  # noqa: E402
+from clock_ratio.windowing import (  # noqa: E402
+    AmplitudeFit,
+    fit_demeaned_amplitude,
+    fit_gls_amplitude,
+    triangular_average,
+)
 
 OUT_DIR = Path(__file__).resolve().parent
 
@@ -122,6 +127,11 @@ def main() -> int:
                   f"{n_jump:>5} {'(独立窗过少)':>8}")
             continue
 
+        try:
+            cov_fit = fit_gls_amplitude(t_run, b_run, tide_1s, block_size=WINDOW)
+        except ValueError:
+            cov_fit = None
+
         results.append({
             "group": segment.group,
             "t_start": str(t_run[0]),
@@ -139,6 +149,7 @@ def main() -> int:
             "beat_tri": beat_tri,
             "t_tri": t_tri,
             "tide": tide,
+            "cov": cov_fit,
         })
 
         print(f"{segment.group:>2} {str(t_run[0])[5:16]:<18} {len(b_run)/3600:>6.2f} {n_jump:>5} "
@@ -153,17 +164,29 @@ def main() -> int:
             "group", "t_start_beijing", "t_end_beijing", "hours",
             "n_jump", "n_pts", "n_inference_pts", "A", "u_A", "A_over_uA", "r", "p",
             "tide_rms_hz", "noise_std_hz",
+            "cov_method", "cov_A", "cov_u_A", "cov_ci_low", "cov_ci_high",
+            "cov_n_windows", "cov_effective_n",
         ])
         for r in results:
             if np.isnan(r["A"]):
-                w.writerow([r["group"], "", "", "", "", "", "", "", "", "", "", "", ""])
+                w.writerow([r["group"], *([""] * 20)])
             else:
+                cov = r["cov"]
+                if cov is None:
+                    cov_fields = [""] * 7
+                else:
+                    cov_fields = [
+                        cov.method, f"{cov.amplitude:.4f}", f"{cov.standard_error:.4f}",
+                        f"{cov.ci_low:.4f}", f"{cov.ci_high:.4f}",
+                        str(cov.n_windows), f"{cov.effective_n:.2f}",
+                    ]
                 w.writerow([
                     r["group"], r["t_start"], r["t_end"], f"{r['hours']:.3f}",
                     r["n_jump"], r["n_pts"], r["n_inference_pts"],
                     f"{r['A']:.4f}", f"{r['u_A']:.4f}", f"{r['A']/r['u_A']:.2f}",
                     f"{r['r']:.4f}", f"{r['p']:.4f}",
                     f"{r['tide_rms']:.3e}", f"{r['noise_std']:.3e}",
+                    *cov_fields,
                 ])
 
     # ---- forest plot ----
@@ -270,6 +293,17 @@ def main() -> int:
         w.writerow(["amplitude_A", f"{_Abar:+.6f}"])
         w.writerow(["amplitude_uA", f"{_uAbar:.6f}"])
         w.writerow(["amplitude_sigma", f"{abs(_Abar)/_uAbar:.6f}"])
+        _cov_ok = [r for r in results if r.get("cov") is not None]
+        _cAs = np.array([r["cov"].amplitude for r in _cov_ok])
+        _cuAs = np.array([r["cov"].standard_error for r in _cov_ok])
+        _cwg = 1.0 / _cuAs**2
+        _cAbar = float(np.sum(_cAs * _cwg) / np.sum(_cwg))
+        _cuAbar = float(1.0 / np.sqrt(np.sum(_cwg)))
+        w.writerow(["cov_method", "gls"])
+        w.writerow(["cov_n_segments", len(_cov_ok)])
+        w.writerow(["cov_amplitude_A", f"{_cAbar:+.6f}"])
+        w.writerow(["cov_amplitude_uA", f"{_cuAbar:.6f}"])
+        w.writerow(["cov_amplitude_sigma", f"{abs(_cAbar)/_cuAbar:.6f}"])
     print(f"Wrote {agg_path}")
 
     # ---- robustness / additional dimensions ----
