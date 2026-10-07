@@ -37,7 +37,28 @@
 python run_all.py --help
 ```
 
+### 2.0 阶段一权威入口（audit，优先）
+
+```bash
+uv sync --extra test
+uv run pytest -q
+RUN_CLOCK_DATA_TESTS=1 uv run pytest -q
+uv run python run_all.py --mode audit --output-dir results/audit-v1
+uv run python -m clock_ratio.verify_result_manifest results/audit-v1/verified/manifest.json
+uv run python -m clock_ratio.audit_report --manifest results/audit-v1/verified/manifest.json
+```
+
+审计模式（`--mode audit`）是阶段一权威入口，且为 fail-fast：全部中间产物先写入固定的
+`results/audit-v1/staging`，只有在独立的清单验证（`verify_result_manifest`）通过后才提升为
+不可变的 `runs/<hash>` 历史，并以原子方式切换 `verified` 符号链接。分析审计报告
+（`ANALYSIS_AUDIT.md`）仅从已验证的清单生成，不重新读取原始数据。其下的 §2.1–2.2
+其余入口保留为诊断用途。
+
 ### 2.1 只运行新增潮汐分析（保留旧产物时推荐）
+
+**Legacy 诊断入口**：§2.1–2.2 的旧模式（`python run_all.py`、`--tidal-only`）保留历史行为，
+但其输出不被清单构建器接受（只有 `results/audit-v1/staging` 下的产物可以），因此不能产出
+权威清单。
 
 ```bash
 python run_all.py --tidal-only

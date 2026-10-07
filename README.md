@@ -252,6 +252,25 @@ A=−0.54 12.91%）与 A=−1 的长 τ 不稳定度升都是真实的**：前�
 
 ## 复现
 
+**阶段一审计状态（临时）**：当前阶段一临时（provisional）主结果是 16 段结果——第 9 段因参数
+待确认而被隔离；17 段与 leave-one-out 结果为敏感性检查；专业潮汐输入的物理模型来源仍需外部
+确认。权威数值以 `results/audit-v1/verified/manifest.json` 及其生成的 `ANALYSIS_AUDIT.md`
+为准（本节不写入任何运行数值）。
+
+**阶段一权威入口（audit）**：
+
+```bash
+uv sync --extra test
+uv run pytest -q
+RUN_CLOCK_DATA_TESTS=1 uv run pytest -q
+uv run python run_all.py --mode audit --output-dir results/audit-v1
+uv run python -m clock_ratio.verify_result_manifest results/audit-v1/verified/manifest.json
+uv run python -m clock_ratio.audit_report --manifest results/audit-v1/verified/manifest.json
+```
+
+审计模式为 fail-fast，先写入 `results/audit-v1/staging`，经独立清单验证后再提升为不可变历史
+并原子切换 `verified` 符号链接；分析审计报告仅从已验证的清单生成。以下历史命令保留原样。
+
 **只重建新增潮汐分析与独立报告**（希望保留旧产物时推荐）：
 
 ```bash
