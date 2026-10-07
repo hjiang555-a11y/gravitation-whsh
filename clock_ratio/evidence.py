@@ -1,4 +1,4 @@
-"""Shared evidence-status vocabulary for audit outputs."""
+"""Single source of the evidence-status vocabulary for audit outputs (budget, manifest, ledgers)."""
 from __future__ import annotations
 
 from enum import Enum
