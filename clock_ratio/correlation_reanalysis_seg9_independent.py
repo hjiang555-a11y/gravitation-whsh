@@ -33,7 +33,8 @@ from clock.shared import (  # noqa: E402
     JUMP_THRESHOLD, N1156, N1397, N1550, N1550_WH, SHIFT_A,
     D_7_25, D_1_25, load_beat, longest_valid_span, to_dec,
 )
-from clock_ratio.compute_ratio import endpoint_screen, full_ratio  # noqa: E402
+from clock.sample_selection import endpoint_screen_indices  # noqa: E402
+from clock_ratio.ratio_model import full_ratio  # noqa: E402
 
 getcontext().prec = 80
 OUT_DIR = Path(__file__).resolve().parent
@@ -66,9 +67,12 @@ def recompute_ratios() -> list[dict]:
         if span is None:
             continue
         d_long = b_seg[span[0]: span[1] + 1]
-        d_long, rem_start, rem_end = endpoint_screen(d_long)
-        if len(d_long) == 0:
+        try:
+            screen = endpoint_screen_indices(d_long)
+        except ValueError:
             continue
+        rem_start, rem_end = screen.removed_start, screen.removed_end
+        d_long = d_long[screen.start:screen.stop]
         shift_dec = to_dec(SHIFT_A[kk])
         mean_dm_dec = to_dec(d_long.mean()) - m_dec
         R = full_ratio(mean_dm_dec, shift_dec, m_dec)
