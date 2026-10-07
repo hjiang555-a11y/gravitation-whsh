@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import os
 import shutil
@@ -155,13 +156,24 @@ def test_cli_generates_reproducible_report_when_sources_valid(artifact_copy: Pat
     assert (artifact_copy / "REPORT.md").read_text() == render_report(read_report(artifact_copy))
 
 
-@pytest.mark.parametrize("tidal_only", [True, False])
-def test_step_selection_when_tidal_mode_changes(tidal_only: bool) -> None:
+def test_step_selection_when_mode_changes() -> None:
     import run_all
-    # Given mode, When selecting, Then preserve legacy order and place new steps before old report.
-    names = [path.name for _, path in run_all.select_steps(tidal_only)]
+    # Given a mode, When selecting, Then preserve legacy order and keep audit steps separate.
     tidal = ["tidal_correction.py", "make_tidal_report.py"]
-    assert names == (tidal if tidal_only else [*LEGACY[:-1], *tidal, LEGACY[-1]])
+    assert [Path(step.command[1]).name for step in run_all.select_steps("tidal")] == tidal
+    legacy = [Path(step.command[1]).name for step in run_all.select_steps("legacy")]
+    assert legacy == [*LEGACY[:-1], *tidal, LEGACY[-1]]
+    assert all(step.outputs == () for step in run_all.select_steps("legacy"))
+
+
+def test_select_steps_audit_order() -> None:
+    import run_all
+    # Given audit mode, When selecting, Then the nine executable steps keep their fixed order.
+    names = [step.name for step in run_all.select_steps("audit")]
+    assert names == [
+        "样本账本", "参数账本", "潮汐转换比较", "比值", "潮汐场景",
+        "段不确定度", "敏感性", "manifest 构建", "manifest 验证",
+    ]
 
 
 @pytest.mark.parametrize("fail_index", [None, 0, 1])
@@ -256,3 +268,80 @@ def test_seg9_independent_when_recomputes_from_raw_and_matches() -> None:
     assert row["n_segments"] == "16"
     assert ratio_csv.read_text() == ratio_before
     assert orig_corr.read_text() == corr_before
+
+
+def failing_steps():
+    import run_all
+    return (run_all.Step("failing", (sys.executable, "-c", "raise SystemExit(3)"), ()),)
+
+
+def test_audit_stops_on_first_failure_and_preserves_verified(tmp_path: Path) -> None:
+    import run_all
+    verified = tmp_path / "verified"
+    verified.mkdir()
+    old = verified / "manifest.json"
+    old.write_text('{"old": true}', encoding="utf-8")
+    summary = run_all.run_steps(failing_steps(), tmp_path / "staging", fail_fast=True)
+    assert not summary.success
+    assert summary.failed_step == "failing"
+    assert old.read_text(encoding="utf-8") == '{"old": true}'
+    assert not (tmp_path / "staging" / "manifest.json").exists()
+
+
+def test_run_steps_success_but_missing_declared_output_fails(tmp_path: Path) -> None:
+    import run_all
+    # Given a zero-exit step that never writes its declared output, When run, Then it fails.
+    step = run_all.Step("empty", (sys.executable, "-c", "pass"), (tmp_path / "missing.csv",))
+    summary = run_all.run_steps((step,), tmp_path / "staging", fail_fast=True)
+    assert not summary.success
+    assert summary.failed_step == "empty"
+
+
+def test_run_steps_legacy_continues_and_reports_failure(tmp_path: Path) -> None:
+    import run_all
+    # Given a failing step followed by a passing one, When run without fail_fast, Then continue.
+    first = run_all.Step("first", (sys.executable, "-c", "raise SystemExit(3)"), ())
+    second = run_all.Step("second", (sys.executable, "-c", "pass"), ())
+    summary = run_all.run_steps((first, second), tmp_path / "staging", fail_fast=False)
+    assert summary.completed == ("second",)
+    assert summary.failed_step == "first"
+    assert not summary.success
+
+
+def test_promote_run_is_atomic_and_keeps_history(tmp_path: Path) -> None:
+    import run_all
+    # Given a verified staging run, When promoted, Then the run is immutable history and
+    # the verified symlink is atomically swapped, never deleting old runs.
+    out = tmp_path / "out"
+    staging = tmp_path / "staging"
+    staging.mkdir()
+    (staging / "manifest.json").write_text('{"ok": true}', encoding="utf-8")
+    digest = hashlib.sha256(b'{"ok": true}').hexdigest()[:16]
+    run_dir = run_all.promote_run(staging, output_dir=out)
+    assert run_dir == out / "runs" / digest
+    verified = out / "verified"
+    assert verified.is_symlink()
+    assert (verified / "manifest.json").read_text(encoding="utf-8") == '{"ok": true}'
+    assert not staging.exists()
+    # identical re-promotion keeps the immutable run and leaves the pointer valid
+    staging_same = tmp_path / "staging-same"
+    staging_same.mkdir()
+    (staging_same / "manifest.json").write_text('{"ok": true}', encoding="utf-8")
+    assert run_all.promote_run(staging_same, output_dir=out) == run_dir
+    assert (verified / "manifest.json").read_text(encoding="utf-8") == '{"ok": true}'
+    assert run_dir.exists()
+    # a different manifest swaps the pointer but keeps the first run in history
+    staging_new = tmp_path / "staging-new"
+    staging_new.mkdir()
+    (staging_new / "manifest.json").write_text('{"ok": false}', encoding="utf-8")
+    new_digest = hashlib.sha256(b'{"ok": false}').hexdigest()[:16]
+    assert run_all.promote_run(staging_new, output_dir=out) == out / "runs" / new_digest
+    assert (verified / "manifest.json").read_text(encoding="utf-8") == '{"ok": false}'
+    assert run_dir.exists()
+
+
+def test_legacy_mode_never_declares_outputs() -> None:
+    import run_all
+    # Given legacy/tidal compatibility modes, When selecting, Then no Step declares outputs.
+    assert all(step.outputs == () for step in run_all.select_steps("legacy"))
+    assert all(step.outputs == () for step in run_all.select_steps("tidal"))

@@ -312,3 +312,32 @@ def test_cli_writes_diff_report_before_exiting_on_row_count_mismatch(
         "converted_timestamp_utc": "2026-06-20T00:01:00Z",
         "converted_value": "-0.04897",
     }
+
+
+def test_cli_when_tolerate_mismatch_records_and_exits_zero(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = staging_repo_root(tmp_path)
+    monkeypatch.setattr(tide_conversion, "_protected_repo_roots", lambda: (repo_root.resolve(),))
+    workbook_path = repo_root / "clock" / "professional.xlsx"
+    workbook_path.parent.mkdir(parents=True)
+    write_demo_workbook(workbook_path)
+    reference = repo_root / "results" / "professional_tidal_delta_30s.csv"
+    write_csv(
+        reference,
+        [
+            ("2026-06-20T00:00:00Z", "-0.019588"),
+            ("2026-06-20T00:00:30Z", "-0.009794"),
+        ],
+    )
+    base_args = ["--input", str(workbook_path), "--compare", str(reference)]
+
+    tolerated_dir = repo_root / "results" / "audit-v1" / "staging" / "tolerate"
+    tolerated = CliRunner().invoke(app, [*base_args, "--output-dir", str(tolerated_dir), "--tolerate-mismatch"])
+    assert tolerated.exit_code == 0
+    assert {path.name for path in tolerated_dir.iterdir()} == {CONVERTED_FILENAME, DIFF_FILENAME}
+
+    strict_dir = repo_root / "results" / "audit-v1" / "staging" / "strict"
+    strict = CliRunner().invoke(app, [*base_args, "--output-dir", str(strict_dir)])
+    assert strict.exit_code != 0

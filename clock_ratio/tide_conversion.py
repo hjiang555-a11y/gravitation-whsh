@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import json
 import subprocess
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
@@ -16,7 +17,8 @@ from zipfile import ZipFile
 import typer
 from openpyxl import load_workbook
 
-from clock import shared
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from clock import shared  # noqa: E402
 
 
 CONVERTED_FILENAME = "professional_tidal_delta_30s.csv"
@@ -425,6 +427,7 @@ def main(
     input: Path = typer.Option(DEFAULT_WORKBOOK, "--input", exists=False, dir_okay=False),
     compare: Path = typer.Option(DEFAULT_COMPARE, "--compare", exists=False, dir_okay=False),
     output_dir: Path = typer.Option(..., "--output-dir", exists=False, file_okay=False, dir_okay=True),
+    tolerate_mismatch: bool = typer.Option(False, "--tolerate-mismatch", help="Record a workbook/CSV mismatch in the diff report and exit 0 (audit mode)."),
 ) -> None:
     try:
         input_path = _resolve_cli_path(input)
@@ -451,9 +454,16 @@ def main(
         }
         _write_json_atomic(diff_path, report)
         if _comparison_has_mismatch(comparison_summary):
-            raise ConversionError(
-                "converted workbook does not match the tracked CSV; see diff report for the first inconsistent or extra row"
-            )
+            if tolerate_mismatch:
+                typer.echo(
+                    "Warning: converted workbook does not match the tracked CSV; "
+                    "mismatch recorded in the diff report",
+                    err=True,
+                )
+            else:
+                raise ConversionError(
+                    "converted workbook does not match the tracked CSV; see diff report for the first inconsistent or extra row"
+                )
     except (ConversionError, OSError, ValueError) as error:
         typer.echo(f"Error: {error}", err=True)
         raise typer.Exit(code=1) from error
