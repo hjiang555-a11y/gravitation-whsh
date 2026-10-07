@@ -8,9 +8,12 @@ shift `shift_a = -8.13e-17` sits between the 7-month value (~-1.72e-16) and the
 8-month value (~+7.9e-18), and its source comment asks whether that is real or a
 placeholder, making y_9 ~ +6.4e-18 (raw) an outlier. This script answers "what
 do the combined values and the tidal-correction story become if segment 9 is
-dropped", by re-reducing the ALREADY-COMPUTED per-segment (y_i, u_i) stored in
-`statistical_methods_tidal.json`. It never re-runs tidal_correction.py or
-statistical_methods.py and never rewrites their artifacts.
+dropped", by DECODING the ALREADY-COMPUTED per-segment facts stored in
+`statistical_methods_tidal.json` into the typed scenario layer and re-combining
+them there (segment-1 baseline preserved; no re-selection, no re-correction).
+It never re-runs tidal_correction.py or statistical_methods.py and never
+rewrites their artifacts.  The full leave-one-out sweep over all 17 groups is
+recomputed from the same fact layer.
 
 Outputs (new, separate):
   statistical_methods_tidal_seg9_excluded.json
@@ -19,48 +22,100 @@ from __future__ import annotations
 
 import json
 import sys
+from collections.abc import Mapping
 from decimal import Decimal, localcontext
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from clock_ratio.statistical_methods_tidal import (  # noqa: E402
-    AnalysisError, build_synthesis, combine,
+from clock.sample_selection import AnalysisError  # noqa: E402
+from clock_ratio.segment_uncertainty import SegmentUncertainty  # noqa: E402
+from clock_ratio.statistical_methods_tidal import scenario_document  # noqa: E402
+from clock_ratio.statistical_scenarios import (  # noqa: E402
+    SCENARIO_KEYS,
+    ScenarioSegmentResult,
+    StatisticalScenarioResult,
+    _build_scenario_result,
+    build_synthesis,
+    exclude_groups,
+    leave_one_out,
+    render_synthesis,
 )
+from clock_ratio.tidal_analysis import SCENARIOS  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parent
 SOURCE_JSON = OUT_DIR / "statistical_methods_tidal.json"
 JSON_PATH = OUT_DIR / "statistical_methods_tidal_seg9_excluded.json"
 EXCLUDED_GROUP = 9
+SCENARIO_BY_KEY = {scenario.key: scenario for scenario in SCENARIOS}
 
 
-def scenario_result_from_rows(scenario: dict, rows: list[dict]) -> dict:
-    """Re-combine preset per-segment (y_i, u_i) rows for one scenario, keeping
-    the same segment-1 baseline and the same Decimal reconstruction path as
-    statistical_methods_tidal.scenario_result."""
-    import numpy as np
-    u = np.array([r["u_i"] for r in rows])
-    yy = np.array([r["y_i_1e18"] for r in rows]) * 1e-18
-    comb = combine(yy, u, float(Decimal(scenario["R_seg1"])))
-    with localcontext() as ctx:
-        ctx.prec = 80
-        R0 = Decimal(scenario["R_seg1"])
-        y_wls_d = Decimal(repr(comb["y_wls"]))
-        y_mp_d = Decimal(repr(comb["y_mp"]))
-        mu_d = Decimal(repr(comb["mu_bayes"]))
+def decode_scenario(key: str, payload: Mapping[str, object]) -> StatisticalScenarioResult:
+    """Decode one stored scenario block into the typed fact layer.
+
+    Accepts both schema generations: rows without ``n_valid`` fall back to
+    ``T_s`` (the retained-sample count in the legacy artifact).  The per-segment
+    ratio is reconstructed as ``R_seg1 * (1 + y_i)`` in an 80-digit Decimal
+    context; the fractional uncertainty is decoded from the stored ``u_i``.
+    Diagnostic-only fields the artifact never carried (runs, tau grid, fit)
+    stay empty and the uncertainty is flagged ``supported-with-limitations``.
+    """
+    scenario = SCENARIO_BY_KEY.get(key)
+    if scenario is None:
+        raise AnalysisError(f"unknown scenario key: {key!r}")
+    try:
+        reference = Decimal(str(payload["R_seg1"]))
+        rows = payload["per_segment"]
+    except (KeyError, TypeError) as error:
+        raise AnalysisError(f"{key}: malformed scenario block: {error}") from error
+    if not isinstance(rows, list) or not rows:
+        raise AnalysisError(f"{key}: per_segment must be a non-empty list")
+    facts: list[ScenarioSegmentResult] = []
+    for row in rows:
+        try:
+            group = int(row["group"])
+            n_valid = int(row.get("n_valid", row["T_s"]))
+            y_i = float(row["y_i_1e18"])
+            u_i = Decimal(str(row["u_i"]))
+        except (KeyError, TypeError, ValueError) as error:
+            raise AnalysisError(f"{key}: malformed per_segment row: {error}") from error
+        with localcontext() as context:
+            context.prec = 80
+            ratio = reference * (Decimal(1) + Decimal(repr(y_i)) * Decimal("1e-18"))
+            u_fractional = float(u_i / ratio)
+        uncertainty = SegmentUncertainty(
+            group=group, n_valid=n_valid, n_runs=0, taus_s=(), sigma_y=(),
+            fit_slope=None, fit_intercept=None, u_fractional=u_fractional,
+            status="supported-with-limitations",
+        )
+        facts.append(ScenarioSegmentResult(
+            group=group, ratio=ratio, deviation=y_i * 1e-18,
+            uncertainty=uncertainty, n_valid=n_valid,
+        ))
+    return _build_scenario_result(
+        key, float(scenario.coefficient), tuple(facts), (), reference)
+
+
+def compact_summary(result: StatisticalScenarioResult) -> dict:
+    """Small per-group digest for the leave-one-out section."""
+    combination = result.combination
+    with localcontext() as context:
+        context.prec = 80
+        reference = combination.reference_ratio
         return {
-            "coefficient": scenario["coefficient"],
-            "R_seg1": scenario["R_seg1"],
-            "n_segments": len(rows),
-            "excluded_group": EXCLUDED_GROUP,
-            "R_wls": str(R0 * (Decimal(1) + y_wls_d)),
-            "R_mp": str(R0 * (Decimal(1) + y_mp_d)),
-            "R_bayes": str(R0 * (Decimal(1) + mu_d)),
-            "y_wls_precision_1e18": comb["y_wls"] * 1e18,
-            **{k: comb[k] for k in ("u_wls", "chi2", "dof", "chi2_red", "p_chi2",
-                                    "birge_ratio", "u_birge", "xi_mp", "u_mp",
-                                    "mu_bayes", "u_stat_bayes", "xi_bayes")},
-            "per_segment": rows,
+            "R_wls": str(reference * (Decimal(1) + Decimal(repr(combination.y_wls)))),
+            "R_mp": str(reference * (Decimal(1) + Decimal(repr(combination.y_mp)))),
+            "R_bayes": str(reference * (Decimal(1) + Decimal(repr(combination.mu_bayes)))),
+            "chi2_red": combination.chi2_red,
+            "u_wls": combination.u_wls,
         }
+
+
+def reduced_block(result: StatisticalScenarioResult, coefficient: Decimal) -> dict:
+    """Legacy scenario block for the 16-segment result (adds membership keys)."""
+    block = scenario_document(result, coefficient)
+    block["n_segments"] = len(result.included_groups)
+    block["excluded_group"] = EXCLUDED_GROUP
+    return block
 
 
 def main() -> int:
@@ -68,31 +123,49 @@ def main() -> int:
         source = json.loads(SOURCE_JSON.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise AnalysisError(f"cannot read {SOURCE_JSON.name}: {error}") from error
+    if not isinstance(source, dict):
+        raise AnalysisError(f"{SOURCE_JSON.name}: document must be an object")
+    scenarios = source.get("scenarios")
+    if not isinstance(scenarios, dict):
+        raise AnalysisError(f"{SOURCE_JSON.name}: missing scenarios block")
+    missing = [key for key in SCENARIO_KEYS if key not in scenarios]
+    if missing:
+        raise AnalysisError(f"{SOURCE_JSON.name}: missing scenarios {missing}")
 
-    scenarios = source["scenarios"]
-    reduced: dict[str, dict] = {}
-    for key, scenario in scenarios.items():
-        rows = [r for r in scenario["per_segment"] if r["group"] != EXCLUDED_GROUP]
-        if len(rows) != len(scenario["per_segment"]) - 1:
-            raise AnalysisError(f"{key}: segment {EXCLUDED_GROUP} not present exactly once")
-        reduced[key] = scenario_result_from_rows(scenario, rows)
+    decoded = {key: decode_scenario(key, scenarios[key]) for key in SCENARIO_KEYS}
+    reduced = {
+        key: exclude_groups(decoded[key], frozenset({EXCLUDED_GROUP}))
+        for key in SCENARIO_KEYS
+    }
 
     document = {
-        "scenarios": reduced,
-        "synthesis": build_synthesis(reduced),
+        "scenarios": {
+            key: reduced_block(reduced[key], SCENARIO_BY_KEY[key].coefficient)
+            for key in SCENARIO_KEYS
+        },
+        "synthesis": render_synthesis(build_synthesis(reduced)),
+        "leave_one_out": {
+            key: {
+                str(group): compact_summary(result)
+                for group, result in leave_one_out(decoded[key]).items()
+            }
+            for key in SCENARIO_KEYS
+        },
         "metadata": {
             "decimal_precision": 80,
             "source": SOURCE_JSON.name,
             "excluded_group": EXCLUDED_GROUP,
             "exclusion_reason": "segment 9 shift_a anomalous (-8.13e-17 between the 7-month ~-1.72e-16 and 8-month ~+7.9e-18), y_9 a raw outlier; see METHODOLOGY §8",
-            "method": "re-combined the existing per-segment (y_i, u_i); no re-selection, no re-correction",
+            "method": "decoded the stored per-segment facts and re-combined them via the typed scenario layer (segment-1 baseline preserved); the leave-one-out sweep was recomputed from the same facts; no re-selection, no re-correction",
             "baseline": "R_seg1 from the same scenario as in statistical_methods_tidal.json",
             "note": "ADDITIVE sensitivity check; does not replace the 17-segment results",
         },
     }
+
     JSON_PATH.write_text(json.dumps(document, indent=2, allow_nan=False), encoding="utf-8")
     print(f"Wrote {JSON_PATH}")
-    for key, sc in reduced.items():
+    for key in SCENARIO_KEYS:
+        sc = document["scenarios"][key]
         print(f"\n[{key}] A={sc['coefficient']}  (n={sc['n_segments']}, seg{EXCLUDED_GROUP} dropped)")
         print(f"  WLS   R={sc['R_wls'][:26]}  u={sc['u_wls']:.3e}  chi2_red={sc['chi2_red']:.3f}")
         print(f"  M-P   R={sc['R_mp'][:26]}  xi={sc['xi_mp']:.3e}")
