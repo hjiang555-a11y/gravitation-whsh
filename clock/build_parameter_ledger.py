@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import json
 import subprocess
+import sys
 from dataclasses import asdict
 from decimal import Decimal
 from pathlib import Path
@@ -12,9 +13,10 @@ from typing import Any
 
 import typer
 
-from clock import shared
-from clock.data_provenance import ParameterEvidence
-from clock_ratio.evidence import EvidenceStatus
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from clock import shared  # noqa: E402
+from clock.data_provenance import ParameterEvidence  # noqa: E402
+from clock_ratio.evidence import EvidenceStatus  # noqa: E402
 
 app = typer.Typer(add_completion=False)
 COMPONENT_NAMES = ("a_rou", "a_AC", "a_SM", "a_air", "a_BBR")

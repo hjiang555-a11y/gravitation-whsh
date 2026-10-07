@@ -4,15 +4,17 @@ from __future__ import annotations
 import csv
 import json
 import os
+import sys
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
 
 import typer
 
-from clock import shared
-from clock.data_provenance import FileDigest, TimestampQuality, describe_file, inspect_timestamp_labels
-from clock.sample_selection import DEFAULT_SELECTION_PLAN, SelectedSegment, select_segments
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from clock import shared  # noqa: E402
+from clock.data_provenance import FileDigest, TimestampQuality, describe_file, inspect_timestamp_labels  # noqa: E402
+from clock.sample_selection import DEFAULT_SELECTION_PLAN, SelectedSegment, select_segments  # noqa: E402
 
 app = typer.Typer(add_completion=False)
 OUTPUT_FILENAMES = ("sample_ledger.csv", "time_quality.json")
