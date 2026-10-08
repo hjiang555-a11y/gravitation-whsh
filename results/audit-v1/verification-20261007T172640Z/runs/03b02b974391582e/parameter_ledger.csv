@@ -1,0 +1,107 @@
+name,group,value,unit,source_path,inherited_from_group,status,note
+a_rou,1,-2.3405897235204027E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,1,7.44377658537123E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,1,-1.7854788394394161E-16,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,1,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,1,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,1,-1.7200816633092242027E-16,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,2,-1.4762696609004877E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,2,7.44377658537123E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,2,-1.786187875083559E-16,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,2,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,2,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,2,-1.7199263788907471877E-16,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,3,-2.447205229168124E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,3,7.44377658537123E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,3,-1.7856555448119226E-16,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,3,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,3,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,3,-1.720364984187378424E-16,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,4,-2.8193721064244536E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,4,7.44377658537123E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,4,-1.7848198533888947E-16,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,4,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,4,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,4,-1.7199014596416068536E-16,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,5,-2.722072607303744E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,5,7.44377658537123E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,5,-1.7852307151852717E-16,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,5,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,5,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,5,-1.720215021938863144E-16,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,6,-2.6646987912614174E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,6,7.44377658537123E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,6,-1.784782742736454E-16,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,6,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,6,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,6,-1.7197096756740031174E-16,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,7,-2.530366977034812E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,7,7.44377658537123E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,7,-1.7827511036845825E-16,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,7,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,7,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,7,-1.717543704807905012E-16,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,8,-2.334981365086871E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,8,7.44377658537123E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,8,-1.782675356790445E-16,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,8,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,8,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,8,-1.717272572301819571E-16,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,9,-3.532E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,9,8.929E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,9,-8.925E-17,fractional,clock/params.json,,pending-verification,Group 9 a_SM is explicitly called out in repository docs for manual verification.
+a_air,9,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,9,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,9,-8.13442E-17,fractional,clock/params.json,,pending-verification,Derived from params.json components; pending because at least one constituent still needs verification.
+a_rou,10,-3.532E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,10,8.929E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,10,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,10,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,10,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,10,7.9058E-18,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,11,-3.532E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,11,8.929E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,11,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,11,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,11,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,11,7.9058E-18,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,12,-3.422E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,12,8.929E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,12,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,12,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,12,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,12,7.9168E-18,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,13,-3.422E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,13,8.929E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,13,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,13,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,13,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,13,7.9168E-18,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,14,-3.422E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_AC,14,8.929E-18,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_SM,14,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_air,14,-6.7E-19,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+a_BBR,14,0,fractional,clock/params.json,,established,Loaded directly from params.json and used by executable analysis code.
+shift_a,14,7.9168E-18,fractional,clock/params.json,,established,Sum of executable shift_a components from params.json.
+a_rou,15,-3.422E-19,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_AC,15,8.929E-18,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_SM,15,0,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_air,15,-6.7E-19,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_BBR,15,0,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+shift_a,15,7.9168E-18,fractional,clock/params.json,12,pending-verification,Inherited total shift_a from group 12 because groups 15-17 have no separate executable source.
+a_rou,16,-3.422E-19,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_AC,16,8.929E-18,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_SM,16,0,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_air,16,-6.7E-19,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_BBR,16,0,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+shift_a,16,7.9168E-18,fractional,clock/params.json,12,pending-verification,Inherited total shift_a from group 12 because groups 15-17 have no separate executable source.
+a_rou,17,-3.422E-19,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_AC,17,8.929E-18,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_SM,17,0,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_air,17,-6.7E-19,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+a_BBR,17,0,fractional,clock/params.json,12,pending-verification,Inherited from group 12 in clock.shared; not stored independently in params.json.
+shift_a,17,7.9168E-18,fractional,clock/params.json,12,pending-verification,Inherited total shift_a from group 12 because groups 15-17 have no separate executable source.
+DELTA_G,,-3.116E-15,fractional,clock/params.json,,pending-verification,"Static gravitational correction is executable, but its levelling provenance is not closed inside this repository."
+levelling_raw_observations,,,missing-source,docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md,,external-unverified,"Repository docs treat levelling documents as external read-only sources, but no raw observations are present here."
+levelling_reduction_process,,,missing-source,docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md,,external-unverified,Repository docs explicitly state that the levelling reduction is not yet reproducible from code in this repo.
+levelling_uncertainty_propagation,,,missing-source,docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md,,external-unverified,"Repository docs require levelling uncertainty propagation evidence, but no executable source is present here."

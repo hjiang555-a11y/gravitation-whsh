@@ -1,0 +1,38 @@
+{
+  "config": {
+    "gravity_m_s2": "9.794",
+    "direction": "CAS-minus-SHA",
+    "timezone": "UTC",
+    "source_column": "综合差",
+    "expected_step_s": 30
+  },
+  "input_workbook": "/home/room115/gravitation-whsh/clock/武汉-上海潮汐结果（0620-0910）-30秒间隔数据.xlsx",
+  "reference_csv": "/home/room115/gravitation-whsh/.claude/worktrees/clock-analysis-audit/results/professional_tidal_delta_30s.csv",
+  "conversion_summary": {
+    "row_count": 239040,
+    "first_timestamp_utc": "2026-06-20T00:00:00Z",
+    "last_timestamp_utc": "2026-09-10T23:59:30Z",
+    "step_seconds": 30,
+    "source_column": "综合差"
+  },
+  "comparison_summary": {
+    "converted_row_count": 239040,
+    "reference_row_count": 239040,
+    "common_prefix_row_count": 239040,
+    "first_timestamp_utc": "2026-06-20T00:00:00Z",
+    "last_timestamp_utc": "2026-09-10T23:59:30Z",
+    "max_abs_time_diff_s": 0,
+    "max_abs_value_diff": "0.0000202736",
+    "first_inconsistent_row": {
+      "row_number": 1,
+      "converted_timestamp_utc": "2026-06-20T00:00:00Z",
+      "reference_timestamp_utc": "2026-06-20T00:00:00Z",
+      "converted_value": "-0.309285705399999931442",
+      "reference_value": "-0.309279816",
+      "time_diff_s": 0,
+      "value_diff": "-0.000005889399999931442"
+    },
+    "first_extra_converted_row": null,
+    "first_extra_reference_row": null
+  }
+}

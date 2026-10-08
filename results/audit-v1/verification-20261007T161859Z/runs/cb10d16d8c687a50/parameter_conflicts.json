@@ -1,0 +1,242 @@
+[
+  {
+    "name": "a_SM",
+    "group": 9,
+    "value": "-8.925E-17",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": null,
+    "status": "pending-verification",
+    "note": "Group 9 a_SM is explicitly called out in repository docs for manual verification."
+  },
+  {
+    "name": "shift_a",
+    "group": 9,
+    "value": "-8.13442E-17",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": null,
+    "status": "pending-verification",
+    "note": "Derived from params.json components; pending because at least one constituent still needs verification."
+  },
+  {
+    "name": "a_rou",
+    "group": 15,
+    "value": "-3.422E-19",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_AC",
+    "group": 15,
+    "value": "8.929E-18",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_SM",
+    "group": 15,
+    "value": "0",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_air",
+    "group": 15,
+    "value": "-6.7E-19",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_BBR",
+    "group": 15,
+    "value": "0",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "shift_a",
+    "group": 15,
+    "value": "7.9168E-18",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited total shift_a from group 12 because groups 15-17 have no separate executable source."
+  },
+  {
+    "name": "a_rou",
+    "group": 16,
+    "value": "-3.422E-19",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_AC",
+    "group": 16,
+    "value": "8.929E-18",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_SM",
+    "group": 16,
+    "value": "0",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_air",
+    "group": 16,
+    "value": "-6.7E-19",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_BBR",
+    "group": 16,
+    "value": "0",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "shift_a",
+    "group": 16,
+    "value": "7.9168E-18",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited total shift_a from group 12 because groups 15-17 have no separate executable source."
+  },
+  {
+    "name": "a_rou",
+    "group": 17,
+    "value": "-3.422E-19",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_AC",
+    "group": 17,
+    "value": "8.929E-18",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_SM",
+    "group": 17,
+    "value": "0",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_air",
+    "group": 17,
+    "value": "-6.7E-19",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "a_BBR",
+    "group": 17,
+    "value": "0",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited from group 12 in clock.shared; not stored independently in params.json."
+  },
+  {
+    "name": "shift_a",
+    "group": 17,
+    "value": "7.9168E-18",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": 12,
+    "status": "pending-verification",
+    "note": "Inherited total shift_a from group 12 because groups 15-17 have no separate executable source."
+  },
+  {
+    "name": "DELTA_G",
+    "group": null,
+    "value": "-3.116E-15",
+    "unit": "fractional",
+    "source_path": "clock/params.json",
+    "inherited_from_group": null,
+    "status": "pending-verification",
+    "note": "Static gravitational correction is executable, but its levelling provenance is not closed inside this repository."
+  },
+  {
+    "name": "levelling_raw_observations",
+    "group": null,
+    "value": null,
+    "unit": "missing-source",
+    "source_path": "docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md",
+    "inherited_from_group": null,
+    "status": "external-unverified",
+    "note": "Repository docs treat levelling documents as external read-only sources, but no raw observations are present here."
+  },
+  {
+    "name": "levelling_reduction_process",
+    "group": null,
+    "value": null,
+    "unit": "missing-source",
+    "source_path": "docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md",
+    "inherited_from_group": null,
+    "status": "external-unverified",
+    "note": "Repository docs explicitly state that the levelling reduction is not yet reproducible from code in this repo."
+  },
+  {
+    "name": "levelling_uncertainty_propagation",
+    "group": null,
+    "value": null,
+    "unit": "missing-source",
+    "source_path": "docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md",
+    "inherited_from_group": null,
+    "status": "external-unverified",
+    "note": "Repository docs require levelling uncertainty propagation evidence, but no executable source is present here."
+  }
+]

@@ -1,0 +1,847 @@
+{
+  "schema_version": "1.1",
+  "git_commit": "a070eeb811dd2fe5ab359b350123caae1f768dea",
+  "dirty": false,
+  "python": "3.12.3",
+  "packages": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2",
+    "pydantic": "2.13.5",
+    "typer": "0.27.2"
+  },
+  "inputs": [
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260627_1.txt",
+      "sha256": "742ba484024f5b4b67644a4eb79052a62d2107800b608b74cefc17757832fc7e",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-06-28T06:54:37Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260628_1.txt",
+      "sha256": "656cc828870d6708bd95dba1c018fc680139fbe65651db4d7b78430957b2d22a",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-06-30T04:23:32Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260629_1.txt",
+      "sha256": "f5781a875d69639526eb69321aae9b0aa49ec08af787b0b2d3a1912c72194efd",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-06-30T04:23:32Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260630_1.txt",
+      "sha256": "1b44d3e5f62eb075ffeaec1e9397bafc498218f1bbd6ad351059167e7a939fa7",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-07-02T06:14:43Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260701_1.txt",
+      "sha256": "adea83a264561072dd9b4f7f0d48f89f188bb06f603a21796453faef93480fb1",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-07-02T06:16:05Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260702_1.txt",
+      "sha256": "4f71b44d5ce973fd224d49349d57dc8a5479c61bd96ce65cd806ade013ef6acd",
+      "size_bytes": 17020800,
+      "mtime_utc": "2026-07-03T05:17:30Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260703_1.txt",
+      "sha256": "1b7409d1f0772df5c4a85e5a83a4a579f8e94e45ee44b9e3ce3395f235913655",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-07-04T23:45:25Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260704_1.txt",
+      "sha256": "648e39b7ae0219ac538643b2d506079bc9a24c7b418f5f127e3b786f6dbf4030",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-07-04T23:45:25Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260705_1.txt",
+      "sha256": "a5c804e1019d5804c34a583ba5925a6cb881e425020b42e5a50faf0b7958905f",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-07-06T08:16:13Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260706_1.txt",
+      "sha256": "dd9261023c835c9d3fa17830016585af7b0f434fc7ca74668c1b07cf6e54e27e",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-07-09T06:20:47Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260707_1.txt",
+      "sha256": "372ac52315bb7018a0e1f7f2915171a255aec79f02f83e992ba2f328d96e1a73",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-07-09T06:20:47Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260806_1.txt",
+      "sha256": "c41c450d3d419030cd7f8a5e64fd02ed9aeef04530fceae70a240bc31bea115c",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-06T23:55:07Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260807_1.txt",
+      "sha256": "8a9cff27081bd39ea4600b558521de78a0ae511c034019d5e4330439beda794c",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-08T00:57:41Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260808_1.txt",
+      "sha256": "dd79d8de913b1240c3b01c0fef4eda95627b98f99421e7e7bf327efd25afc228",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-09T01:16:24Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260809_1.txt",
+      "sha256": "53e2619d5eb8ee18db62acc9c85a4375e024f4beeb624a625ffad11bd701874f",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-11T10:13:08Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260810_1.txt",
+      "sha256": "151899e5eb416ff3fd171f3e1621323541fc37de91863fd80b80b3ac92a4086c",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-11T10:14:31Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260811_1.txt",
+      "sha256": "00d37c725f62645ad475a23c5b38b7a489a9c85fbe3a3e3cda8cc19b8afb0782",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-12T00:17:25Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260812_1.txt",
+      "sha256": "d8c3dca345653c2341405065034c938bb80d397669581d8dc41346198d035c3a",
+      "size_bytes": 51749764,
+      "mtime_utc": "2026-08-15T11:39:16Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260820_1.txt",
+      "sha256": "c8db7509261bcdb8b352ed491526cfb9933294b014b1b0120c6c1f7605184f52",
+      "size_bytes": 6088321,
+      "mtime_utc": "2026-08-21T01:49:05Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260821_1.txt",
+      "sha256": "5c2cbb0911bcf6ab7b52936273564f7ce94eb992fb2a2e63b9262f5970ed13e8",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-22T11:00:15Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260822_1.txt",
+      "sha256": "d8cb9fb2337983e112a672142d80566d7000251aafd06c85f38dca6b14eb83bb",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-24T02:11:00Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260823_1.txt",
+      "sha256": "1c704e83f8a3dc905501b95cda0978ddaf8dafecd494da50bb4d54221666af1d",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-24T02:11:00Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260824_1.txt",
+      "sha256": "040178413975add6ca963060e8bd0550be59defd34c1d674b3de027bc7078c97",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-28T09:27:09Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260825_1.txt",
+      "sha256": "f78e68d6f459fbde694eb8be831ef9c9bce8f49757a0ba9871199960052f0a83",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-28T09:27:09Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "../../../clock/data/环外数据（第八列数据）/Freq_B_2_260826_1.txt",
+      "sha256": "9f796c4abdf716a8f759ce7d603f8d7e33e8648d34b41ecad4109b812db6405b",
+      "size_bytes": 17021422,
+      "mtime_utc": "2026-08-28T09:29:52Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    }
+  ],
+  "parameters": {
+    "relative_path": "clock/params.json",
+    "sha256": "a2a05ef7ed0c3b7d0fe7b2f9f3684cf3fef4ac2bea4c5ca71ebba32eda51fbf6",
+    "size_bytes": 3321,
+    "mtime_utc": "2026-10-06T08:07:53.601343Z",
+    "provider": null,
+    "command": [],
+    "distributable": null,
+    "status": "established"
+  },
+  "products": [
+    {
+      "relative_path": "sample_ledger.csv",
+      "sha256": "9f7f5de0afb65763514ef5540a9f5224eb9847627bc3845b3badddba08a5d03c",
+      "size_bytes": 1690,
+      "mtime_utc": "2026-10-08T06:58:47.724603Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "time_quality.json",
+      "sha256": "8aeb201d52115ef91d6e258c8565ae3fe0a05d6e90328adbaefff83c3470e972",
+      "size_bytes": 16263,
+      "mtime_utc": "2026-10-08T06:58:47.724904Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "parameter_ledger.csv",
+      "sha256": "ad5ad1d6d2a7278647f4d25aefa1527ed9c73c6246b13ce3f4d958c51875cc40",
+      "size_bytes": 15062,
+      "mtime_utc": "2026-10-08T06:58:47.803482Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "parameter_conflicts.json",
+      "sha256": "1d5a854a88ee55683c58fb4edd6cf6db9fdb6c59637fa04944654cc9e151ff41",
+      "size_bytes": 7710,
+      "mtime_utc": "2026-10-08T06:58:47.804482Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "tide-conversion/professional_tidal_delta_30s.csv",
+      "sha256": "f280e43c15ee768e8688f686456a00be1a120d5fd8d80c1858553a8b6de25f13",
+      "size_bytes": 10962045,
+      "mtime_utc": "2026-10-08T06:58:57.306530Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "tide-conversion/professional_tidal_delta_30s.diff.json",
+      "sha256": "728f35c50627d8e1647f2cc0be7846a067752e0b2e0af4633129778e554744d1",
+      "size_bytes": 1370,
+      "mtime_utc": "2026-10-08T06:59:00.359238Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "statistical_methods_tidal.json",
+      "sha256": "5427ceccbfefc02ee97a5cb84ec549206b488aaf239c7c44e37457d5fe8e889e",
+      "size_bytes": 22396,
+      "mtime_utc": "2026-10-08T06:59:04.104263Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    },
+    {
+      "relative_path": "statistical_methods_tidal_seg9_excluded.json",
+      "sha256": "e21b25c628491b7a2b183511e160b45c85a4ee855ed18c10f29c6a4f5d732fd3",
+      "size_bytes": 42453,
+      "mtime_utc": "2026-10-08T06:59:07.025959Z",
+      "provider": null,
+      "command": [],
+      "distributable": null,
+      "status": "established"
+    }
+  ],
+  "parameter_ledger_sha256": "ad5ad1d6d2a7278647f4d25aefa1527ed9c73c6246b13ce3f4d958c51875cc40",
+  "sample_ledger_sha256": "9f7f5de0afb65763514ef5540a9f5224eb9847627bc3845b3badddba08a5d03c",
+  "primary_16": {
+    "scenario": "raw",
+    "coefficient": "0",
+    "included_groups": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "excluded_groups": [
+      9
+    ],
+    "n_segments": 16,
+    "total_samples": 986416,
+    "duration_weighted_ratio": "1.2075070393433377201798925422298889411271180924277187417854518806996414723312918",
+    "segment_ratios": [
+      "1.2075070393433377209511392342884451167413791027221712598810109303259159213121598",
+      "1.2075070393433377168992818933124410618937335137580850871802142869205256058884682",
+      "1.2075070393433377233626044649502187468092882035998359304239985275225644379582708",
+      "1.2075070393433377153827635697190501501860329142907971423776941508881287643325624",
+      "1.2075070393433377168737684518941177813127728054014911292306765771721978433562774",
+      "1.2075070393433377195621542484387408596106930733659744778883097769003835232406519",
+      "1.2075070393433377273671640754368209414980506929444674298508773296621575210556308",
+      "1.2075070393433377221180203871939504706103119979463981319165871279003132923621177",
+      "1.2075070393433377200284365109209026267490108361209076494925187628700328228907568",
+      "1.2075070393433377241065243749073318800184322834742126002784388732503785058467386",
+      "1.2075070393433377218315938523033849763271225046961495274079942798556718541094452",
+      "1.2075070393433377172166072437445038868023334416002946952169760250041038162717809",
+      "1.2075070393433377233302426296283180677406523262629584646850541751927830176000732",
+      "1.2075070393433377206498946501653990294954836858280974031253412448083511895909946",
+      "1.2075070393433377200195793201397301712059737047028547169426312899712607263428950",
+      "1.2075070393433377198709444295302339899017557967568441978823582979568958281390321"
+    ],
+    "segment_n_valid": [
+      68009,
+      29481,
+      42891,
+      64280,
+      19532,
+      52140,
+      39526,
+      43565,
+      57938,
+      35824,
+      40346,
+      152994,
+      68618,
+      57649,
+      147640,
+      65983
+    ],
+    "segment_statuses": [
+      "established",
+      "supported-with-limitations",
+      "established",
+      "established",
+      "established",
+      "supported-with-limitations",
+      "supported-with-limitations",
+      "established",
+      "established",
+      "established",
+      "supported-with-limitations",
+      "established",
+      "established",
+      "established",
+      "supported-with-limitations",
+      "established"
+    ],
+    "combination": {
+      "R_seg1": "1.2075070393433377209511392342884451167413791027221712598810109303259159213121598",
+      "R_wls": "1.2075070393433377200464104337868920419305439666264194521188560456494883520088030",
+      "R_mp": "1.2075070393433377205519661184561686865486879863554356316437687495815956453706540",
+      "R_bayes": "1.2075070393433377205630643505541719423190803014306306585972367401019724827739822",
+      "y_wls_precision_1e18": -0.7492534378876662,
+      "u_wls": 3.3374561925694203e-19,
+      "chi2": 60.25027966112809,
+      "dof": 15,
+      "chi2_red": 4.016685310741873,
+      "p_chi2": 2.2840745172502006e-7,
+      "birge_ratio": 2.004166986740844,
+      "u_birge": 6.688819520841425e-19,
+      "xi_mp": 2.498117769781072e-18,
+      "u_mp": 7.881054417651531e-19,
+      "mu_bayes": -3.213851937006634e-19,
+      "u_stat_bayes": 8.854811496434007e-19,
+      "xi_bayes": 2.832803078760403e-18
+    }
+  },
+  "sensitivity_17": {
+    "scenario": "raw",
+    "coefficient": "0",
+    "included_groups": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "excluded_groups": [],
+    "n_segments": 17,
+    "total_samples": 1008912,
+    "duration_weighted_ratio": "1.2075070393433377203695663475692647402466509985105627343026029475466651648186284",
+    "segment_ratios": [
+      "1.2075070393433377209511392342884451167413791027221712598810109303259159213121598",
+      "1.2075070393433377168992818933124410618937335137580850871802142869205256058884682",
+      "1.2075070393433377233626044649502187468092882035998359304239985275225644379582708",
+      "1.2075070393433377153827635697190501501860329142907971423776941508881287643325624",
+      "1.2075070393433377168737684518941177813127728054014911292306765771721978433562774",
+      "1.2075070393433377195621542484387408596106930733659744778883097769003835232406519",
+      "1.2075070393433377273671640754368209414980506929444674298508773296621575210556308",
+      "1.2075070393433377221180203871939504706103119979463981319165871279003132923621177",
+      "1.2075070393433377286864794151210836531330828569127071032036558794000489952146400",
+      "1.2075070393433377200284365109209026267490108361209076494925187628700328228907568",
+      "1.2075070393433377241065243749073318800184322834742126002784388732503785058467386",
+      "1.2075070393433377218315938523033849763271225046961495274079942798556718541094452",
+      "1.2075070393433377172166072437445038868023334416002946952169760250041038162717809",
+      "1.2075070393433377233302426296283180677406523262629584646850541751927830176000732",
+      "1.2075070393433377206498946501653990294954836858280974031253412448083511895909946",
+      "1.2075070393433377200195793201397301712059737047028547169426312899712607263428950",
+      "1.2075070393433377198709444295302339899017557967568441978823582979568958281390321"
+    ],
+    "segment_n_valid": [
+      68009,
+      29481,
+      42891,
+      64280,
+      19532,
+      52140,
+      39526,
+      43565,
+      22496,
+      57938,
+      35824,
+      40346,
+      152994,
+      68618,
+      57649,
+      147640,
+      65983
+    ],
+    "segment_statuses": [
+      "established",
+      "supported-with-limitations",
+      "established",
+      "established",
+      "established",
+      "supported-with-limitations",
+      "supported-with-limitations",
+      "established",
+      "supported-with-limitations",
+      "established",
+      "established",
+      "supported-with-limitations",
+      "established",
+      "established",
+      "established",
+      "supported-with-limitations",
+      "established"
+    ],
+    "combination": {
+      "R_seg1": "1.2075070393433377209511392342884451167413791027221712598810109303259159213121598",
+      "R_wls": "1.2075070393433377203508308164214641935543357052536743204004013654453495112214479",
+      "R_mp": "1.2075070393433377211047583193618757168764464461666254035945404733639278067032786",
+      "R_bayes": "1.2075070393433377211081341623810528868922563885110506780237704388403490692156701",
+      "y_wls_precision_1e18": -0.4971469302518009,
+      "u_wls": 3.278133741382285e-19,
+      "chi2": 83.86374847961169,
+      "dof": 16,
+      "chi2_red": 5.24148427997573,
+      "p_chi2": 3.323451235209945e-11,
+      "birge_ratio": 2.2894288108556093,
+      "u_birge": 7.505053833358494e-19,
+      "xi_mp": 3.0619477929876562e-18,
+      "u_mp": 8.869494502393312e-19,
+      "mu_bayes": 1.3001574564566034e-19,
+      "u_stat_bayes": 9.833806208724027e-19,
+      "xi_bayes": 3.4023240257964274e-18
+    }
+  },
+  "leave_one_out": {
+    "1": {
+      "excluded_group": 1,
+      "R_wls": "1.2075070393433377203128849332622190555838615214247067286247736416526990237968947",
+      "R_mp": "1.2075070393433377211237383142305252982046653704439353996447284629207710216947705",
+      "R_bayes": "1.2075070393433377211267613694236525146879772541728114135669314600239303800695783",
+      "chi2_red": 5.57678486224195,
+      "u_wls": 3.380152747882559e-19
+    },
+    "2": {
+      "excluded_group": 2,
+      "R_wls": "1.2075070393433377205444753458683651140284228734639402195246384339593958304344759",
+      "R_mp": "1.2075070393433377214118885786835645986356105374576671870371265588124545269018799",
+      "R_bayes": "1.2075070393433377214133171566521125338869659292540235311003828395710691422472959",
+      "chi2_red": 5.1762732473347,
+      "u_wls": 3.368836562749954e-19
+    },
+    "3": {
+      "excluded_group": 3,
+      "R_wls": "1.2075070393433377202933607427392966511584261721363945435839526668703960674993656",
+      "R_mp": "1.2075070393433377209846039219905086580692907058896053921325547985354833037290179",
+      "R_bayes": "1.2075070393433377209854235732345123517376088315774201779181839534672667521193895",
+      "chi2_red": 5.483537532434664,
+      "u_wls": 3.3092622981985245e-19
+    },
+    "4": {
+      "excluded_group": 4,
+      "R_wls": "1.2075070393433377207913590331794992815921818555974629109993630992876864629465718",
+      "R_mp": "1.2075070393433377215477324810937566475204983205730680185203718433446738168300879",
+      "R_bayes": "1.2075070393433377215446137089242142572091374490574507867973030838719078852422549",
+      "chi2_red": 4.233176599514639,
+      "u_wls": 3.420386509654006e-19
+    },
+    "5": {
+      "excluded_group": 5,
+      "R_wls": "1.2075070393433377203578705444029445080335429721980541018097099868684377324287017",
+      "R_mp": "1.2075070393433377211656598215777935117540677449971895717666234732047602460792962",
+      "R_bayes": "1.2075070393433377211719367743560057719901214124319981466242460725722263218054923",
+      "chi2_red": 5.575731251769979,
+      "u_wls": 3.2814505500264854e-19
+    },
+    "6": {
+      "excluded_group": 6,
+      "R_wls": "1.2075070393433377206581275542010136625773522839835339096663852284843396339279020",
+      "R_mp": "1.2075070393433377212439712423775681204552538605369790723282372977594480928258313",
+      "R_bayes": "1.2075070393433377212453357644886080469955164155505206692992156984253491222611478",
+      "chi2_red": 5.440563497875767,
+      "u_wls": 3.864356521683979e-19
+    },
+    "7": {
+      "excluded_group": 7,
+      "R_wls": "1.2075070393433377199538664973270215998703958824839391793931884032910927803255962",
+      "R_mp": "1.2075070393433377206034126467902776282099540617384388385913715583649841351462399",
+      "R_bayes": "1.2075070393433377206087454443184949181449332870605365116950068342680631454975143",
+      "chi2_red": 3.863022607206548,
+      "u_wls": 3.3695917044715203e-19
+    },
+    "8": {
+      "excluded_group": 8,
+      "R_wls": "1.2075070393433377203444002245418886836203078295625952750447698009073697977779003",
+      "R_mp": "1.2075070393433377210898835544300373754373468963212447899781275435702188597805870",
+      "R_bayes": "1.2075070393433377210870393352481426251980372032727338648161203358573388671777018",
+      "chi2_red": 5.58386655920941,
+      "u_wls": 3.284092693994981e-19
+    },
+    "9": {
+      "excluded_group": 9,
+      "R_wls": "1.2075070393433377200464104337868920419305439666264194521188560456494883520088030",
+      "R_mp": "1.2075070393433377205519661184561686865486879863554356316437687495815956453706540",
+      "R_bayes": "1.2075070393433377205630643505541719423190803014306306585972367401019724827739822",
+      "chi2_red": 4.016685310741873,
+      "u_wls": 3.3374561925694203e-19
+    },
+    "10": {
+      "excluded_group": 10,
+      "R_wls": "1.2075070393433377203673465232495387248953882555243314940013382245256404038879741",
+      "R_mp": "1.2075070393433377211896186099679562520088619415829882854925958335301194054480560",
+      "R_bayes": "1.2075070393433377211920750924385859346685770579132621217520962145816287352400489",
+      "chi2_red": 5.587613326802889,
+      "u_wls": 3.361051650596402e-19
+    },
+    "11": {
+      "excluded_group": 11,
+      "R_wls": "1.2075070393433377202977988107468402356684198653370301058144004388130995694850452",
+      "R_mp": "1.2075070393433377209620790298247714902736761160234072666923180270949682325102064",
+      "R_bayes": "1.2075070393433377209610778878968195840246032140017930260024565486867335765640096",
+      "chi2_red": 5.467354941565091,
+      "u_wls": 3.301196939213142e-19
+    },
+    "12": {
+      "excluded_group": 12,
+      "R_wls": "1.2075070393433377203127762487324713526675361658208902605259043204866380907846270",
+      "R_mp": "1.2075070393433377210671392536796310177225357456338603090308439760109683140243572",
+      "R_bayes": "1.2075070393433377210691862801183620003551946696236007345036137567257901865891176",
+      "chi2_red": 5.555958469983486,
+      "u_wls": 3.319989396855044e-19
+    },
+    "13": {
+      "excluded_group": 13,
+      "R_wls": "1.2075070393433377204334056163530995718237459109183369678295891328233997574871506",
+      "R_mp": "1.2075070393433377213424156352251595819304162525204656457365769729599727159212072",
+      "R_bayes": "1.2075070393433377213485437273313779849481969620355684443113794693716691491599371",
+      "chi2_red": 5.430358211097033,
+      "u_wls": 3.3210361410993237e-19
+    },
+    "14": {
+      "excluded_group": 14,
+      "R_wls": "1.2075070393433377202303025169432103634315484034132665984804012066734242058191477",
+      "R_mp": "1.2075070393433377209549230746130356581024202703256214744339660126933097193539972",
+      "R_bayes": "1.2075070393433377209587051694887549861986300899914714451843272617383856332994876",
+      "chi2_red": 5.368137196257865,
+      "u_wls": 3.3437827437185897e-19
+    },
+    "15": {
+      "excluded_group": 15,
+      "R_wls": "1.2075070393433377203370464601450260810015450383883444006540736103821019110596128",
+      "R_mp": "1.2075070393433377211444159222694051181674681200356728340563731611750394867660466",
+      "R_bayes": "1.2075070393433377211471033518869179617156483250278473024073881404854994620830456",
+      "chi2_red": 5.5883591233209104,
+      "u_wls": 3.3528300725475684e-19
+    },
+    "16": {
+      "excluded_group": 16,
+      "R_wls": "1.2075070393433377204336660037765129238026848519870695347308128373902030780843710",
+      "R_mp": "1.2075070393433377212036422068391534219003037623077318929768109795149289686037519",
+      "R_bayes": "1.2075070393433377212057875683479198547236050749869210995079628179104257050552055",
+      "chi2_red": 5.573893878353203,
+      "u_wls": 3.6651636935262594e-19
+    },
+    "17": {
+      "excluded_group": 17,
+      "R_wls": "1.2075070393433377203586684536083279719252281121802419385746294224457932268135440",
+      "R_mp": "1.2075070393433377211757909912660192362293512806075573470939651508986868016561187",
+      "R_bayes": "1.2075070393433377211787342469547946167707126521497258443180055845223263091072360",
+      "chi2_red": 5.588583220123598,
+      "u_wls": 3.3047950158726127e-19
+    }
+  },
+  "tide_method": {
+    "source_column": "综合差",
+    "direction": "CAS-minus-SHA",
+    "timezone": "UTC",
+    "expected_step_s": 30,
+    "gravity_m_s2": "9.794",
+    "converted_row_count": 239040,
+    "reference_row_count": 239040,
+    "common_prefix_row_count": 239040,
+    "max_abs_time_diff_s": 0.0,
+    "max_abs_value_diff": "0.0000202736",
+    "first_inconsistent_row_number": 1,
+    "first_inconsistent_value_diff": "-0.000005889399999931442",
+    "status": "pending-verification"
+  },
+  "uncertainty_budget": {
+    "components": [
+      {
+        "name": "statistical",
+        "correction": null,
+        "standard_uncertainty": "8.854811496434007E-19",
+        "source": "gap-safe scenario analysis (16-segment provisional primary)",
+        "status": "supported-with-limitations",
+        "required": true
+      },
+      {
+        "name": "sr-systematic",
+        "correction": null,
+        "standard_uncertainty": null,
+        "source": "params.json shift_a components (a_rou, a_AC, a_SM, a_air, a_BBR); no closed uncertainty record exists yet",
+        "status": "pending-verification",
+        "required": true
+      },
+      {
+        "name": "static-potential",
+        "correction": null,
+        "standard_uncertainty": null,
+        "source": "levelling documents for the Wuhan-Shanghai geopotential difference; no closed uncertainty record extracted yet",
+        "status": "external-unverified",
+        "required": true
+      },
+      {
+        "name": "yb-systematic",
+        "correction": null,
+        "standard_uncertainty": null,
+        "source": "conflicting evidence unresolved: internal 1.1e-18 vs published 1.3e-18",
+        "status": "pending-verification",
+        "required": true
+      },
+      {
+        "name": "link",
+        "correction": null,
+        "standard_uncertainty": null,
+        "source": "1550 nm fibre link; no executable uncertainty evidence",
+        "status": "pending-verification",
+        "required": true
+      },
+      {
+        "name": "comb",
+        "correction": null,
+        "standard_uncertainty": null,
+        "source": "optical frequency comb; no executable uncertainty evidence",
+        "status": "pending-verification",
+        "required": true
+      },
+      {
+        "name": "tidal-residual",
+        "correction": null,
+        "standard_uncertainty": null,
+        "source": "tidal residual model; no executable uncertainty evidence",
+        "status": "pending-verification",
+        "required": true
+      }
+    ],
+    "correlation": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "known_quadrature": "8.854811496434007E-19",
+    "total_standard_uncertainty": null,
+    "status": "pending-verification"
+  },
+  "commands": [
+    "python run_all.py --mode audit"
+  ]
+}
