@@ -115,6 +115,37 @@ CURATED: dict[str, tuple[str, str]] = {
     "level_km": ("1113", "experiment-side levelling report: levelling line length"),
     "campaign_days": ("58", "experiment materials: 2026-06-29 to 2026-08-26 campaign span"),
     "n_stages": ("3", "experiment materials: number of measurement stages"),
+    "same_campus_best_e18": (
+        "3.2",
+        "literature: Aeppli et al. 2026 (PRL 137, 033201): best same-campus "
+        "(NIST-JILA, 3.6 km link) cross-species ratio uncertainty, as quoted",
+    ),
+    "same_campus_km": (
+        "3.6",
+        "literature: Aeppli et al. 2026 (as above): phase-stabilised fibre "
+        "link length of the NIST-JILA campus comparison",
+    ),
+    "eu_best_e18": (
+        "7.7",
+        "literature: Pizzocaro et al. 2026 (Phys. Rev. Research 8, 033250; "
+        "arXiv:2604.27963): best ratio in the European fibre network campaign",
+    ),
+    "vlbi_km": (
+        "9000",
+        "literature: Pizzocaro et al. 2021 (Nature Physics 17, 223-227): "
+        "VLBI comparison of two optical clocks separated by about 9000 km",
+    ),
+    "lisdat_km": (
+        "1415",
+        "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): "
+        "Paris-Braunschweig Sr-Sr comparison over 1415 km of telecom fibre",
+    ),
+    "f_rep_mhz": ("200", "clock/params.json (FREF=1e7, DIV20=20): comb repetition rate, MHz"),
+    "f_1550_thz": (
+        "193.3992",
+        "clock/params.json: N1550_WH x f_rep = 966996 x 200 MHz; the 1550 nm "
+        "transfer frequency used to convert the beat to fractional units",
+    ),
 }
 
 # Measurement-stage assignment by recorded segment group (experiment materials).
@@ -194,6 +225,7 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
 
     u_stat_e18 = comb["u_stat_bayes"] * 1e18
     add("uStatE", f"{u_stat_e18:.3f}", f"{tier1}.u_stat_bayes")
+    add("uStatShort", f"{u_stat_e18:.2f}", f"{tier1}.u_stat_bayes (2 significant figures)")
     add("uWlsE", f"{comb['u_wls'] * 1e18:.3f}", f"{tier1}.u_wls")
     add("uMpE", f"{comb['u_mp'] * 1e18:.3f}", f"{tier1}.u_mp")
     add("uBirgeE", f"{comb['u_birge'] * 1e18:.3f}", f"{tier1}.u_birge")
@@ -240,6 +272,15 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("levelKm", latex_groups(CURATED["level_km"][0]), CURATED["level_km"][1])
     add("nDays", CURATED["campaign_days"][0], CURATED["campaign_days"][1])
     add("nStages", CURATED["n_stages"][0], CURATED["n_stages"][1])
+    add("refSameCampusU", CURATED["same_campus_best_e18"][0] + r"\times10^{-18}",
+        CURATED["same_campus_best_e18"][1])
+    add("refSameCampusKm", CURATED["same_campus_km"][0], CURATED["same_campus_km"][1])
+    add("refEuBestU", CURATED["eu_best_e18"][0] + r"\times10^{-18}",
+        CURATED["eu_best_e18"][1])
+    add("refVlbiKm", latex_groups(CURATED["vlbi_km"][0]), CURATED["vlbi_km"][1])
+    add("refLisdatKm", latex_groups(CURATED["lisdat_km"][0]), CURATED["lisdat_km"][1])
+    add("fRepMHz", CURATED["f_rep_mhz"][0], CURATED["f_rep_mhz"][1])
+    add("fFifteenTHz", CURATED["f_1550_thz"][0], CURATED["f_1550_thz"][1])
 
     # Derived: static-potential uncertainty from the levelled dW uncertainty.
     u_static_e18 = float(CURATED["delta_w_unc"][0]) / C_LIGHT**2 * 1e18
@@ -362,7 +403,12 @@ def render_segment_table(segments: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def run_checks(macros: list[tuple[str, str, str]], payload: dict) -> list[str]:
+def run_checks(
+    macros: list[tuple[str, str, str]],
+    payload: dict,
+    *,
+    compare_existing: bool,
+) -> list[str]:
     errs: list[str] = []
     names = [name for name, _, _ in macros]
     if len(set(names)) != len(names):
@@ -386,7 +432,7 @@ def run_checks(macros: list[tuple[str, str, str]], payload: dict) -> list[str]:
         )
     if not 2.0 <= payload["headline"]["u_total_e18"] <= 2.3:
         errs.append("total standard uncertainty outside the reviewed range")
-    if NUMBERS_TEX.exists():
+    if compare_existing and NUMBERS_TEX.exists():
         present = set(re.findall(r"\\newcommand\{\\([A-Za-z]+)\}", NUMBERS_TEX.read_text(encoding="utf-8")))
         expected = set(names)
         if present != expected:
@@ -415,13 +461,20 @@ def main() -> int:
 
     macros: list[tuple[str, str, str]] = []
     payload = build(macros)
-    errs = run_checks(macros, payload)
+    # Structural checks first; the numbers.tex comparison runs after the write
+    # (build mode) or against the existing file (check mode).
+    errs = run_checks(macros, payload, compare_existing=False)
     if errs:
         for err in errs:
             print(f"ERROR: {err}", file=sys.stderr)
         return 1
 
     if args.check:
+        errs = run_checks(macros, payload, compare_existing=True)
+        if errs:
+            for err in errs:
+                print(f"ERROR: {err}", file=sys.stderr)
+            return 1
         print(
             f"OK: {len(macros)} macros (all sourced); "
             f"u_total={payload['headline']['u_total_e18']:.3f}e-18; "

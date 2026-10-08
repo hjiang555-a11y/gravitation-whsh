@@ -29,6 +29,10 @@
       "value": "0.885",
       "source": "manifest:primary_16.combination.u_stat_bayes"
     },
+    "uStatShort": {
+      "value": "0.89",
+      "source": "manifest:primary_16.combination.u_stat_bayes (2 significant figures)"
+    },
     "uWlsE": {
       "value": "0.334",
       "source": "manifest:primary_16.combination.u_wls"
@@ -172,6 +176,34 @@
     "nStages": {
       "value": "3",
       "source": "experiment materials: number of measurement stages"
+    },
+    "refSameCampusU": {
+      "value": "3.2\\times10^{-18}",
+      "source": "literature: Aeppli et al. 2026 (PRL 137, 033201): best same-campus (NIST-JILA, 3.6 km link) cross-species ratio uncertainty, as quoted"
+    },
+    "refSameCampusKm": {
+      "value": "3.6",
+      "source": "literature: Aeppli et al. 2026 (as above): phase-stabilised fibre link length of the NIST-JILA campus comparison"
+    },
+    "refEuBestU": {
+      "value": "7.7\\times10^{-18}",
+      "source": "literature: Pizzocaro et al. 2026 (Phys. Rev. Research 8, 033250; arXiv:2604.27963): best ratio in the European fibre network campaign"
+    },
+    "refVlbiKm": {
+      "value": "9\\,000",
+      "source": "literature: Pizzocaro et al. 2021 (Nature Physics 17, 223-227): VLBI comparison of two optical clocks separated by about 9000 km"
+    },
+    "refLisdatKm": {
+      "value": "1\\,415",
+      "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): Paris-Braunschweig Sr-Sr comparison over 1415 km of telecom fibre"
+    },
+    "fRepMHz": {
+      "value": "200",
+      "source": "clock/params.json (FREF=1e7, DIV20=20): comb repetition rate, MHz"
+    },
+    "fFifteenTHz": {
+      "value": "193.3992",
+      "source": "clock/params.json: N1550_WH x f_rep = 966996 x 200 MHz; the 1550 nm transfer frequency used to convert the beat to fractional units"
     },
     "uStaticE": {
       "value": "0.946",
