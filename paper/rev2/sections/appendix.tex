@@ -1,0 +1,132 @@
+\section{Frequency chain and ratio inversion}
+\label{app:chain}
+
+The observable is the out-of-loop beat between the transferred
+\qty{1550}{nm} carrier and the local Yb-referenced comb. All
+frequencies in the chain derive from the comb repetition rate
+$f_{\mathrm{rep}} = \fRepMHz$\,MHz. The Sr clock's absolute frequency
+$f_{\mathrm{Sr}}$ (\qty{698}{nm}) is related to the comb frequency fed
+to the \qty{1397}{nm} branch by
+\begin{equation}
+  f_{\mathrm{comb}}^{1397} = \tfrac{1}{2}\,(1 + a)\,f_{\mathrm{Sr}},
+\end{equation}
+where $a$ collects the Sr systematic corrections (density, lattice,
+second-order Zeeman and BBR shifts). The Yb clock's absolute frequency
+$f_{\mathrm{Yb}}$ (\qty{578}{nm}) relates to the \qty{1156}{nm} comb
+branch by
+\begin{equation}
+  f_{\mathrm{comb}}^{1156} = \tfrac{1}{2}\,(1 + b)\,f_{\mathrm{Yb}}.
+\end{equation}
+The beat is converted to fractional units with the transfer frequency
+$F_{1550} = \fFifteenTHz$\,THz. The static gravitational-redshift
+correction enters the ratio inversion as a multiplicative factor,
+\begin{equation}
+  \left(\mathrm{Yb/Sr}\right)_{\rm corr}
+  = \left(\mathrm{Yb/Sr}\right)_{\rm raw} \times (1 + \delta_g),
+  \qquad \delta_g = \deltaGV,
+\end{equation}
+derived from the levelled geopotential difference
+$\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$
+(Section~\ref{sec:methods-levelling}).
+
+\section{Data processing and segment definition}
+\label{app:processing}
+
+The counters sample the beat every second in phase-averaging mode.
+Samples deviating by more than $10$\,Hz from the running median are
+treated as jump points and removed; the retained data are further
+trimmed at both ends by an endpoint screen that drops points beyond
+$1\%$ of the peak-to-peak range of the record. The primary data set
+consists of the longest jump-free record of each accepted segment
+after this screening. Table~\ref{tab:segments} lists the per-segment
+retained counts, ratio deviations and statistical uncertainties; the
+category column marks the five segments whose stability fits are
+model-limited. The excluded ninth recorded segment, its parameter
+provenance and its effect on the combination are described in
+Sections~\ref{sec:methods-campaign} and~\ref{sec:results-sensitivity}.
+
+\begin{table}[t]
+  \centering
+  \caption{Per-segment data of the primary 16-segment set. Ratio
+  deviations $y_i = R_i/R_1 - 1$ are relative to the first segment;
+  $u_i$ is the statistical uncertainty of the segment ratio;
+  ``Fit'' is \emph{est.} for segments whose stability fit lies in the
+  white-frequency-noise band and \emph{lim.} for model-limited fits.}
+  \label{tab:segments}
+  \input{generated/segment_table}
+\end{table}
+
+\section{Statistical combination models}
+\label{app:stats}
+
+\paragraph{Fixed-effect WLS.} Under the assumption that all segments
+estimate one common ratio with uncertainties $u_i$,
+\[
+  \mu_{\rm WLS} = \frac{\sum_i w_i R_i}{\sum_i w_i}, \quad
+  w_i = 1/u_i^2, \quad
+  u_{\rm WLS} = \left(\sum_i w_i\right)^{-1/2},
+\]
+with $\chi^2 = \sum_i (R_i - \mu_{\rm WLS})^2 / u_i^2$ and
+$\chi^2_{\rm red} = \chi^2/(N-1)$. For the primary data set,
+$\chi^2_{\rm red} = \chiRed$ ($N = \nSeg$,
+$\dofV$ degrees of freedom, $p = \pChi$), so the fixed-effect
+uncertainty under-describes the observed scatter.
+
+\paragraph{Birge scaling.} The Birge ratio
+$B = \sqrt{\chi^2_{\rm red}} = \birgeRatio$ scales all segment
+uncertainties by a common factor, $u_i \to B u_i$; it assumes the
+relative sizes of the $u_i$ are correct but their overall scale is
+not.
+
+\paragraph{Mandel--Paule.} An excess scatter $\xi$ common to all
+segments is added in quadrature, $u_{i,\rm eff}^2 = u_i^2 + \xi^2$,
+and $\xi$ is solved from $\chi^2_{\rm red}(\xi) = 1$. For the primary
+data set, $\xi = \xiMpE \times 10^{-18}$.
+
+\paragraph{Bayesian random effect.} The same observation model,
+$R_i \sim \mathcal{N}(\mu, u_i^2 + \xi^2)$, is treated
+hierarchically: $\mu$ and $\xi$ are both inferred, with flat priors
+on $\mu$ and on $\log\xi$, and the joint posterior
+$p(\mu, \xi \mid \{R_i, u_i\})$ is marginalised numerically over a
+40-decade log-$\xi$ grid. The reported central value is the posterior
+mean of $\mu$ and the statistical uncertainty is its posterior
+standard deviation; for the primary data set,
+$\xi = \xiBayesE \times 10^{-18}$. The excess scatter quantified here
+also absorbs the correlated component of the time-varying
+gravitational-redshift term (Section~\ref{sec:methods-budget}), which
+is carried separately as an uncertainty item rather than corrected.
+
+\section{Levelling reduction}
+\label{app:levelling}
+
+The orthometric height difference between benchmarks follows from the
+levelled normal heights after the normal-to-orthometric conversion,
+with gravity observed at every levelling point. The geopotential
+difference is integrated segment by segment,
+$\dW_{AB} = -\sum_i g_i \Delta H_i$, and combined with the two local
+offsets between benchmark and clock platform (obtained by
+trigonometric levelling) and the platform-to-transition offsets from
+the clock design parameters. The resulting atomic-transition
+geopotential difference is $\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$,
+equivalent to an optical fractional shift of $\deltaGV$.
+
+\section{Uncertainty budget details}
+\label{app:budget}
+
+The components of Table~\ref{tab:budget} are obtained as follows.
+The statistical term is the posterior standard deviation of the
+Bayesian random-effect model (Appendix~\ref{app:stats}). The Sr and
+Yb terms are the published systematic uncertainties of the two
+clocks~\citep{jia2026sr, zhu2026yb}; for the Yb clock the published
+evaluation is adopted. The static-potential term is
+$u(\dW)/c^2$ from the levelling uncertainty
+$\dWUnc~\mathrm{m^2\,s^{-2}}$, giving
+$\uStaticE \times 10^{-18}$. The fibre-link and comb terms are
+experiment-side upper bounds of $\uSubsystemBound$ each, carried at
+\uLinkE $\times 10^{-18}$ and $\uCombE \times 10^{-18}$ to preserve the
+experiment-side margin. The time-varying-redshift term is scaled from
+the spread of the segment-averaged gravitational shift across the
+campaign and is carried at $\uTidalE \times 10^{-18}$; it is not
+applied as a correction. The total standard uncertainty,
+$\uTotalE \times 10^{-18}$, is the quadrature sum of the seven
+components.

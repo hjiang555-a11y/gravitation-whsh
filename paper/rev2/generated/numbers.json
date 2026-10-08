@@ -200,6 +200,10 @@
       12,
       16
     ],
-    "max_manifest_vs_frozen_y_diff_e18": 4.4212011829358744e-10
+    "max_manifest_vs_frozen_y_diff_e18": 4.4212011829358744e-10,
+    "site_km": 700,
+    "fibre_km": 1350,
+    "round_trip_km": 2700,
+    "n_days": 58
   }
 }

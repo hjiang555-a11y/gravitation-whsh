@@ -77,6 +77,18 @@
       "value": "-0.321",
       "source": "manifest:primary_16.combination.mu_bayes"
     },
+    "sensRwlsHead": {
+      "value": "1.207\\,507\\,039\\,343\\,337\\,720\\,4",
+      "source": "manifest:sensitivity_17.combination.R_wls rounded to 19 decimals"
+    },
+    "sensChiRed": {
+      "value": "5.24",
+      "source": "manifest:sensitivity_17.combination.chi2_red"
+    },
+    "dSegNineWls": {
+      "value": "+0.30\\times10^{-18}",
+      "source": "derived: sensitivity_17 minus primary_16 WLS centre, in 1e-18"
+    },
     "nSeg": {
       "value": "16",
       "source": "manifest:primary_16.included_groups"
@@ -100,6 +112,10 @@
     "nHoursAll": {
       "value": "280",
       "source": "derived: sensitivity total_samples / 3600"
+    },
+    "nSegNine": {
+      "value": "22496",
+      "source": "derived: sensitivity_17.total_samples minus primary_16.total_samples (the number of seconds carried by segment 9)"
     },
     "nModelLimited": {
       "value": "5",
@@ -145,6 +161,10 @@
       "value": "37",
       "source": "literature: Aeppli et al. 2026 (as above), quoted uncertainty digits"
     },
+    "refNistE": {
+      "value": "3.7",
+      "source": "literature: Aeppli et al. 2026 quoted uncertainty, in 1e-18"
+    },
     "refEuV": {
       "value": "1.207\\,507\\,039\\,343\\,337\\,718",
       "source": "literature: Pizzocaro et al. 2026, Phys. Rev. Research 8, 033250 (arXiv:2604.27963)"
@@ -152,6 +172,10 @@
     "refEuU": {
       "value": "32",
       "source": "literature: Pizzocaro et al. 2026 (as above), quoted uncertainty digits"
+    },
+    "refEuE": {
+      "value": "3.2",
+      "source": "literature: Pizzocaro et al. 2026 quoted uncertainty, in 1e-18"
     },
     "fibreKm": {
       "value": "1\\,350",
@@ -208,6 +232,14 @@
     "deltaGV": {
       "value": "-3.116\\times10^{-15}",
       "source": "clock/params.json DELTA_G = -3.116e-15: static gravitational-redshift correction applied in the ratio inversion"
+    },
+    "uSubsystemBound": {
+      "value": "1\\times10^{-19}",
+      "source": "experiment materials: upper bound quoted for the fibre-link and comb transfer subsystems (<1e-19 each)"
+    },
+    "levelMm": {
+      "value": "0.255",
+      "source": "experiment-side levelling report: per-kilometre misclosure of the levelling line (first-order limit 0.45 mm)"
     },
     "refThreshold": {
       "value": "5\\times10^{-18}",

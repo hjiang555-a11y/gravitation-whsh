@@ -1,0 +1,113 @@
+\subsection{Experimental setup and frequency transfer}
+\label{sec:methods-setup}
+
+The comparison links two optical lattice clocks at different institutions:
+an ytterbium (Yb) clock at IAPMST in Wuhan and a strontium (Sr) clock at
+USTC in Shanghai, about $\siteKm$\,km apart. The two sites are connected by
+a phase-stabilised fibre link of $\fibreKm$\,km single-pass length
+($\roundKm$\,km loop-back), operated at \qty{1550}{nm}. The route is
+divided into spans of tens of kilometres, each terminated by a relay
+station that carries a narrow-linewidth laser together with an
+erbium-doped fibre amplifier and a fibre-noise-cancellation loop; the
+added instability of the link is kept below the clock noise level for
+averaging times beyond $100$\,s.
+
+Both ends use independent optical frequency combs to bridge the
+spectral gap between the clock transitions and the telecom carrier. On the
+Shanghai side the Sr \qty{698}{nm} transition is transferred via a
+\qty{1397}{nm} continuous laser to the \qty{1550}{nm} carrier; on the
+Wuhan side the received carrier is linked to the Yb \qty{578}{nm}
+transition through the \qty{1156}{nm} light. All local frequency
+references and phase-locked loops are derived from the comb repetition
+rate $f_{\mathrm{rep}} = \fRepMHz$\,MHz. The observable is the
+out-of-loop beat between the received carrier and the local
+Yb-referenced comb, converted to fractional units with the transfer
+frequency $F_{1550} = \fFifteenTHz$\,THz (see Appendix~\ref{app:chain}).
+
+\subsection{Observation campaign and per-segment data}
+\label{sec:methods-campaign}
+
+The campaign spanned \nDays~days, from 29 June to 26 August 2026, in
+\nStages~measurement stages. Synchronous-operation windows were first
+defined from the lock status of the two clocks and of the beat signals;
+within each window the longest continuous valid record was retained.
+The selection used lock status only and did not refer to the resulting
+ratio deviations. In total \nSegAll~jump-free segments were recorded,
+carrying \nSamplesAll~valid seconds.
+
+The ninth recorded segment is excluded from the primary analysis. Its Sr
+systematic frequency-shift parameter sits between the values of the two
+operating periods and its provenance has not been confirmed by the
+experiment team; the segment is therefore held pending verification. The
+exclusion is based on parameter provenance, not on the resulting ratio
+deviation, and its effect is quantified in the sensitivity check
+(Section~\ref{sec:results-sensitivity}). The primary data set thus
+comprises \nSeg~segments and \nSamples~valid seconds
+(\nHours~effective hours), i.e.\ \nSegNine~seconds fewer than the full
+record.
+
+\subsection{Clock-ratio determination and statistical model}
+\label{sec:methods-stats}
+
+Each retained segment yields a clock-ratio estimate $R_i$ from the mean
+of its retained beat samples, inverted through the fixed frequency-chain
+relation (Appendix~\ref{app:chain}) and corrected for the static
+gravitational redshift $\delta_g = \deltaGV$ derived from the levelled
+geopotential difference (Section~\ref{sec:methods-levelling}). The
+per-segment statistical uncertainty $u_i$ is obtained from the
+overlapping Allan deviation of the beat fractional frequency: a
+$\sigma_y \propto \tau^{-1/2}$ fit over the range
+$128~\mathrm{s} \le \tau \le 0.25\,T_i$, extrapolated to the segment
+duration $T_i$.
+
+The per-segment uncertainties do not fully explain the observed scatter
+between segments, so the ratio is combined with four estimators:
+fixed-effect weighted least squares (WLS, weights $1/u_i^2$), Birge
+scaling, the Mandel--Paule random-effect model, and a Bayesian
+random-effect model in which the excess scatter $\xi$ is a free
+parameter whose posterior uncertainty is propagated into the final
+result. The Bayesian random-effect centre is adopted as the primary
+statistic; the others are reported as cross-checks. Five of the
+\nSeg~segments (groups \modelLimitedGroups) have stability fits that
+fall outside the white-frequency-noise band and are carried with a
+model-limited flag; this is one motivation for the random-effect
+treatment. The full model definitions are given in
+Appendix~\ref{app:stats}.
+
+\subsection{Levelling determination of the geopotential difference}
+\label{sec:methods-levelling}
+
+The static gravitational-redshift correction is fixed by the
+geopotential difference between the two clocks' atomic transition
+positions, determined by first-order spirit levelling together with
+simultaneous gravimetry. A levelling line of about $\levelKm$\,km was
+run between the Wuhan benchmark WS-03 (at IAPMST) and the Shanghai
+benchmark WS-01 (at USTC) through Ezhou, Huangshi, Huanggang, Lu'an,
+Hefei, Wuhu, Guangde and Suzhou, using digital levels with sight
+lengths below \qty{30}{m} and gravity observed at every levelling point
+with two relative gravimeters. The levelled normal heights were
+converted to orthometric heights for the geopotential integration,
+$\dW_{AB} = -\sum_i g_i\,\Delta H_i$, where $g_i$ is the mean gravity
+and $\Delta H_i$ the orthometric height difference of the $i$-th
+segment. The resulting geopotential difference between the two atomic
+transitions is $\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$. The
+per-kilometre misclosure of the levelling is $\levelMm$\,mm, below the
+first-order limit.
+
+\subsection{Uncertainty budget}
+\label{sec:methods-budget}
+
+Table~\ref{tab:budget} lists the uncertainty components of the
+Yb/Sr ratio. The statistical term is the posterior standard deviation
+of the Bayesian random-effect model applied to the \nSeg-segment data.
+The Sr and Yb systematic terms are the published evaluations of the two
+clocks~\citep{jia2026sr, zhu2026yb}; the value adopted for the Yb clock
+resolves an internal-versus-published discrepancy in favour of the
+published evaluation. The static-potential term follows from the
+levelling uncertainty. The fibre-link and frequency-comb terms are
+experiment-side upper bounds. The time-varying
+gravitational-redshift term is carried as an uncertainty item,
+quantified from the scale over which the segment-averaged shift varies
+across the campaign, and is not applied as a correction to the reported
+central value. The components are treated as independent and combined
+in quadrature.

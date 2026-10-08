@@ -151,6 +151,16 @@ CURATED: dict[str, tuple[str, str]] = {
         "clock/params.json DELTA_G = -3.116e-15: static gravitational-redshift "
         "correction applied in the ratio inversion",
     ),
+    "subsystem_bound_e19": (
+        "1\\times10^{-19}",
+        "experiment materials: upper bound quoted for the fibre-link and "
+        "comb transfer subsystems (<1e-19 each)",
+    ),
+    "level_misclosure_mm": (
+        "0.255",
+        "experiment-side levelling report: per-kilometre misclosure of the "
+        "levelling line (first-order limit 0.45 mm)",
+    ),
     "ref_threshold": (
         "5\\times10^{-18}",
         "literature: Dimarcq et al. 2024 (Metrologia 61, 012001), mandatory "
@@ -261,12 +271,24 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("xiBayesE", f"{comb['xi_bayes'] * 1e18:.2f}", f"{tier1}.xi_bayes")
     add("muBayesE", f"{comb['mu_bayes'] * 1e18:.3f}", f"{tier1}.mu_bayes")
 
+    sens_comb = sensitivity["combination"]
+    add("sensRwlsHead", latex_groups(round_str(sens_comb["R_wls"], 19)),
+        "manifest:sensitivity_17.combination.R_wls rounded to 19 decimals")
+    add("sensChiRed", f"{sens_comb['chi2_red']:.2f}",
+        "manifest:sensitivity_17.combination.chi2_red")
+    d_seg9_wls = float((Decimal(sens_comb["R_wls"]) - Decimal(comb["R_wls"])) * Decimal("1e18"))
+    add("dSegNineWls", f"{d_seg9_wls:+.2f}" + r"\times10^{-18}",
+        "derived: sensitivity_17 minus primary_16 WLS centre, in 1e-18")
+
     add("nSeg", str(len(primary["included_groups"])), "manifest:primary_16.included_groups")
     add("nSegAll", str(len(sensitivity["included_groups"])), "manifest:sensitivity_17.included_groups")
     add("nSamples", latex_groups(str(primary["total_samples"])), "manifest:primary_16.total_samples")
     add("nSamplesAll", latex_groups(str(sensitivity["total_samples"])), "manifest:sensitivity_17.total_samples")
     add("nHours", str(round(primary["total_samples"] / 3600)), "derived: total_samples / 3600")
     add("nHoursAll", str(round(sensitivity["total_samples"] / 3600)), "derived: sensitivity total_samples / 3600")
+    add("nSegNine", str(sensitivity["total_samples"] - primary["total_samples"]),
+        "derived: sensitivity_17.total_samples minus primary_16.total_samples "
+        "(the number of seconds carried by segment 9)")
 
     limited = [
         g for g, status in zip(primary["included_groups"], primary["segment_statuses"])
@@ -287,8 +309,12 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("dWUnc", CURATED["delta_w_unc"][0], CURATED["delta_w_unc"][1])
     add("refNistV", latex_groups(CURATED["ref_nist"][0]), CURATED["ref_nist"][1])
     add("refNistU", CURATED["ref_nist_u_digits"][0], CURATED["ref_nist_u_digits"][1])
+    add("refNistE", f"{float(CURATED['ref_nist_u_digits'][0]) / 10:.1f}",
+        "literature: Aeppli et al. 2026 quoted uncertainty, in 1e-18")
     add("refEuV", latex_groups(CURATED["ref_eu"][0]), CURATED["ref_eu"][1])
     add("refEuU", CURATED["ref_eu_u_digits"][0], CURATED["ref_eu_u_digits"][1])
+    add("refEuE", f"{float(CURATED['ref_eu_u_digits'][0]) / 10:.1f}",
+        "literature: Pizzocaro et al. 2026 quoted uncertainty, in 1e-18")
     add("fibreKm", latex_groups(CURATED["fibre_km"][0]), CURATED["fibre_km"][1])
     add("roundKm", latex_groups(CURATED["round_trip_km"][0]), CURATED["round_trip_km"][1])
     add("siteKm", latex_groups(CURATED["site_km"][0]), CURATED["site_km"][1])
@@ -305,6 +331,10 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("fRepMHz", CURATED["f_rep_mhz"][0], CURATED["f_rep_mhz"][1])
     add("fFifteenTHz", CURATED["f_1550_thz"][0], CURATED["f_1550_thz"][1])
     add("deltaGV", CURATED["delta_g"][0], CURATED["delta_g"][1])
+    add("uSubsystemBound", CURATED["subsystem_bound_e19"][0],
+        CURATED["subsystem_bound_e19"][1])
+    add("levelMm", CURATED["level_misclosure_mm"][0],
+        CURATED["level_misclosure_mm"][1])
     add("refThreshold", CURATED["ref_threshold"][0], CURATED["ref_threshold"][1])
     add("refLisdatU", CURATED["lisdat_u_e17"][0], CURATED["lisdat_u_e17"][1])
     add("euNClocks", CURATED["eu_n_clocks"][0], CURATED["eu_n_clocks"][1])
@@ -403,6 +433,10 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
             "n_segments_all": len(sensitivity["included_groups"]),
             "model_limited_groups": limited,
             "max_manifest_vs_frozen_y_diff_e18": max_diff,
+            "site_km": int(CURATED["site_km"][0]),
+            "fibre_km": int(CURATED["fibre_km"][0]),
+            "round_trip_km": int(CURATED["round_trip_km"][0]),
+            "n_days": int(CURATED["campaign_days"][0]),
         },
     }
     return payload
@@ -467,7 +501,7 @@ def run_checks(
     if not 2.0 <= payload["headline"]["u_total_e18"] <= 2.3:
         errs.append("total standard uncertainty outside the reviewed range")
     if compare_existing and NUMBERS_TEX.exists():
-        present = set(re.findall(r"\\newcommand\{\\([A-Za-z]+)\}", NUMBERS_TEX.read_text(encoding="utf-8")))
+        present = set(re.findall(r"\\newcommand\{\\([A-Za-z0-9]+)\}", NUMBERS_TEX.read_text(encoding="utf-8")))
         expected = set(names)
         if present != expected:
             errs.append(
