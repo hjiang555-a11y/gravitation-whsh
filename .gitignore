@@ -21,8 +21,11 @@ paper/*.fls
 paper/*.fdb_latexmk
 paper/*.synctex.gz
 
-# Agent scratch / notepads（本地协调用，不入库）
+# Agent scratch / notepads / local worktrees（本地协调用，不入库）
 .omo/
+.claude/
 
 # 用户新加入的原始上传材料（本地保留，不上传）
 docs/raw/
+paper/*.docx
+paper/ref/Pizzocaro*.pdf
