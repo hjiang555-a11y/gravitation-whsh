@@ -81,12 +81,16 @@ def fig_campaign() -> None:
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(6.9, 4.0),
                                    gridspec_kw={"height_ratios": [1, 2]})
 
+    max_n = max(seg["n_valid"] for seg in segments)
+    x_lo = min(seg["group"] for seg in segments) - 0.6
+    x_hi = max(seg["group"] for seg in segments) + 0.6
     for seg in segments:
         color = STAGE_COLORS[seg["stage"]]
-        width = np.sqrt(seg["n_valid"])
+        width = 0.8 * np.sqrt(seg["n_valid"] / max_n)
         ax1.barh(0, width, left=seg["group"] - width / 2, color=color,
                  height=0.6, alpha=0.85)
     ax1.set_yticks([])
+    ax1.set_xlim(x_lo, x_hi)
     ax1.set_xlabel("Recorded segment index")
     ax1.set_title("(a) Campaign stages", fontsize=10, loc="left")
     handles = [plt.Rectangle((0, 0), 1, 1, color=STAGE_COLORS[s])
@@ -106,6 +110,7 @@ def fig_campaign() -> None:
     ax2.set_ylabel(r"$y_i$ ($10^{-18}$)")
     ax2.set_title("(b) Per-segment ratio deviations", fontsize=10, loc="left")
     ax2.grid(alpha=0.25)
+    ax2.set_xlim(x_lo, x_hi)
     fig.tight_layout()
     _save(fig, "fig2_campaign")
 
