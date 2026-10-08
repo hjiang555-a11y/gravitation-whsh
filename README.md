@@ -270,7 +270,23 @@ uv run python -m clock_ratio.audit_report --manifest results/audit-v1/verified/m
 ```
 
 审计模式为 fail-fast，先写入 `results/audit-v1/staging`，经独立清单验证后再提升为不可变历史
-并原子切换 `verified` 符号链接；分析审计报告仅从已验证的清单生成。以下历史命令保留原样。
+并原子切换 `verified` 符号链接；分析审计报告仅从已验证的清单生成。
+
+**重建论文候选稿（paper/rev2，2026-10-08）**：基于冻结的 16 段审计结果层重建的
+Nature 风格候选稿；原稿 `paper/main.tex` 原样保留、不参与重建。潮汐分析不再作为检出叙事，
+潮汐影响仅作为误差项进入不确定度预算；主贡献为跨城、跨种、达秒定义变更不确定度要求的
+远程 Yb/Sr 比值测量。稿件内所有数字由管线从冻结清单生成（无手写数值）：
+
+```bash
+cd paper/rev2
+uv run --project ../.. python tools/build_numbers.py       # 生成数字宏（读取冻结清单）
+uv run --project ../.. python tools/build_numbers.py --check  # 审计：宏覆盖与一致性
+uv run --project ../.. python tools/make_figures.py        # 生成 3 图（PNG300/PDF）
+pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
+```
+
+编译产物 `paper/rev2/main.pdf` 已入库，便于直接查看。数字来源逐条见
+`paper/rev2/generated/numbers_manifest.json`。以下历史命令保留原样。
 
 **只重建新增潮汐分析与独立报告**（希望保留旧产物时推荐）：
 
@@ -313,6 +329,7 @@ python clock_ratio/make_report.py                # 自动生成权威报告
 | `clock_ratio/concatenated_stability.py` + `.md/.csv` | gap-safe 拼接稳定度（A=0/−1/−0.54，不跨 gap）|
 | `clock_ratio/concatenated_stability_long.py` + `.md/.csv/.png/.pdf` | 拼接版长 τ 稳定度（段端到端相接，τ≤4.63 d，带 EDF 误差棒，log-log 图）|
 | `paper/main.tex` + `paper/refs.bib` | **LaTeX 投稿稿**（英文，Nature 网络框架；`cd paper && pdflatex main.tex && bibtex main && pdflatex main.tex` ×2）|
+| `paper/rev2/` | **重建候选稿**（16 段口径、潮汐为误差项；数字由 `tools/build_numbers.py` 从冻结清单生成；`main.pdf` 已入库）|
 | `docs/PAPER_DRAFT.md` | 论文段落草稿（中文，配 4 图）|
 | `docs/PAPER_DRAFT_EN.md` | 论文段落草稿（英文，与中文稿同数同构）|
 | `docs/PAPER_INTEGRITY_REPORT.md` | 论文草稿完整性/一致性审计（claim→证据，PASS-WITH-NOTES）|
