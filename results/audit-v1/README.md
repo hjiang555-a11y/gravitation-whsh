@@ -11,7 +11,7 @@
 | `runs/<hash16>/manifest.json` | 权威结果清单（schema 1.1）；`<hash16>` = 本文件 SHA-256 前 16 位 |
 | `runs/<hash16>/ANALYSIS_AUDIT.md` | 仅由 manifest 渲染的审计报告（源中无硬编码数值） |
 | `runs/<hash16>/…` | 该次运行的账本、比值、统计与潮汐换算产物（staging 已并入） |
-| `verification-<UTC>/` | Task 15 端到端验证运行（历史过程证据，非当前权威） |
+| `verification/<UTC>/` | Task 15 端到端验证运行（历史过程证据，非当前权威） |
 
 本存档提交时的权威运行：`runs/15725f5246e87af5`（生成于提交 `a070eeb`，`dirty=false`）
 
@@ -41,6 +41,6 @@ uv run python -m clock_ratio.audit_report --manifest results/audit-v1/verified/m
   leave-one-out 为敏感性结果。
 - 重新运行会产生新的 `runs/<hash16>/` 并移动 `verified` 链接（在 git 中显示为改动）；
   是否提交新运行由使用者决定。
-- 历史验证运行可能由较早的 schema 生成（如 `verification-20261007T161859Z` 为 schema 1.0，
+- 历史验证运行可能由较早的 schema 生成（如 `verification/20261007T161859Z` 为 schema 1.0，
   缺少此后新增的 `segment_statuses` 字段）；当前工具对它们可能无法直接复用校验/渲染，
   以生成当时的记录为准，权威结果只认 `verified` 指向的运行。
