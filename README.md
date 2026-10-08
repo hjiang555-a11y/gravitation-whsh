@@ -255,7 +255,8 @@ A=−0.54 12.91%）与 A=−1 的长 τ 不稳定度升都是真实的**：前�
 **阶段一审计状态（临时）**：当前阶段一临时（provisional）主结果是 16 段结果——第 9 段因参数
 待确认而被隔离；17 段与 leave-one-out 结果为敏感性检查；专业潮汐输入的物理模型来源仍需外部
 确认。权威数值以 `results/audit-v1/verified/manifest.json` 及其生成的 `ANALYSIS_AUDIT.md`
-为准（本节不写入任何运行数值）。
+为准（本节不写入任何运行数值）。阶段一结论、验证与关键裁定汇总见
+[docs/audit/PHASE1_SUMMARY.md](docs/audit/PHASE1_SUMMARY.md)。
 
 **阶段一权威入口（audit）**：
 
@@ -316,6 +317,7 @@ python clock_ratio/make_report.py                # 自动生成权威报告
 | `docs/PAPER_DRAFT_EN.md` | 论文段落草稿（英文，与中文稿同数同构）|
 | `docs/PAPER_INTEGRITY_REPORT.md` | 论文草稿完整性/一致性审计（claim→证据，PASS-WITH-NOTES）|
 | `clock_ratio/paper_figs/` | 论文配图（4 图 × PNG300dpi + 矢量 PDF）|
+| `docs/audit/` | 阶段一审计总结（PHASE1_SUMMARY.md）与新旧对照证据存档 |
 | `docs/WORKFLOW.md` | 总流程文档（怎么跑、实验条件变了改哪）|
 | `docs/METHODOLOGY.md` | 计算方法说明（精确定义、公式、归一化基准、存疑项）|
 | `docs/NOTATION.md` | 符号与术语表 |

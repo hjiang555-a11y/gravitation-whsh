@@ -51,8 +51,9 @@ uv run python -m clock_ratio.audit_report --manifest results/audit-v1/verified/m
 审计模式（`--mode audit`）是阶段一权威入口，且为 fail-fast：全部中间产物先写入固定的
 `results/audit-v1/staging`，只有在独立的清单验证（`verify_result_manifest`）通过后才提升为
 不可变的 `runs/<hash>` 历史，并以原子方式切换 `verified` 符号链接。分析审计报告
-（`ANALYSIS_AUDIT.md`）仅从已验证的清单生成，不重新读取原始数据。其下的 §2.1–2.2
-其余入口保留为诊断用途。
+（`ANALYSIS_AUDIT.md`）仅从已验证的清单生成，不重新读取原始数据。阶段一审计的结论、
+验证记录与关键裁定汇总见 [audit/PHASE1_SUMMARY.md](audit/PHASE1_SUMMARY.md)。其下的
+§2.1–2.2 其余入口保留为诊断用途。
 
 当审计在 git worktree 内运行、而原始数据位于主检出（main checkout）时，已验证清单的
 `inputs[].relative_path` 会包含 `../../../clock/...`；在主检出中重跑会将这些路径正常化，
