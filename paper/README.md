@@ -7,6 +7,10 @@ the Wuhan (Yb) - Shanghai (Sr) optical-clock comparison.
 
 - **v0.3 (2026-10-01, commit `da5b2e4`)** — stable working version.
   Nature Article structure, main text compressed to 13 pages.
+- **Rebuilt candidate (2026-10-08)** — `rev2/` is a rebuild on the frozen
+  phase-one audit result layer (16-segment primary membership; the
+  time-varying-redshift term is carried as an uncertainty item only).
+  `main.tex` in this directory is kept unchanged as the historical draft.
 - **Structure** — Results: 2.1 Network and observation campaign →
   2.2 Theoretical tidal influence → 2.3 Tidal gravitational-redshift
   detection → 2.4 Clock-ratio determination. Discussion:
