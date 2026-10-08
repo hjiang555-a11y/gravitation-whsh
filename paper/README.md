@@ -11,6 +11,7 @@ the Wuhan (Yb) - Shanghai (Sr) optical-clock comparison.
   phase-one audit result layer (16-segment primary membership; the
   time-varying-redshift term is carried as an uncertainty item only).
   `main.tex` in this directory is kept unchanged as the historical draft.
+  Length-vs-Nature review: `rev2/REVIEW_NOTES.md`.
 - **Structure** — Results: 2.1 Network and observation campaign →
   2.2 Theoretical tidal influence → 2.3 Tidal gravitational-redshift
   detection → 2.4 Clock-ratio determination. Discussion:
@@ -27,6 +28,7 @@ the Wuhan (Yb) - Shanghai (Sr) optical-clock comparison.
 | `main.tex` | Full article: abstract, introduction, results, discussion, methods, back matter, references. |
 | `refs.bib` | BibTeX entries (26 references; see below). |
 | `overleaf/` + `overleaf-upload.zip` | Self-contained Overleaf upload (main.tex with `figs/` paths, refs.bib, figures). |
+| `overleaf-rev2/` + `overleaf-rev2-upload.zip` | Overleaf upload for the rebuilt candidate (`rev2/`; sections/, generated/, vector-PDF figs). |
 | `README.md` | This file. |
 
 ## How to compile
