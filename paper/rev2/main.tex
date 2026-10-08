@@ -75,16 +75,18 @@
 \input{sections/discussion}
 
 % =====================================================================
-\section{Methods}
-\label{sec:methods}
+% Nature layout: the reference list follows the main text, and the
+% Methods section is the online-only apparatus (not numbered with the
+% main text) placed after the reference list.
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+% =====================================================================
+
+\section*{Methods}
 % =====================================================================
 \input{sections/methods}
 
 % =====================================================================
-\appendix
-\input{sections/appendix}
-% =====================================================================
-
 \section*{Data availability}
 % =====================================================================
 The frozen, machine-readable result layer underlying this manuscript is
@@ -105,8 +107,8 @@ manifest and the curated constants listed in
 \texttt{generated/numbers\_manifest.json}.
 
 % =====================================================================
-\bibliographystyle{unsrtnat}
-\bibliography{refs}
+\appendix
+\input{sections/appendix}
 % =====================================================================
 
 \end{document}
