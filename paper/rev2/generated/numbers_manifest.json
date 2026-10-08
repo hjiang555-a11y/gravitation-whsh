@@ -205,6 +205,50 @@
       "value": "193.3992",
       "source": "clock/params.json: N1550_WH x f_rep = 966996 x 200 MHz; the 1550 nm transfer frequency used to convert the beat to fractional units"
     },
+    "deltaGV": {
+      "value": "-3.116\\times10^{-15}",
+      "source": "clock/params.json DELTA_G = -3.116e-15: static gravitational-redshift correction applied in the ratio inversion"
+    },
+    "refThreshold": {
+      "value": "5\\times10^{-18}",
+      "source": "literature: Dimarcq et al. 2024 (Metrologia 61, 012001), mandatory criterion I.2: required agreement level of frequency-ratio comparisons"
+    },
+    "refLisdatU": {
+      "value": "5\\times10^{-17}",
+      "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): reported Sr-Sr ratio uncertainty over 1415 km of fibre"
+    },
+    "euNClocks": {
+      "value": "7",
+      "source": "literature: Pizzocaro et al. 2026: number of optical clocks in the European fibre-network campaign"
+    },
+    "euNInstitutes": {
+      "value": "4",
+      "source": "literature: Pizzocaro et al. 2026: number of participating institutes"
+    },
+    "lindvallNClocks": {
+      "value": "10",
+      "source": "literature: Lindvall et al. 2025 (Optica 12, 843): number of optical clocks in coordinated comparisons"
+    },
+    "lindvallNCountries": {
+      "value": "6",
+      "source": "literature: Lindvall et al. 2025: number of countries"
+    },
+    "lindvallNRatios": {
+      "value": "38",
+      "source": "literature: Lindvall et al. 2025: number of optical frequency ratios reported"
+    },
+    "schioppoKm": {
+      "value": "2\\,220",
+      "source": "literature: Schioppo et al. 2022 (Nature Communications 13, 212): metrological fibre link network length"
+    },
+    "chenKm": {
+      "value": "2\\,067",
+      "source": "literature: Chen et al. 2026 (Light: Science & Applications 15, 276): field-deployed fibre link length"
+    },
+    "claimDate": {
+      "value": "October 2026",
+      "source": "the claim date of the first-report statement; user-confirmed timing"
+    },
     "uStaticE": {
       "value": "0.946",
       "source": "derived: curated delta_w_unc / c^2"

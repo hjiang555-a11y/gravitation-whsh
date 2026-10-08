@@ -146,6 +146,29 @@ CURATED: dict[str, tuple[str, str]] = {
         "clock/params.json: N1550_WH x f_rep = 966996 x 200 MHz; the 1550 nm "
         "transfer frequency used to convert the beat to fractional units",
     ),
+    "delta_g": (
+        "-3.116\\times10^{-15}",
+        "clock/params.json DELTA_G = -3.116e-15: static gravitational-redshift "
+        "correction applied in the ratio inversion",
+    ),
+    "ref_threshold": (
+        "5\\times10^{-18}",
+        "literature: Dimarcq et al. 2024 (Metrologia 61, 012001), mandatory "
+        "criterion I.2: required agreement level of frequency-ratio comparisons",
+    ),
+    "lisdat_u_e17": (
+        "5\\times10^{-17}",
+        "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): "
+        "reported Sr-Sr ratio uncertainty over 1415 km of fibre",
+    ),
+    "eu_n_clocks": ("7", "literature: Pizzocaro et al. 2026: number of optical clocks in the European fibre-network campaign"),
+    "eu_n_institutes": ("4", "literature: Pizzocaro et al. 2026: number of participating institutes"),
+    "lindvall_n_clocks": ("10", "literature: Lindvall et al. 2025 (Optica 12, 843): number of optical clocks in coordinated comparisons"),
+    "lindvall_n_countries": ("6", "literature: Lindvall et al. 2025: number of countries"),
+    "lindvall_n_ratios": ("38", "literature: Lindvall et al. 2025: number of optical frequency ratios reported"),
+    "schioppo_km": ("2\\,220", "literature: Schioppo et al. 2022 (Nature Communications 13, 212): metrological fibre link network length"),
+    "chen_km": ("2\\,067", "literature: Chen et al. 2026 (Light: Science & Applications 15, 276): field-deployed fibre link length"),
+    "claim_date": ("October 2026", "the claim date of the first-report statement; user-confirmed timing"),
 }
 
 # Measurement-stage assignment by recorded segment group (experiment materials).
@@ -281,6 +304,17 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("refLisdatKm", latex_groups(CURATED["lisdat_km"][0]), CURATED["lisdat_km"][1])
     add("fRepMHz", CURATED["f_rep_mhz"][0], CURATED["f_rep_mhz"][1])
     add("fFifteenTHz", CURATED["f_1550_thz"][0], CURATED["f_1550_thz"][1])
+    add("deltaGV", CURATED["delta_g"][0], CURATED["delta_g"][1])
+    add("refThreshold", CURATED["ref_threshold"][0], CURATED["ref_threshold"][1])
+    add("refLisdatU", CURATED["lisdat_u_e17"][0], CURATED["lisdat_u_e17"][1])
+    add("euNClocks", CURATED["eu_n_clocks"][0], CURATED["eu_n_clocks"][1])
+    add("euNInstitutes", CURATED["eu_n_institutes"][0], CURATED["eu_n_institutes"][1])
+    add("lindvallNClocks", CURATED["lindvall_n_clocks"][0], CURATED["lindvall_n_clocks"][1])
+    add("lindvallNCountries", CURATED["lindvall_n_countries"][0], CURATED["lindvall_n_countries"][1])
+    add("lindvallNRatios", CURATED["lindvall_n_ratios"][0], CURATED["lindvall_n_ratios"][1])
+    add("schioppoKm", CURATED["schioppo_km"][0], CURATED["schioppo_km"][1])
+    add("chenKm", CURATED["chen_km"][0], CURATED["chen_km"][1])
+    add("claimDate", CURATED["claim_date"][0], CURATED["claim_date"][1])
 
     # Derived: static-potential uncertainty from the levelled dW uncertainty.
     u_static_e18 = float(CURATED["delta_w_unc"][0]) / C_LIGHT**2 * 1e18
