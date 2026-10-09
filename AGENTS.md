@@ -47,7 +47,7 @@ cd paper/rev2
 |---|---|
 | `paper/rev2/` | **当前论文候选稿**（16 段口径；数字宏管线；`main.pdf` 已入库） |
 | `paper/main.tex` 等 | 历史稿（潮汐检出叙事），冻结只读 |
-| `paper/overleaf-rev2/` + zip | rev2 的 Overleaf 上传包（由 `sync_overleaf.sh` 同步） |
+| `paper/overleaf-rev2-v2/` + zip | 当前 Overleaf 包（由 `sync_overleaf.sh` 同步）；`overleaf-rev2/` 为冻结旧版 |
 | `results/audit-v1/verified/` | 阶段一权威结果层（manifest 为唯一真源） |
 | `docs/audit/PHASE1_SUMMARY.md` | 阶段一结论/裁定/外部输入总入口 |
 | `clock/`、`clock_ratio/` | 分析实现（运行说明见 `docs/WORKFLOW.md`） |

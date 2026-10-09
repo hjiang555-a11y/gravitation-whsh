@@ -263,7 +263,9 @@ A=−0.54 12.91%）与 A=−1 的长 τ 不稳定度升都是真实的**：前�
 > 合并、参考文献补 5 条（NIST-F2 / PTB CSF / 卫星链路 3 条）、首句补离子/原子光钟引文（+4 条，
 > 全部 <2×10⁻¹⁸：PTB Al⁺ 1.6×10⁻¹⁸、NIST Al⁺ 更新 5.5×10⁻¹⁹；NPL 最佳 2.2×10⁻¹⁸ 超线未引）、
 > 全文拼写统一美式；原 Results §2.3 并入独立章节 "Discussion and outlook"，原 §2.4（段 9 敏感性）
-> 移除、论文不再解释其不采用原因。详细对照与复算口径见 [paper/rev2/REVIEW_NOTES.md](paper/rev2/REVIEW_NOTES.md)。
+> 移除、论文不再解释其不采用原因；作者第二版合并：题名改 Yb/Sr、Introduction 逻辑梳理与润色、
+> 暗物质句补引 BACON-2021（beloy2021bacon）；新 Overleaf 包 overleaf-rev2-v2 已生成（原包保留）。
+> 详细对照与复算口径见 [paper/rev2/REVIEW_NOTES.md](paper/rev2/REVIEW_NOTES.md)。
 
 Nature 格式指南锚点：物理论文一般 ≤6 印页；典型 6 页 ≈ 正文 2,500 词（摘要段+正文）+ 4 个
 紧凑图表项；Methods 在线部分另计（≤3,000 词）。
@@ -271,12 +273,12 @@ Nature 格式指南锚点：物理论文一般 ≤6 印页；典型 6 页 ≈ �
 | 项 | 本稿 | 锚点 | 差 |
 |---|---:|---:|---:|
 | Summary（摘要段） | 185 词 | ≤200 | ✓ |
-| 正文（摘要段 + Introduction + Results + Discussion and outlook） | **1,587 词** | 2,500（典型 6 页） | **−913（−36.5%）** |
+| 正文（摘要段 + Introduction + Results + Discussion and outlook） | **1,564 词** | 2,500（典型 6 页） | **−936（−37.4%）** |
 | 主文图表项 | 3 图 + 1 表 = 4 | 4（典型 6 页） | ✓ |
 | Methods | 689 词（不计正文） | ≤3,000 | ✓ |
 | 题名 | 99 字符 | ≤75（两行） | 超 ~24 |
 
-**结论**：正文约为典型 6 页 Article 的 63.5%，估计印版 4–5 页；补 ≈700–1,000 词可达典型
+**结论**：正文约为典型 6 页 Article 的 62.6%，估计印版 4–5 页；补 ≈700–1,000 词可达典型
 6 页体量（候选位置见审阅文档），或维持紧凑短稿。
 
 ## 复现
@@ -315,9 +317,10 @@ pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
 ```
 
 编译产物 `paper/rev2/main.pdf` 已入库，便于直接查看。数字来源逐条见
-`paper/rev2/generated/numbers_manifest.json`。**Overleaf 上传包**：
-[paper/overleaf-rev2/](paper/overleaf-rev2/)（自包含目录）与
-[paper/overleaf-rev2-upload.zip](paper/overleaf-rev2-upload.zip)（直接上传 zip）。以下历史命令保留原样。
+`paper/rev2/generated/numbers_manifest.json`。**Overleaf 上传包（当前）**：
+[paper/overleaf-rev2-v2/](paper/overleaf-rev2-v2/)（自包含目录）与
+[paper/overleaf-rev2-v2-upload.zip](paper/overleaf-rev2-v2-upload.zip)（直接上传 zip）；
+初版包 [paper/overleaf-rev2/](paper/overleaf-rev2/) 保留为冻结快照。以下历史命令保留原样。
 
 **只重建新增潮汐分析与独立报告**（希望保留旧产物时推荐）：
 

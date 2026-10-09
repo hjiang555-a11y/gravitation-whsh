@@ -1,0 +1,209 @@
+{
+  "headline": {
+    "R_full": "1.2075070393433377205630643505541719423190803014306306585972367401019724827739822",
+    "R_19dp": "1.2075070393433377206",
+    "unc_digits": "21",
+    "u_total_e18": 2.117764091619247,
+    "u_stat_e18": 0.8854811496434006
+  },
+  "segments": [
+    {
+      "group": 1,
+      "stage": 1,
+      "y_i_1e18": 0.0,
+      "u_frac_1e18": 1.1134008261352752,
+      "n_valid": 68009,
+      "status": "established"
+    },
+    {
+      "group": 2,
+      "stage": 1,
+      "y_i_1e18": -3.3555558758,
+      "u_frac_1e18": 1.1778627062450584,
+      "n_valid": 29481,
+      "status": "supported-with-limitations"
+    },
+    {
+      "group": 3,
+      "stage": 1,
+      "y_i_1e18": 1.997061013,
+      "u_frac_1e18": 1.9839549570463273,
+      "n_valid": 42891,
+      "status": "established"
+    },
+    {
+      "group": 4,
+      "stage": 1,
+      "y_i_1e18": -4.6114643502,
+      "u_frac_1e18": 0.9512449867258389,
+      "n_valid": 64280,
+      "status": "established"
+    },
+    {
+      "group": 5,
+      "stage": 1,
+      "y_i_1e18": -3.3766848967,
+      "u_frac_1e18": 6.039548787821747,
+      "n_valid": 19532,
+      "status": "established"
+    },
+    {
+      "group": 6,
+      "stage": 1,
+      "y_i_1e18": -1.1502914191,
+      "u_frac_1e18": 0.5126937343721104,
+      "n_valid": 52140,
+      "status": "supported-with-limitations"
+    },
+    {
+      "group": 7,
+      "stage": 1,
+      "y_i_1e18": 5.313447154,
+      "u_frac_1e18": 1.1731862853608654,
+      "n_valid": 39526,
+      "status": "supported-with-limitations"
+    },
+    {
+      "group": 8,
+      "stage": 1,
+      "y_i_1e18": 0.96635557,
+      "u_frac_1e18": 4.508601295324377,
+      "n_valid": 43565,
+      "status": "established"
+    },
+    {
+      "group": 10,
+      "stage": 2,
+      "y_i_1e18": -0.7641385874,
+      "u_frac_1e18": 1.2297890275106258,
+      "n_valid": 57938,
+      "status": "established"
+    },
+    {
+      "group": 11,
+      "stage": 2,
+      "y_i_1e18": 2.613140162,
+      "u_frac_1e18": 2.3006884432200687,
+      "n_valid": 35824,
+      "status": "established"
+    },
+    {
+      "group": 12,
+      "stage": 2,
+      "y_i_1e18": 0.729150712,
+      "u_frac_1e18": 1.7150880125910797,
+      "n_valid": 40346,
+      "status": "supported-with-limitations"
+    },
+    {
+      "group": 13,
+      "stage": 2,
+      "y_i_1e18": -3.0927620866,
+      "u_frac_1e18": 1.6944359297011227,
+      "n_valid": 152994,
+      "status": "established"
+    },
+    {
+      "group": 14,
+      "stage": 2,
+      "y_i_1e18": 1.970260477,
+      "u_frac_1e18": 1.3767945369473344,
+      "n_valid": 68618,
+      "status": "established"
+    },
+    {
+      "group": 15,
+      "stage": 3,
+      "y_i_1e18": -0.2494764621,
+      "u_frac_1e18": 1.293333644375248,
+      "n_valid": 57649,
+      "status": "established"
+    },
+    {
+      "group": 16,
+      "stage": 3,
+      "y_i_1e18": -0.7714736923,
+      "u_frac_1e18": 0.606981143622801,
+      "n_valid": 147640,
+      "status": "supported-with-limitations"
+    },
+    {
+      "group": 17,
+      "stage": 3,
+      "y_i_1e18": -0.8945660518,
+      "u_frac_1e18": 2.141566147183038,
+      "n_valid": 65983,
+      "status": "established"
+    }
+  ],
+  "budget": [
+    {
+      "name": "Statistical",
+      "e18": 0.8854811496434006,
+      "source": "manifest:primary_16.combination.u_stat_bayes"
+    },
+    {
+      "name": "Sr systematics",
+      "e18": 0.92,
+      "source": "curated:sr_syst_e18"
+    },
+    {
+      "name": "Yb systematics",
+      "e18": 1.3,
+      "source": "curated:yb_syst_e18"
+    },
+    {
+      "name": "Static potential",
+      "e18": 0.9457525476455758,
+      "source": "derived:curated delta_w_unc / c^2"
+    },
+    {
+      "name": "Fiber link",
+      "e18": 0.1,
+      "source": "curated:link_e18"
+    },
+    {
+      "name": "Frequency comb",
+      "e18": 0.1,
+      "source": "curated:comb_e18"
+    },
+    {
+      "name": "Time-varying redshift",
+      "e18": 0.5,
+      "source": "curated:tidal_e18"
+    }
+  ],
+  "comparisons": [
+    {
+      "name": "This work",
+      "delta_e18": 0.0,
+      "u_e18": 2.117764091619247
+    },
+    {
+      "name": "NIST-JILA",
+      "delta_e18": -2.436935649445828,
+      "u_e18": 3.7
+    },
+    {
+      "name": "European network",
+      "delta_e18": 2.563064350554172,
+      "u_e18": 3.2
+    }
+  ],
+  "meta": {
+    "n_segments": 16,
+    "n_segments_all": 17,
+    "model_limited_groups": [
+      2,
+      6,
+      7,
+      12,
+      16
+    ],
+    "max_manifest_vs_frozen_y_diff_e18": 4.4212011829358744e-10,
+    "site_km": 700,
+    "fibre_km": 1350,
+    "round_trip_km": 2700,
+    "n_days": 58
+  }
+}

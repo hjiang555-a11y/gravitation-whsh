@@ -1,0 +1,317 @@
+{
+  "generated_by": "paper/rev2/tools/build_numbers.py",
+  "macros": {
+    "Rheadline": {
+      "value": "1.207\\,507\\,039\\,343\\,337\\,720\\,6",
+      "source": "manifest:primary_16.combination.R_bayes rounded to 19 decimals"
+    },
+    "RbayesFull": {
+      "value": "1.2075070393433377205630643505541719423190803014306306585972367401019724827739822",
+      "source": "manifest:primary_16.combination.R_bayes (full precision)"
+    },
+    "RwlsFull": {
+      "value": "1.2075070393433377200464104337868920419305439666264194521188560456494883520088030",
+      "source": "manifest:primary_16.combination.R_wls (full precision)"
+    },
+    "RmpFull": {
+      "value": "1.2075070393433377205519661184561686865486879863554356316437687495815956453706540",
+      "source": "manifest:primary_16.combination.R_mp (full precision)"
+    },
+    "RwlsHead": {
+      "value": "1.207\\,507\\,039\\,343\\,337\\,720\\,0",
+      "source": "manifest:primary_16.combination.R_wls rounded to 19 decimals"
+    },
+    "RmpHead": {
+      "value": "1.207\\,507\\,039\\,343\\,337\\,720\\,6",
+      "source": "manifest:primary_16.combination.R_mp rounded to 19 decimals"
+    },
+    "uStatE": {
+      "value": "0.885",
+      "source": "manifest:primary_16.combination.u_stat_bayes"
+    },
+    "uStatShort": {
+      "value": "0.89",
+      "source": "manifest:primary_16.combination.u_stat_bayes (2 significant figures)"
+    },
+    "uWlsE": {
+      "value": "0.334",
+      "source": "manifest:primary_16.combination.u_wls"
+    },
+    "uMpE": {
+      "value": "0.788",
+      "source": "manifest:primary_16.combination.u_mp"
+    },
+    "uBirgeE": {
+      "value": "0.669",
+      "source": "manifest:primary_16.combination.u_birge"
+    },
+    "chiSq": {
+      "value": "60.25",
+      "source": "manifest:primary_16.combination.chi2"
+    },
+    "chiRed": {
+      "value": "4.017",
+      "source": "manifest:primary_16.combination.chi2_red"
+    },
+    "dofV": {
+      "value": "15",
+      "source": "manifest:primary_16.combination.dof"
+    },
+    "pChi": {
+      "value": "2.3\\times10^{-7}",
+      "source": "manifest:primary_16.combination.p_chi2"
+    },
+    "birgeRatio": {
+      "value": "2.004",
+      "source": "manifest:primary_16.combination.birge_ratio"
+    },
+    "xiMpE": {
+      "value": "2.50",
+      "source": "manifest:primary_16.combination.xi_mp"
+    },
+    "xiBayesE": {
+      "value": "2.83",
+      "source": "manifest:primary_16.combination.xi_bayes"
+    },
+    "muBayesE": {
+      "value": "-0.321",
+      "source": "manifest:primary_16.combination.mu_bayes"
+    },
+    "sensRwlsHead": {
+      "value": "1.207\\,507\\,039\\,343\\,337\\,720\\,4",
+      "source": "manifest:sensitivity_17.combination.R_wls rounded to 19 decimals"
+    },
+    "sensChiRed": {
+      "value": "5.24",
+      "source": "manifest:sensitivity_17.combination.chi2_red"
+    },
+    "dSegNineWls": {
+      "value": "+0.30\\times10^{-18}",
+      "source": "derived: sensitivity_17 minus primary_16 WLS center, in 1e-18"
+    },
+    "nSeg": {
+      "value": "16",
+      "source": "manifest:primary_16.included_groups"
+    },
+    "nSegAll": {
+      "value": "17",
+      "source": "manifest:sensitivity_17.included_groups"
+    },
+    "nSamples": {
+      "value": "986\\,416",
+      "source": "manifest:primary_16.total_samples"
+    },
+    "nSamplesAll": {
+      "value": "1\\,008\\,912",
+      "source": "manifest:sensitivity_17.total_samples"
+    },
+    "nHours": {
+      "value": "274",
+      "source": "derived: total_samples / 3600"
+    },
+    "nHoursAll": {
+      "value": "280",
+      "source": "derived: sensitivity total_samples / 3600"
+    },
+    "nSegNine": {
+      "value": "22496",
+      "source": "derived: sensitivity_17.total_samples minus primary_16.total_samples (the number of seconds carried by segment 9)"
+    },
+    "nModelLimited": {
+      "value": "5",
+      "source": "manifest:primary_16.segment_statuses (non-established)"
+    },
+    "modelLimitedGroups": {
+      "value": "2,\\ 6,\\ 7,\\ 12,\\ 16",
+      "source": "manifest:primary_16 (groups with non-established fit status)"
+    },
+    "uSrE": {
+      "value": "0.92",
+      "source": "curated: USTC Sr1 systematic uncertainty 9.2e-19 (Jia et al. 2026, Metrologia 63, 025002), adopted as 0.92e-18"
+    },
+    "uYbE": {
+      "value": "1.3",
+      "source": "curated (user-confirmed): Wuhan Yb lattice-clock published systematic uncertainty 1.3e-18 (Zhu et al., arXiv:2606.10514); resolves the internal 1.1e-18 vs published 1.3e-18 conflict in favor of the published evaluation"
+    },
+    "uLinkE": {
+      "value": "0.1",
+      "source": "curated upper bound: experiment-side budget lists the fiber transfer as < 1e-19 (experiment materials; .omo/drafts/experiment-facts.md); adopted as 0.1e-18"
+    },
+    "uCombE": {
+      "value": "0.1",
+      "source": "curated upper bound: experiment-side budget lists the comb transfer as < 1e-19 (experiment materials; .omo/drafts/experiment-facts.md); adopted as 0.1e-18"
+    },
+    "uTidalE": {
+      "value": "0.5",
+      "source": "mandate (user-confirmed 0.5e-18): data-driven scale of the time-varying redshift term carried as an uncertainty item; consistent with the frozen 16-segment empirical-scenario center shift (5.30e-19) in results/audit-v1/verified/statistical_methods_tidal_seg9_excluded.json"
+    },
+    "dWVal": {
+      "value": "280.042",
+      "source": "curated: leveled geopotential difference 280.042 m^2/s^2 (experiment-side leveling report); the alternative record 280.049 m^2/s^2 is carried as an external pending item"
+    },
+    "dWUnc": {
+      "value": "0.085",
+      "source": "curated: leveling uncertainty +/- 0.085 m^2/s^2 (experiment-side leveling report)"
+    },
+    "refNistV": {
+      "value": "1.207\\,507\\,039\\,343\\,337\\,723\\,0",
+      "source": "literature: Aeppli et al. 2026, Phys. Rev. Lett. 137, 033201 (arXiv:2512.21428)"
+    },
+    "refNistU": {
+      "value": "37",
+      "source": "literature: Aeppli et al. 2026 (as above), quoted uncertainty digits"
+    },
+    "refNistE": {
+      "value": "3.7",
+      "source": "literature: Aeppli et al. 2026 quoted uncertainty, in 1e-18"
+    },
+    "refEuV": {
+      "value": "1.207\\,507\\,039\\,343\\,337\\,718",
+      "source": "literature: Pizzocaro et al. 2026, Phys. Rev. Research 8, 033250 (arXiv:2604.27963)"
+    },
+    "refEuU": {
+      "value": "32",
+      "source": "literature: Pizzocaro et al. 2026 (as above), quoted uncertainty digits"
+    },
+    "refEuE": {
+      "value": "3.2",
+      "source": "literature: Pizzocaro et al. 2026 quoted uncertainty, in 1e-18"
+    },
+    "fibreKm": {
+      "value": "1\\,350",
+      "source": "experiment materials (link documentation): single-pass fiber length"
+    },
+    "roundKm": {
+      "value": "2\\,700",
+      "source": "experiment materials (link documentation): loop-back round-trip length"
+    },
+    "siteKm": {
+      "value": "700",
+      "source": "experiment materials (link documentation): separation of the two sites"
+    },
+    "levelKm": {
+      "value": "1\\,113",
+      "source": "experiment-side leveling report: leveling line length"
+    },
+    "nDays": {
+      "value": "58",
+      "source": "experiment materials: 2026-06-29 to 2026-08-26 campaign span"
+    },
+    "nStages": {
+      "value": "3",
+      "source": "experiment materials: number of measurement stages"
+    },
+    "refSameCampusU": {
+      "value": "3.2\\times10^{-18}",
+      "source": "literature: Aeppli et al. 2026 (PRL 137, 033201): best same-campus (NIST-JILA, 3.6 km link) cross-species ratio uncertainty, as quoted"
+    },
+    "refSameCampusKm": {
+      "value": "3.6",
+      "source": "literature: Aeppli et al. 2026 (as above): phase-stabilized fiber link length of the NIST-JILA campus comparison"
+    },
+    "refEuBestU": {
+      "value": "7.7\\times10^{-18}",
+      "source": "literature: Pizzocaro et al. 2026 (Phys. Rev. Research 8, 033250; arXiv:2604.27963): best ratio in the European fiber network campaign"
+    },
+    "refPtbTransportableU": {
+      "value": "4.3\\times10^{-18}",
+      "source": "literature: Vishwakarma et al. 2026 (arXiv:2608.01916): Yb+/Sr ratio uncertainty with a transportable clock at PTB"
+    },
+    "refVlbiKm": {
+      "value": "9\\,000",
+      "source": "literature: Pizzocaro et al. 2021 (Nature Physics 17, 223-227): VLBI comparison of two optical clocks separated by about 9000 km"
+    },
+    "refLisdatKm": {
+      "value": "1\\,415",
+      "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): Paris-Braunschweig Sr-Sr comparison over 1415 km of telecom fiber"
+    },
+    "fRepMHz": {
+      "value": "200",
+      "source": "clock/params.json (FREF=1e7, DIV20=20): comb repetition rate, MHz"
+    },
+    "fFifteenTHz": {
+      "value": "193.3992",
+      "source": "clock/params.json: N1550_WH x f_rep = 966996 x 200 MHz; the 1550 nm transfer frequency used to convert the beat to fractional units"
+    },
+    "deltaGV": {
+      "value": "-3.116\\times10^{-15}",
+      "source": "clock/params.json DELTA_G = -3.116e-15: static gravitational-redshift correction applied in the ratio inversion"
+    },
+    "uSubsystemBound": {
+      "value": "1\\times10^{-19}",
+      "source": "experiment materials: upper bound quoted for the fiber-link and comb transfer subsystems (<1e-19 each)"
+    },
+    "levelMm": {
+      "value": "0.255",
+      "source": "experiment-side leveling report: per-kilometer misclosure of the leveling line (first-order limit 0.45 mm)"
+    },
+    "refThreshold": {
+      "value": "5\\times10^{-18}",
+      "source": "literature: Dimarcq et al. 2024 (Metrologia 61, 012001), mandatory criterion I.2: required agreement level of frequency-ratio comparisons"
+    },
+    "selfEvalBound": {
+      "value": "2\\times10^{-18}",
+      "source": "author-supplied abstract statement (2026-10-09): bound quoted for self-evaluated uncertainties of current optical clocks; consistent with the introduction citations (lattice and single-ion clocks at or below 1e-18: arnold2026lu, zhang2026ca)"
+    },
+    "refLisdatU": {
+      "value": "5\\times10^{-17}",
+      "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): reported Sr-Sr ratio uncertainty over 1415 km of fiber"
+    },
+    "euNClocks": {
+      "value": "7",
+      "source": "literature: Pizzocaro et al. 2026: number of optical clocks in the European fiber-network campaign"
+    },
+    "euNInstitutes": {
+      "value": "4",
+      "source": "literature: Pizzocaro et al. 2026: number of participating institutes"
+    },
+    "lindvallNClocks": {
+      "value": "10",
+      "source": "literature: Lindvall et al. 2025 (Optica 12, 843): number of optical clocks in coordinated comparisons"
+    },
+    "lindvallNCountries": {
+      "value": "6",
+      "source": "literature: Lindvall et al. 2025: number of countries"
+    },
+    "lindvallNRatios": {
+      "value": "38",
+      "source": "literature: Lindvall et al. 2025: number of optical frequency ratios reported"
+    },
+    "schioppoKm": {
+      "value": "2\\,220",
+      "source": "literature: Schioppo et al. 2022 (Nature Communications 13, 212): metrological fiber link network length"
+    },
+    "chenKm": {
+      "value": "2\\,067",
+      "source": "literature: Chen et al. 2026 (Light: Science & Applications 15, 276): field-deployed fiber link length"
+    },
+    "claimDate": {
+      "value": "October 2026",
+      "source": "the claim date of the first-report statement; user-confirmed timing"
+    },
+    "uStaticE": {
+      "value": "0.946",
+      "source": "derived: curated delta_w_unc / c^2"
+    },
+    "uTotalE": {
+      "value": "2.12",
+      "source": "derived: quadrature of the budget components (this pipeline)"
+    },
+    "uTotalShort": {
+      "value": "2.1",
+      "source": "derived: quadrature of the budget components, 2 significant figures"
+    },
+    "RheadlineUnc": {
+      "value": "21",
+      "source": "derived: total standard uncertainty to two significant figures"
+    },
+    "dVsNistE": {
+      "value": "-2.44\\times10^{-18}",
+      "source": "derived: R_bayes minus the NIST-JILA reference, in 1e-18"
+    },
+    "dVsEuE": {
+      "value": "+2.56\\times10^{-18}",
+      "source": "derived: R_bayes minus the European-network reference, in 1e-18"
+    }
+  }
+}
