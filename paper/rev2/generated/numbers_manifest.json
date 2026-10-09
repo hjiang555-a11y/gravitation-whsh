@@ -87,7 +87,7 @@
     },
     "dSegNineWls": {
       "value": "+0.30\\times10^{-18}",
-      "source": "derived: sensitivity_17 minus primary_16 WLS centre, in 1e-18"
+      "source": "derived: sensitivity_17 minus primary_16 WLS center, in 1e-18"
     },
     "nSeg": {
       "value": "16",
@@ -131,11 +131,11 @@
     },
     "uYbE": {
       "value": "1.3",
-      "source": "curated (user-confirmed): Wuhan Yb lattice-clock published systematic uncertainty 1.3e-18 (Zhu et al., arXiv:2606.10514); resolves the internal 1.1e-18 vs published 1.3e-18 conflict in favour of the published evaluation"
+      "source": "curated (user-confirmed): Wuhan Yb lattice-clock published systematic uncertainty 1.3e-18 (Zhu et al., arXiv:2606.10514); resolves the internal 1.1e-18 vs published 1.3e-18 conflict in favor of the published evaluation"
     },
     "uLinkE": {
       "value": "0.1",
-      "source": "curated upper bound: experiment-side budget lists the fibre transfer as < 1e-19 (experiment materials; .omo/drafts/experiment-facts.md); adopted as 0.1e-18"
+      "source": "curated upper bound: experiment-side budget lists the fiber transfer as < 1e-19 (experiment materials; .omo/drafts/experiment-facts.md); adopted as 0.1e-18"
     },
     "uCombE": {
       "value": "0.1",
@@ -143,15 +143,15 @@
     },
     "uTidalE": {
       "value": "0.5",
-      "source": "mandate (user-confirmed 0.5e-18): data-driven scale of the time-varying redshift term carried as an uncertainty item; consistent with the frozen 16-segment empirical-scenario centre shift (5.30e-19) in results/audit-v1/verified/statistical_methods_tidal_seg9_excluded.json"
+      "source": "mandate (user-confirmed 0.5e-18): data-driven scale of the time-varying redshift term carried as an uncertainty item; consistent with the frozen 16-segment empirical-scenario center shift (5.30e-19) in results/audit-v1/verified/statistical_methods_tidal_seg9_excluded.json"
     },
     "dWVal": {
       "value": "280.042",
-      "source": "curated: levelled geopotential difference 280.042 m^2/s^2 (experiment-side levelling report); the alternative record 280.049 m^2/s^2 is carried as an external pending item"
+      "source": "curated: leveled geopotential difference 280.042 m^2/s^2 (experiment-side leveling report); the alternative record 280.049 m^2/s^2 is carried as an external pending item"
     },
     "dWUnc": {
       "value": "0.085",
-      "source": "curated: levelling uncertainty +/- 0.085 m^2/s^2 (experiment-side levelling report)"
+      "source": "curated: leveling uncertainty +/- 0.085 m^2/s^2 (experiment-side leveling report)"
     },
     "refNistV": {
       "value": "1.207\\,507\\,039\\,343\\,337\\,723\\,0",
@@ -179,7 +179,7 @@
     },
     "fibreKm": {
       "value": "1\\,350",
-      "source": "experiment materials (link documentation): single-pass fibre length"
+      "source": "experiment materials (link documentation): single-pass fiber length"
     },
     "roundKm": {
       "value": "2\\,700",
@@ -191,7 +191,7 @@
     },
     "levelKm": {
       "value": "1\\,113",
-      "source": "experiment-side levelling report: levelling line length"
+      "source": "experiment-side leveling report: leveling line length"
     },
     "nDays": {
       "value": "58",
@@ -207,11 +207,15 @@
     },
     "refSameCampusKm": {
       "value": "3.6",
-      "source": "literature: Aeppli et al. 2026 (as above): phase-stabilised fibre link length of the NIST-JILA campus comparison"
+      "source": "literature: Aeppli et al. 2026 (as above): phase-stabilized fiber link length of the NIST-JILA campus comparison"
     },
     "refEuBestU": {
       "value": "7.7\\times10^{-18}",
-      "source": "literature: Pizzocaro et al. 2026 (Phys. Rev. Research 8, 033250; arXiv:2604.27963): best ratio in the European fibre network campaign"
+      "source": "literature: Pizzocaro et al. 2026 (Phys. Rev. Research 8, 033250; arXiv:2604.27963): best ratio in the European fiber network campaign"
+    },
+    "refPtbTransportableU": {
+      "value": "4.3\\times10^{-18}",
+      "source": "literature: Vishwakarma et al. 2026 (arXiv:2608.01916): Yb+/Sr ratio uncertainty with a transportable clock at PTB"
     },
     "refVlbiKm": {
       "value": "9\\,000",
@@ -219,7 +223,7 @@
     },
     "refLisdatKm": {
       "value": "1\\,415",
-      "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): Paris-Braunschweig Sr-Sr comparison over 1415 km of telecom fibre"
+      "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): Paris-Braunschweig Sr-Sr comparison over 1415 km of telecom fiber"
     },
     "fRepMHz": {
       "value": "200",
@@ -235,11 +239,11 @@
     },
     "uSubsystemBound": {
       "value": "1\\times10^{-19}",
-      "source": "experiment materials: upper bound quoted for the fibre-link and comb transfer subsystems (<1e-19 each)"
+      "source": "experiment materials: upper bound quoted for the fiber-link and comb transfer subsystems (<1e-19 each)"
     },
     "levelMm": {
       "value": "0.255",
-      "source": "experiment-side levelling report: per-kilometre misclosure of the levelling line (first-order limit 0.45 mm)"
+      "source": "experiment-side leveling report: per-kilometer misclosure of the leveling line (first-order limit 0.45 mm)"
     },
     "refThreshold": {
       "value": "5\\times10^{-18}",
@@ -251,11 +255,11 @@
     },
     "refLisdatU": {
       "value": "5\\times10^{-17}",
-      "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): reported Sr-Sr ratio uncertainty over 1415 km of fibre"
+      "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): reported Sr-Sr ratio uncertainty over 1415 km of fiber"
     },
     "euNClocks": {
       "value": "7",
-      "source": "literature: Pizzocaro et al. 2026: number of optical clocks in the European fibre-network campaign"
+      "source": "literature: Pizzocaro et al. 2026: number of optical clocks in the European fiber-network campaign"
     },
     "euNInstitutes": {
       "value": "4",
@@ -275,11 +279,11 @@
     },
     "schioppoKm": {
       "value": "2\\,220",
-      "source": "literature: Schioppo et al. 2022 (Nature Communications 13, 212): metrological fibre link network length"
+      "source": "literature: Schioppo et al. 2022 (Nature Communications 13, 212): metrological fiber link network length"
     },
     "chenKm": {
       "value": "2\\,067",
-      "source": "literature: Chen et al. 2026 (Light: Science & Applications 15, 276): field-deployed fibre link length"
+      "source": "literature: Chen et al. 2026 (Light: Science & Applications 15, 276): field-deployed fiber link length"
     },
     "claimDate": {
       "value": "October 2026",

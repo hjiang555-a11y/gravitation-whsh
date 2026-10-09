@@ -58,9 +58,9 @@ Required packages: `fontenc`, `inputenc`, `amsmath`, `amssymb`,
 - The author line is the placeholder `xxxxx`; the author list,
   affiliations and back-matter statements are to be supplied by the
   collaboration before submission.
-- Title (as specified in review, ~100 characters): "An inter-city Sr/Yb
+- Title (as specified in review, 99 characters): "An intercity Sr/Yb
   optical clock comparison at the 2.1x10^-18 uncertainty over a 1,350 km
-  fibre link"; still above Nature's 75-character guideline.
+  fiber link"; still above Nature's 75-character guideline.
 - Abstract: the latest author-revised text (2026-10-09), numbers
   macro-backed. Length metrics and the length-vs-format review live in
   `paper/rev2/REVIEW_NOTES.md` in the repository and are intentionally

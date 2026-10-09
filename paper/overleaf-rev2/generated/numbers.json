@@ -158,7 +158,7 @@
       "source": "derived:curated delta_w_unc / c^2"
     },
     {
-      "name": "Fibre link",
+      "name": "Fiber link",
       "e18": 0.1,
       "source": "curated:link_e18"
     },

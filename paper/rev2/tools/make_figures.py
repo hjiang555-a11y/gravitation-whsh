@@ -63,14 +63,14 @@ def fig_network() -> None:
     ax.text(5.0, 1.72, f"{meta['site_km']:,} km apart".replace(",", " "),
             ha="center", fontsize=9, color="#0969da")
     ax.text(5.0, 0.72,
-            f"phase-stabilised fibre link, {meta['fibre_km']:,} km single pass "
+            f"phase-stabilized fiber link, {meta['fibre_km']:,} km single pass "
             f"({meta['round_trip_km']:,} km loop-back), 1550 nm".replace(",", " "),
             ha="center", fontsize=8.5, color="#24292f")
     ax.annotate("", xy=(8.25, 0.95), xytext=(1.75, 0.95),
                 arrowprops=dict(arrowstyle="<->", color="#57606a", lw=1.2))
     for x in (3.4, 5.0, 6.6):
         ax.plot([x], [0.95], marker="s", ms=6, color="#2ca02c")
-    ax.text(5.0, 0.35, "relay stations (EDFA + fibre-noise cancellation)",
+    ax.text(5.0, 0.35, "relay stations (EDFA + fiber-noise cancellation)",
             ha="center", fontsize=8, color="#57606a")
     _save(fig, "fig1_network")
 

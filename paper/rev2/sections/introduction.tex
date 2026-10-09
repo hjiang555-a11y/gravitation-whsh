@@ -1,58 +1,60 @@
 Optical lattice and single-ion clocks now reach fractional systematic
-uncertainties at or below $1\times10^{-18}$~\citep{arnold2026lu,
-zhang2026ca}, and two-clock instabilities approach $10^{-18}$ within an
-hour~\citep{oelker2019stability}. Their value compounds when they are
-compared. Comparing independent clocks verifies accuracy budgets that no
-single laboratory can test, because the environmental and geodetic
-assumptions entering a self-evaluation are shared within one site; linking
-clocks at different locations into a cooperative \emph{network} is
-therefore how optical clocks become verifiable metrological
+uncertainties at or below \selfEvalBound~\citep{arnold2026lu,
+zhang2026ca}, two orders of magnitude better than current primary
+frequency standards~\citep{heavner2014nistf2, weyers2018ptbcsf}. By
+comparing independent optical clocks located in different regions and
+laboratories, the precision budget self-assessed by individual clocks
+can be verified more objectively. This is because the environmental
+conditions and geodetic assumptions used in self-evaluation are
+typically based on a single location, and using identical methods within
+a single laboratory may lead to common systematic biases. Therefore,
+connecting clocks from different locations and types into a
+collaborative network is a key pathway toward establishing optical
+clocks as a verifiable metrological
 infrastructure~\citep{riehle2017networks, komar2014quantumnetwork}. The
-idea has moved from proposal to practice: fibre links with added noise below
-the clocks themselves now span thousands of
-kilometres~\citep{schioppo2022cavities, chen2026dissemination}, and
-multi-clock campaigns have measured tens of ratios among
-clocks in six countries~\citep{lindvall2025coordinated} and across a
-continental network~\citep{pizzocaro2026european}.
+idea has moved from proposal to practice: fiber links with noise levels
+below that of the clocks themselves now span thousands of
+kilometers~\citep{schioppo2022cavities, chen2026dissemination}, and
+multi-clock campaigns have measured tens of ratios among clocks in six
+countries~\citep{lindvall2025coordinated} and across a continental
+network~\citep{pizzocaro2026european}. Satellite-based advanced links
+with comparable performance are also being developed and will
+interconnect with fiber networks to form a future global optical clock
+network~\citep{shen2021satellite, caldwell2023geo, shen2022freespace}.
 
-The most immediate purpose of such a network is the redefinition of the SI
-second. The roadmap towards the redefinition requires, among its mandatory
-criteria, that frequency ratios be measured independently in different
-laboratories with an agreement better than \refThreshold, and that
-individual ratios be repeated by different
-institutes~\citep{dimarcq2024roadmap}; the requirement was restated in the
-2025 CCTF progress
-reports~\citep{cctf2025strategy, cctf2025taskforce}. The present status is
-asymmetric. Ratios at or below the threshold have been demonstrated only
-between clocks on the same campus, most recently over a
-\refSameCampusKm~km stabilised link with uncertainties at or below
-\refSameCampusU~\citep{aeppli2026nist}; comparisons across independent
-institutions have reached \refEuBestU{} at
-best~\citep{pizzocaro2026european}. No frequency-ratio measurement between
-clocks in different cities has yet met the
+The most immediate purpose of such a network is the redefinition of the
+SI second. One of the mandatory requirements (I.2.b) in the roadmap for
+this redefinition~\citep{dimarcq2024roadmap} is that frequency ratios of
+different clock types be measured at least twice by different institutes
+in agreement with an overall uncertainty of the comparison
+$\Delta\nu/\nu < \refThreshold$---a requirement reiterated in the 2025
+CCTF progress report~\citep{cctf2025strategy, cctf2025taskforce}.
+However, comparisons across independent institutions and different
+locations have reached at best a precision of
+\refEuBestU~\citep{pizzocaro2026european}. So far, no frequency-ratio
+measurements between clocks in different cities have satisfied this
 requirement~\citep{fortier2026review}.
 
 Closing that gap matters beyond the definition itself. Chronometrically
-levelled clocks map the gravitational potential of the Earth at centimetre
-resolution~\citep{grotti2018geodesy, takamoto2020redshift, mcgrew2018geodesy};
-clock networks have been proposed and used as sensors for dark
-matter~\citep{derevianko2014topological, wcislo2018global}; and
-intercontinental clock comparisons through very long baseline
-interferometry (VLBI) have linked clocks $\refVlbiKm$\,km apart in Italy
-and Japan~\citep{pizzocaro2021vlbi}. All of these applications assume that
-remote clocks agree at a level that, until now, has only been demonstrated
-locally.
+leveled clocks map the gravitational potential of the Earth at
+centimeter resolution~\citep{grotti2018geodesy, takamoto2020redshift,
+mcgrew2018geodesy}; clock networks have been proposed and used as
+sensors for dark matter~\citep{derevianko2014topological,
+wcislo2018global}. All of these applications assume that remote clocks
+agree at a level that, until now, has only been demonstrated locally
+twice: a Sr/Yb/Al$^+$ triple-clock ratio measurement with an uncertainty
+of \refSameCampusU~by NIST--JILA in Boulder (US)~\citep{aeppli2026nist},
+and a Yb$^+$/Sr measurement with \refPtbTransportableU~by PTB in
+Braunschweig (Germany)~\citep{vishwakarma2026interspeciesclockcomparison5}.
 
-Here we report an inter-city, cross-species frequency-ratio measurement
+Here we report an intercity, cross-species frequency-ratio measurement
 between an IAPMST ytterbium lattice clock in Wuhan and a USTC strontium
 lattice clock in Shanghai, about $\siteKm$\,km apart, connected by a
-$\fibreKm$\,km phase-stabilised fibre link and operated coherently for
-\nDays~days in three stages. From \nSeg~retained data segments
-(\nSamples~seconds), we determine the Yb/Sr ratio to a total standard
-uncertainty of \uTotalShort$\times10^{-18}$, meeting the uncertainty
-requirement of the redefinition roadmap; the time-varying
-gravitational-redshift term is carried as an uncertainty item rather than
-applied as a correction. The result establishes the two sites as a
-prototype node pair for a distributed optical-clock network, and completes,
-at inter-city scale, the class of ratio measurements that the redefinition
-process depends on.
+$\fibreKm$\,km fiber link. We determine the Yb/Sr ratio with a total
+uncertainty of \uTotalShort$\times10^{-18}$; gravitational redshift
+effects have been corrected, whereas measurement error and the
+time-varying gravitational redshift term associated with gravitational
+tides have been retained as uncertainty components. The result
+establishes the two sites as a prototype node pair for a distributed
+optical-clock network, and completes, at intercity scale, the class of
+ratio measurements that the redefinition process depends on.

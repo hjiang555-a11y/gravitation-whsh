@@ -15,7 +15,7 @@ fi
 "$REV2/tools/sync_overleaf.sh"
 
 cd "$ROOT"
-git add paper/rev2 paper/overleaf-rev2 paper/overleaf-rev2-upload.zip
+git add paper/rev2 paper/overleaf-rev2 paper/overleaf-rev2-upload.zip README.md .gitignore
 if git diff --cached --quiet; then
   echo "nothing to publish"
   exit 0

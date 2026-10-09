@@ -57,12 +57,12 @@ CURATED: dict[str, tuple[str, str]] = {
         "1.3",
         "curated (user-confirmed): Wuhan Yb lattice-clock published systematic "
         "uncertainty 1.3e-18 (Zhu et al., arXiv:2606.10514); resolves the "
-        "internal 1.1e-18 vs published 1.3e-18 conflict in favour of the "
+        "internal 1.1e-18 vs published 1.3e-18 conflict in favor of the "
         "published evaluation",
     ),
     "link_e18": (
         "0.1",
-        "curated upper bound: experiment-side budget lists the fibre transfer "
+        "curated upper bound: experiment-side budget lists the fiber transfer "
         "as < 1e-19 (experiment materials; .omo/drafts/experiment-facts.md); "
         "adopted as 0.1e-18",
     ),
@@ -76,19 +76,19 @@ CURATED: dict[str, tuple[str, str]] = {
         "0.5",
         "mandate (user-confirmed 0.5e-18): data-driven scale of the "
         "time-varying redshift term carried as an uncertainty item; consistent "
-        "with the frozen 16-segment empirical-scenario centre shift (5.30e-19) "
+        "with the frozen 16-segment empirical-scenario center shift (5.30e-19) "
         "in results/audit-v1/verified/statistical_methods_tidal_seg9_excluded.json",
     ),
     "delta_w": (
         "280.042",
-        "curated: levelled geopotential difference 280.042 m^2/s^2 "
-        "(experiment-side levelling report); the alternative record "
+        "curated: leveled geopotential difference 280.042 m^2/s^2 "
+        "(experiment-side leveling report); the alternative record "
         "280.049 m^2/s^2 is carried as an external pending item",
     ),
     "delta_w_unc": (
         "0.085",
-        "curated: levelling uncertainty +/- 0.085 m^2/s^2 "
-        "(experiment-side levelling report)",
+        "curated: leveling uncertainty +/- 0.085 m^2/s^2 "
+        "(experiment-side leveling report)",
     ),
     "ref_nist": (
         "1.2075070393433377230",
@@ -108,10 +108,10 @@ CURATED: dict[str, tuple[str, str]] = {
         "32",
         "literature: Pizzocaro et al. 2026 (as above), quoted uncertainty digits",
     ),
-    "fibre_km": ("1350", "experiment materials (link documentation): single-pass fibre length"),
+    "fibre_km": ("1350", "experiment materials (link documentation): single-pass fiber length"),
     "round_trip_km": ("2700", "experiment materials (link documentation): loop-back round-trip length"),
     "site_km": ("700", "experiment materials (link documentation): separation of the two sites"),
-    "level_km": ("1113", "experiment-side levelling report: levelling line length"),
+    "level_km": ("1113", "experiment-side leveling report: leveling line length"),
     "campaign_days": ("58", "experiment materials: 2026-06-29 to 2026-08-26 campaign span"),
     "n_stages": ("3", "experiment materials: number of measurement stages"),
     "same_campus_best_e18": (
@@ -121,13 +121,18 @@ CURATED: dict[str, tuple[str, str]] = {
     ),
     "same_campus_km": (
         "3.6",
-        "literature: Aeppli et al. 2026 (as above): phase-stabilised fibre "
+        "literature: Aeppli et al. 2026 (as above): phase-stabilized fiber "
         "link length of the NIST-JILA campus comparison",
     ),
     "eu_best_e18": (
         "7.7",
         "literature: Pizzocaro et al. 2026 (Phys. Rev. Research 8, 033250; "
-        "arXiv:2604.27963): best ratio in the European fibre network campaign",
+        "arXiv:2604.27963): best ratio in the European fiber network campaign",
+    ),
+    "ptb_transportable_e18": (
+        "4.3",
+        "literature: Vishwakarma et al. 2026 (arXiv:2608.01916): Yb+/Sr ratio "
+        "uncertainty with a transportable clock at PTB",
     ),
     "vlbi_km": (
         "9000",
@@ -137,7 +142,7 @@ CURATED: dict[str, tuple[str, str]] = {
     "lisdat_km": (
         "1415",
         "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): "
-        "Paris-Braunschweig Sr-Sr comparison over 1415 km of telecom fibre",
+        "Paris-Braunschweig Sr-Sr comparison over 1415 km of telecom fiber",
     ),
     "f_rep_mhz": ("200", "clock/params.json (FREF=1e7, DIV20=20): comb repetition rate, MHz"),
     "f_1550_thz": (
@@ -152,13 +157,13 @@ CURATED: dict[str, tuple[str, str]] = {
     ),
     "subsystem_bound_e19": (
         "1\\times10^{-19}",
-        "experiment materials: upper bound quoted for the fibre-link and "
+        "experiment materials: upper bound quoted for the fiber-link and "
         "comb transfer subsystems (<1e-19 each)",
     ),
     "level_misclosure_mm": (
         "0.255",
-        "experiment-side levelling report: per-kilometre misclosure of the "
-        "levelling line (first-order limit 0.45 mm)",
+        "experiment-side leveling report: per-kilometer misclosure of the "
+        "leveling line (first-order limit 0.45 mm)",
     ),
     "ref_threshold": (
         "5\\times10^{-18}",
@@ -175,15 +180,15 @@ CURATED: dict[str, tuple[str, str]] = {
     "lisdat_u_e17": (
         "5\\times10^{-17}",
         "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): "
-        "reported Sr-Sr ratio uncertainty over 1415 km of fibre",
+        "reported Sr-Sr ratio uncertainty over 1415 km of fiber",
     ),
-    "eu_n_clocks": ("7", "literature: Pizzocaro et al. 2026: number of optical clocks in the European fibre-network campaign"),
+    "eu_n_clocks": ("7", "literature: Pizzocaro et al. 2026: number of optical clocks in the European fiber-network campaign"),
     "eu_n_institutes": ("4", "literature: Pizzocaro et al. 2026: number of participating institutes"),
     "lindvall_n_clocks": ("10", "literature: Lindvall et al. 2025 (Optica 12, 843): number of optical clocks in coordinated comparisons"),
     "lindvall_n_countries": ("6", "literature: Lindvall et al. 2025: number of countries"),
     "lindvall_n_ratios": ("38", "literature: Lindvall et al. 2025: number of optical frequency ratios reported"),
-    "schioppo_km": ("2\\,220", "literature: Schioppo et al. 2022 (Nature Communications 13, 212): metrological fibre link network length"),
-    "chen_km": ("2\\,067", "literature: Chen et al. 2026 (Light: Science & Applications 15, 276): field-deployed fibre link length"),
+    "schioppo_km": ("2\\,220", "literature: Schioppo et al. 2022 (Nature Communications 13, 212): metrological fiber link network length"),
+    "chen_km": ("2\\,067", "literature: Chen et al. 2026 (Light: Science & Applications 15, 276): field-deployed fiber link length"),
     "claim_date": ("October 2026", "the claim date of the first-report statement; user-confirmed timing"),
 }
 
@@ -292,7 +297,7 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         "manifest:sensitivity_17.combination.chi2_red")
     d_seg9_wls = float((Decimal(sens_comb["R_wls"]) - Decimal(comb["R_wls"])) * Decimal("1e18"))
     add("dSegNineWls", f"{d_seg9_wls:+.2f}" + r"\times10^{-18}",
-        "derived: sensitivity_17 minus primary_16 WLS centre, in 1e-18")
+        "derived: sensitivity_17 minus primary_16 WLS center, in 1e-18")
 
     add("nSeg", str(len(primary["included_groups"])), "manifest:primary_16.included_groups")
     add("nSegAll", str(len(sensitivity["included_groups"])), "manifest:sensitivity_17.included_groups")
@@ -340,6 +345,8 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("refSameCampusKm", CURATED["same_campus_km"][0], CURATED["same_campus_km"][1])
     add("refEuBestU", CURATED["eu_best_e18"][0] + r"\times10^{-18}",
         CURATED["eu_best_e18"][1])
+    add("refPtbTransportableU", CURATED["ptb_transportable_e18"][0] + r"\times10^{-18}",
+        CURATED["ptb_transportable_e18"][1])
     add("refVlbiKm", latex_groups(CURATED["vlbi_km"][0]), CURATED["vlbi_km"][1])
     add("refLisdatKm", latex_groups(CURATED["lisdat_km"][0]), CURATED["lisdat_km"][1])
     add("fRepMHz", CURATED["f_rep_mhz"][0], CURATED["f_rep_mhz"][1])
@@ -361,7 +368,7 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("chenKm", CURATED["chen_km"][0], CURATED["chen_km"][1])
     add("claimDate", CURATED["claim_date"][0], CURATED["claim_date"][1])
 
-    # Derived: static-potential uncertainty from the levelled dW uncertainty.
+    # Derived: static-potential uncertainty from the leveled dW uncertainty.
     u_static_e18 = float(CURATED["delta_w_unc"][0]) / C_LIGHT**2 * 1e18
     add("uStaticE", f"{u_static_e18:.3f}",
         "derived: curated delta_w_unc / c^2")
@@ -434,7 +441,7 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
             {"name": "Sr systematics", "e18": budget_values["sr"], "source": "curated:sr_syst_e18"},
             {"name": "Yb systematics", "e18": budget_values["yb"], "source": "curated:yb_syst_e18"},
             {"name": "Static potential", "e18": u_static_e18, "source": "derived:curated delta_w_unc / c^2"},
-            {"name": "Fibre link", "e18": budget_values["link"], "source": "curated:link_e18"},
+            {"name": "Fiber link", "e18": budget_values["link"], "source": "curated:link_e18"},
             {"name": "Frequency comb", "e18": budget_values["comb"], "source": "curated:comb_e18"},
             {"name": "Time-varying redshift", "e18": budget_values["tidal"], "source": "curated:tidal_e18"},
         ],

@@ -25,7 +25,7 @@ correction enters the ratio inversion as a multiplicative factor,
   = \left(\mathrm{Yb/Sr}\right)_{\rm raw} \times (1 + \delta_g),
   \qquad \delta_g = \deltaGV,
 \end{equation}
-derived from the levelled geopotential difference
+derived from the leveled geopotential difference
 $\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$ (Methods).
 
 \section{Data processing and segment definition}
@@ -35,7 +35,7 @@ The counters sample the beat every second in phase-averaging mode.
 Samples deviating by more than $10$\,Hz from the running median are
 treated as jump points and removed; the retained data are further
 trimmed at both ends by an endpoint screen that drops points beyond
-$1\%$ of the peak-to-peak range of the record. The data set analysed
+$1\%$ of the peak-to-peak range of the record. The data set analyzed
 here consists of the longest jump-free record of each accepted segment
 after this screening. Table~\ref{tab:segments} lists the per-segment
 retained counts, ratio deviations and statistical uncertainties; the
@@ -44,7 +44,7 @@ model-limited.
 
 \begin{table}[t]
   \centering
-  \caption{Per-segment data of the 16 segments analysed in this work. Ratio
+  \caption{Per-segment data of the 16 segments analyzed in this work. Ratio
   deviations $y_i = R_i/R_1 - 1$ are relative to the first segment;
   $u(y_i)$ is the statistical uncertainty of the segment ratio;
   ``Fit'' is \emph{est.} for segments whose stability fit lies in the
@@ -64,7 +64,7 @@ estimate one common ratio with uncertainties $u_i$,
   u_{\rm WLS} = \left(\sum_i w_i\right)^{-1/2},
 \]
 with $\chi^2 = \sum_i (R_i - \mu_{\rm WLS})^2 / u_i^2$ and
-$\chi^2_{\rm red} = \chi^2/(N-1)$. For the analysed data set,
+$\chi^2_{\rm red} = \chi^2/(N-1)$. For the analyzed data set,
 $\chi^2_{\rm red} = \chiRed$ ($N = \nSeg$,
 $\dofV$ degrees of freedom, $p = \pChi$), so the fixed-effect
 uncertainty under-describes the observed scatter.
@@ -77,7 +77,7 @@ not.
 
 \paragraph{Mandel--Paule.} An excess scatter $\xi$ common to all
 segments is added in quadrature, $u_{i,\rm eff}^2 = u_i^2 + \xi^2$,
-and $\xi$ is solved from $\chi^2_{\rm red}(\xi) = 1$. For the analysed
+and $\xi$ is solved from $\chi^2_{\rm red}(\xi) = 1$. For the analyzed
 data set, $\xi = \xiMpE \times 10^{-18}$.
 
 \paragraph{Bayesian random effect.} The same observation model,
@@ -87,22 +87,22 @@ on $\mu$ and on $\log\xi$, and the joint posterior
 $p(\mu, \xi \mid \{R_i, u_i\})$ is marginalised numerically over a
 40-decade log-$\xi$ grid. The reported central value is the posterior
 mean of $\mu$ and the statistical uncertainty is its posterior
-standard deviation; for the analysed data set,
+standard deviation; for the analyzed data set,
 $\xi = \xiBayesE \times 10^{-18}$. The excess scatter quantified here
 also absorbs the correlated component of the time-varying
 gravitational-redshift term (Methods), which
 is carried separately as an uncertainty item rather than corrected.
 
-\section{Levelling reduction}
-\label{app:levelling}
+\section{Leveling reduction}
+\label{app:leveling}
 
 The orthometric height difference between benchmarks follows from the
-levelled normal heights after the normal-to-orthometric conversion,
-with gravity observed at every levelling point. The geopotential
+leveled normal heights after the normal-to-orthometric conversion,
+with gravity observed at every leveling point. The geopotential
 difference is integrated segment by segment,
 $\dW_{AB} = -\sum_i g_i \Delta H_i$, and combined with the two local
 offsets between benchmark and clock platform (obtained by
-trigonometric levelling) and the platform-to-transition offsets from
+trigonometric leveling) and the platform-to-transition offsets from
 the clock design parameters. The resulting atomic-transition
 geopotential difference is $\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$,
 equivalent to an optical fractional shift of $\deltaGV$.
@@ -116,9 +116,9 @@ Bayesian random-effect model (Appendix~\ref{app:stats}). The Sr and
 Yb terms are the published systematic uncertainties of the two
 clocks~\citep{jia2026sr, zhu2026yb}; for the Yb clock the published
 evaluation is adopted. The static-potential term is
-$u(\dW)/c^2$ from the levelling uncertainty
+$u(\dW)/c^2$ from the leveling uncertainty
 $\dWUnc~\mathrm{m^2\,s^{-2}}$, giving
-$\uStaticE \times 10^{-18}$. The fibre-link and comb terms are
+$\uStaticE \times 10^{-18}$. The fiber-link and comb terms are
 experiment-side upper bounds of $\uSubsystemBound$ each, carried at
 \uLinkE $\times 10^{-18}$ and $\uCombE \times 10^{-18}$ to preserve the
 experiment-side margin. The time-varying-redshift term is scaled from
