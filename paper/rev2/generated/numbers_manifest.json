@@ -245,6 +245,10 @@
       "value": "5\\times10^{-18}",
       "source": "literature: Dimarcq et al. 2024 (Metrologia 61, 012001), mandatory criterion I.2: required agreement level of frequency-ratio comparisons"
     },
+    "selfEvalBound": {
+      "value": "2\\times10^{-18}",
+      "source": "author-supplied abstract statement (2026-10-09): bound quoted for self-evaluated uncertainties of current optical clocks; consistent with the introduction citations (lattice and single-ion clocks at or below 1e-18: arnold2026lu, zhang2026ca)"
+    },
     "refLisdatU": {
       "value": "5\\times10^{-17}",
       "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): reported Sr-Sr ratio uncertainty over 1415 km of fibre"

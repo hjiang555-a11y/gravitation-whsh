@@ -61,10 +61,11 @@ Required packages: `fontenc`, `inputenc`, `amsmath`, `amssymb`,
 - Title (as specified in review, ~100 characters): "An inter-city Sr/Yb
   optical clock comparison at the 2.1x10^-18 uncertainty over a 1,350 km
   fibre link"; still above Nature's 75-character guideline.
-- Main text length ~1,510 words (summary + Introduction + Results +
-  Discussion and outlook) against the ~2,500-word anchor for a typical
-  6-page Nature Article; the full length-vs-format review is in
-  `paper/rev2/REVIEW_NOTES.md` (repository).
+- Abstract replaced with the specified text (2026-10-09); 177 words,
+  numbers macro-backed. Main text length ~1,534 words (summary +
+  Introduction + Results + Discussion and outlook) against the
+  ~2,500-word anchor for a typical 6-page Nature Article; the full
+  length-vs-format review is in `paper/rev2/REVIEW_NOTES.md` (repository).
 - This package is synced from `paper/rev2/` by
   `paper/rev2/tools/sync_overleaf.sh`; one-shot verification is
   `paper/rev2/tools/check.sh`.

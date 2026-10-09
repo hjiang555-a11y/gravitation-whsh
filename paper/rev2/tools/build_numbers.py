@@ -165,6 +165,13 @@ CURATED: dict[str, tuple[str, str]] = {
         "literature: Dimarcq et al. 2024 (Metrologia 61, 012001), mandatory "
         "criterion I.2: required agreement level of frequency-ratio comparisons",
     ),
+    "self_eval_bound": (
+        "2\\times10^{-18}",
+        "author-supplied abstract statement (2026-10-09): bound quoted for "
+        "self-evaluated uncertainties of current optical clocks; consistent "
+        "with the introduction citations (lattice and single-ion clocks at or "
+        "below 1e-18: arnold2026lu, zhang2026ca)",
+    ),
     "lisdat_u_e17": (
         "5\\times10^{-17}",
         "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): "
@@ -343,6 +350,7 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("levelMm", CURATED["level_misclosure_mm"][0],
         CURATED["level_misclosure_mm"][1])
     add("refThreshold", CURATED["ref_threshold"][0], CURATED["ref_threshold"][1])
+    add("selfEvalBound", CURATED["self_eval_bound"][0], CURATED["self_eval_bound"][1])
     add("refLisdatU", CURATED["lisdat_u_e17"][0], CURATED["lisdat_u_e17"][1])
     add("euNClocks", CURATED["eu_n_clocks"][0], CURATED["eu_n_clocks"][1])
     add("euNInstitutes", CURATED["eu_n_institutes"][0], CURATED["eu_n_institutes"][1])
