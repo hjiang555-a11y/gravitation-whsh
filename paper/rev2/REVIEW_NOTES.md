@@ -30,7 +30,7 @@
    ytterbium（NIST/JILA `mcgrew2018geodesy`、武汉 `zhu2026yb`）与
    strontium（JILA `aeppli2024sr`、USTC `jia2026sr`、NTSC `lu2025ntsc`）晶格钟，
    Al$^+$（NIST `marshall2025alplus`、PTB `dawel2026ptbalplus`）、
-   Lu$^+$（`arnold2026lu`，隶属 **NUS 新加坡量子技术中心**；2026-10-09 更正：非悉尼）、
+   Lu$^+$（`arnold2026lu`，隶属 **NUS 新加坡量子技术中心**）、
    Ca$^+$（`zhang2026ca`）离子钟；离子 ≥2、原子 ≥2，
    全部自评估系统不确定度**严格 <2×10⁻¹⁸**。核查结论：**PTB 可用**（Al⁺ 1.6×10⁻¹⁸）；
    **NPL 暂不引**（已发表最佳 Yb⁺(E3) 2.2×10⁻¹⁸ > 2×10⁻¹⁸，Tofful 2024）；
