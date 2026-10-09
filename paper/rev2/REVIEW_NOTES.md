@@ -47,6 +47,13 @@
    `overleaf-rev2-v2-upload.zip`；**原包 `paper/overleaf-rev2/` 保持不动**
    （`sync_overleaf.sh` 已指向新包）。正文合计 1,564 词（62.6%）。
 
+9. **Results §2.1 重写（2026-10-10 第五轮，按指示）**：结合实验情况扼要介绍网络组成——
+   两台晶格钟（武汉 Yb `zhu2026yb` 1.3×10⁻¹⁸、上海 Sr `jia2026sr` 0.92×10⁻¹⁸，均为宏）、
+   700 km 站距、1350 km 单程/2700 km 环回 1550 nm 相稳光纤链路与中继站；频率控制关系
+   （两端独立光梳、$f_\mathrm{rep}$=200 MHz、698→1397→1550 nm 与 1550→1156→578 nm 传递链）；
+   比对方法（环外拍频、逐秒采样、$F_{1550}$ 归一化、逐段比值反演指向附录 A）。
+   Results 318 → 468 词；正文合计 1,714 词（68.6%）。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
@@ -62,15 +69,15 @@
 |---|---:|---|
 | Summary（摘要段，无引用） | 185 | 指引 ≤200 ✓ |
 | 1 Introduction | 431 | |
-| 2 Results | 318 | |
+| 2 Results | 468 | |
 | 3 Discussion and outlook | 630 | |
-| **正文小计（I+R+D）** | **1,379** | |
-| **正文合计（摘要段 + 正文）** | **1,564** | 6 页锚点 2,500 → **−936（−37.4%）**；8 页锚点 4,300 → −2,736 |
+| **正文小计（I+R+D）** | **1,529** | |
+| **正文合计（摘要段 + 正文）** | **1,714** | 6 页锚点 2,500 → **−786（−31.4%）**；8 页锚点 4,300 → −2,586 |
 | 主文图表项 | 3 图 + 1 表 = 4 | 6 页档标配 4 ✓ |
 | Methods | 689 | 指引 ≤3,000 ✓；不计入正文页数 |
 | 附录 A–E | 539 | 在线/补充材料 |
 
-**结论**：当前正文 ≈ 典型 6 页 Article 字数的 **62.6%**；按 4 个紧凑图表项估计，印版约 **4–5 页**。
+**结论**：当前正文 ≈ 典型 6 页 Article 字数的 **68.6%**；按 4 个紧凑图表项估计，印版约 **5 页**。
 补 ≈700–1,000 词可达典型 6 页体量（候选位置：Results 的对照与稳健性细节；Discussion 的
 应用/展望；Introduction 的动机细节），或维持紧凑短稿。
 
@@ -95,5 +102,6 @@
 - 稿件：`paper/rev2/main.pdf` / `paper/rev2/main.tex`
 - 一键校验：`paper/rev2/tools/check.sh`；Overleaf 包同步：`paper/rev2/tools/sync_overleaf.sh`；
   一键发布：`paper/rev2/tools/publish.sh "commit message"`（校验+同步+提交+推送）
-- Overleaf 包：`paper/overleaf-rev2/`、`paper/overleaf-rev2-upload.zip`
+- Overleaf 包（当前）：`paper/overleaf-rev2-v2/`、`paper/overleaf-rev2-v2-upload.zip`；
+  初版包 `paper/overleaf-rev2/` 保留为冻结快照
 - 根 README：「篇幅与 Nature Article 对照（paper/rev2）」一节

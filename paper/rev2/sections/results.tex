@@ -11,17 +11,38 @@
   \label{fig:network}
 \end{figure}
 
-Figure~\ref{fig:network} shows the two-clock network. The Yb and Sr
-clocks are separated by $\siteKm$\,km and connected through a
-$\fibreKm$\,km phase-stabilized fiber link operated at \qty{1550}{nm};
-the loop-back topology and the relay stations keep the link's added
-instability below the clock noise for averaging times beyond
-$100$\,s. Over two months (\nDays~days, \nStages~stages) the two clocks
-and their transfer chains ran synchronously for a total of
-\nSamplesAll~valid seconds, recorded as \nSegAll~jump-free segments;
-the data set analyzed here comprises \nSeg~segments with
-\nSamples~seconds (\nHours~effective hours). Figure~\ref{fig:campaign}a
-places the segments on the campaign timeline.
+Figure~\ref{fig:network} shows the two-clock network. The comparison
+links an ytterbium (Yb) lattice clock at IAPMST in Wuhan, with a
+published systematic uncertainty of
+$\uYbE\times10^{-18}$~\citep{zhu2026yb}, and a strontium (Sr) lattice
+clock at USTC in Shanghai, evaluated at
+$\uSrE\times10^{-18}$~\citep{jia2026sr}. The two sites are separated by
+$\siteKm$\,km and connected through a phase-stabilized fiber link of
+$\fibreKm$\,km single-pass length ($\roundKm$\,km loop-back) operated
+at \qty{1550}{nm}; relay stations along the route keep the link's added
+instability below the clock noise for averaging times beyond $100$\,s.
+
+Both ends use independent optical frequency combs to bridge the
+spectral gap between each clock transition and the telecom carrier, and
+all local frequency references and phase-locked loops are derived from
+the comb repetition rate $f_{\mathrm{rep}} = \fRepMHz$\,MHz. On the
+Shanghai side the Sr \qty{698}{nm} transition is transferred via a
+\qty{1397}{nm} continuous laser to the \qty{1550}{nm} carrier sent over
+the fiber; on the Wuhan side the received carrier is linked through
+\qty{1156}{nm} light to the Yb \qty{578}{nm} transition. The comparison
+observable is the out-of-loop beat between the received carrier and the
+local Yb-referenced comb, sampled every second and converted to
+fractional units with the transfer frequency
+$F_{1550} = \fFifteenTHz$\,THz; each retained segment then yields a
+frequency-ratio estimate through the fixed frequency-chain relation
+(Appendix~\ref{app:chain}).
+
+Over two months (\nDays~days, \nStages~stages) the two clocks and their
+transfer chains ran synchronously for a total of \nSamplesAll~valid
+seconds, recorded as \nSegAll~jump-free segments; the data set analyzed
+here comprises \nSeg~segments with \nSamples~seconds
+(\nHours~effective hours). Figure~\ref{fig:campaign}a places the
+segments on the campaign timeline.
 
 \subsection{Clock-ratio determination}
 \label{sec:results-ratio}

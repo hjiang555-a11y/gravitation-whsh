@@ -44,13 +44,13 @@ pdflatex main.tex
   `cd paper/rev2 && python3 tools/build_numbers.py` (verify: `--check`).
 - The author line is the placeholder `xxxxx`; the author list and
   affiliations are to be supplied by the collaboration before submission.
-- This version (v2) incorporates the author's second revision: title
-  "An intercity Yb/Sr optical clock comparison at the 2.1x10^-18 uncertainty
-  over a 1 350 km fiber link"; abstract closing on "optical clocks"; the
-  Introduction restructured and polished, with the BACON-2021 frequency-ratio
-  paper (`beloy2021bacon`) cited in the dark-matter sentence.
-- Title is 99 characters (Nature guideline: 75); main text ~1,564 words
-  (~62.6% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
+- This version (v2) incorporates the author's second revision (title
+  "An intercity Yb/Sr optical clock comparison...", Introduction
+  restructured, BACON-2021 cited in the dark-matter sentence) and the
+  rewritten Results 2.1 (network composition, frequency control, and
+  comparison method, with both clocks' systematic uncertainties).
+- Title is 99 characters (Nature guideline: 75); main text ~1,714 words
+  (~68.6% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
 - This package is synced from `paper/rev2/` by
   `paper/rev2/tools/sync_overleaf.sh`; one-shot verification is
   `paper/rev2/tools/check.sh`.
