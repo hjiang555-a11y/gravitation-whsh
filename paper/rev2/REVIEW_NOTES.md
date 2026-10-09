@@ -14,8 +14,9 @@
    不采用原因，仅保留"记录 17 段、分析 16 段"的事实陈述。
    （段 9 的完整技术记录仍保留在审计层：`results/audit-v1/`、`docs/audit/`。）
 4. **工具（应"轻量化"要求）**：新增
-   `tools/check.sh`（一键：数字管线校验 + 编译 + 未定义引用检查）与
-   `tools/sync_overleaf.sh`（同步 Overleaf 包 + 重建 zip）。
+   `tools/check.sh`（一键：数字管线校验 + 编译 + 未定义引用检查）、
+   `tools/sync_overleaf.sh`（同步 Overleaf 包 + 重建 zip）与
+   `tools/publish.sh "commit message"`（校验 + 同步 + 提交 + 推送，一条命令）。
 
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
@@ -63,6 +64,7 @@
 ## 4. 相关位置
 
 - 稿件：`paper/rev2/main.pdf` / `paper/rev2/main.tex`
-- 一键校验：`paper/rev2/tools/check.sh`；Overleaf 包同步：`paper/rev2/tools/sync_overleaf.sh`
+- 一键校验：`paper/rev2/tools/check.sh`；Overleaf 包同步：`paper/rev2/tools/sync_overleaf.sh`；
+  一键发布：`paper/rev2/tools/publish.sh "commit message"`（校验+同步+提交+推送）
 - Overleaf 包：`paper/overleaf-rev2/`、`paper/overleaf-rev2-upload.zip`
 - 根 README：「篇幅与 Nature Article 对照（paper/rev2）」一节
