@@ -18,12 +18,10 @@ the loop-back topology and the relay stations keep the link's added
 instability below the clock noise for averaging times beyond
 $100$\,s. Over two months (\nDays~days, \nStages~stages) the two clocks
 and their transfer chains ran synchronously for a total of
-\nSamplesAll~valid seconds, recorded as \nSegAll~jump-free segments.
-After excluding one segment whose Sr systematic parameter is pending
-verification (Methods), the primary data set
-contains \nSeg~segments and \nSamples~seconds (\nHours~effective hours).
-Figure~\ref{fig:campaign}a places the segments on the campaign
-timeline.
+\nSamplesAll~valid seconds, recorded as \nSegAll~jump-free segments;
+the data set analysed here comprises \nSeg~segments with
+\nSamples~seconds (\nHours~effective hours). Figure~\ref{fig:campaign}a
+places the segments on the campaign timeline.
 
 \subsection{Clock-ratio determination}
 \label{sec:results-ratio}
@@ -67,55 +65,15 @@ deviations; the segment-to-segment scatter is dominated by the
 statistical noise of the individual segments and by the excess scatter
 captured by the random-effect term.
 
-\subsection{Comparison with other measurements}
-\label{sec:results-comparison}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{figs/fig3_compare.pdf}
-  \caption{Comparison and budget. (a) Differences between this work and
-  the published Yb/Sr ratios, with their quoted uncertainties.
-  (b) Components of the total standard uncertainty; the dashed line marks
-  the quadrature total.}
-  \label{fig:compare}
-\end{figure}
-
-The value reported here agrees with the two existing measurements of
-the Yb/Sr ratio at the level set by the redefinition roadmap
-(Figure~\ref{fig:compare}). Relative to the NIST--JILA value
-\refNistV(\refNistU)~\citep{aeppli2026nist}, our central value differs
-by $\dVsNistE$; relative to the European-network value
-\refEuV(\refEuU)~\citep{pizzocaro2026european}, it differs by
-$\dVsEuE$. Both differences lie within the \refThreshold{} agreement
-threshold of the roadmap's frequency-ratio
-criterion~\citep{dimarcq2024roadmap, cctf2025taskforce}. To our
-knowledge, this is the first reported inter-city (100-km-scale),
-cross-species frequency-ratio measurement meeting that uncertainty
-requirement (as of \claimDate); existing ratios at or below the
-threshold were measured on a single campus~\citep{aeppli2026nist},
-while inter-institute comparisons through fibre networks have so far
-reached \refEuBestU~\citep{pizzocaro2026european}.
-
-\subsection{Segment-9 sensitivity check}
-\label{sec:results-sensitivity}
-
-The excluded segment (Methods) carries
-\nSegNine~seconds. Reinstating it changes the WLS centre by
-$\dSegNineWls$ and raises the reduced chi-square of the \nSegAll-segment
-combination to $\sensChiRed$, reflecting the segment's excess scatter;
-the adopted random-effect treatment is insensitive to this at the
-reported precision, and the 16-segment result remains the primary
-value.
-
 \subsection{Uncertainty budget}
 \label{sec:results-budget}
 
 Table~\ref{tab:budget} collects the components of the total standard
-uncertainty. The statistical term dominates the budget, followed by
-the Yb and Sr systematic evaluations, the static-potential term from
-the levelling, and the time-varying-redshift term carried as an
-uncertainty item; the fibre-link and comb terms are negligible at this
-precision. The total standard uncertainty is
+uncertainty (Figure~\ref{fig:compare}b). The statistical term dominates
+the budget, followed by the Yb and Sr systematic evaluations, the
+static-potential term from the levelling, and the time-varying-redshift
+term carried as an uncertainty item; the fibre-link and comb terms are
+negligible at this precision. The total standard uncertainty is
 $\uTotalShort\times10^{-18}$.
 
 \begin{table}[t]
