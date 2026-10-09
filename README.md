@@ -119,8 +119,9 @@ A   = Σ(tide·beat) / Σ(tide²)    （段内拟合 beat = A·tide + noise 的�
 - **潮汐**：专业人士提供的 30 秒间隔「综合差」（固体潮+海潮），
   `results/professional_tidal_delta_30s.csv`（UTC，方向武汉−上海，ΔW = g·mm/1000）。
 - **潮汐（新增输入，仅登记）**：`results/comp_shanghai-wuhan-beijintime.csv`
-  （2026-06-20–09-10 北京时、90 s 网格；文件原样保留、未接入现有流程，供后续分析；
-  登记与列定义见 [clock/PROFESSIONAL_TIDAL_DATA.md](clock/PROFESSIONAL_TIDAL_DATA.md) §7）。
+  （新一代潮汐模型输出、较既有模型更新；2026-06-20–09-10 北京时、90 s 网格；文件原样
+  保留、未接入现有流程，后续用于潮汐分析；登记与列定义见
+  [clock/PROFESSIONAL_TIDAL_DATA.md](clock/PROFESSIONAL_TIDAL_DATA.md) §7）。
 - **实验**：1550 nm 环外拍频（FXE_B8，第 8 列数据），`clock/data/环外数据（第八列数据）/`
   （已 `.gitignore`）。17 段无跳点窗口见 `clock/shared.py` 的 `GROUPS`（北京时 UTC+8）。
 
