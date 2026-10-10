@@ -47,10 +47,13 @@ pdflatex main.tex
 - This version (v2) incorporates the author's second revision (title
   "An intercity Yb/Sr optical clock comparison...", Introduction
   restructured, BACON-2021 cited in the dark-matter sentence) and the
-  rewritten Results 2.1 (network composition, frequency control, and
-  comparison method, with both clocks' systematic uncertainties).
-- Title is 99 characters (Nature guideline: 75); main text ~1,714 words
-  (~68.6% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
+  rewritten-and-refined Results 2.1: concise network description (combs
+  self-referenced and locked to the local clocks; 1550.12 nm telecom
+  channel transmitted Shanghai to Wuhan; extension of the field-deployed
+  link in ref. [15]; fixed factor-of-two frequency relations; recorded
+  out-of-loop beat with F_1550 normalization).
+- Title is 99 characters (Nature guideline: 75); main text ~1,691 words
+  (~67.6% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
 - This package is synced from `paper/rev2/` by
   `paper/rev2/tools/sync_overleaf.sh`; one-shot verification is
   `paper/rev2/tools/check.sh`.

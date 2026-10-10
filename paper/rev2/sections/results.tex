@@ -11,31 +11,29 @@
   \label{fig:network}
 \end{figure}
 
-Figure~\ref{fig:network} shows the two-clock network. The comparison
-links an ytterbium (Yb) lattice clock at IAPMST in Wuhan, with a
-published systematic uncertainty of
-$\uYbE\times10^{-18}$~\citep{zhu2026yb}, and a strontium (Sr) lattice
-clock at USTC in Shanghai, evaluated at
-$\uSrE\times10^{-18}$~\citep{jia2026sr}. The two sites are separated by
-$\siteKm$\,km and connected through a phase-stabilized fiber link of
-$\fibreKm$\,km single-pass length ($\roundKm$\,km loop-back) operated
-at \qty{1550}{nm}; relay stations along the route keep the link's added
-instability below the clock noise for averaging times beyond $100$\,s.
+Figure~\ref{fig:network} shows the two-clock network. An ytterbium (Yb)
+lattice clock at IAPMST in Wuhan (systematic uncertainty
+$\uYbE\times10^{-18}$~\citep{zhu2026yb}) and a strontium (Sr) lattice
+clock at USTC in Shanghai ($\uSrE\times10^{-18}$~\citep{jia2026sr}) are
+separated by $\siteKm$\,km and compared through a $\fibreKm$\,km
+phase-stabilized fiber link ($\roundKm$\,km loop-back), with the
+carrier transmitted from Shanghai to Wuhan on a \qty{1550.12}{nm}
+telecom channel. The link extends the field-deployed link of
+ref.~\citep{chen2026dissemination}, using the same cascaded
+fiber-noise-cancellation technique; its added instability stays below
+the clock noise for averaging times beyond $100$\,s.
 
-Both ends use independent optical frequency combs to bridge the
-spectral gap between each clock transition and the telecom carrier, and
-all local frequency references and phase-locked loops are derived from
-the comb repetition rate $f_{\mathrm{rep}} = \fRepMHz$\,MHz. On the
-Shanghai side the Sr \qty{698}{nm} transition is transferred via a
-\qty{1397}{nm} continuous laser to the \qty{1550}{nm} carrier sent over
-the fiber; on the Wuhan side the received carrier is linked through
-\qty{1156}{nm} light to the Yb \qty{578}{nm} transition. The comparison
-observable is the out-of-loop beat between the received carrier and the
-local Yb-referenced comb, sampled every second and converted to
-fractional units with the transfer frequency
-$F_{1550} = \fFifteenTHz$\,THz; each retained segment then yields a
-frequency-ratio estimate through the fixed frequency-chain relation
-(Appendix~\ref{app:chain}).
+Both combs are self-referenced and phase-locked to the local clock
+signal, and all other frequencies in the chain derive from the two
+clock transitions through fixed factor-of-two relations
+(698/1397 nm on the Sr side; 578/1156 nm on the Yb side), so the two
+clocks are the system's only independent frequency sources. The
+recorded quantity is the out-of-loop beat between the received carrier
+and the local Yb-referenced comb, sampled every second and converted to
+fractional units with $F_{1550} = \fFifteenTHz$\,THz; the fiber
+loop-back is monitored out of loop throughout. Each retained segment
+yields a frequency-ratio estimate through the fixed frequency-chain
+relations (see Methods).
 
 Over two months (\nDays~days, \nStages~stages) the two clocks and their
 transfer chains ran synchronously for a total of \nSamplesAll~valid
