@@ -61,32 +61,30 @@ segments on the campaign timeline.
 
 We determine the Yb/Sr frequency ratio from the \nSeg~segments. Each
 segment yields a ratio estimate with its own statistical uncertainty
-estimated from the Allan deviation of the beat
-(Methods). The segment estimates scatter more
-than their individual uncertainties allow: the fixed-effect weighted
-least-squares fit gives $\chi^2_{\rm red} = \chiRed$ for
-$\dofV$ degrees of freedom ($p = \pChi$), and
+estimated from the Allan deviation of the beat (Methods). The segment
+estimates scatter more than their individual uncertainties allow: the
+reduced chi-square of the combination is
+$\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
+($p = \pChi$), corresponding to a Birge ratio of $\birgeRatio$, and
 \nModelLimited~of the \nSeg~segments have stability fits that fall
 outside the white-frequency-noise band (groups \modelLimitedGroups).
-We therefore adopt the Bayesian random-effect estimate, which treats
-the excess scatter as a free parameter and propagates its posterior
-uncertainty, while the fixed-effect WLS and Mandel--Paule estimates are
-kept as cross-checks.
-
-The resulting Yb/Sr ratio is
+We therefore adopt a random-effect treatment of the excess
+scatter~\citep{birge1932errors, mandel1970interlaboratory}, as in
+recent ratio comparisons~\citep{pizzocaro2026european, aeppli2026nist}.
+The primary value is obtained from a Bayesian random-effect model, in
+which the excess scatter is marginalised over its posterior as a free
+parameter, giving
 \begin{equation}
   \mathrm{Yb/Sr} = \Rheadline(\RheadlineUnc),
 \end{equation}
-with a statistical uncertainty of
-$\uStatShort\times10^{-18}$ and a total standard uncertainty of
-$\uTotalShort\times10^{-18}$ (Section~\ref{sec:results-budget}). The
-precision-weighted cross-checks agree within their uncertainties:
-the WLS center is \RwlsHead\xspace and the Mandel--Paule center is
-\RmpHead\xspace (rounded at the 19th decimal), both consistent with
-the adopted value at the $10^{-18}$ level. Figure~\ref{fig:campaign}b shows the per-segment
-deviations; the segment-to-segment scatter is dominated by the
-statistical noise of the individual segments and by the excess scatter
-captured by the random-effect term.
+with a statistical uncertainty of $\uStatShort\times10^{-18}$ and a
+total standard uncertainty of $\uTotalShort\times10^{-18}$
+(Section~\ref{sec:results-budget}). The Mandel--Paule estimate,
+\RmpHead\xspace, agrees with the adopted value at the $10^{-18}$ level;
+Figure~\ref{fig:campaign}b shows the per-segment deviations. The
+segment-to-segment scatter is dominated by the statistical noise of the
+individual segments and by the excess scatter captured by the
+random-effect term.
 
 \subsection{Uncertainty budget}
 \label{sec:results-budget}

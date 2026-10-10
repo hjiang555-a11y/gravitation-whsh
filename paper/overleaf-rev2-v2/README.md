@@ -54,8 +54,12 @@ pdflatex main.tex
   extension of the field-deployed link in ref. [15]; fixed
   factor-of-two frequency relations; recorded out-of-loop beat with
   F_1550 normalization).
-- Title is 99 characters (Nature guideline: 75); main text ~1,728 words
-  (~69.1% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
+- Results 2.2 has been rewritten per review: the Bayesian random-effect
+  value is the primary result, with the Mandel–Paule estimate as the
+  cross-check (WLS numbers not reported); Birge (1932) and Mandel–Paule
+  (1970) are cited for the excess-scatter treatment.
+- Title is 99 characters (Nature guideline: 75); main text ~1,718 words
+  (~68.7% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
 - This package is synced from `paper/rev2/` by
   `paper/rev2/tools/sync_overleaf.sh`; one-shot verification is
   `paper/rev2/tools/check.sh`.
