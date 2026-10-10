@@ -61,7 +61,7 @@ segments on the campaign timeline.
 
 We determine the Yb/Sr frequency ratio from the \nSeg~segments. Each
 segment yields a ratio estimate with its own statistical uncertainty
-estimated from the Allan deviation of the beat (Methods). The segment
+obtained from the Allan deviation of the beat (Methods). The segment
 estimates scatter more than their individual uncertainties allow: the
 reduced chi-square of the combination is
 $\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
@@ -72,19 +72,22 @@ We therefore adopt a random-effect treatment of the excess
 scatter~\citep{birge1932errors, mandel1970interlaboratory}, as in
 recent ratio comparisons~\citep{pizzocaro2026european, aeppli2026nist}.
 The primary value is obtained from a Bayesian random-effect model, in
-which the excess scatter is marginalised over its posterior as a free
+which the excess scatter is marginalized over its posterior as a free
 parameter, giving
 \begin{equation}
   \mathrm{Yb/Sr} = \Rheadline(\RheadlineUnc),
 \end{equation}
-with a statistical uncertainty of $\uStatShort\times10^{-18}$ and a
-total standard uncertainty of $\uTotalShort\times10^{-18}$
-(Section~\ref{sec:results-budget}). The Mandel--Paule estimate,
-\RmpHead\xspace, agrees with the adopted value at the $10^{-18}$ level;
-Figure~\ref{fig:campaign}b shows the per-segment deviations. The
-segment-to-segment scatter is dominated by the statistical noise of the
-individual segments and by the excess scatter captured by the
-random-effect term.
+with a statistical uncertainty of $\uStatE\times10^{-18}$ and a total
+standard uncertainty of $\uTotalShort\times10^{-18}$
+(Section~\ref{sec:results-budget}). The two random-effect estimators
+agree at the $10^{-18}$ level: the Mandel--Paule estimate,
+\RmpHead\xspace, has a statistical uncertainty of
+\uMpE$\times10^{-18}$, and the excess scatter inferred is
+$\xiMpE\times10^{-18}$ (Mandel--Paule) and $\xiBayesE\times10^{-18}$
+(Bayesian). Figure~\ref{fig:campaign}b shows the per-segment
+deviations; the segment-to-segment scatter is dominated by the
+statistical noise of the individual segments and by the excess scatter
+captured by the random-effect term.
 
 \subsection{Uncertainty budget}
 \label{sec:results-budget}

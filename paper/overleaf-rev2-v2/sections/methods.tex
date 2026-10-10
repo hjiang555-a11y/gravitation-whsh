@@ -39,28 +39,30 @@ comprises \nSeg~segments with \nSamples~valid seconds
 
 Each retained segment yields a clock-ratio estimate $R_i$ from the mean
 of its retained beat samples, inverted through the fixed frequency-chain
-relation (Appendix~\ref{app:chain}) and corrected for the static
-gravitational redshift $\delta_g = \deltaGV$ derived from the leveled
-geopotential difference (see below). The
-per-segment statistical uncertainty $u_i$ is obtained from the
-overlapping Allan deviation of the beat fractional frequency: a
+relations and corrected for the static gravitational redshift
+$\delta_g = \deltaGV$ derived from the leveled geopotential difference
+(see below). The per-segment statistical uncertainty $u_i$ is obtained
+from the overlapping Allan deviation of the beat fractional frequency: a
 $\sigma_y \propto \tau^{-1/2}$ fit over the range
 $128~\mathrm{s} \le \tau \le 0.25\,T_i$, extrapolated to the segment
 duration $T_i$.
 
-The per-segment uncertainties do not fully explain the observed scatter
-between segments, so the ratio is combined with four estimators:
-fixed-effect weighted least squares (WLS, weights $1/u_i^2$), Birge
-scaling, the Mandel--Paule random-effect model, and a Bayesian
-random-effect model in which the excess scatter $\xi$ is a free
-parameter whose posterior uncertainty is propagated into the final
-result. The Bayesian random-effect center is adopted as the primary
-statistic; the others are reported as cross-checks. Five of the
-\nSeg~segments (groups \modelLimitedGroups) have stability fits that
-fall outside the white-frequency-noise band and are carried with a
-model-limited flag; this is one motivation for the random-effect
-treatment. The full model definitions are given in
-Appendix~\ref{app:stats}.
+The per-segment uncertainties do not fully account for the scatter
+between the segment estimates, so the combination follows a
+random-effect treatment of the excess
+scatter~\citep{birge1932errors, mandel1970interlaboratory}: each
+segment is modeled as $R_i \sim \mathcal{N}(\mu, u_i^2 + \xi^2)$,
+with a common excess scatter $\xi$ added in quadrature to the
+per-segment uncertainties. The primary value is obtained from a
+Bayesian random-effect model, in which $\mu$ and $\xi$ are jointly
+inferred with flat priors on $\mu$ and on $\log\xi$, and the joint
+posterior $p(\mu, \xi \mid \{R_i, u_i\})$ is marginalized numerically
+over a wide $\log\xi$ grid; the posterior mean of $\mu$ and its
+posterior standard deviation give the reported central value and
+statistical uncertainty. The Mandel--Paule
+estimator~\citep{mandel1970interlaboratory}, which solves
+$\chi^2_{\rm red}(\xi) = 1$ for the same observation model, is
+evaluated as a cross-check.
 
 \subsection*{Leveling determination of the geopotential difference}
 
