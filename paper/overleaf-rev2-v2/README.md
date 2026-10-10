@@ -54,8 +54,8 @@ pdflatex main.tex
   extension of the field-deployed link in ref. [15]; fixed
   factor-of-two frequency relations; recorded out-of-loop beat with
   F_1550 normalization).
-- Title is 99 characters (Nature guideline: 75); main text ~1,707 words
-  (~68.3% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
+- Title is 99 characters (Nature guideline: 75); main text ~1,728 words
+  (~69.1% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
 - This package is synced from `paper/rev2/` by
   `paper/rev2/tools/sync_overleaf.sh`; one-shot verification is
   `paper/rev2/tools/check.sh`.
