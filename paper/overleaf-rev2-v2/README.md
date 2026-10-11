@@ -61,8 +61,13 @@ pdflatex main.tex
   subsection "Clock-ratio determination and statistical model" now
   defines the random-effect combination inline (self-contained; no
   appendix pointer).
-- Title is 99 characters (Nature guideline: 75); main text ~1,732 words
-  (~69.3% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
+- The author's third revision (2026-10-11) is merged: the abstract's
+  data-volume sentence is removed; the §2.2 campaign sentence is
+  compacted; the Methods "Observation campaign and per-segment data"
+  subsection is dropped, and the leveling subsection now leads the
+  Methods section.
+- Title is 99 characters (Nature guideline: 75); main text ~1,709 words
+  (~68.4% of the 2,500-word 6-page anchor). Metrics: `paper/rev2/REVIEW_NOTES.md`.
 - This package is synced from `paper/rev2/` by
   `paper/rev2/tools/sync_overleaf.sh`; one-shot verification is
   `paper/rev2/tools/check.sh`.

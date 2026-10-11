@@ -271,7 +271,8 @@ A=−0.54 12.91%）与 A=−1 的长 τ 不稳定度升都是真实的**：前�
 > （Mandel–Paule 为交叉核对，不提 WLS；新增 Birge 1932 / Mandel–Paule 1970 引文）；
 > Methods「Clock-ratio determination and statistical model」小节改为自包含统计模型段
 > （贝叶斯主结果 + Mandel–Paule 交叉核对；不再指向附录），§2.2 统计句定稿
-> （补 u_MP / ξ 值；统计不确定度 3 位有效数字）。
+> （补 u_MP / ξ 值；统计不确定度 3 位有效数字）；作者第三版合并（2026-10-11）：摘要删
+> 数据量句、§2.2 战役句压缩、Methods 删 "Observation campaign" 小节（Leveling 置首）。
 > 详细对照与复算口径见 [paper/rev2/REVIEW_NOTES.md](paper/rev2/REVIEW_NOTES.md)。
 
 Nature 格式指南锚点：物理论文一般 ≤6 印页；典型 6 页 ≈ 正文 2,500 词（摘要段+正文）+ 4 个
@@ -279,13 +280,13 @@ Nature 格式指南锚点：物理论文一般 ≤6 印页；典型 6 页 ≈ �
 
 | 项 | 本稿 | 锚点 | 差 |
 |---|---:|---:|---:|
-| Summary（摘要段） | 185 词 | ≤200 | ✓ |
-| 正文（摘要段 + Introduction + Results + Discussion and outlook） | **1,732 词** | 2,500（典型 6 页） | **−768（−30.7%）** |
+| Summary（摘要段） | 174 词 | ≤200 | ✓ |
+| 正文（摘要段 + Introduction + Results + Discussion and outlook） | **1,709 词** | 2,500（典型 6 页） | **−791（−31.6%）** |
 | 主文图表项 | 3 图 + 1 表 = 4 | 4（典型 6 页） | ✓ |
-| Methods | 687 词（不计正文） | ≤3,000 | ✓ |
+| Methods | 612 词（不计正文） | ≤3,000 | ✓ |
 | 题名 | 99 字符 | ≤75（两行） | 超 ~24 |
 
-**结论**：正文约为典型 6 页 Article 的 69.3%，估计印版 5 页；补 ≈770 词可达典型
+**结论**：正文约为典型 6 页 Article 的 68.4%，估计印版 5 页；补 ≈790 词可达典型
 6 页体量（候选位置见审阅文档），或维持紧凑短稿。
 
 ## 复现
