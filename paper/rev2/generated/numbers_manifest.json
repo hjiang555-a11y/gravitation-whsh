@@ -89,6 +89,22 @@
       "value": "+0.30\\times10^{-18}",
       "source": "derived: sensitivity_17 minus primary_16 WLS center, in 1e-18"
     },
+    "tidalChiRaw": {
+      "value": "4.02",
+      "source": "frozen seg9 JSON: synthesis.goodness_of_fit.raw.chi2_red (16-segment)"
+    },
+    "tidalChiTheory": {
+      "value": "5.61",
+      "source": "frozen seg9 JSON: synthesis.goodness_of_fit.theory.chi2_red (fixed A=-1 template)"
+    },
+    "tidalChiEmp": {
+      "value": "5.19",
+      "source": "frozen seg9 JSON: synthesis.goodness_of_fit.empirical.chi2_red (fixed A=-0.54 template)"
+    },
+    "tidalShiftEmpE": {
+      "value": "0.53",
+      "source": "derived: empirical minus raw Bayesian center shift from the frozen seg9 JSON, in 1e-18; the scale adopted for the time-varying-redshift uncertainty item"
+    },
     "nSeg": {
       "value": "16",
       "source": "manifest:primary_16.included_groups"
@@ -216,6 +232,14 @@
     "refPtbTransportableU": {
       "value": "4.3\\times10^{-18}",
       "source": "literature: Vishwakarma et al. 2026 (arXiv:2608.01916): Yb+/Sr ratio uncertainty with a transportable clock at PTB"
+    },
+    "baconE": {
+      "value": "8\\times10^{-18}",
+      "source": "literature: Beloy et al. 2021 (Nature 591, 564): BACON campus network measured frequency ratios with fractional uncertainties at or below 8e-18"
+    },
+    "nemitzU": {
+      "value": "5\\times10^{-17}",
+      "source": "literature: Nemitz et al. 2016 (Nat. Photon. 10, 258): Yb/Sr ratio with 5e-17 uncertainty at 150 s averaging time"
     },
     "refVlbiKm": {
       "value": "9\\,000",

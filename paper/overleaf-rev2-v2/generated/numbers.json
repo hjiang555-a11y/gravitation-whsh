@@ -190,6 +190,14 @@
       "u_e18": 3.2
     }
   ],
+  "tidal": {
+    "chi2_red": {
+      "raw": 4.016685310741873,
+      "theory": 5.610231462488697,
+      "empirical": 5.1886376939854415
+    },
+    "bayes_shift_emp_e18": 0.5304466003949464
+  },
   "meta": {
     "n_segments": 16,
     "n_segments_all": 17,

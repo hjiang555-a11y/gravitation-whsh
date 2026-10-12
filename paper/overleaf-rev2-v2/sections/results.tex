@@ -98,6 +98,31 @@ term carried as an uncertainty item; the fiber-link and comb terms are
 negligible at this precision. The total standard uncertainty is
 $\uTotalShort\times10^{-18}$.
 
+The time-varying-redshift term requires care, because the two clocks
+sample the geopotential at different times and places and no model of
+the temporal variation is applied to the reported value. Solid Earth
+and ocean tides, together with atmospheric, hydrological and non-tidal
+ocean loading, all change the local potential by amounts that reach
+the $10^{-18}$ level in fractional frequency over the
+campaign~\citep{agnew2015tides, voigt2016timevariable,
+denker2018geodetic}, and no single tidal model accounts for all of
+them consistently. Attempting to correct the beat record with the
+supplied tide series makes the segment scatter worse rather than
+better: the reduced chi-square of the combination rises from
+$\tidalChiRaw$ to $\tidalChiTheory$ (fixed theoretical amplitude) or
+$\tidalChiEmp$ (fixed historical amplitude) when the template is
+applied before the ratio inversion. This is the signature of an
+inaccurate or incomplete geophysical model---the fit with the data is
+not consistent---so correcting the central value is not defensible at
+this stage. We therefore treat the time-varying gravitational redshift
+as an uncertainty item: its magnitude is set by the scale of the
+change that such a correction would induce,
+$\tidalShiftEmpE\times10^{-18}$ in the central value, which we round up
+and carry as $\uTidalE\times10^{-18}$. A physically complete,
+data-consistent treatment of time-dependent gravity is deferred to
+future work; the static potential difference from leveling remains the
+applied correction (Methods).
+
 \begin{table}[t]
   \centering
   \caption{Uncertainty budget of the Yb/Sr frequency-ratio

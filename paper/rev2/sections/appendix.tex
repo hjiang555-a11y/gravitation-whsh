@@ -91,7 +91,9 @@ standard deviation; for the analyzed data set,
 $\xi = \xiBayesE \times 10^{-18}$. The excess scatter quantified here
 also absorbs the correlated component of the time-varying
 gravitational-redshift term (Methods), which
-is carried separately as an uncertainty item rather than corrected.
+is carried separately as an uncertainty item rather than corrected:
+applying tidal templates instead degrades the segment agreement
+(Section~\ref{sec:results-budget}).
 
 \section{Leveling reduction}
 \label{app:leveling}
@@ -124,6 +126,12 @@ experiment-side upper bounds of $\uSubsystemBound$ each, carried at
 experiment-side margin. The time-varying-redshift term is scaled from
 the spread of the segment-averaged gravitational shift across the
 campaign and is carried at $\uTidalE \times 10^{-18}$; it is not
-applied as a correction. The total standard uncertainty,
+applied as a correction. Supporting this choice, the tidal-template
+sensitivity (fixed theoretical and fixed historical amplitudes,
+applied before the ratio inversion) raises the reduced chi-square of
+the combination from $\tidalChiRaw$ to $\tidalChiTheory$ and
+$\tidalChiEmp$ and shifts the Bayesian center by up to
+$\tidalShiftEmpE \times 10^{-18}$, which is the scale carried as the
+uncertainty item. The total standard uncertainty,
 $\uTotalE \times 10^{-18}$, is the quadrature sum of the seven
 components.

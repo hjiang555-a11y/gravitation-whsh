@@ -134,6 +134,17 @@ CURATED: dict[str, tuple[str, str]] = {
         "literature: Vishwakarma et al. 2026 (arXiv:2608.01916): Yb+/Sr ratio "
         "uncertainty with a transportable clock at PTB",
     ),
+    "bacon_best_e18": (
+        "8",
+        "literature: Beloy et al. 2021 (Nature 591, 564): BACON campus network "
+        "measured frequency ratios with fractional uncertainties at or below "
+        "8e-18",
+    ),
+    "nemitz_2016_e17": (
+        "5\\times10^{-17}",
+        "literature: Nemitz et al. 2016 (Nat. Photon. 10, 258): Yb/Sr ratio "
+        "with 5e-17 uncertainty at 150 s averaging time",
+    ),
     "vlbi_km": (
         "9000",
         "literature: Pizzocaro et al. 2021 (Nature Physics 17, 223-227): "
@@ -299,6 +310,25 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("dSegNineWls", f"{d_seg9_wls:+.2f}" + r"\times10^{-18}",
         "derived: sensitivity_17 minus primary_16 WLS center, in 1e-18")
 
+    # Tidal-scenario sensitivity (16-segment, seg-9 excluded): template
+    # corrections applied before ratio inversion worsen the segment scatter,
+    # so the tidal term is carried as an uncertainty item, not a correction.
+    tidal_scenarios = seg9["scenarios"]
+    tidal_syn = seg9["synthesis"]
+    add("tidalChiRaw", f"{tidal_syn['goodness_of_fit']['raw']['chi2_red']:.2f}",
+        "frozen seg9 JSON: synthesis.goodness_of_fit.raw.chi2_red (16-segment)")
+    add("tidalChiTheory", f"{tidal_syn['goodness_of_fit']['theory']['chi2_red']:.2f}",
+        "frozen seg9 JSON: synthesis.goodness_of_fit.theory.chi2_red (fixed A=-1 template)")
+    add("tidalChiEmp", f"{tidal_syn['goodness_of_fit']['empirical']['chi2_red']:.2f}",
+        "frozen seg9 JSON: synthesis.goodness_of_fit.empirical.chi2_red (fixed A=-0.54 template)")
+    tidal_shift_emp = float(
+        (Decimal(tidal_syn["methods"]["R_bayes"]["empirical"]["R"])
+         - Decimal(tidal_syn["methods"]["R_bayes"]["raw"]["R"])) * Decimal("1e18")
+    )
+    add("tidalShiftEmpE", f"{tidal_shift_emp:.2f}",
+        "derived: empirical minus raw Bayesian center shift from the frozen seg9 JSON, "
+        "in 1e-18; the scale adopted for the time-varying-redshift uncertainty item")
+
     add("nSeg", str(len(primary["included_groups"])), "manifest:primary_16.included_groups")
     add("nSegAll", str(len(sensitivity["included_groups"])), "manifest:sensitivity_17.included_groups")
     add("nSamples", latex_groups(str(primary["total_samples"])), "manifest:primary_16.total_samples")
@@ -347,6 +377,10 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         CURATED["eu_best_e18"][1])
     add("refPtbTransportableU", CURATED["ptb_transportable_e18"][0] + r"\times10^{-18}",
         CURATED["ptb_transportable_e18"][1])
+    add("baconE", CURATED["bacon_best_e18"][0] + r"\times10^{-18}",
+        CURATED["bacon_best_e18"][1])
+    add("nemitzU", CURATED["nemitz_2016_e17"][0],
+        CURATED["nemitz_2016_e17"][1])
     add("refVlbiKm", latex_groups(CURATED["vlbi_km"][0]), CURATED["vlbi_km"][1])
     add("refLisdatKm", latex_groups(CURATED["lisdat_km"][0]), CURATED["lisdat_km"][1])
     add("fRepMHz", CURATED["f_rep_mhz"][0], CURATED["f_rep_mhz"][1])
@@ -450,6 +484,14 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
             {"name": "NIST-JILA", "delta_e18": d_nist, "u_e18": float(CURATED["ref_nist_u_digits"][0]) / 10.0},
             {"name": "European network", "delta_e18": d_eu, "u_e18": float(CURATED["ref_eu_u_digits"][0]) / 10.0},
         ],
+        "tidal": {
+            "chi2_red": {
+                "raw": tidal_syn["goodness_of_fit"]["raw"]["chi2_red"],
+                "theory": tidal_syn["goodness_of_fit"]["theory"]["chi2_red"],
+                "empirical": tidal_syn["goodness_of_fit"]["empirical"]["chi2_red"],
+            },
+            "bayes_shift_emp_e18": tidal_shift_emp,
+        },
         "meta": {
             "n_segments": len(groups),
             "n_segments_all": len(sensitivity["included_groups"]),

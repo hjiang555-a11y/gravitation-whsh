@@ -104,6 +104,25 @@
     `\nHoursAll`/`\nSegNine` 随文字删除变为未引用（宏超集允许，管线仍全量生成）。
     词数：摘要 174、Results 474、Methods 612、正文合计 1,709（68.4%）。
 
+15. **§2.3 时变红移不确定性 + Discussion 演进/潮汐/展望 + Conclusion（2026-10-12 第十一轮，
+    按指示）**：
+    - §2.3 新增一段：时变引力红移的来源（固体潮、海潮、大气/水文/非潮汐海洋负荷，
+      引 `agnew2015tides`、`voigt2016timevariable`、`denker2018geodetic`）；潮汐模板修正
+      后 χ²_red 从 \tidalChiRaw 升到 \tidalChiTheory/\tidalChiEmp（修正反而恶化拟合，
+      即模型与数据不符），故按**误差项**处理、不修正中心值；误差项量级取模板修正引发的
+      中心位移 \tidalShiftEmpE×10⁻¹⁸（≈0.53，圆整为 \uTidalE=0.5）。2.2 以前内容未动。
+    - Methods「Uncertainty budget」与附录「Budget details」/「统计模型」同步补敏感性
+      数字与出处（冻结 seg9 JSON：synthesis.goodness_of_fit / methods.R_bayes）。
+    - Discussion 新增 (a) 比值结果演进段：Akamatsu 2014 首次 Yb/Sr（`akamatsu2014ybsr`）
+      → Nemitz 2016 5×10⁻¹⁷（`nemitz2016ybsr`）→ BACON ≤8×10⁻¹⁸（`beloy2021bacon`）→
+      欧洲网络 7.7×10⁻¹⁸ → 同园区 3.2×10⁻¹⁸ → 本文 2.1×10⁻¹⁸，体现比较的重要性与趋同；
+      (b) 简单潮汐 fit 说明段（段均值对段均潮汐势拟合斜率依赖窗口；模板修正残留更大；
+      10⁻¹⁸ 级修正超出本论文范围，留待后续）；(c) outlook 段改写为光纤+卫星/自由空间
+      混合全球光钟网络展望。
+    - 新增 **Conclusion** 节（main.tex `\section{Conclusion}` + `sections/conclusion.tex`）。
+    - 新宏 6 个：`tidalChiRaw/tidalChiTheory/tidalChiEmp/tidalShiftEmpE`（冻结 seg9 JSON）、
+      `baconE`、`nemitzU`（文献，均经 Crossref 验证）；bib 44 → 48 条。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
@@ -119,17 +138,16 @@
 |---|---:|---|
 | Summary（摘要段，无引用） | 174 | 指引 ≤200 ✓ |
 | 1 Introduction | 431 | |
-| 2 Results | 474 | |
-| 3 Discussion and outlook | 630 | |
-| **正文小计（I+R+D）** | **1,535** | |
-| **正文合计（摘要段 + 正文）** | **1,709** | 6 页锚点 2,500 → **−791（−31.6%）**；8 页锚点 4,300 → −2,591 |
+| 2 Results | 690（§2.3 潮汐段落 +216） | |
+| 3 Discussion and outlook | 940（演进/潮汐/展望三段 +310） | |
+| 4 Conclusion（新增） | 185 | |
+| **正文小计（I+R+D+C）** | **2,246** | |
+| **正文合计（摘要段 + 正文）** | **2,420** | 6 页锚点 2,500 → **−80（−3.2%）**；8 页锚点 4,300 → −1,880 |
 | 主文图表项 | 3 图 + 1 表 = 4 | 6 页档标配 4 ✓ |
-| Methods | 612 | 指引 ≤3,000 ✓；不计入正文页数 |
-| 附录 A–E | 531 | 在线/补充材料；未随正文修订改动（旧记录 539；统一口径复算为 531） |
+| Methods | 719 | 指引 ≤3,000 ✓；不计入正文页数 |
+| 附录 A–E | 531 | 在线/补充材料；未随正文修订改动 |
 
-**结论**：当前正文 ≈ 典型 6 页 Article 字数的 **68.4%**；按 4 个紧凑图表项估计，印版约 **5 页**。
-补 ≈790 词可达 2,500 词锚点（候选位置：Results 的对照与稳健性细节；Discussion 的
-应用/展望；Introduction 的动机细节），或维持紧凑短稿。
+**结论**：当前正文 ≈ 典型 6 页 Article 字数的 **96.8%**；按 4 个紧凑图表项估计，印版约 **5–6 页**。
 
 ## 2. 其他投稿格式核对（顺带记录）
 

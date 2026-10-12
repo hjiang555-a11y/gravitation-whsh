@@ -25,6 +25,20 @@ redefinition threshold is therefore no longer the transfer
 infrastructure but the systematic evaluations of the clocks and the
 geodetic determination of their potential difference.
 
+The three independent Yb/Sr values also track the progress of the
+comparison technology itself. The Yb/Sr ratio was first measured in
+2014~\citep{akamatsu2014ybsr} and refined to
+\nemitzU~\citep{nemitz2016ybsr}; the BACON campus network then reached
+fractional ratio uncertainties at or below \baconE~\citep{beloy2021bacon},
+followed by \refEuBestU{} across a continental fiber network and
+\refSameCampusU~on a single campus. Our measurement continues this
+sequence at intercity scale with $\uTotalShort\times10^{-18}$, and the
+three latest values agree with one another at the few-$10^{-18}$
+level. The comparability that matters for the redefinition is no
+longer a single laboratory's claim about its own clock: it is the
+agreement between independent measurements, and the convergence seen
+here is what converts self-assessed systematics into verified ones.
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figs/fig3_compare.pdf}
@@ -47,6 +61,22 @@ comparison; the same sensitivity underlies proposed
 chronometric-geodesy applications of optical-clock
 networks~\citep{grotti2018geodesy, takamoto2020redshift,
 mcgrew2018geodesy}.
+
+A simple tidal test illustrates why the time-varying term is not
+corrected here. Fitting the segment-mean ratio deviations against the
+segment-averaged tidal potential yields a marginal slope whose sign
+and magnitude depend on the fitting window, and applying the supplied
+tide series as a template correction leaves the residual scatter
+larger, not smaller (Section~\ref{sec:results-budget}). A tidal
+template that is adequate for geophysical purposes is not necessarily
+adequate at the $10^{-18}$ level, where ocean-tide loading,
+hydrological mass redistribution and their local phase and amplitude
+errors all matter~\citep{voigt2016timevariable}. A correct
+time-dependent treatment would require a dedicated geodetic campaign
+with in-situ gravimetry and site-specific loading models; that is
+beyond the scope of this paper and is left to future work. Until such
+a treatment exists, the reported ratio carries the time-varying term
+conservatively in its uncertainty budget.
 
 The campaign also demonstrates the operational character that a
 future optical-clock network will need. Over the two-month campaign
@@ -83,10 +113,16 @@ pair of a distributed optical-clock network: the same infrastructure
 can be extended to further nodes, and the technique demonstrated here
 -- clocks at different sites agreeing at the redefinition threshold --
 is the operation that both the redefinition and post-redefinition
-applications require. Realizing those applications over larger
-distances will mean combining fiber networks of the kind used
-here~\citep{schioppo2022cavities, chen2026dissemination} with
-intercontinental techniques such as
-VLBI~\citep{pizzocaro2021vlbi}, and will put the same demands on
-geodetic infrastructure that this comparison
+applications require. The building blocks for such a network are now
+in place: terrestrial fiber links of the kind used
+here~\citep{schioppo2022cavities, chen2026dissemination} carry
+comparisons over thousands of kilometers within continents, while
+free-space and satellite-based links are closing the remaining
+gaps~\citep{shen2021satellite, caldwell2023geo, shen2022freespace,
+pizzocaro2021vlbi}. The natural next step is a hybrid architecture in
+which optical-clock nodes on continental fiber backbones are
+interconnected across oceans by satellite or free-space optical links,
+so that any pair of clocks on Earth can be compared at the level
+demonstrated here. Realizing it will put the same demands on geodetic
+infrastructure that this comparison
 faced~\citep{grotti2018geodesy, mcgrew2018geodesy}.
