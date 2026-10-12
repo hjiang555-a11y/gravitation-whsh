@@ -1,7 +1,7 @@
 # Nature 论文：框架与摘要（当前信息梳理版）
 
 > **本文档反映截至 2026-09-30 的 `paper/main.tex` 定稿口径**，与
-> `paper/physics_analysis/NATURE_FRAMEWORK.md`（早期草稿）不同：定位已从
+> `archive/physics_analysis/NATURE_FRAMEWORK.md`（早期草稿）不同：定位已从
 > 「网络多用途」调整为**以钟比对结果为主宣称、潮汐作为检出结果 + 预算项**。
 >
 > **定位（一句话）**：本文报道的第二例达 `5×10⁻¹⁸` 的**异种**光钟频率比，

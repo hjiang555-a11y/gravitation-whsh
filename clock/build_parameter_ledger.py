@@ -24,7 +24,7 @@ INHERITED_GROUPS = (15, 16, 17)
 INHERITED_FROM_GROUP = 12
 PARAMS_DEFAULT = Path("clock/params.json")
 OUTPUT_FILENAMES = ("parameter_ledger.csv", "parameter_conflicts.json")
-LEVELLING_SOURCE = Path("docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md")
+LEVELLING_SOURCE = Path("archive/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md")
 
 
 def _main_checkout_root() -> Path | None:

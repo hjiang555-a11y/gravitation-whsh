@@ -29,7 +29,7 @@ FIXTURE_COLUMNS = [
     "33623141.0",
 ]
 RUNNER = CliRunner()
-LEVELLING_SOURCE = "docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md"
+LEVELLING_SOURCE = "archive/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md"
 
 
 def write_beat_fixture(tmp_path: Path, labels: list[str]) -> Path:

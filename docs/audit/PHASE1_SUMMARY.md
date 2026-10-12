@@ -116,8 +116,8 @@
 
 - 本目录：`docs/audit/`（本总结 + task-07/09/10/12 新旧对照证据）
 - 权威运行与 E2E 历史：`results/audit-v1/`（含 `README.md`）
-- 计划与设计：`docs/superpowers/plans/2026-10-06-clock-analysis-audit.md`、
-  `docs/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md`
+- 计划与设计（已归档）：`archive/superpowers/plans/2026-10-06-clock-analysis-audit.md`、
+  `archive/superpowers/specs/2026-10-06-clock-comparison-audit-paper-design.md`
 - 提交范围：`61329ad..f9a3339`（33 个提交，分支 `worktree-clock-analysis-audit`）
 
 ## 7. 后续

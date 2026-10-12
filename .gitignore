@@ -32,3 +32,9 @@ paper/ref/Pizzocaro*.pdf
 paper/ref/Vishwakarma*.pdf
 paper/overleaf_rev2_upload__hj.zip
 paper/overleaf_rev2_v2_upload__hj.zip
+
+# 气象温度原始 CSV（仅本地保留；分析文档/代码/图正常入库）
+archive/temperature/*.csv
+
+# 新增潮汐输入（原始数据，仅登记于 clock/PROFESSIONAL_TIDAL_DATA.md §7，保持未跟踪）
+results/comp_shanghai-wuhan-beijintime.csv

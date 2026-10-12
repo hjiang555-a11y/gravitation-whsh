@@ -229,7 +229,7 @@ python clock/segment_analysis/segment6_triangular.py
 ```bash
 python clock/segment_analysis/variant1_30s_tide.py   # 潮汐 30s 原生网格
 python clock/segment_analysis/variant30s_analysis.py # 拍频 30s 均值聚合
-python clock/segment_analysis/segment17_correlation.py # 17 点两两相关
+python archive/segment17_correlation.py              # 17 点两两相关（已归档，仅供参考）
 ```
 
 ## 6. 诊断清单（运行前自检）

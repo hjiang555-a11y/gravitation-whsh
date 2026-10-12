@@ -2,7 +2,7 @@
 
 This folder is ready to upload to Overleaf as-is. It is the **current**
 package for the rebuilt candidate manuscript (`paper/rev2/`); the earlier
-package `paper/overleaf-rev2/` is kept as a frozen snapshot and is no
+package `archive/overleaf-rev2/` is kept as a frozen snapshot and is no
 longer updated.
 
 ## Contents

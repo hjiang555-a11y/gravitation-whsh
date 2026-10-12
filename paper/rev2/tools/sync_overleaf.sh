@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Refresh the CURRENT Overleaf package (paper/overleaf-rev2-v2/) and rebuild
-# its zip. The original paper/overleaf-rev2/ package is a frozen snapshot and
+# its zip. The original frozen snapshot lives in archive/overleaf-rev2/ and is
 # is intentionally left untouched; package READMEs are hand-authored.
 set -euo pipefail
 REV2="$(cd "$(dirname "$0")/.." && pwd)"

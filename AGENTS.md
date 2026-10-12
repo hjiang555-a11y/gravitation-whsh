@@ -47,9 +47,10 @@ cd paper/rev2
 |---|---|
 | `paper/rev2/` | **当前论文候选稿**（16 段口径；数字宏管线；`main.pdf` 已入库） |
 | `paper/main.tex` 等 | 历史稿（潮汐检出叙事），冻结只读 |
-| `paper/overleaf-rev2-v2/` + zip | 当前 Overleaf 包（由 `sync_overleaf.sh` 同步）；`overleaf-rev2/` 为冻结旧版 |
+| `paper/overleaf-rev2-v2/` + zip | 当前 Overleaf 包（由 `sync_overleaf.sh` 同步）；`archive/overleaf-rev2/` 为冻结旧版 |
 | `results/audit-v1/verified/` | 阶段一权威结果层（manifest 为唯一真源） |
 | `docs/audit/PHASE1_SUMMARY.md` | 阶段一结论/裁定/外部输入总入口 |
 | `clock/`、`clock_ratio/` | 分析实现（运行说明见 `docs/WORKFLOW.md`） |
 | `docs/` | 符号/方法/流程/审计等专项文档（按需读，勿通读） |
 | `results/comp_shanghai-wuhan-beijintime.csv` | 新增潮汐输入（仅登记，后续分析用） |
+| `archive/` | 历史/冻结归档（旧 17 段叙事报告、温度分析、旧 Overleaf 快照、diffs、阶段一计划、旧 PDF 解读等） |

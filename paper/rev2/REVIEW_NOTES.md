@@ -44,7 +44,7 @@
    应用动机与"本地两次验证" → 本文工作与结果）；"used as sensors for dark matter" 句补引
    BACON-2021 比值测量 Nature 论文（`beloy2021bacon`，与 `derevianko2014topological`、
    `wcislo2018global` 并引）。生成新包 `paper/overleaf-rev2-v2/` +
-   `overleaf-rev2-v2-upload.zip`；**原包 `paper/overleaf-rev2/` 保持不动**
+   `overleaf-rev2-v2-upload.zip`；**原包已归档至 `archive/overleaf-rev2/`**
    （`sync_overleaf.sh` 已指向新包）。正文合计 1,564 词（62.6%）。
 
 9. **Results §2.1 重写与二次修订（2026-10-10 第五轮，按指示）**：结合实验情况扼要介绍网络组成，
@@ -153,5 +153,5 @@
 - 一键校验：`paper/rev2/tools/check.sh`；Overleaf 包同步：`paper/rev2/tools/sync_overleaf.sh`；
   一键发布：`paper/rev2/tools/publish.sh "commit message"`（校验+同步+提交+推送）
 - Overleaf 包（当前）：`paper/overleaf-rev2-v2/`、`paper/overleaf-rev2-v2-upload.zip`；
-  初版包 `paper/overleaf-rev2/` 保留为冻结快照
+  初版包已归档至 `archive/overleaf-rev2/`（冻结快照）
 - 根 README：「篇幅与 Nature Article 对照（paper/rev2）」一节
