@@ -259,21 +259,9 @@ A=−0.54 12.91%）与 A=−1 的长 τ 不稳定度升都是真实的**：前�
 
 ## 篇幅与 Nature Article 对照（paper/rev2）
 
-> 已按 2026-10-09 审阅意见调整：题名与摘要按指定文本更新；作者修订版（title→Introduction）
-> 合并、参考文献补 5 条（NIST-F2 / PTB CSF / 卫星链路 3 条）、首句补离子/原子光钟引文（+4 条，
-> 全部 <2×10⁻¹⁸：PTB Al⁺ 1.6×10⁻¹⁸、NIST Al⁺ 更新 5.5×10⁻¹⁹；NPL 最佳 2.2×10⁻¹⁸ 超线未引）、
-> 全文拼写统一美式；原 Results §2.3 并入独立章节 "Discussion and outlook"，原 §2.4（段 9 敏感性）
-> 移除、论文不再解释其不采用原因；作者第二版合并：题名改 Yb/Sr、Introduction 逻辑梳理与润色、
-> 暗物质句补引 BACON-2021（beloy2021bacon）；新 Overleaf 包 overleaf-rev2-v2 已生成（原包保留）；
-> Results §2.1 重写并二次精简（网络组成/频率控制/比对方法；链路细节从简；
-> 商用网络非独占使用；载波记作 ITU-T 100 GHz DWDM C34 信道）；
-> §2.1 战役段挪至 §2.2 开头（从数据记录起叙述）；§2.2 以贝叶斯随机效应为主结果重写
-> （Mandel–Paule 为交叉核对，不提 WLS；新增 Birge 1932 / Mandel–Paule 1970 引文）；
-> Methods「Clock-ratio determination and statistical model」小节改为自包含统计模型段
-> （贝叶斯主结果 + Mandel–Paule 交叉核对；不再指向附录），§2.2 统计句定稿
-> （补 u_MP / ξ 值；统计不确定度 3 位有效数字）；作者第三版合并（2026-10-11）：摘要删
-> 数据量句、§2.2 战役句压缩、Methods 删 "Observation campaign" 小节（Leveling 置首）。
-> 详细对照与复算口径见 [paper/rev2/REVIEW_NOTES.md](paper/rev2/REVIEW_NOTES.md)。
+> 当前候选稿为 16 段口径重建稿（含作者第三版修订，2026-10-11）；稿件内所有数字由
+> 宏管线生成。历次审阅变更与复算口径见
+> [paper/rev2/REVIEW_NOTES.md](paper/rev2/REVIEW_NOTES.md)。
 
 Nature 格式指南锚点：物理论文一般 ≤6 印页；典型 6 页 ≈ 正文 2,500 词（摘要段+正文）+ 4 个
 紧凑图表项；Methods 在线部分另计（≤3,000 词）。
@@ -318,10 +306,9 @@ Nature 风格候选稿；原稿 `paper/main.tex` 原样保留、不参与重建�
 
 ```bash
 cd paper/rev2
-uv run --project ../.. python tools/build_numbers.py       # 生成数字宏（读取冻结清单）
-uv run --project ../.. python tools/build_numbers.py --check  # 审计：宏覆盖与一致性
-uv run --project ../.. python tools/make_figures.py        # 生成 3 图（PNG300/PDF）
-pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
+./tools/check.sh                      # 一键：数字管线校验 + 编译 + 未定义引用检查
+uv run --project ../.. python tools/build_numbers.py  # （可选）重新生成数字宏
+uv run --project ../.. python tools/make_figures.py   # （可选）重新生成 3 图
 ```
 
 编译产物 `paper/rev2/main.pdf` 已入库，便于直接查看。数字来源逐条见
@@ -371,7 +358,7 @@ python clock_ratio/make_report.py                # 自动生成权威报告
 | `clock_ratio/EXPERIMENT_REPORT.md` | **总权威报告**（钟比值+潮汐+相关性+拼接稳定度 §9）|
 | `clock_ratio/concatenated_stability.py` + `.md/.csv` | gap-safe 拼接稳定度（A=0/−1/−0.54，不跨 gap）|
 | `clock_ratio/concatenated_stability_long.py` + `.md/.csv/.png/.pdf` | 拼接版长 τ 稳定度（段端到端相接，τ≤4.63 d，带 EDF 误差棒，log-log 图）|
-| `paper/main.tex` + `paper/refs.bib` | **LaTeX 投稿稿**（英文，Nature 网络框架；`cd paper && pdflatex main.tex && bibtex main && pdflatex main.tex` ×2）|
+| `paper/main.tex` + `paper/refs.bib` | **历史稿**（潮汐检出叙事；冻结只读；当前候选稿见 `paper/rev2/`）|
 | `paper/rev2/` | **重建候选稿**（16 段口径、潮汐为误差项；数字由 `tools/build_numbers.py` 从冻结清单生成；`main.pdf` 已入库）|
 | `docs/PAPER_DRAFT.md` | 论文段落草稿（中文，配 4 图）|
 | `docs/PAPER_DRAFT_EN.md` | 论文段落草稿（英文，与中文稿同数同构）|

@@ -1,34 +1,35 @@
 # Paper draft: Wuhan-Shanghai optical-clock comparison
 
-LaTeX submission draft for the tidal gravitational-redshift analysis of
-the Wuhan (Yb) - Shanghai (Sr) optical-clock comparison.
+LaTeX drafts for the Wuhan (Yb) - Shanghai (Sr) optical-clock comparison.
+The current candidate manuscript is `rev2/` (16-segment rebuild; numbers
+generated from the frozen audit layer); `main.tex` here is the frozen
+historical draft (tidal-detection narrative).
 
 ## Version status (milestone)
 
 - **v0.3 (2026-10-01, commit `da5b2e4`)** — stable working version.
   Nature Article structure, main text compressed to 13 pages.
-- **Rebuilt candidate (2026-10-08)** — `rev2/` is a rebuild on the frozen
-  phase-one audit result layer (16-segment primary membership; the
+- **Rebuilt candidate (rev2, current)** — `rev2/` is a rebuild on the
+  frozen phase-one audit result layer (16-segment primary membership; the
   time-varying-redshift term is carried as an uncertainty item only).
-  `main.tex` in this directory is kept unchanged as the historical draft.
-  Length-vs-Nature review: `rev2/REVIEW_NOTES.md`.
-- **Structure** — Results: 2.1 Network and observation campaign →
-  2.2 Theoretical tidal influence → 2.3 Tidal gravitational-redshift
-  detection → 2.4 Clock-ratio determination. Discussion:
-  3.1 Attempted tidal compensation → 3.2 Clock-comparison synthesis.
-- **Open items** — authors and affiliations remain provisional. The tidal
-  template response is an effect estimate only: its covariance-aware
-  significance and the interpretation of the supplied height-equivalent
-  tide series remain to be confirmed.
+  The author's third revision was merged 2026-10-11 and the current
+  Overleaf package is `overleaf-rev2-v2/`.
+- **Structure, metrics and revision log** — `rev2/REVIEW_NOTES.md`
+  (single source; not duplicated here).
+- **Open items** — authors and affiliations remain provisional (the
+  current draft carries the `xxxxx` placeholder); rev2's open items
+  (title length vs the 75-character guideline; appendix disposition) are
+  tracked in `rev2/REVIEW_NOTES.md`.
 
 ## Files
 
 | File | Purpose |
 |---|---|
 | `main.tex` | Full article: abstract, introduction, results, discussion, methods, back matter, references. |
-| `refs.bib` | BibTeX entries (26 references; see below). |
+| `refs.bib` | BibTeX entries (30 entries; historical draft). |
 | `overleaf/` + `overleaf-upload.zip` | Self-contained Overleaf upload (main.tex with `figs/` paths, refs.bib, figures). |
-| `overleaf-rev2/` + `overleaf-rev2-upload.zip` | Overleaf upload for the rebuilt candidate (`rev2/`; sections/, generated/, vector-PDF figs). |
+| `overleaf-rev2/` + `overleaf-rev2-upload.zip` | Overleaf upload for the rebuilt candidate (frozen snapshot; superseded by `overleaf-rev2-v2/`). |
+| `overleaf-rev2-v2/` + `overleaf-rev2-v2-upload.zip` | **Current** Overleaf package for `rev2/` (synced by `rev2/tools/sync_overleaf.sh`). |
 | `README.md` | This file. |
 
 ## How to compile
