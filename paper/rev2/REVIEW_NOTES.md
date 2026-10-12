@@ -123,6 +123,26 @@
     - 新宏 6 个：`tidalChiRaw/tidalChiTheory/tidalChiEmp/tidalShiftEmpE`（冻结 seg9 JSON）、
       `baconE`、`nemitzU`（文献，均经 Crossref 验证）；bib 44 → 48 条。
 
+16. **整体评估与结构优化（2026-10-12 第十二轮，按指示；Nature 评审视角）**：
+    - **Methods 框架补齐、废除附录 A–E**：附录五节（频率链与比值反演 / 数据处理与段定义 /
+      统计合并模型 / 水准归算 / 预算细节）全部并入 Methods，删除 `appendix.tex` 与
+      main.tex 的 `\appendix`。Methods 现按逻辑顺序组织：① 水准归算 → ② 实验装置与频率
+      传递（含频率链公式与 δ_g 反演）→ ③ 数据处理与段定义（`tab:segments` 迁入）→
+      ④ 钟比值与统计模型（WLS/Birge/Mandel–Paule/贝叶斯自包含）→ ⑤ 不确定度预算（含潮汐
+      敏感性）。消除了统计模型三处重复（原 Results/Methods/附录各一遍）。
+    - **Discussion 与 Conclusion 去重**：Discussion 保留论证版（对照/演进/引力势与潮汐
+      处理/运行属性/局限/展望）；Conclusion 收敛为简报式总结（首次跨城达标 + 三者趋同 +
+      瓶颈转移 + 网络愿景），不再复述全文数字。
+    - **逻辑修复**：删除 Discussion 中"段均值对潮汐势拟合斜率依赖拟合窗口"句——该表述是
+      17 段检出叙事残留，16 段口径无对应数字支持，且与"模板修正恶化拟合"的敏感性证据
+      重复；现仅保留后者（有 χ²_red 数据支撑）。
+    - **bib 清理**：移除 9 条孤儿条目（bothwell2022redshift、chou2010redshift、
+      kolkowitz2016gw、laurent2015aces、lisdat2016network、oelker2019stability、
+      riehle2015redefinition、roberts2017domain、sanner2019lorentz）；
+      bib 48 → 39 条 = 正文引用数，零孤儿。
+    - 渲染：12 页（含 Methods），无 undefined 引用；正文（摘要+引言+结果+讨论+结论）
+      ≈2,300 词。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
@@ -136,18 +156,17 @@
 
 | 组成 | 词数 | 对照 |
 |---|---:|---|
-| Summary（摘要段，无引用） | 174 | 指引 ≤200 ✓ |
-| 1 Introduction | 431 | |
-| 2 Results | 690（§2.3 潮汐段落 +216） | |
-| 3 Discussion and outlook | 940（演进/潮汐/展望三段 +310） | |
-| 4 Conclusion（新增） | 185 | |
-| **正文小计（I+R+D+C）** | **2,246** | |
-| **正文合计（摘要段 + 正文）** | **2,420** | 6 页锚点 2,500 → **−80（−3.2%）**；8 页锚点 4,300 → −1,880 |
+| Summary（摘要段，无引用） | 181 | 指引 ≤200 ✓ |
+| 1 Introduction | 436 | |
+| 2 Results | 695 | |
+| 3 Discussion and outlook | 913 | |
+| 4 Conclusion | 142 | |
+| **正文小计（I+R+D+C）** | **2,186** | |
+| **正文合计（摘要段 + 正文）** | **2,367** | 6 页锚点 2,500 → **−133（−5.3%）**；8 页锚点 4,300 → −1,933 |
 | 主文图表项 | 3 图 + 1 表 = 4 | 6 页档标配 4 ✓ |
-| Methods | 719 | 指引 ≤3,000 ✓；不计入正文页数 |
-| 附录 A–E | 531 | 在线/补充材料；未随正文修订改动 |
+| Methods | 572 | 指引 ≤3,000 ✓；不计入正文页数 |
 
-**结论**：当前正文 ≈ 典型 6 页 Article 字数的 **96.8%**；按 4 个紧凑图表项估计，印版约 **5–6 页**。
+**结论**：当前正文 ≈ 典型 6 页 Article 字数的 **94.7%**；按 4 个紧凑图表项估计，印版约 **5–6 页**。
 
 ## 2. 其他投稿格式核对（顺带记录）
 

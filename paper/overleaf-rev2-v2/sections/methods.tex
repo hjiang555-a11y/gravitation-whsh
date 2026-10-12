@@ -8,14 +8,19 @@ run between the Wuhan benchmark WS-03 (at IAPMST) and the Shanghai
 benchmark WS-01 (at USTC) through Ezhou, Huangshi, Huanggang, Lu'an,
 Hefei, Wuhu, Guangde and Suzhou, using digital levels with sight
 lengths below \qty{30}{m} and gravity observed at every leveling point
-with two relative gravimeters. The leveled normal heights were
-converted to orthometric heights for the geopotential integration,
-$\dW_{AB} = -\sum_i g_i\,\Delta H_i$, where $g_i$ is the mean gravity
-and $\Delta H_i$ the orthometric height difference of the $i$-th
-segment. The resulting geopotential difference between the two atomic
-transitions is $\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$. The
-per-kilometer misclosure of the leveling is $\levelMm$\,mm, below the
-first-order limit.
+with two relative gravimeters. The orthometric height difference
+between the benchmarks follows from the leveled normal heights after
+the normal-to-orthometric conversion, and the geopotential difference
+is integrated segment by segment, $\dW_{AB} = -\sum_i g_i\,\Delta H_i$,
+where $g_i$ is the mean gravity and $\Delta H_i$ the orthometric
+height difference of the $i$-th segment. Combining this with the two
+local offsets between benchmark and clock platform (obtained by
+trigonometric leveling) and the platform-to-transition offsets from
+the clock design parameters gives the atomic-transition geopotential
+difference $\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$, equivalent
+to an optical fractional shift of $\deltaGV$. The per-kilometer
+misclosure of the leveling is $\levelMm$\,mm, below the first-order
+limit.
 
 \subsection*{Experimental setup and frequency transfer}
 
@@ -40,7 +45,42 @@ references and phase-locked loops are derived from the comb repetition
 rate $f_{\mathrm{rep}} = \fRepMHz$\,MHz. The observable is the
 out-of-loop beat between the received carrier and the local
 Yb-referenced comb, converted to fractional units with the transfer
-frequency $F_{1550} = \fFifteenTHz$\,THz (see Appendix~\ref{app:chain}).
+frequency $F_{1550} = \fFifteenTHz$\,THz. All frequencies in the chain
+derive from the two clock transitions through fixed factor-of-two
+relations,
+$f_{\mathrm{comb}}^{1397} = \tfrac{1}{2}(1+a)\,f_{\mathrm{Sr}}$ and
+$f_{\mathrm{comb}}^{1156} = \tfrac{1}{2}(1+b)\,f_{\mathrm{Yb}}$, where
+$a$ and $b$ collect the Sr and Yb systematic corrections (density,
+lattice, second-order Zeeman and blackbody shifts). The static
+gravitational-redshift correction enters the ratio inversion as a
+multiplicative factor,
+$\left(\mathrm{Yb/Sr}\right)_{\rm corr}
+= \left(\mathrm{Yb/Sr}\right)_{\rm raw} \times (1+\delta_g)$ with
+$\delta_g = \deltaGV$, derived from the leveled geopotential
+difference above.
+
+\subsection*{Data processing and segment definition}
+
+The counters sample the beat every second in phase-averaging mode.
+Samples deviating by more than $10$\,Hz from the running median are
+treated as jump points and removed; the retained data are further
+trimmed at both ends by an endpoint screen that drops points beyond
+$1\%$ of the peak-to-peak range of the record. Each accepted segment
+contributes its longest jump-free record after this screening.
+Table~\ref{tab:segments} lists the per-segment retained counts, ratio
+deviations and statistical uncertainties; the category column marks
+the five segments whose stability fits are model-limited.
+
+\begin{table}[t]
+  \centering
+  \caption{Per-segment data of the 16 segments analyzed in this work. Ratio
+  deviations $y_i = R_i/R_1 - 1$ are relative to the first segment;
+  $u(y_i)$ is the statistical uncertainty of the segment ratio;
+  ``Fit'' is \emph{est.} for segments whose stability fit lies in the
+  white-frequency-noise band and \emph{lim.} for model-limited fits.}
+  \label{tab:segments}
+  \input{generated/segment_table}
+\end{table}
 
 \subsection*{Clock-ratio determination and statistical model}
 
@@ -60,16 +100,27 @@ random-effect treatment of the excess
 scatter~\citep{birge1932errors, mandel1970interlaboratory}: each
 segment is modeled as $R_i \sim \mathcal{N}(\mu, u_i^2 + \xi^2)$,
 with a common excess scatter $\xi$ added in quadrature to the
-per-segment uncertainties. The primary value is obtained from a
-Bayesian random-effect model, in which $\mu$ and $\xi$ are jointly
-inferred with flat priors on $\mu$ and on $\log\xi$, and the joint
-posterior $p(\mu, \xi \mid \{R_i, u_i\})$ is marginalized numerically
-over a wide $\log\xi$ grid; the posterior mean of $\mu$ and its
-posterior standard deviation give the reported central value and
-statistical uncertainty. The Mandel--Paule
-estimator~\citep{mandel1970interlaboratory}, which solves
-$\chi^2_{\rm red}(\xi) = 1$ for the same observation model, is
-evaluated as a cross-check.
+per-segment uncertainties. Under the fixed-effect assumption the
+inverse-variance combination
+$\mu_{\rm WLS} = \sum_i w_i R_i / \sum_i w_i$ with $w_i = 1/u_i^2$
+gives $\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
+($p = \pChi$), so the fixed-effect uncertainty under-describes the
+observed scatter. The Birge ratio
+$B = \sqrt{\chi^2_{\rm red}} = \birgeRatio$ would rescale all
+$u_i$ by a common factor, and the Mandel--Paule
+estimator~\citep{mandel1970interlaboratory} solves
+$\chi^2_{\rm red}(\xi) = 1$ for the same observation model, giving
+$\xi = \xiMpE \times 10^{-18}$. The primary value is instead obtained
+from a Bayesian random-effect model, in which $\mu$ and $\xi$ are
+jointly inferred with flat priors on $\mu$ and on $\log\xi$, and the
+joint posterior $p(\mu, \xi \mid \{R_i, u_i\})$ is marginalized
+numerically over a 40-decade $\log\xi$ grid; the posterior mean of
+$\mu$ and its posterior standard deviation give the reported central
+value and statistical uncertainty, with
+$\xi = \xiBayesE \times 10^{-18}$. The excess scatter quantified here
+also absorbs the correlated component of the time-varying
+gravitational-redshift term (see below), which is carried separately
+as an uncertainty item rather than corrected.
 
 \subsection*{Uncertainty budget}
 
@@ -79,20 +130,26 @@ of the Bayesian random-effect model applied to the \nSeg-segment data.
 The Sr and Yb systematic terms are the published evaluations of the two
 clocks~\citep{jia2026sr, zhu2026yb}; the value adopted for the Yb clock
 resolves an internal-versus-published discrepancy in favor of the
-published evaluation. The static-potential term follows from the
-leveling uncertainty. The fiber-link and frequency-comb terms are
-experiment-side upper bounds. The time-varying
-gravitational-redshift term is carried as an uncertainty item,
-quantified from the scale over which the segment-averaged shift varies
-across the campaign, and is not applied as a correction to the reported
-central value. As a direct sensitivity check, we repeated the
-combination with the supplied tide series applied as a template
-correction before the ratio inversion, at fixed theoretical and at
-fixed historical amplitudes: the reduced chi-square of the combination
-rose from $\tidalChiRaw$ to $\tidalChiTheory$ and $\tidalChiEmp$,
-respectively, and the Bayesian center moved by up to
+published evaluation. The static-potential term is
+$u(\dW)/c^2$ from the leveling uncertainty
+$\dWUnc~\mathrm{m^2\,s^{-2}}$, giving
+$\uStaticE \times 10^{-18}$. The fiber-link and comb terms are
+experiment-side upper bounds of $\uSubsystemBound$ each, carried at
+\uLinkE $\times 10^{-18}$ and $\uCombE \times 10^{-18}$ to preserve the
+experiment-side margin.
+
+The time-varying gravitational-redshift term is carried as an
+uncertainty item, quantified from the scale over which the
+segment-averaged shift varies across the campaign, and is not applied
+as a correction to the reported central value. As a direct sensitivity
+check, we repeated the combination with the supplied tide series
+applied as a template correction before the ratio inversion, at fixed
+theoretical and at fixed historical amplitudes: the reduced chi-square
+of the combination rose from $\tidalChiRaw$ to $\tidalChiTheory$ and
+$\tidalChiEmp$, respectively, and the Bayesian center moved by up to
 $\tidalShiftEmpE\times10^{-18}$. A template that degrades the
 agreement between segments is treated as inconsistent with the data,
 so no tidal correction is applied; the magnitude of the induced center
 shift is carried as the time-varying-redshift uncertainty item. The
-components are treated as independent and combined in quadrature.
+components are treated as independent and combined in quadrature,
+giving the total standard uncertainty $\uTotalE \times 10^{-18}$.
