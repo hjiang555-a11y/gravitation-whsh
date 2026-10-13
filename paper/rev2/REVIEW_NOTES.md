@@ -331,6 +331,14 @@
       42(11)）；引文 45 条零缺失零孤儿；句子长度分布合理（均值 25–39 词，
       无 45+ 词长句）；无 AI 典型用语（delve/crucial/it is important 等）。
 
+32. **固体潮相关性结论写入论文（2026-10-13 第二十八轮，按指示）**：
+    - §2.3 正文加一句：段均值相关在全潮 r=+0.52，仅固体潮降至 r=+0.31
+      （"locating the dominant coupling in the ocean-tide loading term"）；
+    - Methods 潮汐节补固体潮分解句（全潮 r 0.52 → 固体潮 0.31，主导耦合
+      在海潮负荷项）；
+    - 新宏 `\tidalCorrTotal`(0.52)/`\tidalCorrSolid`(0.31)，从已提交的
+      `clock_ratio/tidal_solid_only_compare.json` 生成（97 宏）。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：

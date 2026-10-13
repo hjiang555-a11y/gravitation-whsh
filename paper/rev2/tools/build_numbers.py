@@ -381,6 +381,23 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         "model (DE421 + FES2022) from clock_ratio/tidal_new_model_compare.json, "
         "16 segments")
 
+    # Solid-tide-only diagnostic (clock_ratio/tidal_solid_only_compare.json):
+    # without ocean loading the segment-mean correlation weakens markedly.
+    solid_path = ROOT / "clock_ratio" / "tidal_solid_only_compare.json"
+    if solid_path.is_file():
+        solid = _load(solid_path)
+        cor_total = solid["sources"]["old_total"]["correlation"]
+        cor_solid = solid["sources"]["old_solid"]["correlation"]
+    else:
+        cor_total = cor_solid = None
+    if cor_total is not None and cor_solid is not None:
+        add("tidalCorrTotal", f"{cor_total['pearson_17']['r']:+.2f}",
+            "derived: 17-segment Pearson r of y_i vs segment-mean full tide "
+            "(tidal_solid_only_compare.json)")
+        add("tidalCorrSolid", f"{cor_solid['pearson_17']['r']:+.2f}",
+            "derived: 17-segment Pearson r of y_i vs segment-mean solid tide only "
+            "(tidal_solid_only_compare.json)")
+
     add("nSeg", str(len(primary["included_groups"])), "manifest:primary_16.included_groups")
     add("nSegAll", str(len(sensitivity["included_groups"])), "manifest:sensitivity_17.included_groups")
     add("nSamples", latex_groups(str(primary["total_samples"])), "manifest:primary_16.total_samples")

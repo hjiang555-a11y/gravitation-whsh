@@ -141,6 +141,14 @@
       "value": "0.50",
       "source": "derived: reduced chi-square of the A=-0.54 scenario with the second tide model (DE421 + FES2022) from clock_ratio/tidal_new_model_compare.json, 16 segments"
     },
+    "tidalCorrTotal": {
+      "value": "+0.52",
+      "source": "derived: 17-segment Pearson r of y_i vs segment-mean full tide (tidal_solid_only_compare.json)"
+    },
+    "tidalCorrSolid": {
+      "value": "+0.31",
+      "source": "derived: 17-segment Pearson r of y_i vs segment-mean solid tide only (tidal_solid_only_compare.json)"
+    },
     "nSeg": {
       "value": "16",
       "source": "manifest:primary_16.included_groups"

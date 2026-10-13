@@ -172,7 +172,13 @@ taken directly from the FES2022 global ocean-tide model, on a
 \qty{90}{s} Beijing-time grid. Its fixed-amplitude combination again
 degrades the fit ($\chi^2_{\rm red} = \tidalChiAlt$ at the historical
 amplitude) but moves the Bayesian center in the opposite direction,
-by $\tidalShiftAltE\times10^{-18}$.
+by $\tidalShiftAltE\times10^{-18}$. To separate the solid-tide and
+ocean-loading contributions, we also repeated the segment-mean
+correlation with the solid tide alone: the Pearson correlation of the
+ratio deviations with the segment-mean full tide is
+$\tidalCorrTotal$, which falls to $\tidalCorrSolid$ for the solid
+tide only, indicating that the dominant coupling comes from the
+ocean-tide loading term.
 
 Templates that degrade the segment agreement, and whose two
 independent realizations disagree in sign, are treated as
