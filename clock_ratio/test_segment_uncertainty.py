@@ -46,11 +46,11 @@ def test_white_frequency_noise_when_series_is_long() -> None:
     rng = np.random.default_rng(20261006)
     y = rng.normal(0.0, 1e-15, 100_000)
 
-    # When the gap-safe estimator fits the log-log stability curve.
+    # When the gap-safe estimator evaluates the stability curve.
     result = estimate_segment_uncertainty(seconds(len(y)), y, StabilityFitConfig())
 
-    # Then the fitted slope lands in the white-noise band and the extrapolation
-    # is established and finite.
+    # Then the slope diagnostic lands in the white-noise band and the
+    # uncertainty is established and finite.
     assert result.fit_slope is not None
     assert WHITE_BAND[0] <= result.fit_slope <= WHITE_BAND[1]
     assert result.fit_intercept is not None
@@ -60,17 +60,57 @@ def test_white_frequency_noise_when_series_is_long() -> None:
     assert len(result.taus_s) == len(result.sigma_y)
 
 
+def test_uncertainty_uses_last_computable_point_not_extrapolation() -> None:
+    # Given a white-frequency-noise series with a known per-sample sigma.
+    rng = np.random.default_rng(20261012)
+    per_sample = 1e-15
+    y = rng.normal(0.0, per_sample, 100_000)
+    times = seconds(len(y))
+
+    # When the estimator runs.
+    result = estimate_segment_uncertainty(times, y, StabilityFitConfig())
+
+    # Then u_fractional equals the sigma_y of the largest computable tau
+    # (the measured last point), not a value extrapolated to the segment
+    # duration.
+    assert result.taus_s, "taus must be computed"
+    assert result.sigma_y, "sigma_y must be computed"
+    tau_last = result.taus_s[-1]
+    sigma_last = result.sigma_y[-1]
+    assert result.u_fractional == sigma_last
+    # The extrapolation of a white-noise fit to T = 100000 s would sit far
+    # below the last measured point (tau = 25000 s): sigma(T) ~ sigma_last/2.
+    fitted = float(np.exp(result.fit_intercept + result.fit_slope * np.log(100_000)))
+    assert fitted < sigma_last * 0.6
+
+
+def test_uncertainty_when_last_point_lands_at_largest_fit_tau() -> None:
+    # Given a long record, the last computable tau is longest_run//4.
+    rng = np.random.default_rng(20261013)
+    y = rng.normal(0.0, 1e-15, 90_000)
+    result = estimate_segment_uncertainty(seconds(len(y)), y, StabilityFitConfig())
+
+    # Then the chosen tau is the largest computable grid point and u matches
+    # it exactly.
+    assert result.u_fractional is not None
+    assert result.u_fractional == result.sigma_y[-1]
+    assert result.taus_s[-1] == 16384  # largest dyadic tau <= 90000//4
+
+
 def test_short_series_when_fewer_than_three_fit_points() -> None:
-    # Given data whose longest run leaves fewer than three taus in the window.
+    # Given data whose longest run leaves fewer than three taus in the fit
+    # window (600 s run -> taus up to 128 s, only one point >= fit_min_s).
     rng = np.random.default_rng(20261009)
     y = rng.normal(0.0, 1e-15, 600)
 
     # When the estimator runs with the default 128 s fit minimum.
     result = estimate_segment_uncertainty(seconds(len(y)), y, StabilityFitConfig())
 
-    # Then it refuses to extrapolate: no longest-tau fallback, no fit, no u.
+    # Then it still reports the last computable point as u, but the missing
+    # slope diagnostic leaves the segment flagged with limitations.
     assert result.taus_s  # taus were evaluated ...
-    assert result.u_fractional is None
+    assert result.u_fractional is not None
+    assert result.u_fractional == result.sigma_y[-1]
     assert result.fit_slope is None
     assert result.fit_intercept is None
     assert result.status == "supported-with-limitations"

@@ -153,7 +153,9 @@ def test_missing_segment_one_baseline_is_rejected() -> None:
 
 
 def test_short_segment_with_undefined_uncertainty_is_rejected() -> None:
-    short = synthetic_segment(2, count=600)
+    # A 100-sample run has no computable OADEV point at or above fit_min_s
+    # (tau grid stops at 100//4 = 25 < 128), so no u can be reported.
+    short = synthetic_segment(2, count=100)
     with pytest.raises(AnalysisError, match="segment 2"):
         analyze_scenario((SEGMENTS[0], short), TIDE, SCENARIOS[0])
 

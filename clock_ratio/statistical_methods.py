@@ -14,11 +14,12 @@ YbSr_NISTstyle_14bin_full_analysis_20260824.m):
      jump-free span, endpoint-screen 1% peak-to-peak).
   2. Gap-safe OADEV: TRUE overlapping Allan deviation of the beat fractional
      frequency (normalized to F_1550 = N1550_WH·f_rep = 193.3992 THz), computed
-     by clock_ratio.segment_uncertainty inside the prespecified window
-     128 s <= tau <= 0.25*T with T = longest gap-free run, fit to
-     log sigma_y = a + b·log tau and extrapolated to tau = T. Underdetermined
-     fits and non-white slopes are flagged; the longest tau is never reused.
-  3. u_i = sigma_y(T) * R_i  (per-segment clock-ratio statistical uncertainty).
+     by clock_ratio.segment_uncertainty on the tau grid up to 0.25*T with
+     T = longest gap-free run; u_i adopts the LAST COMPUTABLE OADEV point
+     (no fit, no extrapolation); the log-log slope is kept as a diagnostic
+     and non-white slopes are flagged.
+  3. u_i = sigma_y(tau_last) * R_i  (per-segment clock-ratio statistical
+     uncertainty, from the last computable point).
   4. Combined values via the typed core: WLS / Birge / Mandel-Paule / Bayesian.
   5. Gravitational correction (whole-experiment total): per-method weighted mean
      of Δf/f = ΔW/c² (same as correlation_reanalysis).

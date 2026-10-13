@@ -1,20 +1,20 @@
 """Gap-safe per-segment statistical uncertainty from true overlapping ADEV.
 
-The estimator fits ``log(sigma_y) = a + b*log(tau)`` only inside the
-prespecified window ``fit_min_s <= tau <= fit_max_fraction * T``, where ``T`` is
-the longest gap-free run of the segment (never the retained-sample count).  Runs
-never cross a gap or a duplicate timestamp; that guarantee comes from
-``tidal_stability.oadev`` / ``continuous_runs``.
+The estimator evaluates ``sigma_y`` on the prespecified tau grid (up to a
+quarter of the longest gap-free run) and adopts the **last computable point**
+as the segment uncertainty: ``u = sigma_y(tau_max)`` with no log-log fit and no
+extrapolation to the segment duration.  Runs never cross a gap or a duplicate
+timestamp; that guarantee comes from ``tidal_stability.oadev`` /
+``continuous_runs``.
 
-When fewer than three usable fit points exist, or the observed slope leaves the
-white-frequency-noise band ``[-0.65, -0.35]``, the result is flagged as
-``supported-with-limitations``: the fit is still reported when computable, but
-``analyze_raw_statistics`` rejects any segment without a defined
-``u_fractional`` instead of silently extrapolating from the longest tau.
+The slope of ``log sigma_y`` vs ``log tau`` is still computed as a diagnostic:
+when it leaves the white-frequency-noise band ``[-0.65, -0.35]`` the result is
+flagged ``supported-with-limitations`` (the last-point value is still
+reported).  When no computable point reaches ``fit_min_s`` the estimator
+refuses to report any value instead of silently reusing a shorter tau.
 """
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 from typing import Literal
 
@@ -60,11 +60,12 @@ class SegmentUncertainty:
 def estimate_segment_uncertainty(
     times: TimeArray, y: FloatArray, config: StabilityFitConfig,
 ) -> SegmentUncertainty:
-    """Fit the gap-safe OADEV curve and extrapolate sigma_y to the longest run.
+    """Adopt the last computable OADEV point as the segment uncertainty.
 
     ``y`` is the segment's fractional frequency; each run is centered inside
     ``oadev``.  The returned ``group`` is always None -- segment identity is
-    attached by the caller (``analyze_raw_statistics``).
+    attached by the caller (``analyze_raw_statistics``).  The log-log slope is
+    kept as a white-frequency-noise diagnostic only.
     """
     runs = continuous_runs(times)
     longest_run = max((stop - start for start, stop in runs), default=0)
@@ -75,28 +76,33 @@ def estimate_segment_uncertainty(
     taus_s = tuple(tau for tau, _ in defined)
     sigma_y = tuple(sigma for _, sigma in defined)
 
-    upper = config.fit_max_fraction * longest_run
-    usable = [(tau, sigma) for tau, sigma in defined
-              if config.fit_min_s <= tau <= upper and sigma > 0.0]
-    if len(usable) < 3:
-        # Conservative fallback: no fit, no u -- never reuse the longest tau.
+    if not defined or max(tau for tau, _ in defined) < config.fit_min_s:
+        # Conservative fallback: no computable point at or above the minimum
+        # tau -- never reuse a shorter-than-allowed point silently.
         return SegmentUncertainty(
             group=None, n_valid=len(times), n_runs=len(runs), taus_s=taus_s,
             sigma_y=sigma_y, fit_slope=None, fit_intercept=None,
             u_fractional=None, status="supported-with-limitations",
         )
 
-    log_tau = np.log([tau for tau, _ in usable])
-    log_sigma = np.log([sigma for _, sigma in usable])
-    slope, intercept = (float(value) for value in np.polyfit(log_tau, log_sigma, 1))
-    u_fractional = float(np.exp(intercept + slope * math.log(longest_run)))
+    u_fractional = defined[-1][1]
+
+    upper = config.fit_max_fraction * longest_run
+    usable = [(tau, sigma) for tau, sigma in defined
+              if config.fit_min_s <= tau <= upper and sigma > 0.0]
+    slope = intercept = None
+    if len(usable) >= 3:
+        log_tau = np.log([tau for tau, _ in usable])
+        log_sigma = np.log([sigma for _, sigma in usable])
+        slope, intercept = (float(value) for value in np.polyfit(log_tau, log_sigma, 1))
+
     status: Literal["established", "supported-with-limitations"] = (
         "established"
-        if ESTABLISHED_SLOPE_BAND[0] <= slope <= ESTABLISHED_SLOPE_BAND[1]
+        if slope is not None and ESTABLISHED_SLOPE_BAND[0] <= slope <= ESTABLISHED_SLOPE_BAND[1]
         else "supported-with-limitations"
     )
     return SegmentUncertainty(
         group=None, n_valid=len(times), n_runs=len(runs), taus_s=taus_s,
         sigma_y=sigma_y, fit_slope=slope, fit_intercept=intercept,
-        u_fractional=u_fractional, status=status,
+        u_fractional=float(u_fractional), status=status,
     )

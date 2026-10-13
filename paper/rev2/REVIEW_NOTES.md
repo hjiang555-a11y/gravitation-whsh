@@ -122,7 +122,6 @@
     - 新增 **Conclusion** 节（main.tex `\section{Conclusion}` + `sections/conclusion.tex`）。
     - 新宏 6 个：`tidalChiRaw/tidalChiTheory/tidalChiEmp/tidalShiftEmpE`（冻结 seg9 JSON）、
       `baconE`、`nemitzU`（文献，均经 Crossref 验证）；bib 44 → 48 条。
-
 16. **整体评估与结构优化（2026-10-12 第十二轮，按指示；Nature 评审视角）**：
     - **Methods 框架补齐、废除附录 A–E**：附录五节（频率链与比值反演 / 数据处理与段定义 /
       统计合并模型 / 水准归算 / 预算细节）全部并入 Methods，删除 `appendix.tex` 与
@@ -136,12 +135,28 @@
     - **逻辑修复**：删除 Discussion 中"段均值对潮汐势拟合斜率依赖拟合窗口"句——该表述是
       17 段检出叙事残留，16 段口径无对应数字支持，且与"模板修正恶化拟合"的敏感性证据
       重复；现仅保留后者（有 χ²_red 数据支撑）。
-    - **bib 清理**：移除 9 条孤儿条目（bothwell2022redshift、chou2010redshift、
-      kolkowitz2016gw、laurent2015aces、lisdat2016network、oelker2019stability、
-      riehle2015redefinition、roberts2017domain、sanner2019lorentz）；
-      bib 48 → 39 条 = 正文引用数，零孤儿。
+    - **bib 清理**：移除 9 条孤儿条目；bib 48 → 39 条 = 正文引用数，零孤儿。
     - 渲染：12 页（含 Methods），无 undefined 引用；正文（摘要+引言+结果+讨论+结论）
       ≈2,300 词。
+
+17. **u_i 计算口径变更：取最后可算点，不外推（2026-10-13 第十三轮，按指示）**：
+    - `clock_ratio/segment_uncertainty.py`：u_i 从「128 s≤τ≤T/4 log-log 拟合外推到 T」
+      改为「取 tau_grid 最后一个可算 OADEV 点」`u_i = R_i·σ_y(τ_max)`；log-log 斜率
+      保留为白频诊断（带外标记 lim. 但 u_i 照常报告）。TDD：3 个新测试先行失败
+      （含 pytest.approx rel=0 陷阱——绝对容差 1e-12 使 2.7e-18 vs 8.6e-18 误判相等，
+      改用精确 ==）。
+    - **重跑 audit**：新 verified 运行 `ac725aaba8ec744b`（旧 `15725f5246e87af5` 保留）。
+      16 段主结果：χ²_red 4.017 → **0.412**（p=0.98）、Birge 2.004 → 0.642、
+      ξ_Bayes 2.83 → **0.14**×10⁻¹⁸、u_stat 0.885 → 1.139×10⁻¹⁸、
+      u_total 2.118 → **2.236**×10⁻¹⁸、R_bayes 尾数 …720.4 → …720.1(22)。
+      NIST 差 −2.44 → **−2.87**×10⁻¹⁸；欧洲网络差 +1.66 → **+2.13**×10⁻¹⁸。
+      潮汐敏感性：raw χ² 0.41 → theory 0.57 / empirical 0.54（仍恶化）；
+      tidalShiftEmpE 0.53 → 0.85（取整后 uTidalE=0.5 依据仍在）。
+    - 论文正文更新：Results §2.2 改为「段间一致（χ²_red=0.41）」叙事；图2 图注改
+      「last computable point」；Methods 统计段重写；Discussion 局限段同步。
+    - docs/METHODOLOGY §2.2 记裁定（外推低估 ~30–40% 为历史记录）；§8/§10.1 同步。
+    - 验证：pytest 231 passed（含数据套件）；manifest verify OK；check.sh OK
+      （u_total 范围断言 2.0–2.3 仍通过）。
 
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 

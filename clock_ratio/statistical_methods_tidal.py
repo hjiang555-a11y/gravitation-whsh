@@ -13,9 +13,10 @@ scenario layer `clock_ratio.statistical_scenarios`:
      tidal template, interpolated from the 30-s grid on the actual retained
      timestamps; the raw scenario skips interpolation).
   3. Per-segment uncertainty u_i: gap-safe TRUE overlapping Allan deviation of
-     the CORRECTED beat fractional frequency (via `segment_uncertainty`), fitted
-     over 128 s <= tau <= 0.25*T with T the longest gap-free run and
-     extrapolated to tau = T; the longest-tau fallback is never reused.
+     the CORRECTED beat fractional frequency (via `segment_uncertainty`),
+     evaluated on the tau grid up to a quarter of the longest gap-free run T;
+     u_i adopts the LAST COMPUTABLE OADEV point (no fit, no extrapolation to
+     tau = T); the log-log slope is kept as a diagnostic only.
   4. Per-scenario ratio R_i and deviation y_i = R_i / R_seg1 - 1 (same
      segment-1 baseline convention and Decimal80 ratio path as the raw case).
   5. Combine with WLS / Birge / M-P / Bayesian (typed core).
@@ -113,7 +114,7 @@ def main() -> int:
         "metadata": {
             "decimal_precision": 80,
             "selection": "frozen raw selection via tidal_analysis.select_segments (identical retained samples across scenarios)",
-            "oadev": "gap-safe true overlapping Allan deviation via segment_uncertainty.estimate_segment_uncertainty on the corrected beat; fit 128s<=tau<=0.25*T (T = longest gap-free run), extrapolated to tau=T; no longest-tau fallback",
+            "oadev": "gap-safe true overlapping Allan deviation via segment_uncertainty.estimate_segment_uncertainty on the corrected beat; tau grid up to 0.25*T (T = longest gap-free run); u_i = last computable OADEV point, no extrapolation; log-log slope kept as diagnostic only",
             "y_i_baseline": "R_i_scenario / R_seg1_scenario - 1 (segment-1 ratio of the SAME scenario), x1e18",
             "u_i": "sigma_y(T) * R_i_scenario, absolute ratio uncertainty, NOT SEM",
             "note": "raw baseline (A=0) reproduces statistical_methods.py field-for-field (same gap-safe estimator); theory/empirical are the new corrected runs.",

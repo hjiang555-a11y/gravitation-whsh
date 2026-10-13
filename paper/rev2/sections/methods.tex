@@ -89,28 +89,29 @@ of its retained beat samples, inverted through the fixed frequency-chain
 relations and corrected for the static gravitational redshift
 $\delta_g = \deltaGV$ derived from the leveled geopotential difference
 (see above). The per-segment statistical uncertainty $u_i$ is obtained
-from the overlapping Allan deviation of the beat fractional frequency: a
-$\sigma_y \propto \tau^{-1/2}$ fit over the range
-$128~\mathrm{s} \le \tau \le 0.25\,T_i$, extrapolated to the segment
-duration $T_i$.
+from the overlapping Allan deviation of the beat fractional frequency,
+evaluated on a tau grid up to a quarter of the longest gap-free run
+$T_i$ of the segment: $u_i$ adopts the last computable point
+$u_i = R_i\,\sigma_y(\tau_{\rm max})$ without extrapolating the
+stability curve beyond the data. The log-log slope of $\sigma_y$
+against $\tau$ is computed as a diagnostic; segments whose slope
+leaves the white-frequency-noise band are flagged but retained.
 
-The per-segment uncertainties do not fully account for the scatter
-between the segment estimates, so the combination follows a
-random-effect treatment of the excess
-scatter~\citep{birge1932errors, mandel1970interlaboratory}: each
+The segment estimates are then combined under a random-effect model
+with a common excess scatter~\citep{birge1932errors,
+mandel1970interlaboratory}: each
 segment is modeled as $R_i \sim \mathcal{N}(\mu, u_i^2 + \xi^2)$,
-with a common excess scatter $\xi$ added in quadrature to the
+with $\xi$ added in quadrature to the
 per-segment uncertainties. Under the fixed-effect assumption the
 inverse-variance combination
 $\mu_{\rm WLS} = \sum_i w_i R_i / \sum_i w_i$ with $w_i = 1/u_i^2$
 gives $\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
-($p = \pChi$), so the fixed-effect uncertainty under-describes the
-observed scatter. The Birge ratio
+($p = \pChi$); a Birge ratio
 $B = \sqrt{\chi^2_{\rm red}} = \birgeRatio$ would rescale all
 $u_i$ by a common factor, and the Mandel--Paule
 estimator~\citep{mandel1970interlaboratory} solves
 $\chi^2_{\rm red}(\xi) = 1$ for the same observation model, giving
-$\xi = \xiMpE \times 10^{-18}$. The primary value is instead obtained
+$\xi = \xiMpE \times 10^{-18}$. The primary value is obtained
 from a Bayesian random-effect model, in which $\mu$ and $\xi$ are
 jointly inferred with flat priors on $\mu$ and on $\log\xi$, and the
 joint posterior $p(\mu, \xi \mid \{R_i, u_i\})$ is marginalized

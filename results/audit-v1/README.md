@@ -13,9 +13,11 @@
 | `runs/<hash16>/…` | 该次运行的账本、比值、统计与潮汐换算产物（staging 已并入） |
 | `verification/<UTC>/` | Task 15 端到端验证运行（历史过程证据，非当前权威） |
 
-本存档提交时的权威运行：`runs/15725f5246e87af5`（生成于提交 `a070eeb`，`dirty=false`）
+本存档提交时的权威运行：`runs/ac725aaba8ec744b`（生成于提交 `5a61fbd`，
+`dirty=false`；u_i 取最后可算点口径，见 `docs/METHODOLOGY.md` §2.2）
+上一口径运行 `runs/15725f5246e87af5`（外推口径）保留为历史。
 
-manifest SHA-256：`15725f5246e87af5a450c8e31ccf0d0ef277d517a493ed1fb44d65a4b86564d4`
+manifest SHA-256：`ac725aaba8ec744bf4e7a17cf37cee41af57461f0d3684584711b24a02b0962e`
 
 ## 复现（需本地原始拍频数据与专业潮汐工作簿；二者按策略不入库）
 

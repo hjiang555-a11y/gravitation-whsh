@@ -1,0 +1,496 @@
+{
+  "computed_total_final": 1008912,
+  "computed_total_status": "established",
+  "computed_total_note": "Current executable sample ledger total from shared select_segments(); reconciliation-only external totals are recorded separately and never used in computations.",
+  "external_reported_totals": [
+    {
+      "value": 1009022,
+      "status": "pending-verification",
+      "source_path": "archive/CONCLUSION_17.md",
+      "note": "Historical trimmed-total claim retained for reconciliation only; no authoritative per-segment allocation exists in the current analysis code."
+    },
+    {
+      "value": 1009204,
+      "status": "pending-verification",
+      "source_path": "paper/main.tex",
+      "note": "Historical manuscript count retained for reconciliation only; no authoritative per-segment allocation exists in the current analysis code."
+    }
+  ],
+  "files": [
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260627_1.txt",
+        "sha256": "742ba484024f5b4b67644a4eb79052a62d2107800b608b74cefc17757832fc7e",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-06-28T06:54:37+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 43267,
+        "max_gap_s": 1.221,
+        "max_abs_jitter_s": 1.184,
+        "first_label_utc8": "2026-06-26T23:59:55.826000+08:00",
+        "last_label_utc8": "2026-06-27T23:59:54.933000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260628_1.txt",
+        "sha256": "656cc828870d6708bd95dba1c018fc680139fbe65651db4d7b78430957b2d22a",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-06-30T04:23:32+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 42788,
+        "max_gap_s": 1.223,
+        "max_abs_jitter_s": 1.2810000000000001,
+        "first_label_utc8": "2026-06-27T23:59:55.802000+08:00",
+        "last_label_utc8": "2026-06-28T23:59:54.815000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260629_1.txt",
+        "sha256": "f5781a875d69639526eb69321aae9b0aa49ec08af787b0b2d3a1912c72194efd",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-06-30T04:23:32+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 39700,
+        "max_gap_s": 1.225,
+        "max_abs_jitter_s": 1.2,
+        "first_label_utc8": "2026-06-28T23:59:55.795000+08:00",
+        "last_label_utc8": "2026-06-29T23:59:54.907000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260630_1.txt",
+        "sha256": "1b44d3e5f62eb075ffeaec1e9397bafc498218f1bbd6ad351059167e7a939fa7",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-07-02T06:14:43+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 43483,
+        "max_gap_s": 1.223,
+        "max_abs_jitter_s": 1.183,
+        "first_label_utc8": "2026-06-29T23:59:55.682000+08:00",
+        "last_label_utc8": "2026-06-30T23:59:54.844000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260701_1.txt",
+        "sha256": "adea83a264561072dd9b4f7f0d48f89f188bb06f603a21796453faef93480fb1",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-07-02T06:16:05+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 41639,
+        "max_gap_s": 1.266,
+        "max_abs_jitter_s": 1.176,
+        "first_label_utc8": "2026-06-30T23:59:55.607000+08:00",
+        "last_label_utc8": "2026-07-01T23:59:54.696000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260702_1.txt",
+        "sha256": "4f71b44d5ce973fd224d49349d57dc8a5479c61bd96ce65cd806ade013ef6acd",
+        "size_bytes": 17020800,
+        "mtime_utc": "2026-07-03T05:17:30+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 40985,
+        "max_gap_s": 1.319,
+        "max_abs_jitter_s": 1.193,
+        "first_label_utc8": "2026-07-01T23:59:55.675000+08:00",
+        "last_label_utc8": "2026-07-02T23:59:54.711000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260703_1.txt",
+        "sha256": "1b7409d1f0772df5c4a85e5a83a4a579f8e94e45ee44b9e3ce3395f235913655",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-07-04T23:45:25+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 43477,
+        "max_gap_s": 1.302,
+        "max_abs_jitter_s": 1.182,
+        "first_label_utc8": "2026-07-02T23:59:55.475000+08:00",
+        "last_label_utc8": "2026-07-03T23:59:54.713000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260704_1.txt",
+        "sha256": "648e39b7ae0219ac538643b2d506079bc9a24c7b418f5f127e3b786f6dbf4030",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-07-04T23:45:25+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 39413,
+        "max_gap_s": 1.303,
+        "max_abs_jitter_s": 1.179,
+        "first_label_utc8": "2026-07-03T23:59:55.478000+08:00",
+        "last_label_utc8": "2026-07-04T23:59:54.559000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260705_1.txt",
+        "sha256": "a5c804e1019d5804c34a583ba5925a6cb881e425020b42e5a50faf0b7958905f",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-07-06T08:16:13+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 43062,
+        "max_gap_s": 1.241,
+        "max_abs_jitter_s": 1.156,
+        "first_label_utc8": "2026-07-04T23:59:55.446000+08:00",
+        "last_label_utc8": "2026-07-05T23:59:54.679000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260706_1.txt",
+        "sha256": "dd9261023c835c9d3fa17830016585af7b0f434fc7ca74668c1b07cf6e54e27e",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-07-09T06:20:47+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 42727,
+        "max_gap_s": 1.309,
+        "max_abs_jitter_s": 1.157,
+        "first_label_utc8": "2026-07-05T23:59:55.458000+08:00",
+        "last_label_utc8": "2026-07-06T23:59:54.423000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260707_1.txt",
+        "sha256": "372ac52315bb7018a0e1f7f2915171a255aec79f02f83e992ba2f328d96e1a73",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-07-09T06:20:47+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 38297,
+        "max_gap_s": 1.305,
+        "max_abs_jitter_s": 1.278,
+        "first_label_utc8": "2026-07-06T23:59:55.421000+08:00",
+        "last_label_utc8": "2026-07-07T23:59:54.573000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260806_1.txt",
+        "sha256": "c41c450d3d419030cd7f8a5e64fd02ed9aeef04530fceae70a240bc31bea115c",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-06T23:55:07+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 42106,
+        "max_gap_s": 1.223,
+        "max_abs_jitter_s": 1.165,
+        "first_label_utc8": "2026-08-05T23:59:55.609000+08:00",
+        "last_label_utc8": "2026-08-06T23:59:54.811000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260807_1.txt",
+        "sha256": "8a9cff27081bd39ea4600b558521de78a0ae511c034019d5e4330439beda794c",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-08T00:57:41+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 42948,
+        "max_gap_s": 1.221,
+        "max_abs_jitter_s": 1.278,
+        "first_label_utc8": "2026-08-06T23:59:55.578000+08:00",
+        "last_label_utc8": "2026-08-07T23:59:54.720000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260808_1.txt",
+        "sha256": "dd79d8de913b1240c3b01c0fef4eda95627b98f99421e7e7bf327efd25afc228",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-09T01:16:24+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 38535,
+        "max_gap_s": 1.304,
+        "max_abs_jitter_s": 1.166,
+        "first_label_utc8": "2026-08-07T23:59:55.604000+08:00",
+        "last_label_utc8": "2026-08-08T23:59:54.691000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260809_1.txt",
+        "sha256": "53e2619d5eb8ee18db62acc9c85a4375e024f4beeb624a625ffad11bd701874f",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-11T10:13:08+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 43014,
+        "max_gap_s": 1.295,
+        "max_abs_jitter_s": 1.191,
+        "first_label_utc8": "2026-08-08T23:59:55.473000+08:00",
+        "last_label_utc8": "2026-08-09T23:59:54.690000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260810_1.txt",
+        "sha256": "151899e5eb416ff3fd171f3e1621323541fc37de91863fd80b80b3ac92a4086c",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-11T10:14:31+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 42112,
+        "max_gap_s": 1.228,
+        "max_abs_jitter_s": 1.393,
+        "first_label_utc8": "2026-08-09T23:59:55.452000+08:00",
+        "last_label_utc8": "2026-08-10T23:59:54.416000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260811_1.txt",
+        "sha256": "00d37c725f62645ad475a23c5b38b7a489a9c85fbe3a3e3cda8cc19b8afb0782",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-12T00:17:25+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 39448,
+        "max_gap_s": 1.3,
+        "max_abs_jitter_s": 1.541,
+        "first_label_utc8": "2026-08-10T23:59:55.396000+08:00",
+        "last_label_utc8": "2026-08-11T23:59:54.615000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260812_1.txt",
+        "sha256": "d8c3dca345653c2341405065034c938bb80d397669581d8dc41346198d035c3a",
+        "size_bytes": 51749764,
+        "mtime_utc": "2026-08-15T11:39:16+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 262686,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 3,
+        "n_gaps": 128350,
+        "max_gap_s": 1.315,
+        "max_abs_jitter_s": 1.288,
+        "first_label_utc8": "2026-08-11T23:59:55.408000+08:00",
+        "last_label_utc8": "2026-08-15T00:58:00.351000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260820_1.txt",
+        "sha256": "c8db7509261bcdb8b352ed491526cfb9933294b014b1b0120c6c1f7605184f52",
+        "size_bytes": 6088321,
+        "mtime_utc": "2026-08-21T01:49:05+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 30902,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 0,
+        "n_gaps": 14615,
+        "max_gap_s": 1.215,
+        "max_abs_jitter_s": 0.366,
+        "first_label_utc8": "2026-08-20T15:25:07.051000+08:00",
+        "last_label_utc8": "2026-08-21T00:00:08.784000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260821_1.txt",
+        "sha256": "5c2cbb0911bcf6ab7b52936273564f7ce94eb992fb2a2e63b9262f5970ed13e8",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-22T11:00:15+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 53795,
+        "max_gap_s": 1.304,
+        "max_abs_jitter_s": 1.479,
+        "first_label_utc8": "2026-08-21T00:00:09.444000+08:00",
+        "last_label_utc8": "2026-08-22T00:00:08.681000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260822_1.txt",
+        "sha256": "d8cb9fb2337983e112a672142d80566d7000251aafd06c85f38dca6b14eb83bb",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-24T02:11:00+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 44942,
+        "max_gap_s": 1.326,
+        "max_abs_jitter_s": 1.307,
+        "first_label_utc8": "2026-08-22T00:00:09.355000+08:00",
+        "last_label_utc8": "2026-08-23T00:00:08.495000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260823_1.txt",
+        "sha256": "1c704e83f8a3dc905501b95cda0978ddaf8dafecd494da50bb4d54221666af1d",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-24T02:11:00+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 51858,
+        "max_gap_s": 1.308,
+        "max_abs_jitter_s": 1.283,
+        "first_label_utc8": "2026-08-23T00:00:09.388000+08:00",
+        "last_label_utc8": "2026-08-24T00:00:08.593000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260824_1.txt",
+        "sha256": "040178413975add6ca963060e8bd0550be59defd34c1d674b3de027bc7078c97",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-28T09:27:09+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 50243,
+        "max_gap_s": 1.304,
+        "max_abs_jitter_s": 1.399,
+        "first_label_utc8": "2026-08-24T00:00:09.377000+08:00",
+        "last_label_utc8": "2026-08-25T00:00:08.302000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260825_1.txt",
+        "sha256": "f78e68d6f459fbde694eb8be831ef9c9bce8f49757a0ba9871199960052f0a83",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-28T09:27:09+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 46865,
+        "max_gap_s": 1.303,
+        "max_abs_jitter_s": 1.278,
+        "first_label_utc8": "2026-08-25T00:00:09.283000+08:00",
+        "last_label_utc8": "2026-08-26T00:00:08.525000+08:00"
+      }
+    },
+    {
+      "digest": {
+        "relative_path": "Freq_B_2_260826_1.txt",
+        "sha256": "9f796c4abdf716a8f759ce7d603f8d7e33e8648d34b41ecad4109b812db6405b",
+        "size_bytes": 17021422,
+        "mtime_utc": "2026-08-28T09:29:52+00:00"
+      },
+      "timestamp_quality": {
+        "n_rows": 86400,
+        "n_parse_errors": 0,
+        "n_duplicates": 0,
+        "n_reversals": 1,
+        "n_gaps": 54063,
+        "max_gap_s": 1.303,
+        "max_abs_jitter_s": 1.291,
+        "first_label_utc8": "2026-08-26T00:00:09.287000+08:00",
+        "last_label_utc8": "2026-08-27T00:00:08.512000+08:00"
+      }
+    }
+  ]
+}

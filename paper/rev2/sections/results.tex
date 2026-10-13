@@ -54,8 +54,9 @@ out-of-loop records.
   \caption{Fractional instability of a representative segment
   (Yb/Sr, segment 8) together with the out-of-loop records of the two
   frequency combs (SH, WH) and of the fiber link. The segment follows
-  a white-frequency-noise law over most of the record, from which its
-  statistical uncertainty is extrapolated (Methods).}
+  a white-frequency-noise law over most of the record; the
+  statistical uncertainty of each segment is taken from its last
+  computable Allan-deviation point (Methods).}
   \label{fig:ratio}
 \end{figure}
 
@@ -64,16 +65,17 @@ segment yields a ratio estimate with its own statistical uncertainty
 obtained from the Allan deviation of the beat, after jump-point
 removal and endpoint screening (Methods); Figure~\ref{fig:ratio}
 shows a representative stability record. The segment
-estimates scatter more than their individual uncertainties allow: the
+estimates are consistent with their individual uncertainties: the
 reduced chi-square of the combination is
 $\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
 ($p = \pChi$), corresponding to a Birge ratio of $\birgeRatio$, and
-\nModelLimited~of the \nSeg~segments have stability fits that fall
+\nModelLimited~of the \nSeg~segments have stability slopes that fall
 outside the white-frequency-noise band (groups \modelLimitedGroups).
-We therefore adopt a random-effect treatment of the excess
-scatter~\citep{birge1932errors, mandel1970interlaboratory}, as in
-recent ratio comparisons~\citep{pizzocaro2026european, aeppli2026nist}.
-The primary value is obtained from a Bayesian random-effect model, in
+Following recent ratio
+comparisons~\citep{pizzocaro2026european, aeppli2026nist}, we combine
+the segments with a random-effect model that admits a common excess
+scatter~\citep{birge1932errors, mandel1970interlaboratory}. The
+primary value is obtained from a Bayesian random-effect model, in
 which the excess scatter is marginalized over its posterior as a free
 parameter, giving
 \begin{equation}
@@ -86,9 +88,8 @@ agree at the $10^{-18}$ level: the Mandel--Paule estimate,
 \RmpHead\xspace, has a statistical uncertainty of
 \uMpE$\times10^{-18}$, and the excess scatter inferred is
 $\xiMpE\times10^{-18}$ (Mandel--Paule) and $\xiBayesE\times10^{-18}$
-(Bayesian). The segment-to-segment scatter is dominated by the
-statistical noise of the individual segments and by the excess scatter
-captured by the random-effect term.
+(Bayesian); both are consistent with a scatter dominated by the
+statistical noise of the individual segments.
 
 \subsection{Uncertainty budget}
 \label{sec:results-budget}
