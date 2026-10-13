@@ -277,6 +277,15 @@
     "verifiable metrological infrastructure / future global optical clock
     network"及第三段（chronometric leveling、dark-matter sensing）呼应。
 
+28. **Discussion 引力势/潮汐段逻辑链改写（2026-10-13 第二十四轮，按指示；
+    仅改此段）**：潮汐影响在本精度已可观（"already appreciable"）→ 更大
+    尺度（洲际/洲间基线）时变红移成为主导系统项之一（引 denker2018geodetic）
+    → 网络因此成为"地球探测仪器"：大基线钟比对直接感知时变重力位，
+    为潮汐与负荷模型提供独立检验与校准手段（呼应 chronometric geodesy）
+    → 反过来，认识了潮汐后可以修正时变项而非保守计入，扩大光钟比对的
+    精度适用范围（双向闭环）。末句保留未来工作指向。段落其余部分
+    （首段对照、演进、运行属性、局限、展望）未动。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
