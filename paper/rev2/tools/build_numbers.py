@@ -575,11 +575,12 @@ def render_tex(macros: list[tuple[str, str, str]]) -> str:
         "",
     ]
     for name, value, _ in macros:
-        # Pure digit-grouped numbers render in text mode so that PDF text
-        # extraction (pdftotext, screen readers) recovers the digits exactly
-        # and tabular columns do not swallow thin spaces; values containing
-        # math (e.g. \times10^{-18}) stay in math mode.
-        if re.fullmatch(r"[0-9.\\thinspace-]*", value):
+        # Pure digit-grouped numbers and plain-text values (dates, labels)
+        # render in text mode so that PDF text extraction (pdftotext, screen
+        # readers) recovers the characters exactly and tabular columns do not
+        # swallow thin spaces; values containing math (e.g. \times10^{-18})
+        # stay in math mode.
+        if re.fullmatch(r"[0-9.\\thinspaceA-Za-z ]*", value):
             lines.append(rf"\newcommand{{\{name}}}{{{value}}}")
         else:
             lines.append(rf"\newcommand{{\{name}}}{{\ensuremath{{{value}}}}}")

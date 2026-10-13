@@ -315,6 +315,22 @@
       provenance 改为"两模型位移的较大者"。总不确定度 2.3 与括号 (28)
       不变。
 
+31. **全文结构与表述润色（2026-10-13 第二十七轮，按指示；Nature 顶级期刊
+    目标，superpowers + paper-writing/scientific-writing 流程）**：
+    - **摘要**：headline 值恢复括号 `1.207 507 039 343 337 720 1(28)`
+      （`\Rheadline(\RheadlineUnc)`），总不确定度 2.3×10⁻¹⁸ 与 (28) 一致。
+    - **渲染修复**：`\claimDate` 原为 \ensuremath 包裹（数学模式吞空格，
+      PDF 显示 "October2026"）；build_numbers.py 的纯文本正则扩展为
+      数字+thinspace+字母+空格，日期类宏改文本模式渲染，现为
+      "as of October 2026"。
+    - **拼写/语法**：§2.1 "An ytterbium" → "A ytterbium"。
+    - **标点**：Discussion 展望段三重 em-dash 包裹句改为括号
+      （Nature 每页 ≤2 个 em-dash 的约束下更稳妥）。
+    - **全文一致性核对**：95 宏管线校验通过；(28) 出现 2 处（摘要+§2.3）
+      且与总不确定度 2.3 一致；(11) 仅出现在参考文献页码（Anal. Chem.
+      42(11)）；引文 45 条零缺失零孤儿；句子长度分布合理（均值 25–39 词，
+      无 45+ 词长句）；无 AI 典型用语（delve/crucial/it is important 等）。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
