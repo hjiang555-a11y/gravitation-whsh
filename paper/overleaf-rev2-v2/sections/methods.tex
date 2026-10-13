@@ -163,11 +163,22 @@ historical amplitude $A = -0.54$ obtained from the demeaned beat
 waveform in our earlier analysis of the same campaign. The fit
 degrades rather than improves: the reduced chi-square of the
 combination rises from $\tidalChiRaw$ to $\tidalChiTheory$ and
-$\tidalChiEmp$, respectively, and the Bayesian center moves by up to
-$\tidalShiftEmpE\times10^{-18}$. A template that degrades the
-agreement between segments is treated as inconsistent with the data,
-so no tidal correction is applied to the reported central value; the
-magnitude of the induced center shift is carried as the
-time-varying-redshift uncertainty item. The components are treated as
-independent and combined in quadrature, giving the total standard
-uncertainty $\uTotalE \times 10^{-18}$.
+$\tidalChiEmp$, respectively, and the Bayesian center moves by
+$\tidalShiftEmpE\times10^{-18}$. A second, independent tide template
+was evaluated as a cross-check: the solid tide was computed from the
+DE421 ephemerides (Earth--Sun--Moon positions) with Love numbers, and
+the ocean-tide loading correction to the gravitational potential was
+taken directly from the FES2022 global ocean-tide model, on a
+\qty{90}{s} Beijing-time grid. Its fixed-amplitude combination again
+degrades the fit ($\chi^2_{\rm red} = \tidalChiAlt$ at the historical
+amplitude) but moves the Bayesian center in the opposite direction,
+by $\tidalShiftAltE\times10^{-18}$.
+
+Templates that degrade the segment agreement, and whose two
+independent realizations disagree in sign, are treated as
+inconsistent with the data: no tidal correction is applied to the
+reported central value, and the larger of the two center shifts is
+carried as the time-varying-redshift uncertainty item
+$\uTidalE\times10^{-18}$. The components are treated as independent
+and combined in quadrature, giving the total standard uncertainty
+$\uTotalE \times 10^{-18}$.

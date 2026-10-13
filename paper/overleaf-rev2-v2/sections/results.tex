@@ -144,19 +144,18 @@ and ocean tides, together with atmospheric, hydrological and
 non-tidal ocean loading, move the local potential by amounts reaching
 the $10^{-18}$ level over the campaign~\citep{agnew2015tides,
 voigt2016timevariable, denker2018geodetic}, and no single tide model
-accounts for all of them consistently. Attempting to correct the beat
-record with the supplied tide series degrades the fit rather than
-improving it: the reduced chi-square of the combination rises from
-$\tidalChiRaw$ to $\tidalChiTheory$ (fixed theoretical amplitude) or
-$\tidalChiEmp$ (fixed historical amplitude) when the template is
-applied before the ratio inversion, evidence that the model is
-incomplete at this level. We therefore treat the time-varying term as
-an uncertainty rather than a correction. Its magnitude is estimated
-by the method of the present analysis: the ratio combination is
-repeated with the tide template applied at a fixed amplitude, and the
-resulting Bayesian center shift,
-$\tidalShiftEmpE\times10^{-18}$, is adopted (rounded) as the
-uncertainty item $\uTidalE\times10^{-18}$. A physically complete,
+accounts for all of them consistently. Correcting the beat record
+with the supplied tide series degrades rather than improves the fit
+(the reduced chi-square rises from $\tidalChiRaw$ to
+$\tidalChiTheory$ or $\tidalChiEmp$), and a second, independent tide
+model (DE421 ephemerides with Love numbers for the solid tide and the
+FES2022 ocean-tide model for the loading term) yields a similar
+degradation while moving the center in the opposite direction
+($\tidalShiftAltE\times10^{-18}$). The sign disagreement between two
+independent models confirms that the templates are incomplete at this
+level, so the time-varying term is carried as an uncertainty rather
+than a correction, at the larger of the two model shifts,
+$\uTidalE\times10^{-18}$ (Methods). A physically complete,
 data-consistent treatment of time-dependent gravity is deferred to
 future work.
 

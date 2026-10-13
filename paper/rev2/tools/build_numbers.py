@@ -75,11 +75,10 @@ CURATED: dict[str, tuple[str, str]] = {
     ),
     "tidal_e18": (
         "0.85",
-        "derived from the frozen audit layer: Bayesian center shift between the "
-        "empirical (A=-0.54) and raw (A=0) tidal-template scenarios in "
-        "results/audit-v1/verified/statistical_methods_tidal_seg9_excluded.json "
-        "(0.8479e-18, rounded to 0.85e-18); carried as the time-varying-redshift "
-        "uncertainty item",
+        "the larger of the two independent tide-model center shifts: frozen "
+        "audit layer empirical-shift 0.8479e-18 (ETideLoad4.5 template) vs "
+        "0.2132e-18 (DE421+FES2022 template, opposite sign); carried as the "
+        "time-varying-redshift uncertainty item",
     ),
     "delta_w": (
         "280.042",
@@ -360,7 +359,27 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     )
     add("tidalShiftEmpE", f"{tidal_shift_emp:.2f}",
         "derived: empirical minus raw Bayesian center shift from the frozen seg9 JSON, "
-        "in 1e-18; the scale adopted for the time-varying-redshift uncertainty item")
+        "in 1e-18; the larger of the two model shifts adopted for the uncertainty item")
+    # Second, independent tide model (DE421 + FES2022, European public model):
+    # diagnostic comparison committed at clock_ratio/tidal_new_model_compare.json.
+    alt_path = ROOT / "clock_ratio" / "tidal_new_model_compare.json"
+    if alt_path.is_file():
+        alt = _load(alt_path)
+        alt_mu_raw = Decimal(str(alt["scenarios"]["raw"]["combination"]["mu_bayes"]))
+        alt_mu_emp = Decimal(str(alt["scenarios"]["empirical"]["combination"]["mu_bayes"]))
+        alt_shift = float((alt_mu_emp - alt_mu_raw) * Decimal("1e18"))
+        alt_chi = float(alt["scenarios"]["empirical"]["combination"]["chi2_red"])
+    else:
+        alt_shift = 0.0
+        alt_chi = 0.0
+    add("tidalShiftAltE", f"{abs(alt_shift):.2f}",
+        "derived: empirical-minus-raw Bayesian center shift of the second tide "
+        "model (DE421 + FES2022) from clock_ratio/tidal_new_model_compare.json, "
+        "in 1e-18 (sign opposite to the ETideLoad4.5 template)")
+    add("tidalChiAlt", f"{alt_chi:.2f}",
+        "derived: reduced chi-square of the A=-0.54 scenario with the second tide "
+        "model (DE421 + FES2022) from clock_ratio/tidal_new_model_compare.json, "
+        "16 segments")
 
     add("nSeg", str(len(primary["included_groups"])), "manifest:primary_16.included_groups")
     add("nSegAll", str(len(sensitivity["included_groups"])), "manifest:sensitivity_17.included_groups")
