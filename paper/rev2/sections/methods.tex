@@ -102,23 +102,21 @@ with a common excess scatter~\citep{birge1932errors,
 mandel1970interlaboratory}: each
 segment is modeled as $R_i \sim \mathcal{N}(\mu, u_i^2 + \xi^2)$,
 with $\xi$ added in quadrature to the
-per-segment uncertainties. Under the fixed-effect assumption the
-inverse-variance combination
-$\mu_{\rm WLS} = \sum_i w_i R_i / \sum_i w_i$ with $w_i = 1/u_i^2$
-gives $\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
-($p = \pChi$); a Birge ratio
-$B = \sqrt{\chi^2_{\rm red}} = \birgeRatio$ would rescale all
-$u_i$ by a common factor, and the Mandel--Paule
-estimator~\citep{mandel1970interlaboratory} solves
-$\chi^2_{\rm red}(\xi) = 1$ for the same observation model, giving
-$\xi = \xiMpE \times 10^{-18}$. The primary value is obtained
-from a Bayesian random-effect model, in which $\mu$ and $\xi$ are
+per-segment uncertainties. The primary value is obtained from a
+Bayesian random-effect model, in which $\mu$ and $\xi$ are
 jointly inferred with flat priors on $\mu$ and on $\log\xi$, and the
 joint posterior $p(\mu, \xi \mid \{R_i, u_i\})$ is marginalized
 numerically over a 40-decade $\log\xi$ grid; the posterior mean of
 $\mu$ and its posterior standard deviation give the reported central
 value and statistical uncertainty, with
-$\xi = \xiBayesE \times 10^{-18}$. The excess scatter quantified here
+$\xi = \xiBayesE \times 10^{-18}$. As cross-checks, we also combine
+the segments by weighted least squares (inverse-variance weights
+$w_i = 1/u_i^2$), which yields
+$\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
+($p = \pChi$), and by the Mandel--Paule
+estimator~\citep{mandel1970interlaboratory}, which gives
+$\xi = \xiMpE \times 10^{-18}$; the Birge ratio is
+$\birgeRatio$. The excess scatter quantified here
 also absorbs the correlated component of the time-varying
 gravitational-redshift term (see below), which is carried separately
 as an uncertainty item rather than corrected.

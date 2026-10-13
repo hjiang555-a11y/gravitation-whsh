@@ -85,17 +85,20 @@ outside the white-frequency-noise band (groups \modelLimitedGroups).
 Following recent ratio
 comparisons~\citep{pizzocaro2026european, aeppli2026nist}, we combine
 the segments with a random-effect model that admits a common excess
-scatter~\citep{birge1932errors, mandel1970interlaboratory}, and we
-evaluate the three estimators in Table~\ref{tab:estimators}. All three
-agree at the $10^{-18}$ level, and the Bayesian random-effect estimate
-carries the largest standard uncertainty; we report it as the primary
-value. The Bayesian model, in which the excess scatter is marginalized
-over its posterior as a free parameter, gives
+scatter~\citep{birge1932errors, mandel1970interlaboratory}. As a
+cross-check, we also combine the segments by weighted least squares
+(WLS), in which each segment is weighted by the inverse of its
+squared statistical uncertainty, $w_i = 1/u_i^2$, and by the
+Mandel--Paule estimator. The three estimates agree at the
+$10^{-18}$ level (Table~\ref{tab:estimators}); the Bayesian
+random-effect estimate, which carries the largest standard
+uncertainty, is reported as the primary value,
 \begin{equation}
   \mathrm{Yb/Sr} = \Rheadline(\RheadlineUnc),
 \end{equation}
-with a statistical uncertainty of $\uStatE\times10^{-18}$ and a total
-standard uncertainty of $\uTotalShort\times10^{-18}$
+where the parenthesized uncertainty is the Bayesian statistical
+uncertainty. The total standard uncertainty of the comparison is
+$\uTotalShort\times10^{-18}$
 (Section~\ref{sec:results-budget}). The excess scatter inferred is
 $\xiBayesE\times10^{-18}$ (Bayesian) and $\xiMpE\times10^{-18}$
 (Mandel--Paule), consistent with a scatter dominated by the
@@ -104,9 +107,10 @@ statistical noise of the individual segments.
 \begin{table}[t]
   \centering
   \caption{Statistical combination of the \nSeg~segment ratios.
-  All three estimators agree at the $10^{-18}$ level; the Bayesian
-  random-effect value, which carries the largest standard uncertainty,
-  is reported as the primary result.}
+  WLS denotes weighted least squares with inverse-variance weights
+  $w_i = 1/u_i^2$. All three estimators agree at the $10^{-18}$
+  level; the Bayesian random-effect value, which carries the largest
+  standard uncertainty, is reported as the primary result.}
   \label{tab:estimators}
   \begin{tabular}{lS[table-format=1.21]S[table-format=1.3]}
     \toprule

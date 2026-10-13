@@ -183,6 +183,17 @@
     "statistical uncertainty of 1.139×10⁻¹⁸ and a total standard
     uncertainty of 2.2×10⁻¹⁸"（三位与括号两位均为同一量的舍入）。
 
+20. **表述对齐 Pizzocaro 2026 + WLS 解释 + Methods 精简（2026-10-13 第十六轮，
+    按指示）**：
+    - 借鉴 Pizzocaro 2026（PRR 8, 033250）的 Birge/每日 bin 数据组合表述——
+      §2.2 以 χ²_red、Birge ratio、p 值叙述段间一致性，再用随机效应模型合并；
+    - WLS 在正文与表注中一句话解释（inverse-variance weights w_i=1/u_i²）；
+    - Methods 统计段精简：只展开 Bayesian random-effect 主模型（先验、边缘化、
+      40-decade log ξ 网格）；WLS、Birge、Mandel–Paule 仅引用文献与数值
+      （birge1932errors / mandel1970interlaboratory），不再逐一推导；
+    - 括号不确定度定位句改为 "the parenthesized uncertainty is the Bayesian
+      statistical uncertainty"。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
