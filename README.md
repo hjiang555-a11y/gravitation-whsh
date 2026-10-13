@@ -55,7 +55,7 @@ uv run python -m clock_ratio.audit_report --manifest results/audit-v1/verified/m
 cd paper/rev2
 ./tools/check.sh                      # 一键：数字管线校验 + 编译 + 未定义引用检查
 uv run --project ../.. python tools/build_numbers.py  # （可选）重新生成数字宏
-uv run --project ../.. python tools/make_figures.py   # （可选）重新生成 3 图
+uv run --project ../.. python tools/make_figures.py   # （可选）核对三张用户提供的图是否在位
 ```
 
 **历史/附加分析（legacy 链）**：`python run_all.py`（全流程，含 17 段历史检出、

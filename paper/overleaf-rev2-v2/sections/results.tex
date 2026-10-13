@@ -44,23 +44,26 @@ frequency-chain relations (see Methods).
 
 Over two months (\nDays~days) the two clocks and their transfer chains
 ran synchronously for a total of \nHours~effective hours, recorded as
-\nSeg~jump-free segments. Figure~\ref{fig:campaign}a places the
-segments on the campaign timeline.
+\nSeg~jump-free segments. Figure~\ref{fig:ratio} shows the fractional
+instability of a representative segment together with the diagnostic
+out-of-loop records.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig2_campaign.pdf}
-  \caption{Campaign and per-segment data. (a) Recorded segments colored
-  by measurement stage; bar widths scale with the square root of the
-  retained sample count. (b) Per-segment ratio deviations $y_i$ with
-  their statistical uncertainties; the dashed line marks zero deviation.}
-  \label{fig:campaign}
+  \includegraphics[width=\linewidth]{figs/fig2_ratio.pdf}
+  \caption{Fractional instability of a representative segment
+  (Yb/Sr, segment 8) together with the out-of-loop records of the two
+  frequency combs (SH, WH) and of the fiber link. The segment follows
+  a white-frequency-noise law over most of the record, from which its
+  statistical uncertainty is extrapolated (Methods).}
+  \label{fig:ratio}
 \end{figure}
 
 We determine the Yb/Sr frequency ratio from the \nSeg~segments. Each
 segment yields a ratio estimate with its own statistical uncertainty
 obtained from the Allan deviation of the beat, after jump-point
-removal and endpoint screening (Methods). The segment
+removal and endpoint screening (Methods); Figure~\ref{fig:ratio}
+shows a representative stability record. The segment
 estimates scatter more than their individual uncertainties allow: the
 reduced chi-square of the combination is
 $\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
@@ -83,8 +86,7 @@ agree at the $10^{-18}$ level: the Mandel--Paule estimate,
 \RmpHead\xspace, has a statistical uncertainty of
 \uMpE$\times10^{-18}$, and the excess scatter inferred is
 $\xiMpE\times10^{-18}$ (Mandel--Paule) and $\xiBayesE\times10^{-18}$
-(Bayesian). Figure~\ref{fig:campaign}b shows the per-segment
-deviations; the segment-to-segment scatter is dominated by the
+(Bayesian). The segment-to-segment scatter is dominated by the
 statistical noise of the individual segments and by the excess scatter
 captured by the random-effect term.
 
@@ -92,7 +94,7 @@ captured by the random-effect term.
 \label{sec:results-budget}
 
 Table~\ref{tab:budget} collects the components of the total standard
-uncertainty (Figure~\ref{fig:compare}b). The statistical term dominates
+uncertainty. The statistical term dominates
 the budget, followed by the Yb and Sr systematic evaluations, the
 static-potential term from the leveling, and the time-varying-redshift
 term carried as an uncertainty item; the fiber-link and comb terms are
