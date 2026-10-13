@@ -194,6 +194,12 @@
     - 括号不确定度定位句改为 "the parenthesized uncertainty is the Bayesian
       statistical uncertainty"。
 
+21. **统计量入表、正文更简练（2026-10-13 第十七轮，按指示）**：
+    Table 1 增加 ξ（共同超额散布）列，WLS 行以 --- 占位；χ²_red、dof、p、
+    Birge ratio 移入表注；正文 §2.2 不再逐项报这些统计量，仅以
+    "as quantified by the combination statistics in Table 1" 一句概括，
+    段 2/6/7/12/16 模型受限组的表述保留在正文。Methods 交叉核对句不变。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
