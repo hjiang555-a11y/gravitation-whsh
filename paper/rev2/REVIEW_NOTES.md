@@ -346,7 +346,18 @@
     且 280.049 m²/s² 为旧记录（历史遗留，仅存于冻结的 NATURE_FRAMEWORK.md）。
     修改：局限段改为"水准值已由独立 GNSS+大地水准面模型校准交叉核实、
     在不确定度内一致（Methods）"；"pending reconciliation"仅保留给潮汐
-    序列来源与样本总数口径；`delta_w` provenance 同步更新为双检核口径。
+    序列来源与样本总数口径；      `delta_w` provenance 同步更新为双检核口径。
+
+34. **模型受限段归因说明（2026-10-13 第三十轮，按审稿提示）**：
+    审稿人问 5 个模型受限段是否有共性物理条件变化。调研（斜率分布、段时长、
+    时段、战役、温度/锁分记录）：受限段与正常段无干净分离——斜率连续分布
+    （−0.43 至 −0.79），受限段（−0.67~−0.79）只是越过 −0.65 界限的陡端；
+    其 u_frac 反而更低（更接近白频）；无单一战役/天气/温度归因
+    （温度与锁定频移 |r|<0.05）。结论：正常现象，不值得强调。
+    Methods「Data processing」加一句："These five lie at the steep end of a
+    continuous slope distribution, just beyond the acceptance bound, and show
+    no common campaign, weather or laboratory condition that distinguishes
+    them from the remaining segments."
 
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
