@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "source": "comp_shanghai-wuhan-beijintime.csv",
+    "n_rows": 79680,
+    "grid_s": 90,
+    "time_base": "Beijing time (UTC+8), native to the beat axis",
+    "unit": "fractional frequency df/f (Wuhan-Shanghai)",
+    "note": "diagnostic comparison; the professional 30-s series remains authoritative"
+  },
+  "scenarios": {
+    "raw": {
+      "coefficient": 0.0,
+      "n_segments": 16,
+      "R_wls": null,
+      "combination": {
+        "y_wls": -6.799984421696012e-19,
+        "u_wls": 1.1284673733706112e-18,
+        "chi2": 6.1849781283792,
+        "chi2_red": 0.41233187522528,
+        "p_chi2": 0.9764701775094566,
+        "birge_ratio": 0.6421307306345647,
+        "u_birge": 7.246235789597387e-19,
+        "xi_mp": 0.0,
+        "u_mp": 1.1284673733706112e-18,
+        "mu_bayes": -6.763361554361213e-19,
+        "u_stat_bayes": 1.1393738637821962e-18,
+        "xi_bayes": 1.4221957257203668e-19,
+        "reference_ratio": "1.2075070393433377209511392342884451167413791027221712598810109303259159213121598"
+      }
+    },
+    "theory": {
+      "coefficient": -1.0,
+      "n_segments": 16,
+      "R_wls": null,
+      "combination": {
+        "y_wls": -1.0943585240632491e-18,
+        "u_wls": 8.623404694111867e-19,
+        "chi2": 8.747593679211443,
+        "chi2_red": 0.5831729119474295,
+        "p_chi2": 0.8903407791065922,
+        "birge_ratio": 0.76365758815547,
+        "u_birge": 6.585328430394027e-19,
+        "xi_mp": 0.0,
+        "u_mp": 8.623404694111867e-19,
+        "mu_bayes": -1.0901454591624598e-18,
+        "u_stat_bayes": 8.770940013516638e-19,
+        "xi_bayes": 1.3914524908155384e-19,
+        "reference_ratio": "1.2075070393433377224796193342219190053180001947287905242347622607253896226304150"
+      }
+    },
+    "empirical": {
+      "coefficient": -0.54,
+      "n_segments": 16,
+      "R_wls": null,
+      "combination": {
+        "y_wls": -8.942967254308212e-19,
+        "u_wls": 9.76817070491346e-19,
+        "chi2": 7.5370722057359245,
+        "chi2_red": 0.502471480382395,
+        "p_chi2": 0.9410000414798355,
+        "birge_ratio": 0.7088522274652136,
+        "u_birge": 6.924189562438351e-19,
+        "xi_mp": 0.0,
+        "u_mp": 9.76817070491346e-19,
+        "mu_bayes": -8.894871308310542e-19,
+        "u_stat_bayes": 9.89565992067634e-19,
+        "xi_bayes": 1.4054574870589157e-19,
+        "reference_ratio": "1.2075070393433377217765184882525210160921570028678605700469018415872356598260650"
+      }
+    }
+  }
+}
