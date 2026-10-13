@@ -237,6 +237,25 @@
       地球物理模型与数值标准），新增 bib 两条：`zhang2026etideload`
       （官网 URL）、`iers2010conventions`（IERS Technical Note 36）。
 
+25. **Discussion/Conclusion/Methods 整体改写（2026-10-13 第二十一轮，按指示；
+    Nature 评审视角）**：
+    - Discussion：删除与 §2.3 重复的潮汐处理段（原 ¶4 "The treatment of
+      the time-varying term illustrates this point" 整段并入 ¶3 引力势段，
+      保留一句 future-work 指向）；首段删去"瓶颈论证"尾部（与 ¶2 演进段
+      重复的 campus 对比）；limitations 段"model-limited slope diagnostics"
+      措辞微调。结构现为：对照与达标 → 比值演进/趋同 → 引力势与潮汐边界
+      → 运行属性 → 局限 → 展望。
+    - Conclusion：重写为简报式四句（结果/首次跨城达标+三者趋同/剩余局限/
+      网络愿景），与 Discussion 首段及 abstract 去重。
+    - Methods：不确定度预算节补齐**潮汐模板构造**（ETideLoad4.5 30 s
+      固体潮+海潮负荷位移差 → g·Δh 势差 → h=F_1550·ΔW/c² 拍频模板），
+      解决 §2.3 "supplied tide series" 无来源的问题；链路/梳齿条目表述
+      同步为 frequency-conversion stages；删除已不用的
+      `\uSubsystemBound` 引用（宏保留）。
+    - Results §2.2：图2a 的正文描述段与 caption 重复，合并为一段
+      （正文一句概括 + 指向 caption 细节）。
+    - 词数：正文（摘要+引言+结果+讨论+结论）≈2,244；Methods ≈997。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：

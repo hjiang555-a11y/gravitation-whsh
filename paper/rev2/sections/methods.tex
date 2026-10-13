@@ -129,18 +129,27 @@ resolves an internal-versus-published discrepancy in favor of the
 published evaluation. The static-potential term is
 $u(\dW)/c^2$ from the leveling uncertainty
 $\dWUnc~\mathrm{m^2\,s^{-2}}$, giving
-$\uStaticE \times 10^{-18}$. The fiber-link and comb terms are
-experiment-side upper bounds of $\uSubsystemBound$ each, carried at
-\uLinkE $\times 10^{-18}$ and $\uCombE \times 10^{-18}$ to preserve the
-experiment-side margin.
+$\uStaticE \times 10^{-18}$. The frequency-conversion stages
+contribute $\uLinkE \times 10^{-18}$ and $\uCombE \times 10^{-18}$
+from their frequency-reference settings.
 
-The time-varying gravitational-redshift term is carried as an
-uncertainty item, quantified from the scale over which the
-segment-averaged shift varies across the campaign, and is not applied
-as a correction to the reported central value. As a direct sensitivity
-check, we repeated the combination with the supplied tide series
-applied as a template correction before the ratio inversion, at fixed
-theoretical and at fixed historical amplitudes: the reduced chi-square
+The time-varying gravitational-redshift term requires a tidal
+template. The supplied tide series consists of the solid Earth tide
+and ocean tide loading displacement difference between the two sites,
+computed every \qty{30}{s} with the public software
+ETideLoad4.5~\citep{zhang2026etideload}, which implements the
+geophysical models and numerical standards of the IERS Conventions
+(2010)~\citep{iers2010conventions}. The displacement difference is
+converted to an equivalent geopotential difference with the local
+gravity $g$ and then to a beat-frequency template through
+$h = F_{1550}\,\Delta W/c^2$ (Methods, ``Experimental setup''), the
+same normalization used for the beat record.
+
+The time-varying term is carried as an uncertainty item and is not
+applied as a correction to the reported central value. As a direct
+sensitivity check, we repeated the combination with the tide template
+applied before the ratio inversion, at fixed theoretical ($A = -1$)
+and fixed historical ($A = -0.54$) amplitudes: the reduced chi-square
 of the combination rose from $\tidalChiRaw$ to $\tidalChiTheory$ and
 $\tidalChiEmp$, respectively, and the Bayesian center moved by up to
 $\tidalShiftEmpE\times10^{-18}$. A template that degrades the
