@@ -359,6 +359,23 @@
     no common campaign, weather or laboratory condition that distinguishes
     them from the remaining segments."
 
+35. **§2.2 交叉引用修正 + Discussion 三处内容补充（2026-10-13 第三十一轮，
+    按指示）**：
+    - §2.2 "see Methods for the model-limited segments" 指向不存在的小节，
+      改为"The five segments flagged as model-limited in the per-segment
+      table (Methods) are retained with their measured uncertainties."
+    - Discussion 演进段补双向反馈句（比对互相验证 + 结果反馈到各实验室的
+      方法评估与误差改进）；"three latest, independently obtained values"。
+    - 新增钟能力对比段：最终不确定度与 NIST–JILA 相当且略小，虽然分布式
+      系统带来链路/光梳/大地测量附加不确定度；补偿因素是 274 小时连续
+      记录远长于典型单园区窗口，而更长的连续平均是缩小统计不确定度的
+      直接途径；记录无跳点本身是链路跳变抑制与监测控制的技术成果
+      （段内几乎无剔除样本）。
+    - 运行属性段补钟复现性保障：比对前刻意关机重启测试重启复现性 +
+      实验室环境严格调控，使"钟能回到同一频率"本身成为被测属性；
+      三阶段段均值无系统偏移（−0.53/+0.29/−0.64×10⁻¹⁸）。
+    - 正文 2,612 词（6 页锚点 +4%），结构未动。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
