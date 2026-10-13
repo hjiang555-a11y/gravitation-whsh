@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
 from decimal import Decimal, ROUND_HALF_EVEN
 from pathlib import Path
@@ -234,15 +235,20 @@ def _chunks(text: str, from_right: bool) -> list[str]:
 
 
 def latex_groups(num_str: str) -> str:
-    """Digit-group a decimal string with LaTeX thin spaces (1.207\\,507\\,...)."""
+    """Digit-group a decimal string with LaTeX thin spaces (1.207\\,507\\,...).
+
+    Uses \\thinspace (text-mode safe) rather than \\, so that grouped
+    digits survive inside tabular columns where \\, produces overlapping
+    glyphs and corrupts PDF text extraction.
+    """
     sign = ""
     text = num_str
     if text.startswith("-"):
         sign, text = "-", text[1:]
     if "." in text:
         int_part, frac = text.split(".")
-        return sign + r"\,".join(_chunks(int_part, True)) + "." + r"\,".join(_chunks(frac, False))
-    return sign + r"\,".join(_chunks(text, True))
+        return sign + r"\thinspace".join(_chunks(int_part, True)) + "." + r"\thinspace".join(_chunks(frac, False))
+    return sign + r"\thinspace".join(_chunks(text, True))
 
 
 def round_str(x: str, places: int) -> str:
@@ -285,6 +291,22 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         f"{tier1}.R_wls rounded to 19 decimals")
     add("RmpHead", latex_groups(round_str(comb["R_mp"], 19)),
         f"{tier1}.R_mp rounded to 19 decimals")
+    add("RbayesHead", latex_groups(round_str(comb["R_bayes"], 19)),
+        f"{tier1}.R_bayes rounded to 19 decimals")
+    add("RwlsHeadT", latex_groups(round_str(comb["R_wls"], 21)),
+        f"{tier1}.R_wls rounded to 21 decimals")
+    add("RmpHeadT", latex_groups(round_str(comb["R_mp"], 21)),
+        f"{tier1}.R_mp rounded to 21 decimals")
+    add("RbayesHeadT", latex_groups(round_str(comb["R_bayes"], 21)),
+        f"{tier1}.R_bayes rounded to 21 decimals")
+    # Ungrouped variants for siunitx S columns (siunitx renders its own
+    # digit grouping; embedded thin spaces would be typeset twice).
+    add("RwlsRawT", round_str(comb["R_wls"], 21),
+        f"{tier1}.R_wls rounded to 21 decimals (ungrouped, for S columns)")
+    add("RmpRawT", round_str(comb["R_mp"], 21),
+        f"{tier1}.R_mp rounded to 21 decimals (ungrouped, for S columns)")
+    add("RbayesRawT", round_str(comb["R_bayes"], 21),
+        f"{tier1}.R_bayes rounded to 21 decimals (ungrouped, for S columns)")
 
     u_stat_e18 = comb["u_stat_bayes"] * 1e18
     add("uStatE", f"{u_stat_e18:.3f}", f"{tier1}.u_stat_bayes")
@@ -513,7 +535,14 @@ def render_tex(macros: list[tuple[str, str, str]]) -> str:
         "",
     ]
     for name, value, _ in macros:
-        lines.append(rf"\newcommand{{\{name}}}{{\ensuremath{{{value}}}}}")
+        # Pure digit-grouped numbers render in text mode so that PDF text
+        # extraction (pdftotext, screen readers) recovers the digits exactly
+        # and tabular columns do not swallow thin spaces; values containing
+        # math (e.g. \times10^{-18}) stay in math mode.
+        if re.fullmatch(r"[0-9.\\thinspace-]*", value):
+            lines.append(rf"\newcommand{{\{name}}}{{{value}}}")
+        else:
+            lines.append(rf"\newcommand{{\{name}}}{{\ensuremath{{{value}}}}}")
     return "\n".join(lines) + "\n"
 
 

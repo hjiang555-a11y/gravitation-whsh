@@ -158,6 +158,23 @@
     - 验证：pytest 231 passed（含数据套件）；manifest verify OK；check.sh OK
       （u_total 范围断言 2.0–2.3 仍通过）。
 
+18. **图2 三子图表述对齐 Aeppli 2026 + 三估计量对照表（2026-10-13 第十四轮，按指示）**：
+    - 图2（用户提供的 fig2_ratio，三子图：a 段级分数不稳定度+梳齿/光纤环外诊断、
+      b/c 逐战役比值偏差）caption 改写为 Aeppli 2026 Fig. 2 风格——白频模型
+      `σ_y(τ)=σ_0/sqrt(τ/s)`、统计不确定度取最后可算点、逐战役数据点表述。
+    - §2.2 新增 **Table 1：三估计量对照**（WLS / Mandel–Paule / Bayesian random
+      effect，21 位小数 Yb/Sr + u），Bayes 尾数 720.134 > WLS/MP 720.130 且
+      u_Bayes=1.139×10⁻¹⁸ 最大，故以 Bayes 为宣称结果——正文同步给出理由
+      （"carries the largest standard uncertainty"）。
+    - 新宏 6 个（`RwlsHeadT/RmpHeadT/RbayesHeadT` 21 位分组版、
+      `RwlsRawT/RmpRawT/RbayesRawT` siunitx S 列无分组版）。
+    - **LaTeX 修复两处**：① 宏名不能以数字结尾（`\RwlsHead21` 被解析为
+      `\RwlsHead`+`21`，报 already defined）→ 改字母后缀 T；
+      ② T1 字体下 `\,`/`\thinspace` 在 tabular 内被吞（PDF 字形错排成 …720 121）
+      → 表格改用 siunitx `S[table-format=1.21]` 列 + 无分组数字宏，由
+      `group-digits=all` 渲染分组；正文行内数字宏改文本模式（免 \ensuremath）。
+    - 验证：main.log 零 undefined；PDF 文本提取表格数字 …720 130/130/134 正确。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：

@@ -44,27 +44,38 @@ frequency-chain relations (see Methods).
 
 Over two months (\nDays~days) the two clocks and their transfer chains
 ran synchronously for a total of \nHours~effective hours, recorded as
-\nSeg~jump-free segments. Figure~\ref{fig:ratio} shows the fractional
-instability of a representative segment together with the diagnostic
-out-of-loop records.
+\nSeg~jump-free segments. The results are presented in
+Figure~\ref{fig:ratio}.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figs/fig2_ratio.pdf}
-  \caption{Fractional instability of a representative segment
-  (Yb/Sr, segment 8) together with the out-of-loop records of the two
-  frequency combs (SH, WH) and of the fiber link. The segment follows
-  a white-frequency-noise law over most of the record; the
-  statistical uncertainty of each segment is taken from its last
-  computable Allan-deviation point (Methods).}
+  \caption{Frequency-ratio measurement results. (a) Fractional
+  instability of a representative segment (Yb/Sr, segment 8); the
+  points are the overlapping Allan deviation at different averaging
+  times $\tau$. The solid line is a white-frequency-noise model
+  $\sigma_y(\tau) = \sigma_0/\sqrt{\tau/\mathrm{s}}$; the statistical
+  uncertainty is the last computable point of the stability record,
+  without extrapolation. The gray markers are the out-of-loop
+  instabilities of the two frequency combs (SH, WH) and of the fiber
+  link. (b) Per-campaign ratio measurements as fractional deviations
+  from the final reported value, with error bars from the procedure in
+  (a). (c) The same deviations by campaign date.}
   \label{fig:ratio}
 \end{figure}
 
+In Figure~\ref{fig:ratio}a, the overlapping Allan deviation of the
+fractional ratio for a representative segment follows a white
+frequency noise law $\sigma_y(\tau) = \sigma_0/\sqrt{\tau/\mathrm{s}}$
+over most of the record. The statistical uncertainty of each segment
+is obtained from the last computable point of its stability record
+rather than by extrapolating the white-noise fit to the segment
+duration; together with the segment mean, this provides one data point
+per segment, as plotted in Figure~\ref{fig:ratio}b,c.
+
 We determine the Yb/Sr frequency ratio from the \nSeg~segments. Each
-segment yields a ratio estimate with its own statistical uncertainty
-obtained from the Allan deviation of the beat, after jump-point
-removal and endpoint screening (Methods); Figure~\ref{fig:ratio}
-shows a representative stability record. The segment
+segment yields a ratio estimate with its own statistical uncertainty,
+after jump-point removal and endpoint screening (Methods). The segment
 estimates are consistent with their individual uncertainties: the
 reduced chi-square of the combination is
 $\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
@@ -74,22 +85,39 @@ outside the white-frequency-noise band (groups \modelLimitedGroups).
 Following recent ratio
 comparisons~\citep{pizzocaro2026european, aeppli2026nist}, we combine
 the segments with a random-effect model that admits a common excess
-scatter~\citep{birge1932errors, mandel1970interlaboratory}. The
-primary value is obtained from a Bayesian random-effect model, in
-which the excess scatter is marginalized over its posterior as a free
-parameter, giving
+scatter~\citep{birge1932errors, mandel1970interlaboratory}, and we
+evaluate the three estimators in Table~\ref{tab:estimators}. All three
+agree at the $10^{-18}$ level, and the Bayesian random-effect estimate
+carries the largest standard uncertainty; we report it as the primary
+value. The Bayesian model, in which the excess scatter is marginalized
+over its posterior as a free parameter, gives
 \begin{equation}
   \mathrm{Yb/Sr} = \Rheadline(\RheadlineUnc),
 \end{equation}
 with a statistical uncertainty of $\uStatE\times10^{-18}$ and a total
 standard uncertainty of $\uTotalShort\times10^{-18}$
-(Section~\ref{sec:results-budget}). The two random-effect estimators
-agree at the $10^{-18}$ level: the Mandel--Paule estimate,
-\RmpHead\xspace, has a statistical uncertainty of
-\uMpE$\times10^{-18}$, and the excess scatter inferred is
-$\xiMpE\times10^{-18}$ (Mandel--Paule) and $\xiBayesE\times10^{-18}$
-(Bayesian); both are consistent with a scatter dominated by the
+(Section~\ref{sec:results-budget}). The excess scatter inferred is
+$\xiBayesE\times10^{-18}$ (Bayesian) and $\xiMpE\times10^{-18}$
+(Mandel--Paule), consistent with a scatter dominated by the
 statistical noise of the individual segments.
+
+\begin{table}[t]
+  \centering
+  \caption{Statistical combination of the \nSeg~segment ratios.
+  All three estimators agree at the $10^{-18}$ level; the Bayesian
+  random-effect value, which carries the largest standard uncertainty,
+  is reported as the primary result.}
+  \label{tab:estimators}
+  \begin{tabular}{lS[table-format=1.21]S[table-format=1.3]}
+    \toprule
+    Estimator & {Yb/Sr} & {$u$ ($10^{-18}$)} \\
+    \midrule
+    WLS (inverse variance)   & \RwlsRawT & \uWlsE \\
+    Mandel--Paule            & \RmpRawT & \uMpE \\
+    Bayesian random effect   & \RbayesRawT & \uStatE \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{Uncertainty budget}
 \label{sec:results-budget}

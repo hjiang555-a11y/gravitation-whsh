@@ -2,55 +2,83 @@
   "generated_by": "paper/rev2/tools/build_numbers.py",
   "macros": {
     "Rheadline": {
-      "value": "1.207\\,507\\,039\\,343\\,337\\,720\\,6",
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace720\\thinspace1",
       "source": "manifest:primary_16.combination.R_bayes rounded to 19 decimals"
     },
     "RbayesFull": {
-      "value": "1.2075070393433377205630643505541719423190803014306306585972367401019724827739822",
+      "value": "1.2075070393433377201344585656369188179292550569336320493567391993015505600807042",
       "source": "manifest:primary_16.combination.R_bayes (full precision)"
     },
     "RwlsFull": {
-      "value": "1.2075070393433377200464104337868920419305439666264194521188560456494883520088030",
+      "value": "1.2075070393433377201300363286261481205336963758023772463919635856100035202592917",
       "source": "manifest:primary_16.combination.R_wls (full precision)"
     },
     "RmpFull": {
-      "value": "1.2075070393433377205519661184561686865486879863554356316437687495815956453706540",
+      "value": "1.2075070393433377201300363286261481205336963758023772463919635856100035202592917",
       "source": "manifest:primary_16.combination.R_mp (full precision)"
     },
     "RwlsHead": {
-      "value": "1.207\\,507\\,039\\,343\\,337\\,720\\,0",
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace720\\thinspace1",
       "source": "manifest:primary_16.combination.R_wls rounded to 19 decimals"
     },
     "RmpHead": {
-      "value": "1.207\\,507\\,039\\,343\\,337\\,720\\,6",
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace720\\thinspace1",
       "source": "manifest:primary_16.combination.R_mp rounded to 19 decimals"
     },
+    "RbayesHead": {
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace720\\thinspace1",
+      "source": "manifest:primary_16.combination.R_bayes rounded to 19 decimals"
+    },
+    "RwlsHeadT": {
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace720\\thinspace130",
+      "source": "manifest:primary_16.combination.R_wls rounded to 21 decimals"
+    },
+    "RmpHeadT": {
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace720\\thinspace130",
+      "source": "manifest:primary_16.combination.R_mp rounded to 21 decimals"
+    },
+    "RbayesHeadT": {
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace720\\thinspace134",
+      "source": "manifest:primary_16.combination.R_bayes rounded to 21 decimals"
+    },
+    "RwlsRawT": {
+      "value": "1.207507039343337720130",
+      "source": "manifest:primary_16.combination.R_wls rounded to 21 decimals (ungrouped, for S columns)"
+    },
+    "RmpRawT": {
+      "value": "1.207507039343337720130",
+      "source": "manifest:primary_16.combination.R_mp rounded to 21 decimals (ungrouped, for S columns)"
+    },
+    "RbayesRawT": {
+      "value": "1.207507039343337720134",
+      "source": "manifest:primary_16.combination.R_bayes rounded to 21 decimals (ungrouped, for S columns)"
+    },
     "uStatE": {
-      "value": "0.885",
+      "value": "1.139",
       "source": "manifest:primary_16.combination.u_stat_bayes"
     },
     "uStatShort": {
-      "value": "0.89",
+      "value": "1.14",
       "source": "manifest:primary_16.combination.u_stat_bayes (2 significant figures)"
     },
     "uWlsE": {
-      "value": "0.334",
+      "value": "1.128",
       "source": "manifest:primary_16.combination.u_wls"
     },
     "uMpE": {
-      "value": "0.788",
+      "value": "1.128",
       "source": "manifest:primary_16.combination.u_mp"
     },
     "uBirgeE": {
-      "value": "0.669",
+      "value": "0.725",
       "source": "manifest:primary_16.combination.u_birge"
     },
     "chiSq": {
-      "value": "60.25",
+      "value": "6.18",
       "source": "manifest:primary_16.combination.chi2"
     },
     "chiRed": {
-      "value": "4.017",
+      "value": "0.412",
       "source": "manifest:primary_16.combination.chi2_red"
     },
     "dofV": {
@@ -58,51 +86,51 @@
       "source": "manifest:primary_16.combination.dof"
     },
     "pChi": {
-      "value": "2.3\\times10^{-7}",
+      "value": "9.8\\times10^{-1}",
       "source": "manifest:primary_16.combination.p_chi2"
     },
     "birgeRatio": {
-      "value": "2.004",
+      "value": "0.642",
       "source": "manifest:primary_16.combination.birge_ratio"
     },
     "xiMpE": {
-      "value": "2.50",
+      "value": "0.00",
       "source": "manifest:primary_16.combination.xi_mp"
     },
     "xiBayesE": {
-      "value": "2.83",
+      "value": "0.14",
       "source": "manifest:primary_16.combination.xi_bayes"
     },
     "muBayesE": {
-      "value": "-0.321",
+      "value": "-0.676",
       "source": "manifest:primary_16.combination.mu_bayes"
     },
     "sensRwlsHead": {
-      "value": "1.207\\,507\\,039\\,343\\,337\\,720\\,4",
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace720\\thinspace4",
       "source": "manifest:sensitivity_17.combination.R_wls rounded to 19 decimals"
     },
     "sensChiRed": {
-      "value": "5.24",
+      "value": "0.51",
       "source": "manifest:sensitivity_17.combination.chi2_red"
     },
     "dSegNineWls": {
-      "value": "+0.30\\times10^{-18}",
+      "value": "+0.29\\times10^{-18}",
       "source": "derived: sensitivity_17 minus primary_16 WLS center, in 1e-18"
     },
     "tidalChiRaw": {
-      "value": "4.02",
+      "value": "0.41",
       "source": "frozen seg9 JSON: synthesis.goodness_of_fit.raw.chi2_red (16-segment)"
     },
     "tidalChiTheory": {
-      "value": "5.61",
+      "value": "0.57",
       "source": "frozen seg9 JSON: synthesis.goodness_of_fit.theory.chi2_red (fixed A=-1 template)"
     },
     "tidalChiEmp": {
-      "value": "5.19",
+      "value": "0.54",
       "source": "frozen seg9 JSON: synthesis.goodness_of_fit.empirical.chi2_red (fixed A=-0.54 template)"
     },
     "tidalShiftEmpE": {
-      "value": "0.53",
+      "value": "0.85",
       "source": "derived: empirical minus raw Bayesian center shift from the frozen seg9 JSON, in 1e-18; the scale adopted for the time-varying-redshift uncertainty item"
     },
     "nSeg": {
@@ -114,11 +142,11 @@
       "source": "manifest:sensitivity_17.included_groups"
     },
     "nSamples": {
-      "value": "986\\,416",
+      "value": "986\\thinspace416",
       "source": "manifest:primary_16.total_samples"
     },
     "nSamplesAll": {
-      "value": "1\\,008\\,912",
+      "value": "1\\thinspace008\\thinspace912",
       "source": "manifest:sensitivity_17.total_samples"
     },
     "nHours": {
@@ -170,7 +198,7 @@
       "source": "curated: leveling uncertainty +/- 0.085 m^2/s^2 (experiment-side leveling report)"
     },
     "refNistV": {
-      "value": "1.207\\,507\\,039\\,343\\,337\\,723\\,0",
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace723\\thinspace0",
       "source": "literature: Aeppli et al. 2026, Phys. Rev. Lett. 137, 033201 (arXiv:2512.21428)"
     },
     "refNistU": {
@@ -182,7 +210,7 @@
       "source": "literature: Aeppli et al. 2026 quoted uncertainty, in 1e-18"
     },
     "refEuV": {
-      "value": "1.207\\,507\\,039\\,343\\,337\\,718",
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace718",
       "source": "literature: Pizzocaro et al. 2026, Phys. Rev. Research 8, 033250 (arXiv:2604.27963)"
     },
     "refEuU": {
@@ -194,11 +222,11 @@
       "source": "literature: Pizzocaro et al. 2026 quoted uncertainty, in 1e-18"
     },
     "fibreKm": {
-      "value": "1\\,350",
+      "value": "1\\thinspace350",
       "source": "experiment materials (link documentation): single-pass fiber length"
     },
     "roundKm": {
-      "value": "2\\,700",
+      "value": "2\\thinspace700",
       "source": "experiment materials (link documentation): loop-back round-trip length"
     },
     "siteKm": {
@@ -206,7 +234,7 @@
       "source": "experiment materials (link documentation): separation of the two sites"
     },
     "levelKm": {
-      "value": "1\\,113",
+      "value": "1\\thinspace113",
       "source": "experiment-side leveling report: leveling line length"
     },
     "nDays": {
@@ -242,11 +270,11 @@
       "source": "literature: Nemitz et al. 2016 (Nat. Photon. 10, 258): Yb/Sr ratio with 5e-17 uncertainty at 150 s averaging time"
     },
     "refVlbiKm": {
-      "value": "9\\,000",
+      "value": "9\\thinspace000",
       "source": "literature: Pizzocaro et al. 2021 (Nature Physics 17, 223-227): VLBI comparison of two optical clocks separated by about 9000 km"
     },
     "refLisdatKm": {
-      "value": "1\\,415",
+      "value": "1\\thinspace415",
       "source": "literature: Lisdat et al. 2016 (Nature Communications 7, 12443): Paris-Braunschweig Sr-Sr comparison over 1415 km of telecom fiber"
     },
     "fRepMHz": {
@@ -318,23 +346,23 @@
       "source": "derived: curated delta_w_unc / c^2"
     },
     "uTotalE": {
-      "value": "2.12",
+      "value": "2.24",
       "source": "derived: quadrature of the budget components (this pipeline)"
     },
     "uTotalShort": {
-      "value": "2.1",
+      "value": "2.2",
       "source": "derived: quadrature of the budget components, 2 significant figures"
     },
     "RheadlineUnc": {
-      "value": "21",
+      "value": "22",
       "source": "derived: total standard uncertainty to two significant figures"
     },
     "dVsNistE": {
-      "value": "-2.44\\times10^{-18}",
+      "value": "-2.87\\times10^{-18}",
       "source": "derived: R_bayes minus the NIST-JILA reference, in 1e-18"
     },
     "dVsEuE": {
-      "value": "+2.56\\times10^{-18}",
+      "value": "+2.13\\times10^{-18}",
       "source": "derived: R_bayes minus the European-network reference, in 1e-18"
     }
   }
