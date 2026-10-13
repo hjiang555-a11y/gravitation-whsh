@@ -200,6 +200,16 @@
     "as quantified by the combination statistics in Table 1" 一句概括，
     段 2/6/7/12/16 模型受限组的表述保留在正文。Methods 交叉核对句不变。
 
+22. **§2.2 表述再精简（2026-10-13 第十八轮，按指示）**：
+    - 删 "jump-point removal and endpoint screening"——实际数据无挑点
+      （样本账本：1,009,200 样本仅 3 剔除 + 249 端点裁剪），Methods 的
+      数据处理段同步删除 10 Hz 跳点与 1% 端点筛选细节，只保留"最长无跳段"；
+    - 段 2/6/7/12/16 模型受限组号与斜率细节从正文删除，正文仅一句
+      "(see Methods for the model-limited segments)"，细节在 Methods 与
+      逐段表（tab:segments 的 lim. 标记）；
+    - "The total standard uncertainty is 2.2×10⁻¹⁸" 句从 §2.2 末尾移入
+      §2.3 首段（本就属于预算节）。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：

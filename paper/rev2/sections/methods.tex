@@ -62,14 +62,11 @@ difference above.
 \subsection*{Data processing and segment definition}
 
 The counters sample the beat every second in phase-averaging mode.
-Samples deviating by more than $10$\,Hz from the running median are
-treated as jump points and removed; the retained data are further
-trimmed at both ends by an endpoint screen that drops points beyond
-$1\%$ of the peak-to-peak range of the record. Each accepted segment
-contributes its longest jump-free record after this screening.
+Each accepted segment contributes its longest jump-free record.
 Table~\ref{tab:segments} lists the per-segment retained counts, ratio
 deviations and statistical uncertainties; the category column marks
-the five segments whose stability fits are model-limited.
+the five segments whose stability slopes fall outside the
+white-frequency-noise band (model-limited).
 
 \begin{table}[t]
   \centering
