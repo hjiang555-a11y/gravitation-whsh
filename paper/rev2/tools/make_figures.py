@@ -2,9 +2,12 @@
 """Figure generator for the rebuilt manuscript (paper/rev2).
 
 Reads only generated/numbers.json (written by build_numbers.py) and writes
-figs/fig1_network, figs/fig2_campaign, figs/fig3_compare as PNG (300 dpi)
-and PDF. No numeric literal that appears in the manuscript is typed here;
-every plotted value comes from the generated payload.
+figs/fig2_campaign, figs/fig3_compare as PNG (300 dpi) and PDF. No numeric
+literal that appears in the manuscript is typed here; every plotted value
+comes from the generated payload.
+
+fig1_network is a hand-supplied figure (user-provided PNG, 2026-10-13) and
+is intentionally not regenerated here.
 """
 from __future__ import annotations
 
@@ -41,38 +44,9 @@ def _save(fig, name: str) -> None:
 
 
 def fig_network() -> None:
-    fig, ax = plt.subplots(figsize=(6.9, 2.2))
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, 3)
-    ax.axis("off")
-
-    def site(x: float, label: str, sub: str) -> None:
-        ax.add_patch(plt.Rectangle((x - 0.55, 1.15), 1.1, 0.85, fc="#f6f8fa",
-                                   ec="#24292f", lw=1.2))
-        ax.text(x, 1.72, label, ha="center", va="center", fontsize=10,
-                fontweight="bold")
-        ax.text(x, 1.38, sub, ha="center", va="center", fontsize=8, color="#57606a")
-
-    site(1.2, "Wuhan", "Yb / IAPMST")
-    site(8.8, "Shanghai", "Sr / USTC")
-
-    ax.annotate("", xy=(8.25, 1.58), xytext=(1.75, 1.58),
-                arrowprops=dict(arrowstyle="<->", color="#0969da", lw=1.6))
-    payload = _load()
-    meta = payload["meta"]
-    ax.text(5.0, 1.72, f"{meta['site_km']:,} km apart".replace(",", " "),
-            ha="center", fontsize=9, color="#0969da")
-    ax.text(5.0, 0.72,
-            f"phase-stabilized fiber link, {meta['fibre_km']:,} km single pass "
-            f"({meta['round_trip_km']:,} km loop-back), 1550 nm".replace(",", " "),
-            ha="center", fontsize=8.5, color="#24292f")
-    ax.annotate("", xy=(8.25, 0.95), xytext=(1.75, 0.95),
-                arrowprops=dict(arrowstyle="<->", color="#57606a", lw=1.2))
-    for x in (3.4, 5.0, 6.6):
-        ax.plot([x], [0.95], marker="s", ms=6, color="#2ca02c")
-    ax.text(5.0, 0.35, "relay stations (EDFA + fiber-noise cancellation)",
-            ha="center", fontsize=8, color="#57606a")
-    _save(fig, "fig1_network")
+    """Hand-supplied figure: see module docstring. Kept as a no-op so that
+    old invocations do not overwrite the user-provided fig1_network.png."""
+    print("fig1_network.png is user-supplied; skipping regeneration")
 
 
 def fig_campaign() -> None:

@@ -12,6 +12,7 @@ cp "$REV2"/generated/numbers.tex "$REV2"/generated/segment_table.tex \
    "$REV2"/generated/numbers.json "$REV2"/generated/numbers_manifest.json "$PKG/generated/"
 cp "$REV2/refs.bib" "$PKG/"
 cp "$REV2"/figs/*.pdf "$PKG/figs/"
+cp "$REV2"/figs/fig1_network.png "$PKG/figs/" 2>/dev/null || true
 rm -f "$PKG/../overleaf-rev2-v2-upload.zip"
 (cd "$PKG" && zip -r -X ../overleaf-rev2-v2-upload.zip . -x '*.DS_Store' '*__MACOSX*' >/dev/null)
 echo "Synced $PKG; rebuilt overleaf-rev2-v2-upload.zip"
