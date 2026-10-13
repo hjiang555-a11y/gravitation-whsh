@@ -225,6 +225,18 @@
       总不确定度 × 比值本身（2.34×10⁻¹⁸ × 1.2075 ≈ 2.8×10⁻¹⁸），
       `\RheadlineUnc` 由 `u_total×R` 生成（末两位小数单位 10⁻¹⁹）。
 
+24. **链路/梳齿表述改频率参考设定 + ETideLoad4.5 介绍（2026-10-13 第二十轮，
+    按指示）**：
+    - "The fiber link and the frequency combs each contribute below 1×10⁻¹⁹,
+      carried at 0.1×10⁻¹⁸ and 0.1×10⁻¹⁸" 改为 "The frequency conversion
+      stages each contribute 0.1×10⁻¹⁸ and 0.1×10⁻¹⁸ from the
+      frequency-reference settings of the frequency transfer"（来源于频率变换的
+      频率参考设定）；
+    - 动态引力段开头新增潮汐数据来源介绍：公开软件 ETideLoad4.5（章传银，
+      地球潮汐/负荷效应与形变监测计算，实现 IERS Conventions (2010) 的
+      地球物理模型与数值标准），新增 bib 两条：`zhang2026etideload`
+      （官网 URL）、`iers2010conventions`（IERS Technical Note 36）。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
