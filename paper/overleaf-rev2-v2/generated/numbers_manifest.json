@@ -354,8 +354,8 @@
       "source": "derived: quadrature of the budget components, 2 significant figures"
     },
     "RheadlineUnc": {
-      "value": "23",
-      "source": "derived: total standard uncertainty (2 significant figures) as the parenthesized digits of the headline value"
+      "value": "28",
+      "source": "derived: total standard uncertainty (fractional) multiplied by the ratio value, as the parenthesized digits on the last two decimals of the headline value"
     },
     "dVsNistE": {
       "value": "-2.87\\times10^{-18}",

@@ -447,12 +447,16 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         "derived: quadrature of the budget components, 2 significant figures")
 
     # Parenthesized uncertainty of the headline value, shown in the
-    # uncertainty-budget section once the total is known: the total
-    # standard uncertainty referred to the last two decimal places.
-    total_unc_digits = f"{u_total_e18:.1f}".replace(".", "")
+    # uncertainty-budget section once the total is known. The total
+    # standard uncertainty is fractional; its effect on the ratio value
+    # is the absolute uncertainty u_total x R, read off the last two
+    # decimal places of the 19-decimal headline value (unit 1e-19).
+    abs_unc_e18 = u_total_e18 * float(comb["R_bayes"])
+    total_unc_digits = str(round(abs_unc_e18 * 10))
     add("RheadlineUnc", total_unc_digits,
-        "derived: total standard uncertainty (2 significant figures) as the "
-        "parenthesized digits of the headline value")
+        "derived: total standard uncertainty (fractional) multiplied by the "
+        "ratio value, as the parenthesized digits on the last two decimals "
+        "of the headline value")
 
     # Derived: differences from the reference values.
     r_bayes = Decimal(comb["R_bayes"])
