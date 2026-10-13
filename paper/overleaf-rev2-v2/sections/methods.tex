@@ -96,7 +96,7 @@ white-frequency-noise band (model-limited).
   \input{generated/segment_table}
 \end{table}
 
-\subsection*{Clock-ratio determination and statistical model}
+\subsection*{Clock-ratio determination, statistical model and uncertainty budget}
 
 Each retained segment yields a clock-ratio estimate $R_i$ from the mean
 of its retained beat samples, inverted through the fixed frequency-chain
@@ -129,49 +129,45 @@ $w_i = 1/u_i^2$), which yields
 $\chi^2_{\rm red} = \chiRed$ for $\dofV$ degrees of freedom
 ($p = \pChi$), and by the Mandel--Paule
 estimator~\citep{mandel1970interlaboratory}, which gives
-$\xi = \xiMpE \times 10^{-18}$; the Birge ratio is
-$\birgeRatio$. The excess scatter quantified here
-also absorbs the correlated component of the time-varying
-gravitational-redshift term (see below), which is carried separately
-as an uncertainty item rather than corrected.
+$\xi = \xiMpE \times 10^{-18}$; the Birge ratio is $\birgeRatio$.
 
-\subsection*{Uncertainty budget}
-
-Table~\ref{tab:budget} lists the uncertainty components of the
-Yb/Sr ratio. The statistical term is the posterior standard deviation
-of the Bayesian random-effect model applied to the \nSeg-segment data.
-The Sr and Yb systematic terms are the published evaluations of the two
-clocks~\citep{jia2026sr, zhu2026yb}; the value adopted for the Yb clock
-resolves an internal-versus-published discrepancy in favor of the
-published evaluation. The static-potential term is
+The remaining terms of the uncertainty budget (Table~\ref{tab:budget})
+are systematic. The Sr and Yb terms are the published evaluations of
+the two clocks~\citep{jia2026sr, zhu2026yb}; the value adopted for the
+Yb clock resolves an internal-versus-published discrepancy in favor
+of the published evaluation. The static-potential term is
 $u(\dW)/c^2$ from the leveling uncertainty
 $\dWUnc~\mathrm{m^2\,s^{-2}}$, giving
 $\uStaticE \times 10^{-18}$. The frequency-conversion stages
 contribute $\uLinkE \times 10^{-18}$ and $\uCombE \times 10^{-18}$
 from their frequency-reference settings.
 
-The time-varying gravitational-redshift term requires a tidal
-template. The supplied tide series consists of the solid Earth tide
-and ocean tide loading displacement difference between the two sites,
-computed every \qty{30}{s} with the public software
+\subsection*{Tidal template and time-varying redshift}
+
+The time-varying gravitational-redshift term is quantified from a
+tidal template. The supplied tide series consists of the solid Earth
+tide and ocean tide loading displacement difference between the two
+sites, computed every \qty{30}{s} with the public software
 ETideLoad4.5~\citep{zhang2026etideload}, which implements the
 geophysical models and numerical standards of the IERS Conventions
 (2010)~\citep{iers2010conventions}. The displacement difference is
 converted to an equivalent geopotential difference with the local
 gravity $g$ and then to a beat-frequency template through
-$h = F_{1550}\,\Delta W/c^2$ (Methods, ``Experimental setup''), the
-same normalization used for the beat record.
+$h = F_{1550}\,\Delta W/c^2$, the same normalization used for the
+beat record.
 
-The time-varying term is carried as an uncertainty item and is not
-applied as a correction to the reported central value. As a direct
-sensitivity check, we repeated the combination with the tide template
-applied before the ratio inversion, at fixed theoretical ($A = -1$)
-and fixed historical ($A = -0.54$) amplitudes: the reduced chi-square
-of the combination rose from $\tidalChiRaw$ to $\tidalChiTheory$ and
-$\tidalChiEmp$, respectively, and the Bayesian center moved by up to
+To test how well the template fits the data, we repeated the ratio
+combination with the tide series applied before the inversion, at two
+fixed response amplitudes: the theoretical amplitude $A = -1$ and the
+historical amplitude $A = -0.54$ obtained from the demeaned beat
+waveform in our earlier analysis of the same campaign. The fit
+degrades rather than improves: the reduced chi-square of the
+combination rises from $\tidalChiRaw$ to $\tidalChiTheory$ and
+$\tidalChiEmp$, respectively, and the Bayesian center moves by up to
 $\tidalShiftEmpE\times10^{-18}$. A template that degrades the
 agreement between segments is treated as inconsistent with the data,
-so no tidal correction is applied; the magnitude of the induced center
-shift is carried as the time-varying-redshift uncertainty item. The
-components are treated as independent and combined in quadrature,
-giving the total standard uncertainty $\uTotalE \times 10^{-18}$.
+so no tidal correction is applied to the reported central value; the
+magnitude of the induced center shift is carried as the
+time-varying-redshift uncertainty item. The components are treated as
+independent and combined in quadrature, giving the total standard
+uncertainty $\uTotalE \times 10^{-18}$.

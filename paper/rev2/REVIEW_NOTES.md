@@ -286,6 +286,20 @@
     精度适用范围（双向闭环）。末句保留未来工作指向。段落其余部分
     （首段对照、演进、运行属性、局限、展望）未动。
 
+29. **Methods 小节合并与潮汐节独立（2026-10-13 第二十五轮，按指示）**：
+    - 「Clock-ratio determination and statistical model」与「Uncertainty
+      budget」内容高度重复（统计项、系统项两处都讲），合并为
+      **「Clock-ratio determination, statistical model and uncertainty
+      budget」**：逐段 u_i 与随机效应模型 → 交叉核对（WLS/M-P/Birge）→
+      预算系统项（Sr/Yb/静态势/频率转换）。删除"excess scatter absorbs
+      the tidal term"过渡句。
+    - 潮汐内容独立成节 **「Tidal template and time-varying redshift」**：
+      ① 模板量值确定（ETideLoad4.5 30 s 固体潮+海潮负荷位移差 →
+      g·Δh → h=F_1550·ΔW/c²）；② fit 情况（固定理论幅度 A=−1 与历史幅度
+      A=−0.54 两情景重组合，χ²_red 0.41→0.57/0.54 恶化 → 模型与数据不符 →
+      不作修正、中心位移 0.85×10⁻¹⁸ 作为不确定度项；A=−0.54 的历史来源
+      （同战役早期分析的去均值拍频波形幅度）在文中交代）。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
