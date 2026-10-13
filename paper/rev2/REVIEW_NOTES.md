@@ -376,6 +376,17 @@
       三阶段段均值无系统偏移（−0.53/+0.29/−0.64×10⁻¹⁸）。
     - 正文 2,612 词（6 页锚点 +4%），结构未动。
 
+36. **PTB 多离子钟引用 + 已发表条目去 arXiv note（2026-10-13 第三十二轮，
+    按指示）**：
+    - Introduction 首句加多离子钟：Filzinger et al. 2026（PTB，
+      arXiv:2603.23446，5.3×10⁻¹⁹，最多 10 个 Sr 离子）——Crossref 无正式
+      发表记录，按预印本格式入库（`filzinger2026multiion`，与
+      dawel2026ptbalplus 同款）。
+    - 已正式发表条目移除 arXiv note 5 条：aeppli2026nist（PRL 137）、
+      pizzocaro2026european（PRR 8）、beloy2021bacon（Nature 591）、
+      mcgrew2018geodesy（Nature 564）、dimarcq2024roadmap（Metrologia 61）；
+      zhu2026yb 仍为预印本，保留 note。bib 45 → 46 条，零缺失零孤儿。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
