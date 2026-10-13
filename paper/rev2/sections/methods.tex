@@ -1,26 +1,43 @@
 \subsection*{Leveling determination of the geopotential difference}
 
 The static gravitational-redshift correction is fixed by the
-geopotential difference between the two clocks' atomic transition
-positions, determined by first-order spirit leveling together with
-simultaneous gravimetry. A leveling line of about $\levelKm$\,km was
-run between the Wuhan benchmark WS-03 (at IAPMST) and the Shanghai
-benchmark WS-01 (at USTC) through Ezhou, Huangshi, Huanggang, Lu'an,
-Hefei, Wuhu, Guangde and Suzhou, using digital levels with sight
-lengths below \qty{30}{m} and gravity observed at every leveling point
-with two relative gravimeters. The orthometric height difference
-between the benchmarks follows from the leveled normal heights after
-the normal-to-orthometric conversion, and the geopotential difference
-is integrated segment by segment, $\dW_{AB} = -\sum_i g_i\,\Delta H_i$,
+geopotential difference between the atomic-transition positions of the
+two clocks, determined by a first-order spirit leveling campaign
+carried out specifically for this comparison. The leveling line, about
+$\levelKm$\,km long, runs between the Wuhan benchmark WS-03 (at
+IAPMST) and the Shanghai benchmark WS-01 (at USTC) through Ezhou,
+Huangshi, Huanggang, Lu'an, Hefei, Wuhu, Guangde and Suzhou. Digital
+levels were used with bar-code invar staffs, with sight lengths not
+exceeding \qty{30}{m}; the line was observed in \qtyrange{6}{8}{km}
+sections in both directions, each checked in the field. Gravity was
+observed along the line at the leveling points with two relative
+gravimeters. The orthometric height difference between the benchmarks
+follows from the leveled normal heights after the
+normal-to-orthometric conversion, and the geopotential difference is
+integrated section by section, $\dW_{AB} = -\sum_i g_i\,\Delta H_i$,
 where $g_i$ is the mean gravity and $\Delta H_i$ the orthometric
-height difference of the $i$-th segment. Combining this with the two
+height difference of the $i$-th section. Combining this with the two
 local offsets between benchmark and clock platform (obtained by
 trigonometric leveling) and the platform-to-transition offsets from
 the clock design parameters gives the atomic-transition geopotential
 difference $\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$, equivalent
-to an optical fractional shift of $\deltaGV$. The per-kilometer
-misclosure of the leveling is $\levelMm$\,mm, below the first-order
-limit.
+to an optical fractional shift of $\deltaGV$. The accidental error
+per kilometer of the leveling is
+$M_\Delta = \levelMm$\,mm\,km$^{-1}$, which satisfies the most
+stringent requirements for first-order leveling in the national
+standards of China, the United States, Germany and
+Czechia~\citep{gb12897,fgcc1984,advfapn2022,cuzk2015}.
+
+As an independent check, the geopotential difference was also
+determined by a combined GNSS and geoid-model calibration: the
+ellipsoidal heights of the permanent marks were measured by precise
+point positioning, their vertical offsets to the clock reference
+surfaces were leveled locally, and the EGM2008 geoid model was used
+to convert to a geopotential difference of
+$\dWAlt \pm \dWAltUnc~\mathrm{m^2\,s^{-2}}$. The two independent
+determinations agree within their uncertainties, providing a
+two-fold check of the gravitational-redshift measurement of the
+clock ratio.
 
 \subsection*{Experimental setup and frequency transfer}
 

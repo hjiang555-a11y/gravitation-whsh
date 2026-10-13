@@ -197,6 +197,14 @@
       "value": "0.085",
       "source": "curated: leveling uncertainty +/- 0.085 m^2/s^2 (experiment-side leveling report)"
     },
+    "dWAlt": {
+      "value": "280.60",
+      "source": "curated: GNSS + EGM2008 geoid-model calibration of the geopotential difference (independent check, experiment-side leveling report)"
+    },
+    "dWAltUnc": {
+      "value": "2.558",
+      "source": "curated: uncertainty of the GNSS + EGM2008 geoid calibration (experiment-side leveling report)"
+    },
     "refNistV": {
       "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace723\\thinspace0",
       "source": "literature: Aeppli et al. 2026, Phys. Rev. Lett. 137, 033201 (arXiv:2512.21428)"

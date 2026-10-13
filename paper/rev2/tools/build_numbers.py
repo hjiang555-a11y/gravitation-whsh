@@ -92,6 +92,16 @@ CURATED: dict[str, tuple[str, str]] = {
         "curated: leveling uncertainty +/- 0.085 m^2/s^2 "
         "(experiment-side leveling report)",
     ),
+    "delta_w_alt": (
+        "280.60",
+        "curated: GNSS + EGM2008 geoid-model calibration of the geopotential "
+        "difference (independent check, experiment-side leveling report)",
+    ),
+    "delta_w_alt_unc": (
+        "2.558",
+        "curated: uncertainty of the GNSS + EGM2008 geoid calibration "
+        "(experiment-side leveling report)",
+    ),
     "ref_nist": (
         "1.2075070393433377230",
         "literature: Aeppli et al. 2026, Phys. Rev. Lett. 137, 033201 "
@@ -379,6 +389,8 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("uTidalE", CURATED["tidal_e18"][0], CURATED["tidal_e18"][1])
     add("dWVal", CURATED["delta_w"][0], CURATED["delta_w"][1])
     add("dWUnc", CURATED["delta_w_unc"][0], CURATED["delta_w_unc"][1])
+    add("dWAlt", CURATED["delta_w_alt"][0], CURATED["delta_w_alt"][1])
+    add("dWAltUnc", CURATED["delta_w_alt_unc"][0], CURATED["delta_w_alt_unc"][1])
     add("refNistV", latex_groups(CURATED["ref_nist"][0]), CURATED["ref_nist"][1])
     add("refNistU", CURATED["ref_nist_u_digits"][0], CURATED["ref_nist_u_digits"][1])
     add("refNistE", f"{float(CURATED['ref_nist_u_digits'][0]) / 10:.1f}",
