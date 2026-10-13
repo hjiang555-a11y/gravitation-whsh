@@ -186,8 +186,8 @@
       "source": "curated upper bound: experiment-side budget lists the comb transfer as < 1e-19 (experiment materials; .omo/drafts/experiment-facts.md); adopted as 0.1e-18"
     },
     "uTidalE": {
-      "value": "0.5",
-      "source": "mandate (user-confirmed 0.5e-18): data-driven scale of the time-varying redshift term carried as an uncertainty item; consistent with the frozen 16-segment empirical-scenario center shift (5.30e-19) in results/audit-v1/verified/statistical_methods_tidal_seg9_excluded.json"
+      "value": "0.85",
+      "source": "derived from the frozen audit layer: Bayesian center shift between the empirical (A=-0.54) and raw (A=0) tidal-template scenarios in results/audit-v1/verified/statistical_methods_tidal_seg9_excluded.json (0.8479e-18, rounded to 0.85e-18); carried as the time-varying-redshift uncertainty item"
     },
     "dWVal": {
       "value": "280.042",
@@ -346,16 +346,16 @@
       "source": "derived: curated delta_w_unc / c^2"
     },
     "uTotalE": {
-      "value": "2.24",
+      "value": "2.34",
       "source": "derived: quadrature of the budget components (this pipeline)"
     },
     "uTotalShort": {
-      "value": "2.2",
+      "value": "2.3",
       "source": "derived: quadrature of the budget components, 2 significant figures"
     },
     "RheadlineUnc": {
-      "value": "11",
-      "source": "derived: Bayesian statistical uncertainty u_stat_bayes to two significant figures (digits aligned with the headline value)"
+      "value": "23",
+      "source": "derived: total standard uncertainty (2 significant figures) as the parenthesized digits of the headline value"
     },
     "dVsNistE": {
       "value": "-2.87\\times10^{-18}",

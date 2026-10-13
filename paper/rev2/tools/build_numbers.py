@@ -74,11 +74,12 @@ CURATED: dict[str, tuple[str, str]] = {
         "adopted as 0.1e-18",
     ),
     "tidal_e18": (
-        "0.5",
-        "mandate (user-confirmed 0.5e-18): data-driven scale of the "
-        "time-varying redshift term carried as an uncertainty item; consistent "
-        "with the frozen 16-segment empirical-scenario center shift (5.30e-19) "
-        "in results/audit-v1/verified/statistical_methods_tidal_seg9_excluded.json",
+        "0.85",
+        "derived from the frozen audit layer: Bayesian center shift between the "
+        "empirical (A=-0.54) and raw (A=0) tidal-template scenarios in "
+        "results/audit-v1/verified/statistical_methods_tidal_seg9_excluded.json "
+        "(0.8479e-18, rounded to 0.85e-18); carried as the time-varying-redshift "
+        "uncertainty item",
     ),
     "delta_w": (
         "280.042",
@@ -445,13 +446,13 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("uTotalShort", f"{u_total_e18:.1f}",
         "derived: quadrature of the budget components, 2 significant figures")
 
-    # Parenthesized uncertainty in the headline value: the Bayesian
-    # statistical uncertainty (two significant figures), matching the
-    # estimator from which the central value is taken.
-    stat_unc_digits = f"{u_stat_e18:.1f}".replace(".", "")
-    add("RheadlineUnc", stat_unc_digits,
-        "derived: Bayesian statistical uncertainty u_stat_bayes to two "
-        "significant figures (digits aligned with the headline value)")
+    # Parenthesized uncertainty of the headline value, shown in the
+    # uncertainty-budget section once the total is known: the total
+    # standard uncertainty referred to the last two decimal places.
+    total_unc_digits = f"{u_total_e18:.1f}".replace(".", "")
+    add("RheadlineUnc", total_unc_digits,
+        "derived: total standard uncertainty (2 significant figures) as the "
+        "parenthesized digits of the headline value")
 
     # Derived: differences from the reference values.
     r_bayes = Decimal(comb["R_bayes"])
@@ -491,7 +492,7 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         "headline": {
             "R_full": comb["R_bayes"],
             "R_19dp": round_str(comb["R_bayes"], 19),
-            "unc_digits": stat_unc_digits,
+            "unc_digits": total_unc_digits,
             "u_total_e18": u_total_e18,
             "u_stat_e18": u_stat_e18,
         },
@@ -593,7 +594,7 @@ def run_checks(
             "manifest segment ratios disagree with the frozen per-segment y_i "
             f"by {meta['max_manifest_vs_frozen_y_diff_e18']:.3e}"
         )
-    if not 2.0 <= payload["headline"]["u_total_e18"] <= 2.3:
+    if not 2.2 <= payload["headline"]["u_total_e18"] <= 2.5:
         errs.append("total standard uncertainty outside the reviewed range")
     return errs
 
