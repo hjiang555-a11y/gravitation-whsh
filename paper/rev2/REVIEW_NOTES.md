@@ -269,6 +269,14 @@
     - 新宏 `\dWAlt`/`\dWAltUnc`（280.60/2.558）；新 bib 4 条
       （gb12897/fgcc1984/advfapn2022/cuzk2015）。
 
+27. **Conclusion 末两句正面化（2026-10-13 第二十三轮，按指示）**：
+    末两句改为正面展望——"两站点构成工作节点对，**奠定网络拓展的基础**：
+    未来通过更多光钟节点接入陆地光纤骨干、以卫星与自由空间链路跨洲互联，
+    扩展为全球光钟网络；该网络将提供秒定义重定义所需的可验证计量基础设施，
+    并支撑厘米级时变测地与分布式新物理搜寻"——与 Introduction 首段的
+    "verifiable metrological infrastructure / future global optical clock
+    network"及第三段（chronometric leveling、dark-matter sensing）呼应。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
