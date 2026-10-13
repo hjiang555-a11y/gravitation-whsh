@@ -83,8 +83,9 @@ CURATED: dict[str, tuple[str, str]] = {
     "delta_w": (
         "280.042",
         "curated: leveled geopotential difference 280.042 m^2/s^2 "
-        "(experiment-side leveling report); the alternative record "
-        "280.049 m^2/s^2 is carried as an external pending item",
+        "(experiment-side leveling report); cross-checked by the GNSS + "
+        "EGM2008 geoid calibration (280.60 +/- 2.558 m^2/s^2, delta_w_alt), "
+        "consistent within uncertainties",
     ),
     "delta_w_unc": (
         "0.085",

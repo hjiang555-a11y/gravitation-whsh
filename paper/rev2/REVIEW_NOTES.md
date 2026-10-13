@@ -339,6 +339,15 @@
     - 新宏 `\tidalCorrTotal`(0.52)/`\tidalCorrSolid`(0.31)，从已提交的
       `clock_ratio/tidal_solid_only_compare.json` 生成（97 宏）。
 
+33. **重力位差"外部保留项"歧义消除（2026-10-13 第二十九轮，按审稿提示）**：
+    Discussion 局限段原有"an alternative value exists in the experiment
+    records and is carried as an external item pending reconciliation"——
+    与 Methods 的 GNSS+EGM2008 检核（280.60±2.558，与水准值一致）矛盾，
+    且 280.049 m²/s² 为旧记录（历史遗留，仅存于冻结的 NATURE_FRAMEWORK.md）。
+    修改：局限段改为"水准值已由独立 GNSS+大地水准面模型校准交叉核实、
+    在不确定度内一致（Methods）"；"pending reconciliation"仅保留给潮汐
+    序列来源与样本总数口径；`delta_w` provenance 同步更新为双检核口径。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：

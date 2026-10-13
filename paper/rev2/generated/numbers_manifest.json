@@ -207,7 +207,7 @@
     },
     "dWVal": {
       "value": "280.042",
-      "source": "curated: leveled geopotential difference 280.042 m^2/s^2 (experiment-side leveling report); the alternative record 280.049 m^2/s^2 is carried as an external pending item"
+      "source": "curated: leveled geopotential difference 280.042 m^2/s^2 (experiment-side leveling report); cross-checked by the GNSS + EGM2008 geoid calibration (280.60 +/- 2.558 m^2/s^2, delta_w_alt), consistent within uncertainties"
     },
     "dWUnc": {
       "value": "0.085",
