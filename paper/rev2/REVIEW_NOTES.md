@@ -175,6 +175,14 @@
       `group-digits=all` 渲染分组；正文行内数字宏改文本模式（免 \ensuremath）。
     - 验证：main.log 零 undefined；PDF 文本提取表格数字 …720 130/130/134 正确。
 
+19. **括号不确定度改为贝叶斯统计不确定度（2026-10-13 第十五轮，按指示）**：
+    `\RheadlineUnc` 原为总不确定度两位数字（2.24→22），改为贝叶斯统计不确定度
+    `u_stat_bayes=1.139×10⁻¹⁸` 的两位有效数字（→11），与 headline 中心值的来源
+    估计量一致；`numbers.json` payload `unc_digits` 同步。PDF 现为
+    `1.207 507 039 343 337 720 1(11)`，正文旁注
+    "statistical uncertainty of 1.139×10⁻¹⁸ and a total standard
+    uncertainty of 2.2×10⁻¹⁸"（三位与括号两位均为同一量的舍入）。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：

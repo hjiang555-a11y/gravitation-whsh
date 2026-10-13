@@ -354,8 +354,8 @@
       "source": "derived: quadrature of the budget components, 2 significant figures"
     },
     "RheadlineUnc": {
-      "value": "22",
-      "source": "derived: total standard uncertainty to two significant figures"
+      "value": "11",
+      "source": "derived: Bayesian statistical uncertainty u_stat_bayes to two significant figures (digits aligned with the headline value)"
     },
     "dVsNistE": {
       "value": "-2.87\\times10^{-18}",

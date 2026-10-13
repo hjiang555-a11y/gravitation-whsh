@@ -445,9 +445,13 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("uTotalShort", f"{u_total_e18:.1f}",
         "derived: quadrature of the budget components, 2 significant figures")
 
-    unc_digits = f"{u_total_e18:.1f}".replace(".", "")
-    add("RheadlineUnc", unc_digits,
-        "derived: total standard uncertainty to two significant figures")
+    # Parenthesized uncertainty in the headline value: the Bayesian
+    # statistical uncertainty (two significant figures), matching the
+    # estimator from which the central value is taken.
+    stat_unc_digits = f"{u_stat_e18:.1f}".replace(".", "")
+    add("RheadlineUnc", stat_unc_digits,
+        "derived: Bayesian statistical uncertainty u_stat_bayes to two "
+        "significant figures (digits aligned with the headline value)")
 
     # Derived: differences from the reference values.
     r_bayes = Decimal(comb["R_bayes"])
@@ -487,7 +491,7 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         "headline": {
             "R_full": comb["R_bayes"],
             "R_19dp": round_str(comb["R_bayes"], 19),
-            "unc_digits": unc_digits,
+            "unc_digits": stat_unc_digits,
             "u_total_e18": u_total_e18,
             "u_stat_e18": u_stat_e18,
         },
