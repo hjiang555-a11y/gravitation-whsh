@@ -20,7 +20,8 @@
 
 ## 二、供作者决策的意见（未自动修改）
 
-4. **"first intercity" 论断的防御性（魔鬼代言人，MAJOR）**
+4. **[作者裁定：不改] "first intercity" 论断**
+   作者决定：不确定度要求 <5×10⁻¹⁸，无争议，维持现表述。
    论证依据：欧洲网络的最佳比值 7.7×10⁻¹⁸ 是"总不确定度"口径，本文 2.3×10⁻¹⁸
    也是总不确定度，口径可比；但审稿人可能追问：(a) 欧洲网络论文是否也声称
    "不同城市"？（其站点也在不同机构/城市）；(b) "first" 的时间断言
@@ -44,10 +45,9 @@
    （模板构造 + 两模型描述 + 固体潮分解 + Table 4）。若 Methods 字数敏感，
    可把"固体潮分解"句并入 Table 4 注。**当前可接受**。
 
-7. **标题长度（EIC，已知项）**
-   标题 99 字符，超 Nature 75 字符指引（REVIEW_NOTES 已记录）。投稿前需
-   精简。候选："Intercity Yb/Sr optical clock comparison at 2.3×10⁻¹⁸"
-   （约 55 字符）。
+7. **[已修] 标题长度（EIC）**
+   改为 "Intercity Yb/Sr optical clock comparison at 2.3×10⁻¹⁸"
+   （53 字符，≤75 达标）。
 
 8. **摘要与 Conclusion 的 "first" 重复（领域评审，MINOR）**
    摘要、Discussion、Conclusion 三处都出现 "first intercity"。结论处可简化为

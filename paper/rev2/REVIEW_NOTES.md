@@ -388,6 +388,16 @@
     - 评审意见全文见 `paper/rev2/REVIEW_ADVERSARIAL.md`（含供作者决策的
       4 项：first 论断防御性、摘要双重让步句、Methods 残余重复、标题长度）。
 
+38. **标题与摘要精简（2026-10-14 第三十四轮，按指示）**：
+    - 标题改为 "Intercity Yb/Sr optical clock comparison at
+      2.3×10⁻¹⁸"（53 字符，≤75 达标；原 99 字符）。
+    - 摘要 181 → 166 词：删双重让步句（"although several optical
+      clocks have reported..."），"In this study" → "Here"，末句
+      "Furthermore, together with..." 并入前句（"and together with
+      the NIST–JILA result it satisfies..."）；`\selfEvalBound` 宏仍由
+      Introduction 使用，非孤儿。
+    - 评审意见 4 作者裁定不改（不确定度要求 <5×10⁻¹⁸，无争议）。
+
 36. **PTB 多离子钟引用 + 已发表条目去 arXiv note（2026-10-13 第三十二轮，
     按指示）**：
     - Introduction 首句加多离子钟：Filzinger et al. 2026（PTB，
