@@ -45,15 +45,18 @@
 
 ## 待补（10 条，付费墙/反爬，需机构访问或作者索取）
 
-| bib key | 期刊 | 备注 |
-|---|---|---|
-| takamoto2020redshift | Nat. Photon. 14, 411 (2020) | Nature 付费；arXiv 无该文（RIKEN 版 2502.06104 为不同综述） |
-| riehle2017networks | Nat. Photon. 11, 25 (2017) | Nature 付费 |
-| fortier2026review | Optica 13 (2026) | Optica 官网 SSL 阻断 |
-| heavner2014nistf2 | Metrologia 51, 174 (2014) | IOP 反爬验证码 |
-| shen2021satellite | Optica 8 (2021) | Optica 官网 SSL 阻断 |
-| lu2025ntsc | Metrologia 62 (2025) | IOP 反爬 |
-| birge1932errors | Phys. Rev. 40, 207 (1932) | APS 403 |
-| mandel1970interlaboratory | Anal. Chem. 42, 1194 (1970) | ACS 403 |
-| agnew2015tides | Treatise on Geophysics 3, 151 (2015) | Elsevier 章节付费 |
-| voigt2016timevariable | Metrologia 53, 1365 (2016) | IOP 反爬；GFZ 机构库页面为 JS 渲染 |
+> 以下条目缺少原文 PDF，请通过 DOI 链接下载后放入 `paper/ref/`，
+> 文件名建议 `<bibkey>_<期刊缩写>.pdf`，并在本清单勾选。
+
+| bib key | 期刊 | DOI 链接 | 状态 |
+|---|---|---|---|
+| takamoto2020redshift | Nat. Photon. 14, 411 (2020) | https://doi.org/10.1038/s41566-020-0619-8 | ⬜ 待下载 |
+| riehle2017networks | Nat. Photon. 11, 25 (2017) | https://doi.org/10.1038/nphoton.2016.235 | ⬜ 待下载 |
+| fortier2026review | Optica 13 (2026) | https://doi.org/10.1364/OPTICA.575770 | ⬜ 待下载 |
+| heavner2014nistf2 | Metrologia 51, 174 (2014) | https://doi.org/10.1088/0026-1394/51/3/174 | ⬜ 待下载 |
+| shen2021satellite | Optica 8, 313 (2021) | https://doi.org/10.1364/OPTICA.413114 | ⬜ 待下载 |
+| lu2025ntsc | Metrologia 62 (2025) | https://doi.org/10.1088/1681-7575/addc77 | ⬜ 待下载 |
+| birge1932errors | Phys. Rev. 40, 207 (1932) | https://doi.org/10.1103/PhysRev.40.207 | ⬜ 待下载 |
+| mandel1970interlaboratory | Anal. Chem. 42, 1194 (1970) | https://doi.org/10.1021/ac60293a019 | ⬜ 待下载 |
+| agnew2015tides | Treatise on Geophysics 3, 151 (2015) | https://doi.org/10.1016/B978-0-444-53802-4.00058-0 | ⬜ 待下载 |
+| voigt2016timevariable | Metrologia 53, 1365 (2016) | https://doi.org/10.1088/0026-1394/53/6/1365 | ⬜ 待下载 |
