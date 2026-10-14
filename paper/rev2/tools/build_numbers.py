@@ -295,6 +295,9 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     tier1 = "manifest:primary_16.combination"
     add("Rheadline", latex_groups(round_str(comb["R_bayes"], 19)),
         f"{tier1}.R_bayes rounded to 19 decimals")
+    add("RsegOne", latex_groups(round_str(primary["segment_ratios"][0], 19)),
+        "manifest:primary_16.segment_ratios[0] rounded to 19 decimals "
+        "(segment-1 ratio R_1, the y_i baseline)")
     add("RbayesFull", comb["R_bayes"], f"{tier1}.R_bayes (full precision)")
     add("RwlsFull", comb["R_wls"], f"{tier1}.R_wls (full precision)")
     add("RmpFull", comb["R_mp"], f"{tier1}.R_mp (full precision)")

@@ -5,6 +5,10 @@
       "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace720\\thinspace1",
       "source": "manifest:primary_16.combination.R_bayes rounded to 19 decimals"
     },
+    "RsegOne": {
+      "value": "1.207\\thinspace507\\thinspace039\\thinspace343\\thinspace337\\thinspace721\\thinspace0",
+      "source": "manifest:primary_16.segment_ratios[0] rounded to 19 decimals (segment-1 ratio R_1, the y_i baseline)"
+    },
     "RbayesFull": {
       "value": "1.2075070393433377201344585656369188179292550569336320493567391993015505600807042",
       "source": "manifest:primary_16.combination.R_bayes (full precision)"

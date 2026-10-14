@@ -398,6 +398,30 @@
       Introduction 使用，非孤儿。
     - 评审意见 4 作者裁定不改（不确定度要求 <5×10⁻¹⁸，无争议）。
 
+39. **外部评审意见采纳（2026-10-14 第三十五轮；PRL/Metrologia 路线）**：
+    审稿意见全文（期刊建议 PRL + Metrologia、路线图判据口径、(28)vs(23)、
+    表1/表3 对齐、水准系统误差、潮汐统计定义、Yb arXiv 状态等）见本轮对话记录。
+    - **路线图判据修正（采纳，最关键）**：I.2.b 原文要求"至少五组非整数
+      频率比、每组由不同机构测两次"（Dimarcq 2024 原文核实）。摘要改为
+      "provides the second independent measurement of the Yb/Sr ratio by a
+      different institute, as required by criterion I.2.b for this pair of
+      transitions"（不再声称满足整个 I.2.b）；删 "confirming the validity
+      of uncertainty assessments for both clocks"；"margin of statistical
+      error" → "combined standard uncertainty"。Introduction 判据段补
+      "at least five non-unit ratios ... each ratio at least twice"；
+      末段 "completes the class" → "demonstrates ... the class"。
+      Discussion 局限段同步：Yb/Sr 的两次独立测量已满足，I.2.b 还差
+      另外四组比值。
+    - **表3 补 R₁ 与段9说明**：caption 加 "with R1 = 1.207 507 039 343 337
+      721 0"（新宏 `\RsegOne` 从 manifest segment_ratios[0] 生成）+ "segment
+      9 is excluded (see text)"。
+    - **核验审稿人第 2 条指控**：用冻结清单逐段 u_i 逆方差加权复算
+      u_wls = 1.128×10⁻¹⁸，与表 1 完全一致；χ²=6.18 同时自洽。
+      审稿人算的 0.93×10⁻¹⁸ 为口径错误，不修改。
+    - 用户裁定：第 1 条 (28)→(23) 不改（归一化处理正确）；第 6 条
+      光纤/梳齿细节放补充材料；其余（水准系统误差、潮汐均方根、频率链
+      显式公式、重启数据、作者信息）留待投稿准备轮处理。
+
 36. **PTB 多离子钟引用 + 已发表条目去 arXiv note（2026-10-13 第三十二轮，
     按指示）**：
     - Introduction 首句加多离子钟：Filzinger et al. 2026（PTB，
