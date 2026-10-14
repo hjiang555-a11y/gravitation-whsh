@@ -153,3 +153,12 @@ signal_sim  = offset_tot + noise_sim
 > 补充：FES2022（Finite Element Solution 2022）为公开的全球海潮图集模型；
 > DE421 为 JPL 行星/月球历表（2008）。两者均为公开来源，与"欧洲公开模型"的
 > 用户描述一致。对比分析见 `clock_ratio/tidal_new_model_compare.md`。
+
+## 8. 派生中间序列登记：`results/solid_tide_old_30s_utc.csv`
+
+> **状态：本地派生、不入库（2026-10-13）**。固体潮单独分析
+> （`clock_ratio/tidal_solid_only_compare.md`）的中间序列：从 §1 源 Excel 的
+> H 列「固体潮之差」（CAS−SHA，mm）按 `g=9.794 m/s²` 换算为等效势差
+> （m²/s²），UTC 30 s 网格，与 §2 总序列同一方向与换算约定。列名
+> `solid_tidal_delta_m2_s2_surface`。已加入 .gitignore（与
+> `professional_tidal_delta_30s.csv` 同等待遇）。
