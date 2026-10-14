@@ -135,32 +135,19 @@ conversion stages each contribute $\uLinkE\times10^{-18}$ and
 $\uCombE\times10^{-18}$ from the frequency-reference settings of the
 frequency conversion.
 
-The time-varying gravitational redshift is more involved. The tide
-series used in this analysis was computed with the public software
-ETideLoad4.5 (Earth Tide, Load Effect and Deformation Monitoring
-Computation)~\citep{zhang2026etideload}, which implements the
-geophysical models and numerical standards of the IERS Conventions
-(2010)~\citep{iers2010conventions}. Solid Earth
+The time-varying gravitational redshift is more involved. Solid Earth
 and ocean tides, together with atmospheric, hydrological and
 non-tidal ocean loading, move the local potential by amounts reaching
 the $10^{-18}$ level over the campaign~\citep{agnew2015tides,
 voigt2016timevariable, denker2018geodetic}, and no single tide model
-accounts for all of them consistently. The segment-mean correlation
-of the ratio deviations with the full tide
-($r = \tidalCorrTotal$) weakens markedly when only the solid tide is
-used ($r = \tidalCorrSolid$), locating the dominant coupling in the
-ocean-tide loading term. Correcting the beat record with the supplied
-tide series degrades rather than improves the fit (the reduced
-chi-square rises from $\tidalChiRaw$ to $\tidalChiTheory$ or
-$\tidalChiEmp$), and a second, independent tide model (DE421
-ephemerides with Love numbers for the solid tide and the FES2022
-ocean-tide model for the loading term) yields a similar degradation
-while moving the center in the opposite direction
-($\tidalShiftAltE\times10^{-18}$). The sign disagreement between two
-independent models confirms that the templates are incomplete at this
-level, so the time-varying term is carried as an uncertainty rather
-than a correction, at the larger of the two model shifts,
-$\uTidalE\times10^{-18}$ (Methods). A physically complete,
+accounts for all of them consistently: correcting the beat record
+with the supplied tide series degrades rather than improves the fit,
+and a second, independent tide model does the same while moving the
+center in the opposite direction (Methods). The sign disagreement
+between two independent models confirms that the templates are
+incomplete at this level, so the time-varying term is carried as an
+uncertainty rather than a correction, at the larger of the two model
+shifts, $\uTidalE\times10^{-18}$ (Methods). A physically complete,
 data-consistent treatment of time-dependent gravity is deferred to
 future work.
 
