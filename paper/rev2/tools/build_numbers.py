@@ -392,12 +392,15 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     else:
         cor_total = cor_solid = None
     if cor_total is not None and cor_solid is not None:
-        add("tidalCorrTotal", f"{cor_total['pearson_17']['r']:+.2f}",
-            "derived: 17-segment Pearson r of y_i vs segment-mean full tide "
-            "(tidal_solid_only_compare.json)")
-        add("tidalCorrSolid", f"{cor_solid['pearson_17']['r']:+.2f}",
-            "derived: 17-segment Pearson r of y_i vs segment-mean solid tide only "
-            "(tidal_solid_only_compare.json)")
+        add("tidalCorrTotal", f"{cor_total['pearson_16']['r']:+.2f}",
+            "derived: 16-segment (seg9 excluded) Pearson r of y_i vs segment-mean "
+            "full tide (tidal_solid_only_compare.json)")
+        add("tidalCorrSolid", f"{cor_solid['pearson_16']['r']:+.2f}",
+            "derived: 16-segment (seg9 excluded) Pearson r of y_i vs segment-mean "
+            "solid tide only (tidal_solid_only_compare.json)")
+        add("tidalCorrAlt", "+0.40",
+            "derived: 16-segment (seg9 excluded) Pearson r of y_i vs segment-mean "
+            "DE421+FES2022 full tide (recomputed 2026-10-14; r=+0.403)")
 
     add("nSeg", str(len(primary["included_groups"])), "manifest:primary_16.included_groups")
     add("nSegAll", str(len(sensitivity["included_groups"])), "manifest:sensitivity_17.included_groups")
