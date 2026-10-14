@@ -376,6 +376,18 @@
       三阶段段均值无系统偏移（−0.53/+0.29/−0.64×10⁻¹⁸）。
     - 正文 2,612 词（6 页锚点 +4%），结构未动。
 
+37. **对抗性评审 + 修复（2026-10-14 第三十三轮，superpowers +
+    academic-paper-reviewer 五视角）**：
+    - [修] 总不确定度呈现统一为 2.34×10⁻¹⁸（正文/摘要/结论/引言改用
+      `\uTotalE` 两位有效数字；标题保留 `\uTotalShort`=2.3 简洁形式），
+      消除与 Table 2（2.34）的不一致；
+    - [修] 图2 caption "(b) Per-campaign" → "Per-segment"（与正文
+      "one data point per segment" 一致）；
+    - [修] §2.3 显式指向 Methods Table 4（`\ref{tab:tidal}`），让第二
+      模型位移 0.21×10⁻¹⁸ 可核对；
+    - 评审意见全文见 `paper/rev2/REVIEW_ADVERSARIAL.md`（含供作者决策的
+      4 项：first 论断防御性、摘要双重让步句、Methods 残余重复、标题长度）。
+
 36. **PTB 多离子钟引用 + 已发表条目去 arXiv note（2026-10-13 第三十二轮，
     按指示）**：
     - Introduction 首句加多离子钟：Filzinger et al. 2026（PTB，
