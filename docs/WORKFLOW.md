@@ -254,3 +254,7 @@ python archive/segment17_correlation.py              # 17 点两两相关（已�
 | [docs/ERROR_CHECKLIST.md](ERROR_CHECKLIST.md) | 错误清单 + 检查项目 |
 | [clock/PARAMS.md](../clock/PARAMS.md) | 参数文档字段说明 |
 | [clock_ratio/EXPERIMENT_REPORT.md](../clock_ratio/EXPERIMENT_REPORT.md) | 总权威报告 |
+| [clock/PROFESSIONAL_TIDAL_DATA.md](../clock/PROFESSIONAL_TIDAL_DATA.md) | 专业潮汐数据说明（§7 新增输入、§8 派生序列登记） |
+| [clock_ratio/tidal_new_model_compare.md](../clock_ratio/tidal_new_model_compare.md) | 新旧潮汐模型对比（诊断，不影响权威结果） |
+| [clock_ratio/tidal_solid_only_compare.md](../clock_ratio/tidal_solid_only_compare.md) | 固体潮单独相关性/影响分析（诊断） |
+| [paper/ref/README_original_sources.md](../paper/ref/README_original_sources.md) | 引文原文 PDF 清单与映射 |

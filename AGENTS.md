@@ -30,7 +30,9 @@
 | 查权威结果 | `results/audit-v1/verified/manifest.json`、`.../ANALYSIS_AUDIT.md` | 只读 | `uv run python -m clock_ratio.verify_result_manifest results/audit-v1/verified/manifest.json` |
 | 阶段一历史/裁定/外部待确认 | `docs/audit/PHASE1_SUMMARY.md` | 只读 | — |
 | 符号/方法/参数 | `docs/NOTATION.md`、`docs/METHODOLOGY.md`、`clock/PARAMS.md` | 按需 | — |
-| 潮汐数据（含新增输入登记） | `clock/PROFESSIONAL_TIDAL_DATA.md`（§7） | 按需 | — |
+| 潮汐数据（含新增输入登记） | `clock/PROFESSIONAL_TIDAL_DATA.md`（§7–§8） | 按需 | — |
+| 潮汐模型对比（诊断） | `clock_ratio/tidal_new_model_compare.md`（新旧全潮）、`tidal_solid_only_compare.md`（固体潮单独） | 诊断脚本同目录 `tidal_*_compare.py` | `uv run python clock_ratio/tidal_new_model_compare.py` |
+| 引文原文 | `paper/ref/README_original_sources.md`（bib key ↔ PDF 映射） | `paper/ref/` | — |
 
 ## 一键命令（改论文的轻循环）
 
