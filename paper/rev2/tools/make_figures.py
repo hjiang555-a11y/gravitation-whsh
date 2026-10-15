@@ -4,10 +4,10 @@
 All three manuscript figures are now hand-supplied by the collaboration:
 
     figs/fig1_network.png   -- user-supplied PNG (2026-10-13)
-    figs/fig2_ratio.pdf     -- user-supplied SVG (fig_ratio.svg, 2026-10-13),
-                               converted to PDF with cairosvg
-    figs/fig3_history.pdf   -- user-supplied SVG (fig_history.svg, 2026-10-13),
-                               converted to PDF with cairosvg
+    figs/fig2_ratio.png     -- user-supplied PNG (2026-10-15, replaces the
+                               SVG-derived PDF)
+    figs/fig3_history.png   -- user-supplied PNG (2026-10-15, replaces the
+                               SVG-derived PDF)
 
 This script intentionally does not regenerate any figure: running it
 prints the inventory and exits. The numbers pipeline
@@ -25,9 +25,9 @@ FIGS = REV2 / "figs"
 
 SUPPLIED: tuple[tuple[str, str], ...] = (
     ("fig1_network.png", "user-supplied PNG (2026-10-13); network schematic"),
-    ("fig2_ratio.pdf", "user-supplied SVG fig_ratio.svg (2026-10-13); "
+    ("fig2_ratio.png", "user-supplied PNG (2026-10-15); "
      "fractional instability of a representative segment"),
-    ("fig3_history.pdf", "user-supplied SVG fig_history.svg (2026-10-13); "
+    ("fig3_history.png", "user-supplied PNG (2026-10-15); "
      "historical Yb/Sr measurements vs this work"),
 )
 
