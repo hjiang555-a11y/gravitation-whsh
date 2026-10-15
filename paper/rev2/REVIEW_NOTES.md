@@ -573,6 +573,30 @@
       "positive in 12 out of 16"、"+0.58/+0.87"、图 4a "1.5σ"；
       Overleaf 已同步。
 
+46. **补充材料分层（2026-10-15 第四十二轮，按指示）**：
+    - 用户裁定：P0 可执行（16 段口径，不引入 17 段/遗留信息）；
+      P1 同意；P2 第二、三项可准备备用。执行后推送。
+    - **P0 搬迁**：表 3（逐段数据）→ Extended Data Table 1；图 4
+      （潮汐相关性双面板）→ Extended Data Figure 1。Methods 瘦身为
+      骨架+指向（"Extended Data Table~1 lists..."、
+      "Extended Data Figure~1a/b"）；正文（Results/Discussion）指向
+      ED，不再指向 Methods 表格/图。
+    - **新增 `sections/extended_data.tex`**：ED Table 1（逐段表）、
+      ED Table 2（16 段 leave-one-out 敏感性，新 `generated/loo_table.tex`，
+      从冻结 manifest leave_one_out 生成，顺序索引 1–16 不暴露原组号）、
+      ED Fig. 1（潮汐相关性图，含原 caption）。
+    - **P1 新增 `sections/supplementary.tex`** 五节：
+      §1 频率链与比值反演（N 值表、Dr 公式、shift_a 五分量）、
+      §2 统计模型与合并（WLS/Birge/M-P/贝叶斯、τ 网格、40-decade
+      log ξ 网格收敛）、§3 水准细节与四国规范对标、§4 潮汐模板构造
+      与两模型（ETideLoad4.5 / DE421+FES2022）、§5 传递子系统。
+    - main.tex 结构：Methods → Extended Data → Supplementary
+      Information → Data/Code availability。
+    - 管线：build_numbers.py 新增 `render_loo_table`、第 5 个产物
+      loo_table.tex；check.sh 校验 5 产物。
+    - 验证：pytest 227/231 全绿；check.sh 103 宏 + 5 产物 + 18 页
+      零 undefined（ED Table 1 在 p13、SI 在 p14）；Overleaf 已同步。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
