@@ -36,7 +36,8 @@ fractional units by normalizing to the carrier frequency $f_{1550}$
 loop throughout. The geopotential difference between the two clocks was
 measured by spirit leveling to be
 $\dW = \dWVal \pm \dWUnc~\mathrm{m^{2}\,s^{-2}}$ (see Methods). Each
-retained segment yields a frequency-ratio estimate through the fixed
+observation window (segment) yields a frequency-ratio estimate through
+the fixed
 frequency-chain relations (see Methods).
 
 \subsection{Clock-ratio determination}
@@ -50,23 +51,17 @@ of the fractional ratio for a representative segment follows a white
 frequency noise law over most of the record. The statistical
 uncertainty of each segment is taken from the last computable point
 of its stability record, rather than by extrapolating the white-noise
-fit to the segment duration; together with the segment mean, this
-provides one data point per segment (Figure~\ref{fig:ratio}b,c).
+fit to the segment duration (Methods).
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figs/fig2_ratio.png}
   \caption{Frequency-ratio measurement results. (a) Fractional
   instability of a representative segment (Yb/Sr, segment 8); the
-  points are the overlapping Allan deviation at different averaging
-  times $\tau$. The solid line is a white-frequency-noise model
-  $\sigma_y(\tau) = \sigma_0/\sqrt{\tau/\mathrm{s}}$; the statistical
-  uncertainty is the last computable point of the stability record,
-  without extrapolation. The gray markers are the out-of-loop
-  instabilities of the two frequency combs (SH, WH) and of the fiber
-  link. (b) Per-segment ratio deviations from the final reported
-  value, with error bars from the procedure in
-  (a). (c) The same deviations by campaign date.}
+  gray markers are the out-of-loop instabilities of the two frequency
+  combs (SH, WH) and of the fiber link. (b) Per-segment ratio
+  deviations from the final reported value. (c) The same deviations
+  by campaign date.}
   \label{fig:ratio}
 \end{figure}
 
@@ -76,13 +71,17 @@ segment yields a ratio estimate with its own statistical uncertainty
 estimates are consistent with their individual uncertainties, as
 quantified by the combination statistics in
 Table~\ref{tab:estimators}, and show no systematic drift over the
-campaign (Figure~\ref{fig:ratio}c). Following recent ratio
+campaign (Figure~\ref{fig:ratio}c); several of the segment boundaries
+correspond to deliberate clock shutdowns and restarts, so the
+reproducibility of the ratio rests on tested restart behavior rather
+than on continuous operation. Following recent ratio
 comparisons~\citep{pizzocaro2026european, aeppli2026nist}, we combine
 the segments with a random-effect model that admits a common excess
 scatter~\citep{birge1932errors, mandel1970interlaboratory}, and
 evaluate three estimators (Table~\ref{tab:estimators}). The three
-agree at the $10^{-18}$ level; the Bayesian random-effect estimate,
-which carries the largest standard uncertainty, is reported as the
+agree at the $10^{-18}$ level. We report the Bayesian random-effect
+estimate, whose posterior standard deviation remains the largest of
+the three and is therefore the most conservative choice, as the
 primary value,
 \begin{equation}
   \mathrm{Yb/Sr} = \Rheadline,

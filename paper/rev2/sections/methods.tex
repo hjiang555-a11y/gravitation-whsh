@@ -131,12 +131,12 @@ joint posterior $p(\mu, \xi \mid \{R_i, u_i\})$ is marginalized
 numerically over a 40-decade $\log\xi$ grid; the posterior mean of
 $\mu$ and its posterior standard deviation give the reported central
 value and statistical uncertainty, with
-$\xi = \xiBayesE \times 10^{-18}$. As cross-checks, we also combine
-the segments by weighted least squares (inverse-variance weights
-$w_i = 1/u_i^2$), whose goodness of fit is given in
-Table~\ref{tab:estimators}, and by the Mandel--Paule
-estimator~\citep{mandel1970interlaboratory}, which gives
-$\xi = \xiMpE \times 10^{-18}$.
+$\xi = \xiBayesE \times 10^{-18}$. As cross-checks, the same
+observation model is combined by weighted least squares
+(inverse-variance weights $w_i = 1/u_i^2$) and by the Mandel--Paule
+estimator~\citep{mandel1970interlaboratory}; the resulting
+$\chi^2_{\rm red}$ and $\xi$ values are given in
+Table~\ref{tab:estimators}.
 
 The remaining terms of the uncertainty budget (Table~\ref{tab:budget})
 are systematic. The Sr and Yb terms are the published evaluations of
