@@ -145,13 +145,14 @@ def make_figure(document: dict) -> None:
     new_rows = document["models"]["new_de421_fes2022"]["per_segment"]
     old_agg = document["models"]["old_etideload"]["aggregate"]
     new_agg = document["models"]["new_de421_fes2022"]["aggregate"]
-    groups = [r["group"] for r in old_rows]
-    pos = np.arange(len(groups))
+    # x-axis: sequential index 1..16 (not the original group numbers,
+    # which skip the excluded segment 9).
+    pos = np.arange(len(old_rows))
 
     fig, ax = plt.subplots(figsize=(7.2, 4.2))
     ax.axhline(0.0, color="0.6", ls=":", lw=0.7, zorder=0)
     ax.axhline(-1.0, color="k", ls="--", lw=0.9, zorder=1)
-    ax.text(len(groups) - 1.6, -1.12, "expected $A = -1$", fontsize=8,
+    ax.text(len(old_rows) - 1.6, -1.12, "expected $A = -1$", fontsize=8,
             ha="right", va="top")
 
     ax.errorbar(
@@ -172,7 +173,7 @@ def make_figure(document: dict) -> None:
     ax.axhline(new_agg["amplitude"], color="#e07b00", lw=1.4, alpha=0.75, zorder=2)
 
     ax.set_xticks(pos)
-    ax.set_xticklabels([str(g) for g in groups], fontsize=8)
+    ax.set_xticklabels([str(i + 1) for i in pos], fontsize=8)
     ax.set_xlabel("Segment", fontsize=10)
     ax.set_ylabel("Response amplitude $A$", fontsize=10)
     ax.set_ylim(-3.5, 2.6)
