@@ -6,7 +6,7 @@ set -euo pipefail
 REV2="$(cd "$(dirname "$0")/.." && pwd)"
 PKG="$REV2/../overleaf-rev2-v2"
 mkdir -p "$PKG/generated" "$PKG/figs" "$PKG/sections"
-cp "$REV2/main.tex" "$REV2/extended_data.tex" "$REV2/supplementary.tex" "$PKG/"
+cp "$REV2/main.tex" "$REV2/supplementary.tex" "$PKG/"
 cp "$REV2"/sections/*.tex "$PKG/sections/"
 cp "$REV2"/generated/numbers.tex "$REV2"/generated/segment_table.tex \
    "$REV2"/generated/loo_table.tex \
