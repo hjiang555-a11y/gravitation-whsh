@@ -135,6 +135,59 @@ def aggregate_rows(rows: list[dict], key: str) -> Aggregate:
     )
 
 
+def make_figure(document: dict) -> None:
+    """Render Fig. 4 (manuscript): per-segment response amplitudes, two models."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    old_rows = document["models"]["old_etideload"]["per_segment"]
+    new_rows = document["models"]["new_de421_fes2022"]["per_segment"]
+    old_agg = document["models"]["old_etideload"]["aggregate"]
+    new_agg = document["models"]["new_de421_fes2022"]["aggregate"]
+    groups = [r["group"] for r in old_rows]
+    pos = np.arange(len(groups))
+
+    fig, ax = plt.subplots(figsize=(7.2, 4.2))
+    ax.axhline(0.0, color="0.6", ls=":", lw=0.7, zorder=0)
+    ax.axhline(-1.0, color="k", ls="--", lw=0.9, zorder=1)
+    ax.text(len(groups) - 1.6, -1.12, "expected $A = -1$", fontsize=8,
+            ha="right", va="top")
+
+    ax.errorbar(
+        pos - 0.14,
+        [r["A"] for r in old_rows],
+        yerr=[r["u_A"] for r in old_rows],
+        fmt="o", ms=4.0, lw=0.8, color="#1f5fa8", ecolor="#1f5fa8",
+        capsize=2, label="ETideLoad4.5", zorder=3,
+    )
+    ax.errorbar(
+        pos + 0.14,
+        [r["A"] for r in new_rows],
+        yerr=[r["u_A"] for r in new_rows],
+        fmt="s", ms=3.6, lw=0.8, color="#e07b00", ecolor="#e07b00",
+        capsize=2, label="DE421 + FES2022", zorder=3,
+    )
+    ax.axhline(old_agg["amplitude"], color="#1f5fa8", lw=1.4, alpha=0.75, zorder=2)
+    ax.axhline(new_agg["amplitude"], color="#e07b00", lw=1.4, alpha=0.75, zorder=2)
+
+    ax.set_xticks(pos)
+    ax.set_xticklabels([str(g) for g in groups], fontsize=8)
+    ax.set_xlabel("Segment", fontsize=10)
+    ax.set_ylabel("Response amplitude $A$", fontsize=10)
+    ax.set_ylim(-3.5, 2.6)
+    ax.tick_params(axis="y", labelsize=9)
+    ax.legend(fontsize=9, frameon=False, loc="upper left")
+    fig.tight_layout()
+
+    figs_dir = Path(__file__).resolve().parents[1] / "paper" / "rev2" / "figs"
+    fig.savefig(figs_dir / "fig4_tidal_response.png", dpi=300,
+                bbox_inches="tight")
+    fig.savefig(figs_dir / "fig4_tidal_response.pdf", bbox_inches="tight")
+    plt.close(fig)
+    print(f"Wrote {figs_dir / 'fig4_tidal_response.png'} and .pdf")
+
+
 def main() -> int:
     try:
         times, beat = load_beat()
@@ -200,6 +253,7 @@ def main() -> int:
     JSON_PATH.write_text(json.dumps(document, indent=2, allow_nan=False),
                          encoding="utf-8")
     print(f"\nWrote {JSON_PATH}")
+    make_figure(document)
     return 0
 
 

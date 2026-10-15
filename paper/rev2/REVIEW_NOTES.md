@@ -467,6 +467,26 @@
     - 用户裁定不改：段 9 排除理由（库内有记录，无需论文解释）、标题、
       "two orders of magnitude"、投稿准备项（作者/基金/致谢/利益冲突）。
 
+41. **潮汐相关性图 4 + Methods 潮汐相关性方法段（2026-10-15 第三十七轮，
+    按指示）**：
+    - 用户要求：把潮汐相关性分析增强为论文图（两模型两组点），论证
+      "模型不完备、实际影响可能更小、不确定度估计未降低"。
+    - `tidal_within_segment_16seg.py` 扩展 `make_figure`：逐段幅度 A±u_A
+      森林式误差棒图（旧模型圆点/蓝、新模型方点/橙、预期 A=−1 虚线、
+      精度加权合并水平线）→ `paper/rev2/figs/fig4_tidal_response.{png,pdf}`
+      （300 dpi，同时满足 Overleaf 包 PDF 需求）。
+    - Results §2.3 新增图 4（`fig:tidal-response`）与 caption（负相关段
+      12/16、两合并幅度 −0.58/−0.87 均小于预期 −1 → 观测耦合小于模板
+      预测）。
+    - Discussion 潮汐段引用图 4 并补论证句："Because the observed
+      coupling is smaller than the templates predict, the true tidal
+      impact is likely no larger than the carried uncertainty item."
+    - Methods 潮汐节末新增小节 "Within-segment tidal correlation
+      analysis"：1200-s 三角窗/600-s 步长/去均值过原点拟合、不重叠窗
+      推断、1/u_A² 合并、二项+带符号 Stouffer 检验，两模型同口径。
+    - 验证：check.sh 102 宏 + 14 页 PDF 零 undefined（图 4 已入 PDF）；
+      pytest 227/231 全绿；Overleaf 包已同步。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
