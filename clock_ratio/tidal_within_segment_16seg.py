@@ -66,7 +66,12 @@ def triangular_window(x: np.ndarray) -> np.ndarray:
 
 
 def per_segment_fit(segment: SelectedSegment, tide_at) -> dict | None:
-    """One segment through the batch_analysis chain; None if unfit."""
+    """One segment through the batch_analysis chain; None if unfit.
+
+    The template sign is corrected for the beat polarity, so a POSITIVE
+    response amplitude A means the tidal redshift appears at the expected
+    sign (the fitted amplitudes are positive; theory predicts A = +1).
+    """
     t_run = segment.times
     b_run = segment.beat
     beat_norm = b_run - b_run.mean()
@@ -74,7 +79,7 @@ def per_segment_fit(segment: SelectedSegment, tide_at) -> dict | None:
     if len(beat_tri) < 5:
         return None
     try:
-        tide_1s = tide_at(t_run)
+        tide_1s = -tide_at(t_run)  # sign correction for the beat polarity
     except Exception:
         return None
     tide_tri = triangular_window(tide_1s - tide_1s.mean())
@@ -112,8 +117,8 @@ def aggregate_rows(rows: list[dict], key: str) -> Aggregate:
     _uAs = np.array([r["u_A"] for r in rows])
     _ns = np.array([r["n_pts"] for r in rows])
     _p_eps = np.clip(_ps, 1e-14, None)
-    _neg = int((_rs < 0).sum())
-    _binom_p = stats.binomtest(_neg, len(_rs), 0.5).pvalue
+    _pos = int((_rs > 0).sum())
+    _binom_p = stats.binomtest(_pos, len(_rs), 0.5).pvalue
     _z_sign = np.array([stats.norm.ppf(1 - pp / 2) * np.sign(rr)
                         for rr, pp in zip(_rs, _ps)])
     _stouffer_z_sign = float(np.sum(_z_sign) / np.sqrt(len(_rs)))
@@ -126,7 +131,7 @@ def aggregate_rows(rows: list[dict], key: str) -> Aggregate:
     _Abar = float(np.sum(_As * _wg) / np.sum(_wg))
     _uAbar = float(1.0 / np.sqrt(np.sum(_wg)))
     return Aggregate(
-        key=key, n_segments=len(_rs), negative_r_segments=_neg,
+        key=key, n_segments=len(_rs), negative_r_segments=_pos,
         binomial_p=float(_binom_p),
         stouffer_z_sign=_stouffer_z_sign, stouffer_p_sign=_stouffer_p_sign,
         fisher_p=float(_fisher_p), fisher_z_weighted_r=_rbar,
@@ -151,9 +156,13 @@ def make_figure(document: dict, segments, old_grid: TideGrid) -> None:
     beat_norm = b_run - b_run.mean()
     beat_tri = triangular_window(beat_norm)
     t_tri = t_run[WINDOW // 2 :: STRIDE][: len(beat_tri)]
-    tide_1s = old_grid.beat_at(t_run)
+    tide_1s = -old_grid.beat_at(t_run)  # sign correction for the beat polarity
     tide_tri = triangular_window(tide_1s - tide_1s.mean())[: len(beat_tri)]
     A13 = float(np.dot(tide_tri, beat_tri) / np.dot(tide_tri, tide_tri))
+    resid13 = beat_tri - A13 * tide_tri
+    dof13 = len(tide_tri) - 1
+    uA13 = float(np.sqrt(np.dot(resid13, resid13) / dof13 / np.dot(tide_tri, tide_tri)))
+    sig13 = abs(A13) / uA13
     beat_ff = beat_tri / F_1550 * 1e18
     tide_ff = tide_tri / F_1550 * 1e18
     t_hours = (t_tri - t_tri[0]) / np.timedelta64(1, "h")
@@ -173,9 +182,9 @@ def make_figure(document: dict, segments, old_grid: TideGrid) -> None:
     axa.plot(t_hours, beat_ff, "o", ms=3.0, lw=0.6, color="#0969da",
              label="measured beat", zorder=3)
     axa.plot(t_hours, tide_ff, lw=1.5, color="#d62728",
-             label="template, $A = -1$", zorder=2)
+             label="template, $A = +1$", zorder=2)
     axa.plot(t_hours, A13 * tide_ff, lw=1.3, ls="--", color="#2ca02c",
-             label=f"fitted, $A = {A13:+.2f}$", zorder=4)
+             label=f"fitted, $A = {A13:+.2f}$ ({sig13:.1f}$\\sigma$)", zorder=4)
     axa.axhline(0.0, color="gray", lw=0.6, ls=":")
     axa.set_xlabel("Time (h from segment start)", fontsize=9)
     axa.set_ylabel(r"$\Delta f/f$ ($10^{-18}$)", fontsize=9)
@@ -184,9 +193,9 @@ def make_figure(document: dict, segments, old_grid: TideGrid) -> None:
 
     axb = fig.add_subplot(gs[1])
     axb.axhline(0.0, color="0.6", ls=":", lw=0.7, zorder=0)
-    axb.axhline(-1.0, color="k", ls="--", lw=0.9, zorder=1)
-    axb.text(len(old_rows) - 1.6, -1.12, "expected $A = -1$", fontsize=8,
-             ha="right", va="top")
+    axb.axhline(1.0, color="k", ls="--", lw=0.9, zorder=1)
+    axb.text(len(old_rows) - 1.6, 1.12, "expected $A = +1$", fontsize=8,
+             ha="right", va="bottom")
 
     axb.errorbar(
         pos - 0.14,
@@ -209,7 +218,7 @@ def make_figure(document: dict, segments, old_grid: TideGrid) -> None:
     axb.set_xticklabels([str(i + 1) for i in pos], fontsize=8)
     axb.set_xlabel("Segment", fontsize=9)
     axb.set_ylabel("Response amplitude $A$", fontsize=9)
-    axb.set_ylim(-3.5, 2.6)
+    axb.set_ylim(-2.0, 3.6)
     axb.tick_params(axis="y", labelsize=8)
     axb.legend(fontsize=8, frameon=False, loc="upper left")
 

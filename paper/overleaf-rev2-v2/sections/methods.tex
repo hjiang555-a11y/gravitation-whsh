@@ -167,7 +167,7 @@ beat record.
 
 To test how well the template fits the data, we repeated the ratio
 combination with the tide series applied before the inversion, at two
-fixed response amplitudes: the theoretical amplitude $A = -1$ and the
+fixed response amplitudes: the theoretical amplitude $A = +1$ and the
 historical amplitude $A = -0.54$ obtained from the demeaned beat
 waveform in our earlier analysis of the same campaign. The fit
 degrades rather than improves: the reduced chi-square of the
@@ -203,8 +203,10 @@ same 1200-s triangular window as the ratio processing: the retained
 beat record of each segment and the 1-s tidal template are both
 window-averaged with a 1200-s triangular window at 600-s stride,
 demeaned, and fitted through the origin as
-$\mathrm{beat} = A\cdot\mathrm{tide}$; the amplitude, the Pearson
-correlation $r$ and its $p$ value are inferred from the
+$\mathrm{beat} = A\cdot\mathrm{tide}$, with the template sign
+corrected for the beat polarity so that a positive amplitude
+corresponds to the expected response $A = +1$; the amplitude, the
+Pearson correlation $r$ and its $p$ value are inferred from the
 non-overlapping 1200-s windows only, with the per-segment amplitude
 uncertainty obtained from the scatter of the non-overlapping
 residuals. Figure~\ref{fig:tidal-response}a shows this fit for one
@@ -215,10 +217,10 @@ both tide models, on the same \nSeg~segments that enter the ratio
 combination (Figure~\ref{fig:tidal-response}b). The per-segment
 amplitudes are combined with precision weights $1/u_A^2$; the sign
 consistency is evaluated by a two-sided binomial test on the number of
-segments with negative correlation, together with a signed Stouffer
+segments with positive correlation, together with a signed Stouffer
 combination of the per-segment $p$ values. The combined correlation is
 significant for both models, but neither model reproduces the expected
-response amplitude $-1$ (the observed precision-weighted amplitudes
+response amplitude $+1$ (the observed precision-weighted amplitudes
 are $\tidalAmpOldE$ and $\tidalAmpNewE$), and the two models disagree
 with each other, so the observed coupling is smaller than the
 templates predict and the tidal term is kept as an uncertainty rather
@@ -230,16 +232,16 @@ than a correction, as in the ratio combination above.
   \caption{Within-segment tidal correlation analysis.
   \textbf{(a)} Single-segment example: the 1200-s demeaned beat
   waveform (dots) and the tidal template scaled at the expected
-  response $A=-1$ and at the fitted amplitude, for the ETideLoad4.5
+  response $A=+1$ and at the fitted amplitude, for the ETideLoad4.5
   model. No single segment reaches a significant correlation on its
   own. \textbf{(b)} Per-segment response amplitudes $A$ for the two
   tide models, over the \nSeg~segments entering the ratio
   combination. Error bars are per-segment fit uncertainties from
   non-overlapping windows; the solid lines mark the precision-weighted
   combinations. In \tidalNegSeg~of the \nSeg~segments the correlation
-  is negative for either model, and both precision-weighted amplitudes
+  is positive for either model, and both precision-weighted amplitudes
   ($\tidalAmpOldE$ and $\tidalAmpNewE$) fall short of the expected
-  response of $-1$ (dashed line), so the observed tidal coupling is
+  response of $+1$ (dashed line), so the observed tidal coupling is
   smaller than any single template predicts.}
   \label{fig:tidal-response}
 \end{figure}

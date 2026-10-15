@@ -413,8 +413,9 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         old_agg = new_agg = None
     if old_agg is not None and new_agg is not None:
         add("tidalNegSeg", str(int(old_agg["negative_r_segments"])),
-            "derived: 16-segment within-segment negative-correlation count, "
-            "identical for both tide models (tidal_within_segment_16seg.json)")
+            "derived: 16-segment within-segment POSITIVE-correlation count "
+            "(sign corrected for the beat polarity), identical for both tide "
+            "models (tidal_within_segment_16seg.json)")
         add("tidalAmpOldE", f"{old_agg['amplitude']:+.2f}",
             "derived: 16-segment precision-weighted within-segment response "
             "amplitude, ETideLoad4.5 template (tidal_within_segment_16seg.json)")

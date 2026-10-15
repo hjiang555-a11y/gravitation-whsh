@@ -549,6 +549,30 @@
     - 验证：check.sh 104 宏 + 15 页零 undefined；PDF 正文渲染核对
       "5.0σ / 5.7σ" 正确；Overleaf 已同步。
 
+45. **潮汐响应符号改正（正相关）+ 图 4a 西格玛标注（2026-10-15
+    第四十一轮，按指示）**：
+    - 用户：潮汐拟合的负相关改成正相关（beat 符号问题），所有数据
+      改过来；图 4a 要有西格玛值，显示单段不显著。
+    - `tidal_within_segment_16seg.py`：模板取负（beat 极性符号改正，
+      `tide_1s = -tide_at(...)`），逐段 A/r/合并幅度/带符号 Stouffer
+      全部变正：负相关段数 12/16（p=0.077，符号无关）、合并幅度
+      **+0.577±0.115（5.0σ）** / **+0.873±0.152（5.7σ）**、
+      Stouffer z=+3.75/+4.50；预期响应改为 A=+1。
+    - 图 4a：拟合图例加西格玛标注（段 13 拟合 A=+0.31，1.5σ——
+      单段不显著）；模板线标签 "A = +1"；图 4b 预期线 +1、y 轴范围
+      调整（−2.0~3.6）。
+    - 正文同步：Discussion "positive in 12 of 16"、幅度 +0.58/+0.87、
+      "fall short of the expected response of +1"；Methods 潮汐小节
+      加 "with the template sign corrected for the beat polarity so
+      that a positive amplitude corresponds to the expected response
+      A = +1"、positive 二项检验；图 4 caption 同步 +1；Methods 固定
+      情景段 theoretical amplitude 改为 A=+1。
+    - 宏数值自动更新（\tidalAmpOldE=+0.58、\tidalAmpNewE=+0.87 等），
+      σ 值不变（5.0/5.7）；103 宏。
+    - 验证：check.sh 103 宏 + 15 页零 undefined；PDF 渲染核对
+      "positive in 12 out of 16"、"+0.58/+0.87"、图 4a "1.5σ"；
+      Overleaf 已同步。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
