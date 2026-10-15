@@ -194,7 +194,7 @@ independent realizations disagree in sign, are treated as
 inconsistent with the data: no tidal correction is applied to the
 reported central value, and the larger of the two center shifts is
 carried as the time-varying-redshift uncertainty item
-$\uTidalE\times10^{-18}$ (Table~\ref{tab:tidal}).
+$\uTidalE\times10^{-18}$.
 
 \subsection*{Within-segment tidal correlation analysis}
 
@@ -243,29 +243,6 @@ than a correction, as in the ratio combination above.
   smaller than any single template predicts.}
   \label{fig:tidal-response}
 \end{figure}
-
-\begin{table}[t]
-  \centering
-  \caption{Tidal-template diagnostics for the two independent tide
-  models (16 segments). $\chi^2_{\rm red}$ is the reduced chi-square
-  of the ratio combination with the template applied at the
-  historical amplitude $A = -0.54$; the center shift is the Bayesian
-  center change relative to the uncorrected combination, and
-  $r$ is the Pearson correlation of the segment-mean ratio
-  deviations with the segment-mean tidal shift. Both models degrade
-  the fit relative to the uncorrected value ($\chi^2_{\rm red} =
-  \tidalChiRaw$) and disagree in the sign of the center shift, so the
-  larger shift is carried as the uncertainty item.}
-  \label{tab:tidal}
-  \begin{tabular}{lccc}
-    \toprule
-    Model & {$\chi^2_{\rm red}$} & {Center shift ($10^{-18}$)} & {$r$} \\
-    \midrule
-    ETideLoad4.5         & \tidalChiEmp & +$\tidalShiftEmpE$ & \tidalCorrTotal \\
-    DE421 + FES2022      & \tidalChiAlt & $-\tidalShiftAltE$ & \tidalCorrAlt \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 The components are treated as independent
 and combined in quadrature, giving the total standard uncertainty

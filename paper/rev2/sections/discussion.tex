@@ -38,14 +38,11 @@ although it rests on a single leveling campaign whose available
 GNSS-plus-geoid-model calibration is too imprecise (Methods) to act
 as an effective cross-check; closing this gap will require
 transportable optical clocks with higher frequency reproducibility,
-rather than geodetic techniques alone. Of the time-varying
-contributions, the tidal term is already appreciable at our precision
-and is therefore carried as a data-driven uncertainty item rather
-than corrected (Section~\ref{sec:results-budget}), while co-seismic
-steps from the regional seismicity during the campaign fall well
-below the reported precision.
+rather than geodetic techniques alone. Co-seismic steps from the
+regional seismicity during the campaign fall well below the reported
+precision.
 
-The tidal correlation is nevertheless real. In any single segment
+The time-varying part is observed directly. In any single segment
 the 1200-s demeaned beat waveform and the tidal template are too
 noisy to resolve, but across the \nSeg~segments entering the ratio
 combination the combined evidence is decisive: the sign of the
@@ -55,22 +52,17 @@ response amplitude differs from zero at $\tidalSigmaOldE\sigma$ for
 the ETideLoad4.5 template ($\tidalAmpOldE$) and at
 $\tidalSigmaNewE\sigma$ for the DE421+FES2022 template
 ($\tidalAmpNewE$) (Methods,
-Figure~\ref{fig:tidal-response}). The correlation therefore
-establishes that the time-varying redshift is present in the record
-at the $10^{-18}$ level---and, at the same time, that no template
+Figure~\ref{fig:tidal-response}). The tidal redshift is therefore
+present in the record at the $10^{-18}$ level, yet no template
 captures it: the two amplitudes differ from each other and both fall
 short of the full expected response of $-1$, and the two models
-disagree in the sign of the center shift they produce
-(Methods). Because the observed coupling is smaller
-than the templates predict, the true tidal impact on the reported
-ratio is likely no larger than the carried uncertainty item, so our
-uncertainty estimate is conservative rather than optimistic. A
-tide model that correctly describes the data would reduce this term,
-but constructing one requires more comparison data and dedicated
-geodetic inputs, which is beyond the scope of this paper. The
-templates are therefore incomplete at the $10^{-18}$ level, and the
-model disagreement can be refined, or removed, by more comparison
-data from an expanding optical-clock network.
+disagree in the sign of the center shift they produce. The observed
+coupling is smaller than the templates predict, so carrying the
+larger model shift as an uncertainty item (Section~\ref{sec:results-budget})
+is conservative; a tide model that correctly
+describes the data would reduce this term, but constructing one
+requires more comparison data and dedicated geodetic inputs, which is
+beyond the scope of this paper.
 
 The effect grows with the scale of the comparison: on
 longer, continental- and intercontinental-scale baselines the
@@ -79,16 +71,15 @@ terms~\citep{denker2018geodetic}. That same sensitivity turns the
 network into an instrument for the Earth: clock comparisons over
 large baselines directly sense the time-variable gravitational
 potential, providing an independent means of testing and calibrating
-tide and loading models at the $10^{-18}$ level. Conversely, tidal
+tide and loading models at the $10^{-18}$ level---the model
+disagreement seen here can be refined, or removed, by more comparison
+data from an expanding optical-clock network. Conversely, tidal
 knowledge gained in this way feeds back into the comparisons
 themselves: with data-consistent models, the time-varying term can be
 corrected rather than carried, extending the accuracy reach of
-large-scale clock comparisons. A fully self-consistent treatment of
-the time-dependent potential would require a dedicated geodetic
-campaign with in-situ gravimetry and site-specific loading models and
-is left to future work. The provenance of the supplied tide series
-and the exact accounting of the full sample totals remain external
-items pending confirmation.
+large-scale clock comparisons. The provenance of the supplied tide
+series and the exact accounting of the full sample totals remain
+external items pending confirmation.
 
 Looking ahead, the result is a milestone on the necessary path
 toward a wide-area optical-clock network: the building blocks are now

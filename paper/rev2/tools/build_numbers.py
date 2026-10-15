@@ -401,9 +401,6 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         add("tidalCorrSolid", f"{cor_solid['pearson_16']['r']:+.2f}",
             "derived: 16-segment (seg9 excluded) Pearson r of y_i vs segment-mean "
             "solid tide only (tidal_solid_only_compare.json)")
-        add("tidalCorrAlt", "+0.40",
-            "derived: 16-segment (seg9 excluded) Pearson r of y_i vs segment-mean "
-            "DE421+FES2022 full tide (recomputed 2026-10-14; r=+0.403)")
 
     # Within-segment 1200-s demeaned-waveform correlation on the 16-segment
     # audit primary, for both tide models (clock_ratio/tidal_within_segment_16seg.json).

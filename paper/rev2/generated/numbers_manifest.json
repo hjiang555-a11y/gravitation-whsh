@@ -153,10 +153,6 @@
       "value": "+0.36",
       "source": "derived: 16-segment (seg9 excluded) Pearson r of y_i vs segment-mean solid tide only (tidal_solid_only_compare.json)"
     },
-    "tidalCorrAlt": {
-      "value": "+0.40",
-      "source": "derived: 16-segment (seg9 excluded) Pearson r of y_i vs segment-mean DE421+FES2022 full tide (recomputed 2026-10-14; r=+0.403)"
-    },
     "tidalNegSeg": {
       "value": "12",
       "source": "derived: 16-segment within-segment negative-correlation count, identical for both tide models (tidal_within_segment_16seg.json)"
