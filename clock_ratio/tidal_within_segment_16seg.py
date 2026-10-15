@@ -29,7 +29,7 @@ import numpy as np
 from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from clock.shared import load_beat, load_tide  # noqa: E402
+from clock.shared import F_1550, load_beat, load_tide  # noqa: E402
 from clock.sample_selection import DEFAULT_SELECTION_PLAN, SelectedSegment, select_segments  # noqa: E402
 from clock_ratio.tidal_analysis import TideGrid  # noqa: E402
 from clock_ratio.tidal_new_model_compare import NewTideGrid, load_new_tide  # noqa: E402
@@ -135,11 +135,28 @@ def aggregate_rows(rows: list[dict], key: str) -> Aggregate:
     )
 
 
-def make_figure(document: dict) -> None:
-    """Render Fig. 4 (manuscript): per-segment response amplitudes, two models."""
+def make_figure(document: dict, segments, old_grid: TideGrid) -> None:
+    """Render Fig. 4 (Methods): (a) single-segment fit example,
+    (b) per-segment response amplitudes for both tide models."""
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib import gridspec
+
+    # ---- panel (a): single-segment fit (segment 13, ETideLoad4.5 template;
+    # same chain as the library segment13_triangular.py example) ----
+    seg13 = next(seg for seg in segments if seg.group == 13)
+    t_run = seg13.times
+    b_run = seg13.beat
+    beat_norm = b_run - b_run.mean()
+    beat_tri = triangular_window(beat_norm)
+    t_tri = t_run[WINDOW // 2 :: STRIDE][: len(beat_tri)]
+    tide_1s = old_grid.beat_at(t_run)
+    tide_tri = triangular_window(tide_1s - tide_1s.mean())[: len(beat_tri)]
+    A13 = float(np.dot(tide_tri, beat_tri) / np.dot(tide_tri, tide_tri))
+    beat_ff = beat_tri / F_1550 * 1e18
+    tide_ff = tide_tri / F_1550 * 1e18
+    t_hours = (t_tri - t_tri[0]) / np.timedelta64(1, "h")
 
     old_rows = document["models"]["old_etideload"]["per_segment"]
     new_rows = document["models"]["new_de421_fes2022"]["per_segment"]
@@ -149,37 +166,52 @@ def make_figure(document: dict) -> None:
     # which skip the excluded segment 9).
     pos = np.arange(len(old_rows))
 
-    fig, ax = plt.subplots(figsize=(7.2, 4.2))
-    ax.axhline(0.0, color="0.6", ls=":", lw=0.7, zorder=0)
-    ax.axhline(-1.0, color="k", ls="--", lw=0.9, zorder=1)
-    ax.text(len(old_rows) - 1.6, -1.12, "expected $A = -1$", fontsize=8,
-            ha="right", va="top")
+    fig = plt.figure(figsize=(7.2, 6.8))
+    gs = gridspec.GridSpec(2, 1, height_ratios=[1.15, 1.0], hspace=0.38)
 
-    ax.errorbar(
+    axa = fig.add_subplot(gs[0])
+    axa.plot(t_hours, beat_ff, "o", ms=3.0, lw=0.6, color="#0969da",
+             label="measured beat", zorder=3)
+    axa.plot(t_hours, tide_ff, lw=1.5, color="#d62728",
+             label="template, $A = -1$", zorder=2)
+    axa.plot(t_hours, A13 * tide_ff, lw=1.3, ls="--", color="#2ca02c",
+             label=f"fitted, $A = {A13:+.2f}$", zorder=4)
+    axa.axhline(0.0, color="gray", lw=0.6, ls=":")
+    axa.set_xlabel("Time (h from segment start)", fontsize=9)
+    axa.set_ylabel(r"$\Delta f/f$ ($10^{-18}$)", fontsize=9)
+    axa.tick_params(labelsize=8)
+    axa.legend(fontsize=8, frameon=False, loc="lower right")
+
+    axb = fig.add_subplot(gs[1])
+    axb.axhline(0.0, color="0.6", ls=":", lw=0.7, zorder=0)
+    axb.axhline(-1.0, color="k", ls="--", lw=0.9, zorder=1)
+    axb.text(len(old_rows) - 1.6, -1.12, "expected $A = -1$", fontsize=8,
+             ha="right", va="top")
+
+    axb.errorbar(
         pos - 0.14,
         [r["A"] for r in old_rows],
         yerr=[r["u_A"] for r in old_rows],
         fmt="o", ms=4.0, lw=0.8, color="#1f5fa8", ecolor="#1f5fa8",
         capsize=2, label="ETideLoad4.5", zorder=3,
     )
-    ax.errorbar(
+    axb.errorbar(
         pos + 0.14,
         [r["A"] for r in new_rows],
         yerr=[r["u_A"] for r in new_rows],
         fmt="s", ms=3.6, lw=0.8, color="#e07b00", ecolor="#e07b00",
         capsize=2, label="DE421 + FES2022", zorder=3,
     )
-    ax.axhline(old_agg["amplitude"], color="#1f5fa8", lw=1.4, alpha=0.75, zorder=2)
-    ax.axhline(new_agg["amplitude"], color="#e07b00", lw=1.4, alpha=0.75, zorder=2)
+    axb.axhline(old_agg["amplitude"], color="#1f5fa8", lw=1.4, alpha=0.75, zorder=2)
+    axb.axhline(new_agg["amplitude"], color="#e07b00", lw=1.4, alpha=0.75, zorder=2)
 
-    ax.set_xticks(pos)
-    ax.set_xticklabels([str(i + 1) for i in pos], fontsize=8)
-    ax.set_xlabel("Segment", fontsize=10)
-    ax.set_ylabel("Response amplitude $A$", fontsize=10)
-    ax.set_ylim(-3.5, 2.6)
-    ax.tick_params(axis="y", labelsize=9)
-    ax.legend(fontsize=9, frameon=False, loc="upper left")
-    fig.tight_layout()
+    axb.set_xticks(pos)
+    axb.set_xticklabels([str(i + 1) for i in pos], fontsize=8)
+    axb.set_xlabel("Segment", fontsize=9)
+    axb.set_ylabel("Response amplitude $A$", fontsize=9)
+    axb.set_ylim(-3.5, 2.6)
+    axb.tick_params(axis="y", labelsize=8)
+    axb.legend(fontsize=8, frameon=False, loc="upper left")
 
     figs_dir = Path(__file__).resolve().parents[1] / "paper" / "rev2" / "figs"
     fig.savefig(figs_dir / "fig4_tidal_response.png", dpi=300,
@@ -254,7 +286,7 @@ def main() -> int:
     JSON_PATH.write_text(json.dumps(document, indent=2, allow_nan=False),
                          encoding="utf-8")
     print(f"\nWrote {JSON_PATH}")
-    make_figure(document)
+    make_figure(document, segments, old_grid)
     return 0
 
 

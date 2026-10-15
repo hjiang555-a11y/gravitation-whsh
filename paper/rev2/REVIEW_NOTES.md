@@ -507,6 +507,27 @@
     - 验证：check.sh 102 宏 + 14 页零 undefined；PDF 图序核对通过；
       Overleaf 包已同步。
 
+43. **图 4 移入 Methods + 单段 fit 面板（2026-10-15 第三十九轮，按指示）**：
+    - 用户：图 4 放到 Methods，可加一个单点 fit 图（库里有段 13
+      segment13_triangular.py 例图）；讨论正文提出相关性分析结论——
+      单段不显著、全部段分析显著、但幅度值不符。
+    - 图 4 改为双面板：**(a)** 段 13 单段 fit 例图（1200-s 三角窗
+      拍频 vs 模板：测量点、A=−1 模板、拟合幅度线；取自库中
+      segment13_triangular.py 同一处理链，数值链一致）；**(b)** 两模型
+      逐段幅度森林图（原图）。横坐标顺序 1–16。
+    - 图 4 从 Discussion 移入 Methods「Within-segment tidal correlation
+      analysis」小节（`fig:tidal-response`，主文不再含图 4；主文图
+      1–3：网络/比值/演进）。
+    - Discussion 相关性段改写：单段内 1200-s 去均值拍频与模板相关性
+      因噪声不显著（图 4a 佐证）→ 16 段合并后负相关段 12/16（两模型
+      同）+ 带符号 Stouffer 显著 → 合并幅度 −0.58/−0.87 均偏离预期 −1
+      且互不相同 + 中心位移反号 → 无模板对应 → 实际影响不大于不确定度
+      项。结论仍以相关性为讨论重点。
+    - Methods 潮汐相关性小节补图 4 引用与图注（a/b 面板说明，含
+      \tidalNegSeg/\tidalAmpOldE/\tidalAmpNewE）。
+    - 验证：check.sh 102 宏 + 15 页零 undefined；PDF 图序：图 1/2/3
+      在主文（第 2/3/5 页），图 4 在 Methods（第 15 页）；Overleaf 已同步。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
