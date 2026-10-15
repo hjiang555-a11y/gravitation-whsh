@@ -1,0 +1,82 @@
+% =============================================================
+% Cover Letter -- draft for the corresponding author to complete
+% Venue: Physical Review Letters (primary), Metrologia (full account)
+% =============================================================
+
+[Date: ________]
+
+Dear Editor,
+
+We are pleased to submit our manuscript entitled "Intercity Yb/Sr
+optical clock comparison over 1 350 km fiber link at 2.3×10⁻¹⁸" for
+consideration as a Letter in Physical Review Letters.
+
+Our work reports the first intercity, cross-species frequency-ratio
+measurement to meet the uncertainty requirement of criterion I.2.b in
+the roadmap for the redefinition of the SI second: an ytterbium
+lattice clock at IAPMST in Wuhan and a strontium lattice clock at
+USTC in Shanghai, about 700 km apart, compared over a phase-stabilized
+1 350 km fiber link on a non-exclusive commercial telecom network. We
+determine the Yb/Sr frequency ratio to be 1.207 507 039 343 337 720
+1(28), with a total standard uncertainty of 2.34×10⁻¹⁸, and find it
+consistent with the NIST–JILA campus value [Aeppli et al., PRL 137,
+033201 (2026)] within the combined standard uncertainty. Together with
+the NIST–JILA result, this provides the second, independent
+determination of the Yb/Sr ratio by a different institute, as required
+by criterion I.2.b for this pair of transitions.
+
+Beyond the frequency ratio itself, the measurement addresses two
+questions that matter for the redefinition and for future clock
+networks. First, we show that the transfer infrastructure is no longer
+the bottleneck at this level: the fiber link and the two frequency
+combs contribute well below the clocks, and the dominant budget terms
+are the per-segment statistics and the geodetic determination of the
+gravitational potential difference. Second, we document the treatment
+of the time-varying gravitational redshift with two independent tide
+models (ETideLoad4.5 and a DE421+FES2022 combination): both degrade
+the fit when applied as corrections and disagree in the sign of the
+induced center shift, so we carry the term as an uncertainty item
+rather than a correction. All numbers in the manuscript are generated
+by a reproducible pipeline from a frozen, audited result layer; the
+data and code are available at
+https://github.com/hjiang555-a11y/gravitation-whsh under the Apache
+License 2.0.
+
+We believe this work is of broad interest to the PRL readership: it
+completes, at intercity scale, the class of frequency-ratio
+measurements on which the redefinition of the SI second depends, and
+it demonstrates a working node pair of the wide-area optical-clock
+network envisioned by the roadmap.
+
+This manuscript has not been published previously and is not under
+consideration elsewhere. [A companion full account with the complete
+uncertainty budget, leveling details, and tidal-model comparison is in
+preparation for Metrologia / will be provided as Supplemental
+Material.]
+
+We suggest the following referees with no conflicts of interest:
+  1. [Name, affiliation, email]
+  2. [Name, affiliation, email]
+  3. [Name, affiliation, email]
+
+We request the exclusion of the following individuals:
+  [None / Name, affiliation, reason]
+
+Corresponding author: [Name], [Affiliation], [Email], [Phone]
+
+On behalf of all authors,
+
+[Name]
+[Affiliation]
+[Address]
+
+% -------------------------------------------------------------
+% Items to complete before submission:
+%  [ ] Author list and affiliations (currently "xxxxx")
+%  [ ] Corresponding-author contact details
+%  [ ] Suggested referee names
+%  [ ] Companion Metrologia manuscript status
+%  [ ] Data/code availability statement vs journal policy
+%  [ ] Funding statement and acknowledgements
+%  [ ] Competing-interests declaration
+% -------------------------------------------------------------
