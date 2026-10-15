@@ -112,7 +112,8 @@ relations and corrected for the static gravitational redshift
 $\delta_g = \deltaGV$ derived from the leveled geopotential difference
 (see above). The per-segment statistical uncertainty $u_i$ is obtained
 from the overlapping Allan deviation of the beat fractional frequency,
-evaluated on a tau grid up to a quarter of the longest gap-free run
+evaluated on a tau grid of powers of two plus 600, 1200, 3600 and
+7200\,s, all limited to a quarter of the longest gap-free run
 $T_i$ of the segment: $u_i$ adopts the last computable point
 $u_i = R_i\,\sigma_y(\tau_{\rm max})$ without extrapolating the
 stability curve beyond the data. The log-log slope of $\sigma_y$
@@ -128,7 +129,9 @@ per-segment uncertainties. The primary value is obtained from a
 Bayesian random-effect model, in which $\mu$ and $\xi$ are
 jointly inferred with flat priors on $\mu$ and on $\log\xi$, and the
 joint posterior $p(\mu, \xi \mid \{R_i, u_i\})$ is marginalized
-numerically over a 40-decade $\log\xi$ grid; the posterior mean of
+numerically over a 40-decade $\log\xi$ grid, with the grid span
+expanded until the posterior mass at the edges falls below 1\%; the
+posterior mean of
 $\mu$ and its posterior standard deviation give the reported central
 value and statistical uncertainty, with
 $\xi = \xiBayesE \times 10^{-18}$. As cross-checks, the same
@@ -192,7 +195,18 @@ independent realizations disagree in sign, are treated as
 inconsistent with the data: no tidal correction is applied to the
 reported central value, and the larger of the two center shifts is
 carried as the time-varying-redshift uncertainty item
-$\uTidalE\times10^{-18}$ (Table~\ref{tab:tidal}).
+$\uTidalE\times10^{-18}$ (Table~\ref{tab:tidal}). The same
+within-segment analysis underlies the amplitude comparison in the
+Discussion: on the 16 segments entering the ratio combination, the
+1200-s demeaned beat waveform correlates negatively with the template
+in \tidalNegSeg~of the \nSeg~segments for either model, and the
+precision-weighted response amplitude is
+$\tidalAmpOldE$ (ETideLoad4.5) and $\tidalAmpNewE$
+(DE421+FES2022), each significantly different from the expected
+amplitude $-1$. This mismatch is attributed to the incompleteness of
+the tide models at the $10^{-18}$ level; more comparison data from an
+expanding optical-clock network are expected to refine the models and
+thereby to reduce, or eventually remove, this uncertainty item.
 
 \begin{table}[t]
   \centering

@@ -405,6 +405,26 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
             "derived: 16-segment (seg9 excluded) Pearson r of y_i vs segment-mean "
             "DE421+FES2022 full tide (recomputed 2026-10-14; r=+0.403)")
 
+    # Within-segment 1200-s demeaned-waveform correlation on the 16-segment
+    # audit primary, for both tide models (clock_ratio/tidal_within_segment_16seg.json).
+    within_path = ROOT / "clock_ratio" / "tidal_within_segment_16seg.json"
+    if within_path.is_file():
+        within = _load(within_path)
+        old_agg = within["models"]["old_etideload"]["aggregate"]
+        new_agg = within["models"]["new_de421_fes2022"]["aggregate"]
+    else:
+        old_agg = new_agg = None
+    if old_agg is not None and new_agg is not None:
+        add("tidalNegSeg", str(int(old_agg["negative_r_segments"])),
+            "derived: 16-segment within-segment negative-correlation count, "
+            "identical for both tide models (tidal_within_segment_16seg.json)")
+        add("tidalAmpOldE", f"{old_agg['amplitude']:+.2f}",
+            "derived: 16-segment precision-weighted within-segment response "
+            "amplitude, ETideLoad4.5 template (tidal_within_segment_16seg.json)")
+        add("tidalAmpNewE", f"{new_agg['amplitude']:+.2f}",
+            "derived: 16-segment precision-weighted within-segment response "
+            "amplitude, DE421+FES2022 template (tidal_within_segment_16seg.json)")
+
     add("nSeg", str(len(primary["included_groups"])), "manifest:primary_16.included_groups")
     add("nSegAll", str(len(sensitivity["included_groups"])), "manifest:sensitivity_17.included_groups")
     add("nSamples", latex_groups(str(primary["total_samples"])), "manifest:primary_16.total_samples")

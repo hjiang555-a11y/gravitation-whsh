@@ -433,6 +433,40 @@
       mcgrew2018geodesy（Nature 564）、dimarcq2024roadmap（Metrologia 61）；
       zhu2026yb 仍为预印本，保留 note。bib 45 → 46 条，零缺失零孤儿。
 
+40. **Nature 标准评估后修改（2026-10-15 第三十六轮，按指示）**：
+    评估报告见本轮对话（五视角：EIC/方法/领域/交叉/魔鬼代言人；投稿目标
+    Nature→PRL/Metrologia 缓降路径）。用户裁定：段 9 排除不解释（记录在库、
+    参数与其他段差异大、疑似学生纪律错误无法回溯）、标题暂不改、"two orders"
+    是行内共识说法不改、投稿准备项后续补、段 9 参数外部确认不可行（记录已过、
+    异常即异常）。
+    - [3] Conclusion I.2.b 表述：'confirming one of the required ratio
+      measurements' → 'satisfying criterion I.2.b of the roadmap for this
+      pair of transitions'（避免"五分之一"歧义）。
+    - [2] Methods 统计段补贝叶斯 log ξ 网格收敛句（边缘质量 <1% 门）。
+    - [6] Methods u_i 段 τ 网格写全：二次方秒 + 600/1200/3600/7200 s，
+      上限为最长无间断 run 的 1/4。
+    - [4] Introduction "only locally" 三实验：补 Vishwakarma 2026 PTB
+      可搬运钟 Yb⁺/Sr（4.3×10⁻¹⁸）与 Takamoto 并列；bib 补
+      `vishwakarma2026interspeciesclockcomparison5`（作者列表取自归档旧包）。
+    - [8]+[新增] 段内相关性 16 段口径重算（用户要求两模型都算并对比）：
+      新诊断脚本 `clock_ratio/tidal_within_segment_16seg.py`（复用
+      batch_analysis 处理链：1200-s 三角窗、600-s 步长、去均值、不重叠
+      推断窗；排除段 9）→ `clock_ratio/tidal_within_segment_16seg.json`。
+      结果：两模型负相关段均为 12/16（二项 p=0.077）；带符号 Stouffer
+      z = −3.75（旧 ETideLoad4.5）/ −4.50（新 DE421+FES2022）；
+      精度加权幅度 A = −0.577±0.115（5.0σ）/ −0.873±0.152（5.8σ）——
+      均显著但互不相同且都偏离预期 −1。17 段历史基线（12/17，A=−0.568）
+      保持不变。
+    - 新宏 3 个：`tidalNegSeg`(12)、`tidalAmpOldE`(−0.58)、`tidalAmpNewE`(−0.87)，
+      来源 `tidal_within_segment_16seg.json`（102 宏）。
+    - Discussion 引力势/潮汐段嵌入段内相关性阐述（两模型幅度差异+中心位移
+      符号分歧→模板不完备）；"模型不完备可由更多网络比对数据修正/移除"作为
+      展望句（不作为贡献）。Methods 潮汐节末段同步补同口径数字与展望。
+    - 验证：pytest 227 passed, 4 skipped；数据套件 231 passed；check.sh
+      102 宏 + 14 页 PDF 零 undefined；bib 44 条零缺失零孤儿。
+    - 用户裁定不改：段 9 排除理由（库内有记录，无需论文解释）、标题、
+      "two orders of magnitude"、投稿准备项（作者/基金/致谢/利益冲突）。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：

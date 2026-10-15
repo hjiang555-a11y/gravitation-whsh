@@ -157,6 +157,18 @@
       "value": "+0.40",
       "source": "derived: 16-segment (seg9 excluded) Pearson r of y_i vs segment-mean DE421+FES2022 full tide (recomputed 2026-10-14; r=+0.403)"
     },
+    "tidalNegSeg": {
+      "value": "12",
+      "source": "derived: 16-segment within-segment negative-correlation count, identical for both tide models (tidal_within_segment_16seg.json)"
+    },
+    "tidalAmpOldE": {
+      "value": "-0.58",
+      "source": "derived: 16-segment precision-weighted within-segment response amplitude, ETideLoad4.5 template (tidal_within_segment_16seg.json)"
+    },
+    "tidalAmpNewE": {
+      "value": "-0.87",
+      "source": "derived: 16-segment precision-weighted within-segment response amplitude, DE421+FES2022 template (tidal_within_segment_16seg.json)"
+    },
     "nSeg": {
       "value": "16",
       "source": "manifest:primary_16.included_groups"
