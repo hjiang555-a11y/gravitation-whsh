@@ -487,6 +487,26 @@
     - 验证：check.sh 102 宏 + 14 页 PDF 零 undefined（图 4 已入 PDF）；
       pytest 227/231 全绿；Overleaf 包已同步。
 
+42. **图序重构 + 逐段表序号 + 清除段 9 痕迹（2026-10-15 第三十八轮，
+    按指示）**：
+    - 图序：潮汐相关性图从 Results §2.3 移至 Discussion 引力段，成为
+      **Figure 4**（副产品位）；历史演进图保持原位成为 **Figure 3**
+      （比值主线位）。顺序：图1 网络 → 图2 比值 → 图3 演进 → 图4 潮汐。
+    - Results §2.3 不再放图，改为一句指向 Discussion："The beat record
+      does show a tidal signal, but no available template corresponds to
+      it (Discussion)"。
+    - Discussion 引力段重写为三段：静态势 → **相关性结论段（重点）** →
+      效应随基线增长/网络作为地球仪器。相关性段主题句
+      "The tidal correlation is nevertheless real."，结论聚焦：
+      显著相关（12/16 段负相关、合并幅度 −0.58/−0.87）、无模板对应
+      （互不相同且都偏离 −1、中心位移反号）→ 实际影响不大于所携带的
+      不确定度项 → 模型不完备可由扩展网络修正。
+    - 逐段表（tab:segments）：Group 列改 Segment，行号顺序 1–16（不再
+      用原始组号 1–8,10–17）；表注删除 "segment 9 is excluded"；全稿
+      已无段 9/ninth/excluded 痕迹。
+    - 验证：check.sh 102 宏 + 14 页零 undefined；PDF 图序核对通过；
+      Overleaf 包已同步。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：
