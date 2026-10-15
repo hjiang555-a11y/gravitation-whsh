@@ -169,6 +169,14 @@
       "value": "-0.87",
       "source": "derived: 16-segment precision-weighted within-segment response amplitude, DE421+FES2022 template (tidal_within_segment_16seg.json)"
     },
+    "tidalSigmaOldE": {
+      "value": "5.0",
+      "source": "derived: significance of the 16-segment combined response amplitude relative to zero, ETideLoad4.5 template (tidal_within_segment_16seg.json)"
+    },
+    "tidalSigmaNewE": {
+      "value": "5.7",
+      "source": "derived: significance of the 16-segment combined response amplitude relative to zero, DE421+FES2022 template (tidal_within_segment_16seg.json)"
+    },
     "nSeg": {
       "value": "16",
       "source": "manifest:primary_16.included_groups"

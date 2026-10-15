@@ -528,6 +528,27 @@
     - 验证：check.sh 102 宏 + 15 页零 undefined；PDF 图序：图 1/2/3
       在主文（第 2/3/5 页），图 4 在 Methods（第 15 页）；Overleaf 已同步。
 
+44. **Discussion 显著性σ结论 + 副作用论证 + out of scope（2026-10-15
+    第四十轮，按指示；superpowers brainstorming 流程）**：
+    - 用户：正文要有显著性相关分析的结论（几西格玛），作为潮汐影响
+      存在的证据；副作用论证潮汐实际影响可能小于模型；证明需要修正
+      模型但 out of the scope of this paper。用 superpowers 梳理
+      Discussion 与 Methods。
+    - 新宏 2 个：`tidalSigmaOldE`(5.0)、`tidalSigmaNewE`(5.7)——
+      16 段合并响应幅度相对零的显著性（= amplitude_sigma，来自
+      tidal_within_segment_16seg.json），104 宏。
+    - Discussion 相关性段（"The tidal correlation is nevertheless
+      real."）重写为完整论证链：单段太噪不可分辨 → 16 段合并证据
+      决定性（12/16 负相关段；合并幅度偏离零 5.0σ/5.7σ，两模型）→
+      潮汐红移在记录中以 10⁻¹⁸ 级存在（存在证据）→ 但无模板对应
+      （两幅度互异且都低于 −1、中心位移反号）→ 观测耦合小于模板
+      预测 → 实际影响不大于所携带不确定度项、估计保守（副作用）→
+      正确模型可降低该项，但构建需更多比对数据与大地测量输入，
+      beyond the scope of this paper → 由扩展网络修正/移除。
+    - Methods 潮汐相关性小节与图 4 不变（方法叙述已在第四十三轮）。
+    - 验证：check.sh 104 宏 + 15 页零 undefined；PDF 正文渲染核对
+      "5.0σ / 5.7σ" 正确；Overleaf 已同步。
+
 ## 1. 正文篇幅 vs Nature Article 一般篇幅
 
 **Nature 格式指南锚点**（physical sciences）：

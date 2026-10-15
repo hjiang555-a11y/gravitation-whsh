@@ -424,6 +424,12 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
         add("tidalAmpNewE", f"{new_agg['amplitude']:+.2f}",
             "derived: 16-segment precision-weighted within-segment response "
             "amplitude, DE421+FES2022 template (tidal_within_segment_16seg.json)")
+        add("tidalSigmaOldE", f"{old_agg['amplitude_sigma']:.1f}",
+            "derived: significance of the 16-segment combined response amplitude "
+            "relative to zero, ETideLoad4.5 template (tidal_within_segment_16seg.json)")
+        add("tidalSigmaNewE", f"{new_agg['amplitude_sigma']:.1f}",
+            "derived: significance of the 16-segment combined response amplitude "
+            "relative to zero, DE421+FES2022 template (tidal_within_segment_16seg.json)")
 
     add("nSeg", str(len(primary["included_groups"])), "manifest:primary_16.included_groups")
     add("nSegAll", str(len(sensitivity["included_groups"])), "manifest:sensitivity_17.included_groups")
