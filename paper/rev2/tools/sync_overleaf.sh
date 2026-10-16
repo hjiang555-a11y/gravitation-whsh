@@ -12,6 +12,9 @@ cp "$REV2"/generated/numbers.tex "$REV2"/generated/segment_table.tex \
    "$REV2"/generated/loo_table.tex \
    "$REV2"/generated/ratio_intermediates.tex \
    "$REV2"/generated/correlation_table.tex \
+   "$REV2"/generated/sample_ledger_table.tex \
+   "$REV2"/generated/concat_stability_table.tex \
+   "$REV2"/generated/tidal_synthesis_table.tex \
    "$REV2"/generated/numbers.json "$REV2"/generated/numbers_manifest.json "$PKG/generated/"
 cp "$REV2/refs.bib" "$PKG/"
 cp "$REV2"/figs/*.pdf "$PKG/figs/" 2>/dev/null || true

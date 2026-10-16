@@ -75,6 +75,16 @@ clock comparison at \uTotalShort$\times10^{-18}$}
   \input{generated/loo_table}
 \end{table}
 
+\begin{table}[h]
+  \centering
+  \caption{Per-segment selection diagnostics. Counts at each stage of
+  the data processing chain: the observation window, the excluded
+  intervals, the jump-filtered record, the endpoint-trimmed samples
+  and the retained count.}
+  \label{tab:selection}
+  \input{generated/sample_ledger_table}
+\end{table}
+
 \section{Within-segment tidal correlation analysis}
 
 As an independent quantitative check of the tide-model corrections
@@ -124,6 +134,31 @@ during the campaign is estimated from the earthquake moments to be
 at most $6\times10^{-20}$ in differential fractional frequency, two
 orders below the statistical uncertainty, so it cannot drive the
 tidal-period correlation.
+
+\begin{table}[h]
+  \centering
+  \caption{Spliced concatenated stability of the \nSeg~segments at
+  representative averaging times: the overlapping Allan deviation
+  $\sigma_y(\tau)$ of the spliced record for the raw series, the two
+  theoretical tide corrections ($A=+1$, ETideLoad4.5 and
+  DE421+FES2022), the two empirical corrections ($A=+0.54$), and the
+  removed correction terms themselves. The full $\tau$ grid and the
+  pair counts are in the archived data.}
+  \label{tab:spliced}
+  \input{generated/concat_stability_table}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{Three-scenario tidal combination summary (16 segments):
+  the reduced chi-square and Birge ratio of the segment combination,
+  the Bayesian excess scatter $\xi$, and the segment-to-segment
+  spread $\sigma(y_i)$, for the raw record and for the two fixed
+  correction amplitudes. Both corrections degrade the combination
+  statistics.}
+  \label{tab:tidal-synthesis}
+  \input{generated/tidal_synthesis_table}
+\end{table}
 
 \section{Frequency-chain relations and the ratio inversion}
 \label{sec:freq-chain}
