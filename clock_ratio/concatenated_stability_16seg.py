@@ -51,7 +51,7 @@ FIG_PNG = OUT_DIR / "concatenated_stability_16seg.png"
 FIG_PDF = OUT_DIR / "concatenated_stability_16seg.pdf"
 
 EXCLUDED_GROUP = 9
-TAU_START_S = 100
+TAU_START_S = 1000
 TAUS_S = (128, 256, 512, 600, 1024, 1200, 2048,
           3600, 4096, 7200, 8192, 16384, 21600, 32768, 43200, 65536, 86400,
           100000, 131072, 172800, 200000, 262144, 345600, 400000)
@@ -253,6 +253,8 @@ def write_figure(taus, curves) -> None:
     ax.set_ylabel(r"$\sigma_y(\tau)$")
     ax.set_title("Spliced concatenated ratio stability, 16 segments, both tide models",
                  fontsize=9.5)
+    ax.set_xlim(1e3, 4.2e5)
+    ax.set_ylim(2e-19, 2e-17)
     ax.grid(True, which="both", alpha=0.18, lw=0.4)
     ax.legend(frameon=False, fontsize=7.5)
     for spine in ("top", "right"):

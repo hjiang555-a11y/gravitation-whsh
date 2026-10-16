@@ -1,13 +1,9 @@
 # Spliced concatenated stability (16-segment primary, both tide models)
 
-16 segments placed end-to-end on one continuous 1-s clock; the wall-clock gaps are removed. The aligned record spans **986,416** s (11.417 d of pure data time) versus 57.97 d of real elapsed time. One OADEV per series over the aligned axis, starting at tau = 100 s. Template sign follows the paper convention (corrected for the beat polarity; positive amplitude = expected response).
+16 segments placed end-to-end on one continuous 1-s clock; the wall-clock gaps are removed. The aligned record spans **986,416** s (11.417 d of pure data time) versus 57.97 d of real elapsed time. One OADEV per series over the aligned axis, starting at tau = 1000 s. Template sign follows the paper convention (corrected for the beat polarity; positive amplitude = expected response).
 
 | tau [s] | tau [d] | raw (A=0) | ETideLoad4.5 theory (A=+1) | ETideLoad4.5 empirical (A=+0.54) | DE421+FES2022 theory (A=+1) | DE421+FES2022 empirical (A=+0.54) | correction ETideLoad4.5 h/F1550 | correction DE421+FES2022 h/F1550 | n_pairs |
 |---|---|---|---|---|---|---|---|---|---|
-| 128 | 0.001 | 6.699e-17 ± 5.4e-19 | 6.699e-17 ± 5.4e-19 | 6.699e-17 ± 5.4e-19 | 6.699e-17 ± 5.4e-19 | 6.699e-17 ± 5.4e-19 | 1.667e-19 ± 1.3e-21 | 1.259e-19 ± 1.0e-21 | 986161 |
-| 256 | 0.003 | 4.180e-17 ± 4.8e-19 | 4.180e-17 ± 4.8e-19 | 4.180e-17 ± 4.8e-19 | 4.180e-17 ± 4.8e-19 | 4.180e-17 ± 4.8e-19 | 2.465e-19 ± 2.8e-21 | 1.873e-19 ± 2.1e-21 | 985905 |
-| 512 | 0.006 | 2.688e-17 ± 4.3e-19 | 2.688e-17 ± 4.3e-19 | 2.688e-17 ± 4.3e-19 | 2.688e-17 ± 4.3e-19 | 2.688e-17 ± 4.3e-19 | 3.769e-19 ± 6.1e-21 | 2.889e-19 ± 4.7e-21 | 985393 |
-| 600 | 0.007 | 2.435e-17 ± 4.2e-19 | 2.435e-17 ± 4.2e-19 | 2.435e-17 ± 4.2e-19 | 2.436e-17 ± 4.2e-19 | 2.435e-17 ± 4.2e-19 | 4.180e-19 ± 7.3e-21 | 3.212e-19 ± 5.6e-21 | 985217 |
 | 1024 | 0.012 | 1.694e-17 ± 3.9e-19 | 1.695e-17 ± 3.9e-19 | 1.694e-17 ± 3.9e-19 | 1.695e-17 ± 3.9e-19 | 1.694e-17 ± 3.9e-19 | 6.040e-19 ± 1.4e-20 | 4.680e-19 ± 1.1e-20 | 984369 |
 | 1200 | 0.014 | 1.532e-17 ± 3.8e-19 | 1.532e-17 ± 3.8e-19 | 1.532e-17 ± 3.8e-19 | 1.532e-17 ± 3.8e-19 | 1.532e-17 ± 3.8e-19 | 6.777e-19 ± 1.7e-20 | 5.264e-19 ± 1.3e-20 | 984017 |
 | 2048 | 0.024 | 1.133e-17 ± 3.7e-19 | 1.129e-17 ± 3.6e-19 | 1.130e-17 ± 3.6e-19 | 1.130e-17 ± 3.6e-19 | 1.131e-17 ± 3.6e-19 | 1.018e-18 ± 3.3e-20 | 7.964e-19 ± 2.6e-20 | 982321 |
