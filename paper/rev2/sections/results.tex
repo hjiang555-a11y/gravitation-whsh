@@ -118,21 +118,28 @@ The time-varying gravitational redshift is more involved. Solid Earth
 and ocean tides, together with atmospheric, hydrological and
 non-tidal ocean loading, move the local potential by amounts reaching
 the $10^{-18}$ level over the campaign~\citep{agnew2015tides,
-voigt2016timevariable, denker2018geodetic}. Correcting the beat record
-with a tide template from the public software
-ETideLoad4.5~\citep{zhang2026etideload}, which implements the IERS
-Conventions (2010)~\citep{iers2010conventions}, degrades rather than
-improves the fit, raising the reduced chi-square of the combination
-from \tidalChiRaw~to \tidalChiEmp, and a second, independent template
-built from the DE421 ephemerides~\citep{folkner2009de421} and the
-FES2022 ocean-tide model~\citep{lyard2021fes2014} does the same
-($\chi^2_{\rm red} = \tidalChiAlt$) while moving the center in the
-opposite direction, by $-\tidalShiftEmpE\times10^{-18}$ versus
-$+\tidalShiftAltE\times10^{-18}$ (Methods). The sign disagreement
-between the two models confirms that the templates are incomplete at
-this level, so the time-varying term is carried as an uncertainty
-rather than a correction, at the larger of the two model shifts,
-$\uTidalE\times10^{-18}$ (Methods).
+voigt2016timevariable, denker2018geodetic}, and no prediction model
+reproduces the record at this precision. We therefore evaluated two
+independent tide templates: one from the public software
+ETideLoad4.5~\citep{zhang2026etideload}, implementing the IERS
+Conventions (2010)~\citep{iers2010conventions}, and one built from
+the DE421 ephemerides~\citep{folkner2009de421} and the FES2022
+ocean-tide model~\citep{lyard2021fes2014}. The beat record is
+significantly correlated with the templates within each segment, but
+with a response coefficient below the expected value of $1$: the
+precision-weighted amplitudes are $\tidalAmpOldE$ and
+$\tidalAmpNewE$, indicating that the templates overestimate the
+tidal impact (Methods). Correcting the record accordingly degrades
+rather than improves the fit, raising the reduced chi-square of the
+combination from \tidalChiRaw~to \tidalChiEmp~and \tidalChiAlt,
+respectively, and the two templates shift the center in opposite
+directions, by $-\tidalShiftEmpE\times10^{-18}$ versus
+$+\tidalShiftAltE\times10^{-18}$ (Methods). With the models
+disagreeing in sign, no correction can be applied reliably; we
+therefore carry the larger of the two model shifts,
+$\uTidalE\times10^{-18}$, as an uncertainty term, which is a
+conservative estimate---the observed coupling suggests the actual
+tidal impact on the ratio is smaller.
 
 Combining the statistical and systematic components in quadrature
 gives the total standard uncertainty
