@@ -3,75 +3,50 @@
 The static gravitational-redshift correction is fixed by the
 geopotential difference between the atomic-transition positions of the
 two clocks, determined by a first-order spirit leveling campaign
-carried out specifically for this comparison. The leveling line, about
-$\levelKm$\,km long, runs between the Wuhan benchmark WS-03 (at
-IAPMST) and the Shanghai benchmark WS-01 (at USTC) through Ezhou,
-Huangshi, Huanggang, Lu'an, Hefei, Wuhu, Guangde and Suzhou. Digital
-levels were used with bar-code invar staffs, with sight lengths not
-exceeding \qty{30}{m}; the line was observed in \qtyrange{6}{8}{km}
-sections in both directions, each checked in the field. Gravity was
-observed along the line at the leveling points with two relative
-gravimeters. The orthometric height difference between the benchmarks
-follows from the leveled normal heights after the
-normal-to-orthometric conversion, and the geopotential difference is
-integrated section by section, $\dW_{AB} = -\sum_i g_i\,\Delta H_i$,
-where $g_i$ is the mean gravity and $\Delta H_i$ the orthometric
-height difference of the $i$-th section. Combining this with the two
-local offsets between benchmark and clock platform (obtained by
-trigonometric leveling) and the platform-to-transition offsets from
-the clock design parameters gives the atomic-transition geopotential
-difference $\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$, equivalent
-to an optical fractional shift of $\deltaGV$. The accidental error
-per kilometer of the leveling is
-$M_\Delta = \levelMm$\,mm\,km$^{-1}$, which satisfies the most
-stringent requirements for first-order leveling in the national
-standards of China, the United States, Germany and
-Czechia~\citep{fgcc1984,gb12897,cuzk2015,advfapn2022}.
-
-As an independent check, the geopotential difference was also
-determined by a combined GNSS and geoid-model calibration: the
-ellipsoidal heights of the permanent marks were measured by precise
-point positioning, their vertical offsets to the clock reference
-surfaces were leveled locally, and the EGM2008 geoid model was used
-to convert to a geopotential difference of
-$\dWAlt \pm \dWAltUnc~\mathrm{m^2\,s^{-2}}$. The two independent
-determinations agree within the uncertainties of the GNSS-based
-value, but the GNSS-plus-geoid calibration is two orders of magnitude
-less precise than the leveling result, so it cannot act as an
-effective cross-check at the reported accuracy; a meaningful
-independent verification will require transportable optical clocks
-with higher frequency reproducibility.
+carried out specifically for this comparison: a
+$\levelKm$\,km line between the Wuhan benchmark WS-03 and the
+Shanghai benchmark WS-01, observed in both directions with digital
+levels and bar-code invar staffs, with gravity observed along the
+line. The geopotential difference is integrated section by section,
+$\dW_{AB} = -\sum_i g_i\,\Delta H_i$, and combined with the local
+benchmark-to-transition offsets, giving
+$\dW = \dWVal \pm \dWUnc~\mathrm{m^2\,s^{-2}}$, equivalent to an
+optical fractional shift of $\deltaGV$. The per-kilometer accidental
+error $M_\Delta = \levelMm$\,mm\,km$^{-1}$ satisfies the most
+stringent first-order requirements of the Chinese, US, German and
+Czech national standards (Supplementary
+Section~3)~\citep{fgcc1984,gb12897,cuzk2015,advfapn2022}. An
+independent GNSS-plus-EGM2008 geoid-model calibration gives
+$\dWAlt \pm \dWAltUnc~\mathrm{m^2\,s^{-2}}$, consistent with the
+leveled value but about 30 times less precise, so it serves as a
+consistency check rather than a calibration at the reported
+accuracy; a meaningful independent verification will require
+transportable optical clocks with higher frequency reproducibility.
 
 \subsection*{Experimental setup and frequency transfer}
 
-The comparison links two optical lattice clocks at different institutions:
-an ytterbium (Yb) clock at IAPMST in Wuhan and a strontium (Sr) clock at
-USTC in Shanghai, about $\siteKm$\,km apart. The two sites are connected by
-a phase-stabilized fiber link of $\fibreKm$\,km single-pass length
-($\roundKm$\,km loop-back), operated at \qty{1550}{nm}. The route is
-divided into spans of tens of kilometers, each terminated by a relay
-station that carries a narrow-linewidth laser together with an
-erbium-doped fiber amplifier and a fiber-noise-cancellation loop; the
-added instability of the link is kept below the clock noise level for
-averaging times beyond $100$\,s.
+The two sites are connected by a phase-stabilized fiber link of
+$\fibreKm$\,km single-pass length ($\roundKm$\,km loop-back),
+operated at \qty{1550}{nm} and carried on a commercial telecom
+network used non-exclusively. The route is divided into spans of tens
+of kilometers, each terminated by a relay station carrying a
+narrow-linewidth laser, an erbium-doped fiber amplifier and a
+fiber-noise-cancellation loop; the added instability of the link is
+kept below the clock noise for averaging times beyond $100$\,s.
+Further subsystem details are given in Supplementary Section~7.
 
-Both ends use independent optical frequency combs to bridge the
-spectral gap between the clock transitions and the telecom carrier. On the
-Shanghai side the Sr \qty{698}{nm} transition is transferred via a
-\qty{1397}{nm} continuous laser to the \qty{1550}{nm} carrier; on the
-Wuhan side the received carrier is linked to the Yb \qty{578}{nm}
-transition through the \qty{1156}{nm} light. All local frequency
-references and phase-locked loops are derived from the comb repetition
-rate $f_{\mathrm{rep}} = \fRepMHz$\,MHz. The observable is the
+Both ends use independent optical frequency combs, self-referenced
+and phase-locked to their local clock, to bridge the spectral gap
+between the clock transitions and the telecom carrier; all frequencies
+in the chain derive from the two clock transitions through fixed
+factor-of-two relations, $f_{\mathrm{comb}}^{1397} =
+\tfrac{1}{2}(1+a)\,f_{\mathrm{Sr}}$ and $f_{\mathrm{comb}}^{1156} =
+\tfrac{1}{2}(1+b)\,f_{\mathrm{Yb}}$, where $a$ and $b$ collect the Sr
+and Yb systematic corrections (density, lattice, second-order Zeeman
+and blackbody shifts; Supplementary Section~1). The observable is the
 out-of-loop beat between the received carrier and the local
 Yb-referenced comb, converted to fractional units with the transfer
-frequency $f_{1550} = \fFifteenTHz$\,THz. All frequencies in the chain
-derive from the two clock transitions through fixed factor-of-two
-relations,
-$f_{\mathrm{comb}}^{1397} = \tfrac{1}{2}(1+a)\,f_{\mathrm{Sr}}$ and
-$f_{\mathrm{comb}}^{1156} = \tfrac{1}{2}(1+b)\,f_{\mathrm{Yb}}$, where
-$a$ and $b$ collect the Sr and Yb systematic corrections (density,
-lattice, second-order Zeeman and blackbody shifts). The static
+frequency $f_{1550} = \fFifteenTHz$\,THz. The static
 gravitational-redshift correction enters the ratio inversion as a
 multiplicative factor,
 $\left(\mathrm{Yb/Sr}\right)_{\rm corr}
@@ -177,40 +152,29 @@ from their frequency-reference settings.
 \subsection*{Tidal template and time-varying redshift}
 
 The time-varying gravitational-redshift term is quantified from a
-tidal template. The supplied tide series consists of the solid Earth
-tide and ocean tide loading displacement difference between the two
-sites, computed every \qty{30}{s} with the public software
-ETideLoad4.5~\citep{zhang2026etideload}, which implements the
-geophysical models and numerical standards of the IERS Conventions
-(2010)~\citep{iers2010conventions}. The displacement difference is
-converted to an equivalent geopotential difference with the local
-gravity $g$ and then to a beat-frequency template through
-$h = f_{1550}\,\Delta W/c^2$, the same normalization used for the
-beat record.
+tidal template: the solid Earth tide and ocean tide loading
+displacement difference between the two sites, computed every
+\qty{30}{s} with the public software ETideLoad4.5, converted to an
+equivalent geopotential difference and then to a beat-frequency
+template $h = f_{1550}\,\Delta W/c^2$ with the same $f_{1550}$
+normalization as the beat record (Supplementary Section~6).
 
 To test how well the template fits the data, we repeated the ratio
 combination with the tide series applied before the inversion, at two
 fixed response amplitudes: the theoretical amplitude $A = +1$ and the
-historical amplitude $A = +0.54$ obtained from the demeaned beat
-waveform in our earlier analysis of the same campaign. The fit
-degrades rather than improves: the reduced chi-square of the
-combination rises from $\tidalChiRaw$ to $\tidalChiTheory$ and
-$\tidalChiEmp$, respectively, and the Bayesian center moves by
-$-\tidalShiftEmpE\times10^{-18}$. A second, independent tide template
-was evaluated as a cross-check: the solid tide was computed from the
-DE421 ephemerides (Earth--Sun--Moon positions) with Love numbers, and
-the ocean-tide loading correction to the gravitational potential was
-taken directly from the FES2022 global ocean-tide model, on a
-\qty{90}{s} Beijing-time grid. Its fixed-amplitude combination again
-degrades the fit ($\chi^2_{\rm red} = \tidalChiAlt$ at the historical
-amplitude) but moves the Bayesian center in the opposite direction,
-by $+\tidalShiftAltE\times10^{-18}$. To separate the solid-tide and
-ocean-loading contributions, we also repeated the segment-mean
-correlation with the solid tide alone: the Pearson correlation of the
-ratio deviations with the segment-mean full tide is
-$\tidalCorrTotal$, which falls to $\tidalCorrSolid$ for the solid
-tide only, indicating that the dominant coupling comes from the
-ocean-tide loading term.
+historical amplitude $A = +0.54$ from the demeaned beat waveform of
+our earlier analysis of the same campaign (Supplementary
+Section~6). The fit degrades rather than improves: the reduced
+chi-square of the combination rises from \tidalChiRaw~to
+\tidalChiTheory~and \tidalChiEmp, and the Bayesian center moves by
+$-\tidalShiftEmpE\times10^{-18}$. A second, independent template,
+built from the DE421 ephemerides and the FES2022 ocean-tide model,
+degrades the fit likewise ($\chi^2_{\rm red} = \tidalChiAlt$) while
+moving the Bayesian center in the opposite direction, by
+$+\tidalShiftAltE\times10^{-18}$. Repeating the segment-mean
+correlation with the solid tide alone ($r = \tidalCorrSolid$ instead
+of \tidalCorrTotal) locates the dominant coupling in the ocean-tide
+loading term.
 
 Templates that degrade the segment agreement, and whose two
 independent realizations disagree in sign, are treated as
