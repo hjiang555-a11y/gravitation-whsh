@@ -263,6 +263,43 @@ def write_figure(taus, curves) -> None:
     fig.savefig(FIG_PDF)
     plt.close(fig)
 
+    # ---- companion figure without the empirical curves (5 series) ----
+    meta_focus = {
+        "raw": meta["raw"],
+        "old_theory": meta["old_theory"],
+        "new_theory": meta["new_theory"],
+        "old_correction": meta["old_correction"],
+        "new_correction": meta["new_correction"],
+    }
+    fig, ax = plt.subplots(figsize=(6.9, 3.9))
+    for key in ("raw", "old_theory", "new_theory",
+                "old_correction", "new_correction"):
+        label, color, marker, linestyle = meta_focus[key]
+        pts = [p for p in curves[key] if p["sigma_y"] is not None]
+        xs = [p["tau_s"] for p in pts]
+        ys = [p["sigma_y"] for p in pts]
+        es = [p["u_sigma"] for p in pts]
+        ax.errorbar(xs, ys, yerr=es, color=color, marker=marker, ms=4.0,
+                    lw=1.3, linestyle=linestyle, elinewidth=0.8, capsize=1.8,
+                    label=label)
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlabel(r"$\tau$ [s]")
+    ax.set_ylabel(r"$\sigma_y(\tau)$")
+    ax.set_title("Spliced concatenated ratio stability, 16 segments, "
+                 "theory corrections only", fontsize=9.5)
+    ax.set_xlim(1e3, 4.2e5)
+    ax.set_ylim(2e-19, 2e-17)
+    ax.grid(True, which="both", alpha=0.18, lw=0.4)
+    ax.legend(frameon=False, fontsize=8)
+    for spine in ("top", "right"):
+        ax.spines[spine].set_visible(False)
+    fig.savefig(FIG_PNG.with_name("concatenated_stability_16seg_theory.png"),
+                dpi=300, bbox_inches="tight")
+    fig.savefig(FIG_PDF.with_name("concatenated_stability_16seg_theory.pdf"))
+    plt.close(fig)
+    print(f"wrote companion figure concatenated_stability_16seg_theory.png/.pdf")
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
