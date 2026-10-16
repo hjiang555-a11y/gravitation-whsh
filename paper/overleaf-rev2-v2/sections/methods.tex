@@ -164,8 +164,10 @@ Table~\ref{tab:estimators}.
 The remaining terms of the uncertainty budget (Table~\ref{tab:budget})
 are systematic. The Sr and Yb terms are the published evaluations of
 the two clocks~\citep{jia2026sr, zhu2026yb}; the value adopted for the
-Yb clock resolves an internal-versus-published discrepancy in favor
-of the published evaluation. The static-potential term is
+Yb clock is the published evaluation of
+$\uYbE\times10^{-18}$~\citep{zhu2026yb}, which is more conservative
+than an internal estimate, and the discrepancy does not affect the
+conclusion at the reported precision. The static-potential term is
 $u(\dW)/c^2$ from the leveling uncertainty
 $\dWUnc~\mathrm{m^2\,s^{-2}}$, giving
 $\uStaticE \times 10^{-18}$. The frequency-conversion stages
@@ -235,11 +237,15 @@ segment: the template varies at the $10^{-17}$ level while the
 single-segment beat residuals are comparable in size, so no single
 segment reaches significance on its own. The same fit is repeated for
 both tide models, on the same \nSeg~segments that enter the ratio
-combination (Supplementary Figure~1b). The per-segment
+combination (Supplementary Figure~1b); because the two models are
+correlated realizations that share the same beat record, their two
+significance values are not independent replications of the
+measurement. The per-segment
 amplitudes are combined with precision weights $1/u_A^2$; the sign
 consistency is evaluated by a two-sided binomial test on the number of
 segments with positive correlation, together with a signed Stouffer
-combination of the per-segment $p$ values. The combined correlation is
+combination of the per-segment $p$ values, which assumes the segments
+to be independent. The combined correlation is
 significant for both models, but neither model reproduces the expected
 response amplitude $+1$ (the observed precision-weighted amplitudes
 are $\tidalAmpOldE$ and $\tidalAmpNewE$), and the two models disagree
