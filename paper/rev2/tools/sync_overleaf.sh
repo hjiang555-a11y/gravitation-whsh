@@ -10,6 +10,8 @@ cp "$REV2/main.tex" "$REV2/supplementary.tex" "$PKG/"
 cp "$REV2"/sections/*.tex "$PKG/sections/"
 cp "$REV2"/generated/numbers.tex "$REV2"/generated/segment_table.tex \
    "$REV2"/generated/loo_table.tex \
+   "$REV2"/generated/ratio_intermediates.tex \
+   "$REV2"/generated/correlation_table.tex \
    "$REV2"/generated/numbers.json "$REV2"/generated/numbers_manifest.json "$PKG/generated/"
 cp "$REV2/refs.bib" "$PKG/"
 cp "$REV2"/figs/*.pdf "$PKG/figs/" 2>/dev/null || true

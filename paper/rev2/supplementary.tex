@@ -55,6 +55,18 @@ clock comparison at \uTotalShort$\times10^{-18}$}
 
 \begin{table}[h]
   \centering
+  \caption{Intermediate quantities of the per-segment ratio
+  inversion: the retained sample count $n_{\rm valid}$, the
+  segment-mean beat deviation $\overline{\delta b}$ and the Sr
+  systematic shift $a$ entering the Dr formula, and the resulting
+  ratio $R_i$ (24 digits shown; full precision in the frozen result
+  layer).}
+  \label{tab:ratio-intermediates}
+  \input{generated/ratio_intermediates}
+\end{table}
+
+\begin{table}[h]
+  \centering
   \caption{Leave-one-out sensitivity of the ratio combination. Each
   row excludes one of the 16 segments and recomputes the combination
   from the remaining segments. The center values are stable at the
@@ -84,6 +96,34 @@ falling short of the expected $+1$ and differing from each other.
 This is the same conclusion as the spliced stability record: the
 observed tidal coupling is real but smaller than any single template
 predicts, so the tidal term is carried as an uncertainty.
+
+\begin{table}[h]
+  \centering
+  \caption{Per-segment 1200-s-windowed tidal-correlation fits
+  (ETideLoad4.5 template). $A$ and $u_A$ are the fitted amplitude and
+  its uncertainty, $r$ the Pearson correlation, all from
+  non-overlapping 1200-s windows; the sign convention has the
+  expected response at $A=+1$. The combined, precision-weighted
+  amplitude is $\tidalAmpOldE$ ($\tidalSigmaOldE\sigma$ from zero),
+  with the sign of the correlation positive in \tidalNegSeg~of the
+  \nSeg~segments; the DE421+FES2022 template gives $\tidalAmpNewE$
+  ($\tidalSigmaNewE\sigma$) with the same sign count.}
+  \label{tab:correlation}
+  \input{generated/correlation_table}
+\end{table}
+
+Environmental checks accompany this analysis. Surface air
+temperature records at the three cities along the link show a clear
+diurnal cycle (peak-to-peak about 4.6--5.6\,$^\circ$C), but the
+diurnal components of the out-of-loop reference, the out-of-loop
+signal and the fiber-link beat are each far below their respective
+measurement noise, and the beat reflects the frequency difference
+between the two clocks, so the temperature cycle is not detectable in
+the record. Co-seismic displacement from the regional seismicity
+during the campaign is estimated from the earthquake moments to be
+at most $6\times10^{-20}$ in differential fractional frequency, two
+orders below the statistical uncertainty, so it cannot drive the
+tidal-period correlation.
 
 \section{Frequency-chain relations and the ratio inversion}
 \label{sec:freq-chain}
