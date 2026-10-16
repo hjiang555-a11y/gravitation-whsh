@@ -63,15 +63,17 @@ CURATED: dict[str, tuple[str, str]] = {
     ),
     "link_e18": (
         "0.1",
-        "curated upper bound: experiment-side budget lists the fiber transfer "
-        "as < 1e-19 (experiment materials; .omo/drafts/experiment-facts.md); "
-        "adopted as 0.1e-18",
+        "curated upper bound (for the quadrature only): the fiber transfer "
+        "contributes below 1e-19, from the digitization error of the "
+        "direct-digital-synthesis (DDS) frequency-reference settings; the "
+        "table displays the bound as <0.1 in units of 1e-18",
     ),
     "comb_e18": (
         "0.1",
-        "curated upper bound: experiment-side budget lists the comb transfer "
-        "as < 1e-19 (experiment materials; .omo/drafts/experiment-facts.md); "
-        "adopted as 0.1e-18",
+        "curated upper bound (for the quadrature only): the comb transfer "
+        "contributes below 1e-19, from the digitization error of the "
+        "direct-digital-synthesis (DDS) frequency-reference settings; the "
+        "table displays the bound as <0.1 in units of 1e-18",
     ),
     "tidal_e18": (
         "0.85",
