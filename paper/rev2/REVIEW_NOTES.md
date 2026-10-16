@@ -643,6 +643,27 @@
     - 验证：check.sh 104 宏 + 5 产物 + 两文档零 undefined；PDF 渲染
       核对温度句与 u_i 段；Overleaf 已同步。
 
+50. **图 4 与 SI 图 1 等效性合并 + 僵尸章节清除（2026-10-16
+    第四十六轮，按指示）**：
+    - 用户：图 4（拼接稳定度）与 SI 图 1（逐段幅度）等效；选一种；
+      补充材料有僵尸章节（无内容）；优化 Methods/SI 符合 Nature 篇幅；
+      调整正文相关描述。
+    - 取舍：保留 Methods 图 4（`fig:spliced`，用户精细迭代的拼接
+      稳定度版）；删除 SI 图 1（fig4_tidal_response 不再被 SI 引用，
+      诊断版文件保留于 clock_ratio/ 与 paper_figs 存档）。
+    - SI §2「Within-segment tidal correlation analysis」由僵尸图章
+      重写为定量文字段：12/16 正相关（两模型）、精度加权幅度
+      +0.58/+0.87（均 >5σ 偏离零、但低于预期 +1 且互不相同）、
+      与拼接稳定度记录结论一致（"the same conclusion as the
+      spliced stability record"）。
+    - Methods 相关性小节同步去图指向（Supplementary Figure~1a/b
+      删除），并入数值结论与拼接图呼应句；Discussion 删除
+      "Supplementary Figure~1" 指向。
+    - SI 七节全部有实质内容，无僵尸章节。
+    - 词数：正文 1,910、Methods 1,349（Nature 篇幅余量充足）。
+    - 验证：check.sh 104 宏 + 5 产物 + 两文档零 undefined；SI PDF
+      七节内容核对；Overleaf 已同步。
+
 46. **补充材料分层（2026-10-15 第四十二轮，按指示）**：
     - 用户裁定：P0 可执行（16 段口径，不引入 17 段/遗留信息）；
       P1 同意；P2 第二、三项可准备备用。执行后推送。

@@ -65,25 +65,25 @@ clock comparison at \uTotalShort$\times10^{-18}$}
 
 \section{Within-segment tidal correlation analysis}
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\linewidth]{figs/fig4_tidal_response.png}
-  \caption{Within-segment tidal correlation analysis.
-  \textbf{(a)} Single-segment example: the 1200-s demeaned beat
-  waveform (dots) and the tidal template scaled at the expected
-  response $A=+1$ and at the fitted amplitude, for the ETideLoad4.5
-  model. No single segment reaches a significant correlation on its
-  own. \textbf{(b)} Per-segment response amplitudes $A$ for the two
-  tide models, over the \nSeg~segments entering the ratio
-  combination. Error bars are per-segment fit uncertainties from
-  non-overlapping windows; the solid lines mark the precision-weighted
-  combinations. In \tidalNegSeg~of the \nSeg~segments the correlation
-  is positive for both models, and both precision-weighted amplitudes
-  ($\tidalAmpOldE$ and $\tidalAmpNewE$) fall short of the expected
-  response of $+1$ (dashed line), so the observed tidal coupling is
-  smaller than any single template predicts.}
-  \label{fig:tidal-response}
-\end{figure}
+As an independent quantitative check of the tide-model corrections
+shown in the spliced stability figure of the Methods, each segment's
+1200-s demeaned beat waveform was fitted against the 1-s tidal
+template, $\mathrm{beat} = A\cdot\mathrm{tide}$, with the template
+sign corrected for the beat polarity so that a positive amplitude
+corresponds to the expected response $A = +1$; amplitudes,
+Pearson $r$ and $p$ values were inferred from non-overlapping 1200-s
+windows only. No single segment reaches a significant correlation on
+its own: the per-segment fits scatter around zero with uncertainties
+comparable to the template variation. Across the \nSeg~segments
+entering the ratio combination, however, the sign of the correlation
+is positive in \tidalNegSeg~of the \nSeg~segments for both tide
+models, and the precision-weighted response amplitudes are
+$\tidalAmpOldE$ (ETideLoad4.5) and $\tidalAmpNewE$
+(DE421+FES2022), both differing from zero at more than $5\sigma$ but
+falling short of the expected $+1$ and differing from each other.
+This is the same conclusion as the spliced stability record: the
+observed tidal coupling is real but smaller than any single template
+predicts, so the tidal term is carried as an uncertainty.
 
 \section{Frequency-chain relations and the ratio inversion}
 \label{sec:freq-chain}
@@ -262,7 +262,7 @@ the ocean-tide loading correction to the gravitational potential
 directly from the FES2022 global ocean-tide model, on a \qty{90}{s}
 Beijing-time grid. The two templates are independent realizations;
 their mutual correlation over the campaign is $+0.88$, and their
-segment-mean predictions differ in detail (Figure~\ref{fig:tidal-response}b).
+segment-mean predictions differ in detail.
 
 The historical response amplitude $A = +0.54$ used for the
 fixed-amplitude combinations comes from the demeaned beat waveform of
