@@ -26,6 +26,10 @@ paper/*.fls
 paper/*.fdb_latexmk
 paper/*.synctex.gz
 
+# rev2 编译产物入库例外：主文与补充材料的 PDF 随稿入库（与历史 main.pdf 同待遇）
+!paper/rev2/main.pdf
+!paper/rev2/supplementary.pdf
+
 # Agent scratch / notepads / local worktrees（本地协调用，不入库）
 .omo/
 .claude/
