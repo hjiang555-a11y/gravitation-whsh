@@ -1,0 +1,261 @@
+#!/usr/bin/env python3
+"""Spliced concatenated stability on the 16-segment primary, for BOTH tide models.
+
+The 16 segments entering the ratio combination (segment group 9 excluded, as in
+the audit primary) are spliced end-to-end with their inter-segment gaps removed,
+giving one continuous 986,416-sample record. One overlapping Allan deviation
+runs on that record per scenario, so tau can reach the full spliced length.
+
+The template sign follows the paper convention (corrected for the beat
+polarity): the tidal template is negated and a POSITIVE response amplitude
+corresponds to the expected response A = +1.  Numerically the corrections are
+identical to the historical A=-1 / A=-0.54 convention applied to the
+un-negated template.
+
+Series:
+  raw                  A = 0
+  ETideLoad4.5 theory  A = +1
+  ETideLoad4.5 empir.  A = +0.54
+  DE421+FES2022 theory A = +1
+  DE421+FES2022 empir. A = +0.54
+  correction           the removed term itself, h/F_1550 (ETideLoad4.5)
+
+Independent diagnostic; modifies no existing artifact.
+"""
+
+from __future__ import annotations
+
+import csv
+import sys
+from dataclasses import dataclass
+from decimal import Decimal
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from clock import shared as s  # noqa: E402
+from clock_ratio.tidal_analysis import (  # noqa: E402
+    AnalysisError,
+    Scenario,
+    TideGrid,
+    analyze_segment,
+    select_segments,
+)
+from clock_ratio.tidal_new_model_compare import load_new_tide  # noqa: E402
+
+OUT_DIR = Path(__file__).resolve().parent
+CSV_PATH = OUT_DIR / "concatenated_stability_16seg.csv"
+MD_PATH = OUT_DIR / "concatenated_stability_16seg.md"
+FIG_PNG = OUT_DIR / "concatenated_stability_16seg.png"
+FIG_PDF = OUT_DIR / "concatenated_stability_16seg.pdf"
+
+EXCLUDED_GROUP = 9
+TAU_START_S = 100
+TAUS_S = (128, 256, 512, 600, 1024, 1200, 2048,
+          3600, 4096, 7200, 8192, 16384, 21600, 32768, 43200, 65536, 86400,
+          100000, 131072, 172800, 200000, 262144, 345600, 400000)
+
+# Paper sign convention: template negated, positive amplitude = expected sign.
+RAW = Scenario("raw", Decimal("0"))
+THEORY = Scenario("theory", Decimal("+1"))
+EMPIRICAL = Scenario("empirical", Decimal("+0.54"))
+
+
+@dataclass(frozen=True, slots=True)
+class GridPair:
+    old: TideGrid
+    new: object  # NewTideGrid (duck-typed beat_at)
+
+
+def aligned_axis(segment_times: list[np.ndarray]) -> np.ndarray:
+    """Place each segment end-to-end on one continuous 1-s clock."""
+    origin = segment_times[0][0]
+    blocks, offset = [], 0
+    for times in segment_times:
+        blocks.append(origin + np.timedelta64(offset, "s")
+                      + np.arange(len(times)) * np.timedelta64(1, "s"))
+        offset += len(times)
+    return np.concatenate(blocks)
+
+
+def spliced_oadev(y: np.ndarray, taus_s) -> list[dict]:
+    """Overlapping Allan deviation on one continuous spliced record.
+
+    The record has no gaps (t = 0,1,...,N-1). For lag m (tau = m seconds),
+    every start i=0..N-2m contributes an adjacent m-averaged difference.
+    The 1-sigma uncertainty on sigma_y uses the Riley & Howe equivalent
+    degrees of freedom.
+    """
+    n = len(y)
+    centered = y - y[0]
+    centered = centered - centered.mean()
+    prefix = np.concatenate(([0.0], np.cumsum(centered)))
+    points = []
+    for tau in taus_s:
+        m = int(tau)
+        n_pairs = n - 2 * m + 1
+        if n_pairs <= 0:
+            points.append({"tau_s": m, "n_pairs": 0, "sigma_y": None, "u_sigma": None})
+            continue
+        difference = (prefix[2 * m:] - 2 * prefix[m:-m] + prefix[:-2 * m]) / m
+        sigma = float(np.sqrt(np.dot(difference, difference) / (2.0 * n_pairs)))
+        edf = max(1.0, (3.0 * (n - 1) / (2.0 * m) - 1.0) * (2.0 / 3.0))
+        u_sigma = sigma / np.sqrt(2.0 * edf)
+        points.append({"tau_s": m, "n_pairs": int(n_pairs), "sigma_y": sigma,
+                       "u_sigma": float(u_sigma)})
+    return points
+
+
+def main() -> int:
+    try:
+        times, beat = s.load_beat()
+    except (OSError, ValueError) as error:
+        raise AnalysisError(f"raw beat data could not be loaded: {error}") from error
+    segments = select_segments(times, beat)
+    segments = [seg for seg in segments if seg.group != EXCLUDED_GROUP]
+    try:
+        tide = TideGrid(*s.load_tide())
+    except (OSError, ValueError, KeyError) as error:
+        raise AnalysisError(f"tide data could not be loaded: {error}") from error
+    try:
+        new_grid = load_new_tide()
+    except (OSError, ValueError, KeyError) as error:
+        raise AnalysisError(f"new tide model could not be loaded: {error}") from error
+
+    series: dict[str, list] = {
+        "raw": [],
+        "old_theory": [],
+        "old_empirical": [],
+        "new_theory": [],
+        "new_empirical": [],
+        "correction": [],
+    }
+    segment_times: list[np.ndarray] = []
+    for segment in segments:
+        segment_times.append(segment.times)
+        h_old = tide.beat_at(segment.times)          # un-negated template
+        h_new = new_grid.beat_at(segment.times)
+        # paper sign convention: template negated, A positive
+        h_old_neg = -h_old
+        h_new_neg = -h_new
+        series["raw"].append(analyze_segment(segment, h_old_neg, RAW).fluctuations)
+        series["old_theory"].append(analyze_segment(segment, h_old_neg, THEORY).fluctuations)
+        series["old_empirical"].append(analyze_segment(segment, h_old_neg, EMPIRICAL).fluctuations)
+        series["new_theory"].append(analyze_segment(segment, h_new_neg, THEORY).fluctuations)
+        series["new_empirical"].append(analyze_segment(segment, h_new_neg, EMPIRICAL).fluctuations)
+        series["correction"].append(h_old_neg / s.F_1550)
+
+    aligned_times = aligned_axis(segment_times)
+    span_days = float((segment_times[-1][-1] - segment_times[0][0])
+                      / np.timedelta64(1, "D"))
+    for key in list(series):
+        series[key] = np.concatenate(series[key])
+    n_total = len(series["raw"])
+    if not np.all(np.diff(aligned_times) == np.timedelta64(1, "s")):
+        raise AnalysisError("aligned axis is not a monotone 1-second clock")
+    taus = [t for t in TAUS_S if TAU_START_S <= t < n_total // 2]
+    curves = {key: spliced_oadev(series[key], taus) for key in series}
+
+    with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.writer(stream)
+        writer.writerow(["series", "tau_s", "tau_days", "n_pairs", "sigma_y", "u_sigma"])
+        for key in ("raw", "old_theory", "old_empirical",
+                    "new_theory", "new_empirical", "correction"):
+            for point in curves[key]:
+                writer.writerow([
+                    key, point["tau_s"], f"{point['tau_s'] / 86400:.6f}",
+                    point["n_pairs"],
+                    "" if point["sigma_y"] is None else f"{point['sigma_y']:.6e}",
+                    "" if point["u_sigma"] is None else f"{point['u_sigma']:.6e}",
+                ])
+
+    lines = [
+        "# Spliced concatenated stability (16-segment primary, both tide models)\n",
+        f"{len(segments)} segments placed end-to-end on one continuous 1-s clock; the "
+        f"wall-clock gaps are removed. The aligned record spans "
+        f"**{n_total:,}** s ({n_total / 86400:.3f} d of pure data time) versus "
+        f"{span_days:.2f} d of real elapsed time. One OADEV per series over the "
+        f"aligned axis, starting at tau = {TAU_START_S} s. Template sign follows the "
+        f"paper convention (corrected for the beat polarity; positive amplitude = "
+        f"expected response).\n",
+        "| tau [s] | tau [d] | raw (A=0) | ETideLoad4.5 theory (A=+1) | "
+        "ETideLoad4.5 empirical (A=+0.54) | DE421+FES2022 theory (A=+1) | "
+        "DE421+FES2022 empirical (A=+0.54) | correction h/F1550 | n_pairs |",
+        "|---|---|---|---|---|---|---|---|---|",
+    ]
+    for i, tau in enumerate(taus):
+        def f(key):
+            p = curves[key][i]
+            if p["sigma_y"] is None:
+                return "—"
+            return f"{p['sigma_y']:.3e} ± {p['u_sigma']:.1e}"
+        lines.append(
+            f"| {tau} | {tau / 86400:.3f} | {f('raw')} | {f('old_theory')} | "
+            f"{f('old_empirical')} | {f('new_theory')} | {f('new_empirical')} | "
+            f"{f('correction')} | {curves['raw'][i]['n_pairs']} |")
+    lines.append(
+        "\n> `u_sigma` is the 1-sigma EDF (Riley & Howe) uncertainty on sigma_y. "
+        "Gaps are removed, so the record is treated as contiguous; a tau longer "
+        "than one raw segment is computable but mixes different campaigns, and "
+        "`n_pairs` records the adjacent m-averaged differences behind each "
+        "point.\n")
+    lines.append(f"\n![Spliced stability, both models]({FIG_PNG.name})\n")
+    MD_PATH.write_text("\n".join(lines), encoding="utf-8")
+
+    write_figure(taus, curves)
+
+    print(f"aligned axis: {aligned_times[0]} .. {aligned_times[-1]} "
+          f"({n_total:,} samples, 1-s steps)")
+    print(f"pure data span {n_total / 86400:.3f} d vs real elapsed {span_days:.2f} d; "
+          f"tau up to {taus[-1]} s ({taus[-1] / 86400:.3f} d)")
+    for key in ("raw", "old_theory", "old_empirical",
+                "new_theory", "new_empirical", "correction"):
+        p = curves[key][-1]
+        sigma = "N/A" if p["sigma_y"] is None else f"{p['sigma_y']:.4e}"
+        print(f"  {key:14s} sigma_y({p['tau_s']}s) = {sigma}  (n_pairs={p['n_pairs']})")
+    print(f"wrote {CSV_PATH.name}, {MD_PATH.name}")
+    return 0
+
+
+def write_figure(taus, curves) -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    meta = {
+        "raw": ("raw (A=0)", "#8a8a8a", "o", "-"),
+        "old_theory": ("ETideLoad4.5 theory (A=+1)", "#1f4e9c", "s", "-"),
+        "old_empirical": ("ETideLoad4.5 empirical (A=+0.54)", "#2ca02c", "D", "--"),
+        "new_theory": ("DE421+FES2022 theory (A=+1)", "#b22222", "^", "-"),
+        "new_empirical": ("DE421+FES2022 empirical (A=+0.54)", "#e07b00", "v", "--"),
+        "correction": ("correction h/F1550", "#444444", ".", ":"),
+    }
+    fig, ax = plt.subplots(figsize=(6.9, 4.0))
+    for key in ("raw", "old_theory", "old_empirical",
+                "new_theory", "new_empirical", "correction"):
+        label, color, marker, linestyle = meta[key]
+        pts = [p for p in curves[key] if p["sigma_y"] is not None]
+        xs = [p["tau_s"] for p in pts]
+        ys = [p["sigma_y"] for p in pts]
+        es = [p["u_sigma"] for p in pts]
+        ax.errorbar(xs, ys, yerr=es, color=color, marker=marker, ms=3.6,
+                    lw=1.2, linestyle=linestyle, elinewidth=0.8, capsize=1.8,
+                    label=label)
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlabel(r"$\tau$ [s]")
+    ax.set_ylabel(r"$\sigma_y(\tau)$")
+    ax.set_title("Spliced concatenated ratio stability, 16 segments, both tide models",
+                 fontsize=9.5)
+    ax.grid(True, which="both", alpha=0.18, lw=0.4)
+    ax.legend(frameon=False, fontsize=7.5)
+    for spine in ("top", "right"):
+        ax.spines[spine].set_visible(False)
+    fig.savefig(FIG_PNG, dpi=300, bbox_inches="tight")
+    fig.savefig(FIG_PDF)
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
