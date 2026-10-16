@@ -171,6 +171,24 @@ extrapolating the stability curve beyond the data; the log-log slope
 of $\sigma_y(\tau)$ is retained as a white-frequency-noise diagnostic
 only.
 
+The choice of the last computable point is deliberate and
+conservative. The beat record develops a low-frequency plateau for
+$\tau \gtrsim 4096$\,s (a flicker-frequency-noise floor from the
+clocks and the link, not the tides); fitting the white-frequency
+slope and extrapolating it to the full segment duration would
+systematically understate $u_i$ by 30--40\%, inflating the reduced
+chi-square to about 4 and making the segments appear mutually
+inconsistent. Adopting $\sigma_y$ at the largest computable $\tau$
+instead keeps the statistical uncertainty honest at the expense of
+being somewhat conservative: the resulting $\chi^2_{\rm red} = 0.41$
+and Birge ratio 0.64 are below unity, indicating that the segments
+are consistent with their (slightly conservative) uncertainties.
+Segments whose log-log slope leaves the white-frequency-noise band
+$[-0.65, -0.35]$ are flagged as model-limited but retained with their
+measured uncertainties; they lie at the steep end of a continuous
+slope distribution with no common campaign, weather or laboratory
+condition.
+
 The segments are combined under a random-effect model with common
 excess scatter, $R_i \sim \mathcal{N}(\mu, u_i^2 + \xi^2)$. Three
 estimators are evaluated:

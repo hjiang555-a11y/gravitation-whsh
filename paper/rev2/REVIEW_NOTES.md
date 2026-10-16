@@ -618,6 +618,31 @@
     - 验证：check.sh 104 宏 + 5 产物 + 两文档零 undefined（14 页）；
       PDF 渲染核对图 4 caption 与正文段；Overleaf 已同步。
 
+49. **nature-review-studio 评估修复（2026-10-16 第四十五轮）**：
+    按 mumdark/nature-review-studio v1.4.1 方法论（12 axis/6 指纹/四档
+    banner/21 策略/任务表）评估：指纹「混合多方法」→ 4 审稿人；
+    banner = Major revision；共识 3 项（Cc.1 环境混淆、Cc.2 模板配置、
+    Cc.3 供图来源）；任务表 T1–T12。用户裁定：T8 三段为实验人员定义
+    ——只加定义说明不引入数字；其余基本认可补齐。
+    - T8：Results 战役句补 "in three measurement stages defined by
+      the experiment team (late June to early July, early August, and
+      late August)"。
+    - T4：Methods 相关性节补双模型共享数据句（"not independent
+      replications"）+ Stouffer 段独立性假设句。
+    - T6：Methods Yb 不确定度句改写（published 1.3e-18 更保守、
+      引用 zhu2026yb、差异不影响结论精度）。
+    - T1：Methods 相关性节补温度日周期排除句（地表气温峰峰
+      4.6–5.6 °C；环外参考/信号/链路拍频的日周期分量 << 各自噪声；
+      拍频反映两钟频差；依据 archive/temperature/ANALYSIS.md）。
+    - T3：SI 统计节补 u_i 口径依据段——低频平台 τ≳4096 s 为钟/链路
+      flicker 地板非潮汐；白频外推会系统性低估 u_i 30–40%（推高
+      χ²_red 至 ~4）；取最后可算点更保守（χ²_red 0.41、Birge 0.64）；
+      模型受限段带白频带外旗标保留。
+    - 待办（作者/投稿包）：T2 模板生成配置、T5 图来源声明、T7
+      ξ≪u 说明、T9 可搬运钟张力、T10/12 图核对、T11 图 4 色系。
+    - 验证：check.sh 104 宏 + 5 产物 + 两文档零 undefined；PDF 渲染
+      核对温度句与 u_i 段；Overleaf 已同步。
+
 46. **补充材料分层（2026-10-15 第四十二轮，按指示）**：
     - 用户裁定：P0 可执行（16 段口径，不引入 17 段/遗留信息）；
       P1 同意；P2 第二、三项可准备备用。执行后推送。
