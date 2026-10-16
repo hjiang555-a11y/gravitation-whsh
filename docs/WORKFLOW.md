@@ -174,6 +174,9 @@ python clock_ratio/statistical_methods_tidal_seg9.py
 python clock_ratio/concatenated_stability.py
 python clock_ratio/concatenated_stability_long.py
 
+# 13b. 16 段口径·双模型拼接稳定度（独立诊断，报告 §9.3；模板正号约定）
+python clock_ratio/concatenated_stability_16seg.py
+
 # 14. 论文配图（必须在 statistical_methods_tidal.py 之后）
 python clock_ratio/make_paper_figures.py
 

@@ -60,6 +60,7 @@ uv run --project ../.. python tools/make_figures.py   # （可选）核对三张
 
 **历史/附加分析（legacy 链）**：`python run_all.py`（全流程，含 17 段历史检出、
 变体、拼接稳定度、独立潮汐报告）；`--tidal-only` 只跑独立潮汐分析与报告。
+16 段口径·双模型拼接稳定度诊断（论文正号约定）：`python clock_ratio/concatenated_stability_16seg.py`。
 完整说明见 [docs/WORKFLOW.md](docs/WORKFLOW.md)。
 
 ## 目录导航

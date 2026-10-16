@@ -327,3 +327,12 @@ empirical 的 χ² 从 126.53 降到 106.36，Δχ² = 20.17。
 
 完整 τ 网格与 EDF 误差栏见 [concatenated_stability_long.md](concatenated_stability_long.md)。
 
+### 9.3 16 段口径·双模型拼接（2026-10-16 新增）
+
+按论文当前口径（16 段、模板极性改正后正号约定 A=+1/+0.54）重算端到端拼接，
+并把 DE421+FES2022 新模型纳入同一图：七条曲线（raw；两模型各 theory/empirical；
+两模型各自的修正项 h/F₁₅₅₀ 点线）。产物见
+[concatenated_stability_16seg.md](concatenated_stability_16seg.md)、
+[concatenated_stability_16seg.png](concatenated_stability_16seg.png)。
+这是独立诊断，不替代 §9.1/§9.2 的 17 段历史产物。
+
