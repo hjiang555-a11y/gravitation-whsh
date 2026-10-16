@@ -91,6 +91,39 @@ continuous slope distribution, just beyond the acceptance bound, and
 show no common campaign, weather or laboratory condition that
 distinguishes them from the remaining segments.
 
+As an additional stability check, the \nSeg~segments were spliced
+end-to-end on a continuous 1-s clock with the wall-clock gaps
+removed, giving a single \nSamples~sample record whose overlapping
+Allan deviation $\sigma_y(\tau)$ can reach averaging times beyond a
+single segment (Figure~\ref{fig:spliced}). The spliced curve extends
+the per-segment stability points to $\tau$ up to about 4.6 days of
+pure data time, at which the raw record reaches
+$\sigma_y \approx 8.6\times10^{-19}$; applying the two theoretical
+tide corrections ($A = +1$) shifts the long-$\tau$ level by less than
+$10\%$ in opposite senses, and the removed correction terms
+($h/f_{1550}$) themselves lie below the corrected curves. Because the
+spliced axis removes the inter-segment gaps, points with $\tau$
+exceeding one segment mix different campaigns; the pair count behind
+each point is reported with the data. This diagnostic is a data
+record, not a statistical uncertainty.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig5_spliced_stability.png}
+  \caption{Spliced concatenated stability of the \nSeg~segments.
+  The segments are placed end-to-end on a continuous 1-s clock (gaps
+  removed, $\nSamples$ samples, \qty{11.4}{d} of pure data time); one
+  overlapping Allan deviation per series, from $\tau = \qty{1000}{s}$
+  to $\qty{4.6}{d}$. Curves: the raw record ($A=0$), the theoretical
+  tide correction ($A=+1$) for the ETideLoad4.5 and DE421+FES2022
+  templates, and the removed correction terms $h/f_{1550}$
+  themselves (dotted). Error bars are 1-$\sigma$ equivalent degrees of
+  freedom; the pair count at each $\tau$ is reported with the data.
+  Points beyond one segment mix campaigns, so the curve is a data
+  record rather than an uncertainty estimate.}
+  \label{fig:spliced}
+\end{figure}
+
 \subsection*{Clock-ratio determination, statistical model and uncertainty budget}
 
 Each retained segment yields a clock-ratio estimate $R_i$ from the mean

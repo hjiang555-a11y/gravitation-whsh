@@ -300,6 +300,37 @@ def write_figure(taus, curves) -> None:
     plt.close(fig)
     print(f"wrote companion figure concatenated_stability_16seg_theory.png/.pdf")
 
+    # ---- paper figure (no title, publication fonts) ----
+    fig, ax = plt.subplots(figsize=(6.9, 3.7))
+    for key in ("raw", "old_theory", "new_theory",
+                "old_correction", "new_correction"):
+        label, color, marker, linestyle = meta_focus[key]
+        pts = [p for p in curves[key] if p["sigma_y"] is not None]
+        xs = [p["tau_s"] for p in pts]
+        ys = [p["sigma_y"] for p in pts]
+        es = [p["u_sigma"] for p in pts]
+        ax.errorbar(xs, ys, yerr=es, color=color, marker=marker, ms=4.0,
+                    lw=1.3, linestyle=linestyle, elinewidth=0.8, capsize=1.8,
+                    label=label)
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlabel(r"$\tau$ (s)", fontsize=10)
+    ax.set_ylabel(r"$\sigma_y(\tau)$", fontsize=10)
+    ax.set_xlim(1e3, 4.2e5)
+    ax.set_ylim(2e-19, 2e-17)
+    ax.tick_params(labelsize=9)
+    ax.grid(True, which="both", alpha=0.18, lw=0.4)
+    ax.legend(frameon=False, fontsize=8)
+    for spine in ("top", "right"):
+        ax.spines[spine].set_visible(False)
+    fig.tight_layout()
+    papers_dir = Path(__file__).resolve().parents[1] / "paper" / "rev2" / "figs"
+    fig.savefig(papers_dir / "fig5_spliced_stability.png", dpi=300,
+                bbox_inches="tight")
+    fig.savefig(papers_dir / "fig5_spliced_stability.pdf", bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote paper figure {papers_dir / 'fig5_spliced_stability.png'} and .pdf")
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

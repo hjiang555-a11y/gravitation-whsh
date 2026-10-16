@@ -600,6 +600,24 @@
       核对 "−0.85 vs +0.21"、"signal at the tidal period"；
       Overleaf 已同步。
 
+48. **拼接稳定度图入 Methods（2026-10-16 第四十四轮，按指示）**：
+    - 用户：将 16 段双模型拼接稳定度图与描述放入 Methods，与数据处理
+      放一起。
+    - `concatenated_stability_16seg.py` 新增论文版图输出
+      `paper/rev2/figs/fig5_spliced_stability.{png,pdf}`（无标题、
+      出版字体、τ 1 000 s–4.6 d、5 条线：raw / 两模型 theory A=+1 /
+      两模型 correction h/F₁₅₅₀ 点线）；诊断版 7 线图与 5 线伴图保留。
+    - Methods「Data processing and segment definition」小节末尾新增
+      一段 + Figure 4（`fig:spliced`）：拼接口径（间隙移除、986 416
+      样本、11.4 d 纯数据时间）、长 τ 结果（raw ≈8.6×10⁻¹⁹、两
+      theory 修正使长 τ 水平变化 <10% 且方向相反、修正项自身在下方）、
+      跨段混战役声明（"data record, not a statistical uncertainty"）、
+      n_pairs 随数据报告。
+    - 主文图编号：图 1–3 主文不变；图 4 为 Methods 拼接稳定度图
+      （SI 图 1 潮汐相关性、SI 表 1/2 逐段与 LOO）。
+    - 验证：check.sh 104 宏 + 5 产物 + 两文档零 undefined（14 页）；
+      PDF 渲染核对图 4 caption 与正文段；Overleaf 已同步。
+
 46. **补充材料分层（2026-10-15 第四十二轮，按指示）**：
     - 用户裁定：P0 可执行（16 段口径，不引入 17 段/遗留信息）；
       P1 同意；P2 第二、三项可准备备用。执行后推送。
