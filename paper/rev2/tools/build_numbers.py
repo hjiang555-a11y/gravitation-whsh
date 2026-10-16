@@ -337,10 +337,11 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("xiBayesE", f"{comb['xi_bayes'] * 1e18:.2f}", f"{tier1}.xi_bayes")
     add("muBayesE", f"{comb['mu_bayes'] * 1e18:.3f}", f"{tier1}.mu_bayes")
 
-    d_est = float((Decimal(comb["R_bayes"]) - Decimal(comb["R_wls"])) * Decimal("1e21"))
+    d_est = float((Decimal(comb["R_bayes"]) - Decimal(comb["R_wls"]))
+                  / Decimal(comb["R_bayes"]) * Decimal("1e21"))
     add("dEstSpread", f"{d_est:.1f}\\times 10^{{-21}}",
-        "derived: Bayesian minus WLS center, in 1e-21 units "
-        "(the spread of the three estimator center values)")
+        "derived: fractional spread of the three estimator center values, "
+        "(R_bayes - R_wls)/R_bayes, in 1e-21 units")
 
     sens_comb = sensitivity["combination"]
     add("sensRwlsHead", latex_groups(round_str(sens_comb["R_wls"], 19)),
