@@ -338,7 +338,7 @@ def build(macros: list[tuple[str, str, str]]) -> dict:
     add("muBayesE", f"{comb['mu_bayes'] * 1e18:.3f}", f"{tier1}.mu_bayes")
 
     d_est = float((Decimal(comb["R_bayes"]) - Decimal(comb["R_wls"])) * Decimal("1e21"))
-    add("dEstSpread", f"{d_est:.1f}\\times10^{-21}",
+    add("dEstSpread", f"{d_est:.1f}\\times 10^{{-21}}",
         "derived: Bayesian minus WLS center, in 1e-21 units "
         "(the spread of the three estimator center values)")
 

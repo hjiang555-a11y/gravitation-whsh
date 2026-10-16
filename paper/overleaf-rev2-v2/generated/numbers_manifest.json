@@ -110,7 +110,7 @@
       "source": "manifest:primary_16.combination.mu_bayes"
     },
     "dEstSpread": {
-      "value": "4.4\\times10^-21",
+      "value": "4.4\\times 10^{-21}",
       "source": "derived: Bayesian minus WLS center, in 1e-21 units (the spread of the three estimator center values)"
     },
     "sensRwlsHead": {
