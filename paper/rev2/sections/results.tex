@@ -56,7 +56,11 @@ Figure~\ref{fig:ratio}.
 \end{figure}
 
 We determine the Yb/Sr frequency ratio from the \nSeg~segments. Each
-segment yields a ratio estimate with its own statistical uncertainty
+segment yields a ratio estimate with its own statistical uncertainty,
+taken as the last computable point of the overlapping Allan deviation
+rather than an extrapolation of the white-frequency slope, because
+the beat record develops a low-frequency plateau beyond
+$\tau \approx 4096$\,s that an extrapolation would misrepresent
 (Methods). Following recent ratio
 comparisons~\citep{pizzocaro2026european, aeppli2026nist}, we combine
 the segments with a random-effect model that admits a common excess

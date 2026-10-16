@@ -22,7 +22,7 @@ leveled value but about 30 times less precise, so it serves as a
 consistency check rather than a calibration at the reported
 accuracy.
 
-\subsection*{Experimental setup and frequency transfer}
+\subsection*{Experimental setup, frequency transfer and data processing}
 
 The two sites are connected by a phase-stabilized fiber link of
 $\fibreKm$\,km single-pass length ($\roundKm$\,km loop-back),
@@ -52,25 +52,73 @@ $\left(\mathrm{Yb/Sr}\right)_{\rm corr}
 $\delta_g = \deltaGV$, derived from the leveled geopotential
 difference above.
 
-\subsection*{Data processing and segment definition}
-
 The counters sample the beat every second in phase-averaging mode.
-Each accepted segment contributes its longest jump-free record.
-Supplementary Table~1 lists the per-segment retained counts, ratio
-deviations and statistical uncertainties; five segments whose
-stability slopes fall outside the white-frequency-noise band are
-flagged there as model-limited. These five lie at the steep end of a
-continuous slope distribution, just beyond the acceptance bound, and
-show no common campaign, weather or laboratory condition that
-distinguishes them from the remaining segments.
+Each accepted segment contributes its longest jump-free record; the
+per-segment retained counts, ratio deviations and statistical
+uncertainties are listed in Supplementary Table~1. Five segments
+whose stability slopes fall outside the white-frequency-noise band
+are flagged there as model-limited; they lie at the steep end of a
+continuous slope distribution with no common campaign, weather or
+laboratory condition that distinguishes them from the remaining
+segments.
 
-As an additional stability check, the \nSeg~segments were spliced
-end-to-end on a continuous 1-s clock with the wall-clock gaps
-removed, giving a single \nSamples~sample record whose overlapping
-Allan deviation $\sigma_y(\tau)$ can reach averaging times beyond a
-single segment (Figure~\ref{fig:spliced}). The spliced curve extends
-the per-segment stability points to $\tau$ up to about 4.6 days of
-pure data time, at which the raw record reaches
+\subsection*{Tidal analysis}
+
+Two analyses quantify the tidal impact on the ratio, each with its
+own quantity: the within-segment response of the beat waveform
+(Section~\ref{sec:results-budget} of the main text) and the spliced
+stability of the concatenated record (below). They are equivalent
+measures of the same effect---how strongly the beat follows the tidal
+template---and are expected to converge as the record grows; we
+report both.
+
+\emph{Tidal templates and the correction test.} The solid Earth tide
+and ocean tide loading displacement difference between the two sites
+is computed every \qty{30}{s} with the public software
+ETideLoad4.5, converted to an equivalent geopotential difference and
+then to a beat-frequency template $h = f_{1550}\,\Delta W/c^2$ with
+the same $f_{1550}$ normalization as the beat record. A second,
+independent template is built from the DE421 ephemerides and the
+FES2022 ocean-tide model on a \qty{90}{s} grid. The within-segment
+analysis windows the retained beat record and the 1-s template with
+the same 1200-s triangular window at 600-s stride, demeans both, and
+fits $\mathrm{beat} = A\cdot\mathrm{tide}$ through the origin, with
+the template sign corrected for the beat polarity so that a positive
+amplitude corresponds to the expected response $A = +1$; amplitudes,
+Pearson $r$ and $p$ values are inferred from non-overlapping 1200-s
+windows only, and the per-segment amplitudes are combined with
+precision weights $1/u_A^2$. The combined response amplitudes are
+$\tidalAmpOldE$ (ETideLoad4.5) and $\tidalAmpNewE$
+(DE421+FES2022), as reported in the main text; because the two models
+share the same beat record, their significance values are not
+independent replications.
+
+As a correction test, the ratio combination is repeated with the tide
+series applied before the inversion at two fixed amplitudes, the
+theoretical $A = +1$ and the historical $A = +0.54$ from the demeaned
+beat waveform of our earlier analysis of the same campaign. Both
+templates degrade rather than improve the fit: the reduced chi-square
+of the combination rises from \tidalChiRaw~to \tidalChiTheory~and
+\tidalChiEmp~for the ETideLoad4.5 template (Bayesian center shift
+$-\tidalShiftEmpE\times10^{-18}$), and to \tidalChiAlt~for the
+DE421+FES2022 template, which moves the center in the opposite
+direction, by $+\tidalShiftAltE\times10^{-18}$. Repeating the
+segment-mean correlation with the solid tide alone
+($r = \tidalCorrSolid$ instead of \tidalCorrTotal) locates the
+dominant coupling in the ocean-tide loading term. Templates that
+degrade the segment agreement, and whose two independent realizations
+disagree in sign, are treated as inconsistent with the data: no tidal
+correction is applied to the reported central value, and the larger of
+the two center shifts is carried as the time-varying-redshift
+uncertainty item $\uTidalE\times10^{-18}$.
+
+\emph{Spliced stability.} The \nSeg~segments were spliced end-to-end
+on a continuous 1-s clock with the wall-clock gaps removed, giving a
+single \nSamples~sample record whose overlapping Allan deviation
+$\sigma_y(\tau)$ can reach averaging times beyond a single segment
+(Figure~\ref{fig:spliced}). The spliced curve extends the
+per-segment stability points to $\tau$ up to about 4.6 days of pure
+data time, at which the raw record reaches
 $\sigma_y \approx 8.6\times10^{-19}$; applying the two theoretical
 tide corrections ($A = +1$) shifts the long-$\tau$ level by less than
 $10\%$ in opposite senses, and the removed correction terms
@@ -97,93 +145,6 @@ record, not a statistical uncertainty.
   \label{fig:spliced}
 \end{figure}
 
-\subsection*{Clock-ratio determination and uncertainty budget}
-
-Each retained segment yields a clock-ratio estimate $R_i$ from the mean
-of its retained beat samples, inverted through the fixed frequency-chain
-relations and corrected for the static gravitational redshift
-$\delta_g = \deltaGV$ derived from the leveled geopotential difference
-(see above). The per-segment statistical uncertainty $u_i$ adopts the
-last computable point of the overlapping Allan deviation,
-$u_i = R_i\,\sigma_y(\tau_{\rm max})$ with $\tau_{\rm max}$ at a
-quarter of the longest gap-free run of the segment; unlike the
-conventional treatment, we do not extrapolate the white-frequency
-slope to the segment duration, because the record develops a
-low-frequency plateau for $\tau \gtrsim 4096$\,s that such an
-extrapolation would misrepresent (Supplementary Section~4). The
-segment estimates are then combined under a random-effect model with
-a common excess scatter~\citep{birge1932errors,
-mandel1970interlaboratory}; the reported central value and its
-statistical uncertainty are the posterior mean and standard deviation
-of a Bayesian random-effect analysis, with the weighted-least-squares
-and Mandel--Paule combinations given in Table~\ref{tab:estimators} as
-cross-checks.
-
-The remaining terms of the uncertainty budget (Table~\ref{tab:budget})
-are systematic. The Sr and Yb terms are the published evaluations of
-the two clocks~\citep{jia2026sr, zhu2026yb}; for the Yb clock we
-adopt the published evaluation of $\uYbE\times10^{-18}$~\citep{zhu2026yb},
-which is more conservative than an internal estimate. The
-static-potential term is $u(\dW)/c^2$ from the leveling uncertainty
-$\dWUnc~\mathrm{m^2\,s^{-2}}$, giving
-$\uStaticE \times 10^{-18}$. The frequency-conversion stages
-contribute below $\uSubsystemBound$ each, from the digitization error
-of the direct-digital-synthesis frequency-reference settings; the
-budget carries them as \qty{0.1e-18} upper bounds.
-
-\subsection*{Tidal template and time-varying redshift}
-
-The time-varying gravitational-redshift term is quantified from a
-tidal template: the solid Earth tide and ocean tide loading
-displacement difference between the two sites, computed every
-\qty{30}{s} with the public software ETideLoad4.5, converted to an
-equivalent geopotential difference and then to a beat-frequency
-template $h = f_{1550}\,\Delta W/c^2$ with the same $f_{1550}$
-normalization as the beat record. A second, independent template is
-built from the DE421 ephemerides and the FES2022 ocean-tide model on
-a \qty{90}{s} grid.
-
-To test how well the templates fit the data, we repeated the ratio
-combination with the tide series applied before the inversion, at two
-fixed response amplitudes: the theoretical amplitude $A = +1$ and the
-historical amplitude $A = +0.54$ from the demeaned beat waveform of
-our earlier analysis of the same campaign. Both templates degrade
-rather than improve the fit: the reduced chi-square of the
-combination rises from \tidalChiRaw~to \tidalChiTheory~and
-\tidalChiEmp~for the ETideLoad4.5 template (Bayesian center shift
-$-\tidalShiftEmpE\times10^{-18}$), and to \tidalChiAlt~for the
-DE421+FES2022 template, which moves the center in the opposite
-direction, by $+\tidalShiftAltE\times10^{-18}$. Repeating the
-segment-mean correlation with the solid tide alone
-($r = \tidalCorrSolid$ instead of \tidalCorrTotal) locates the
-dominant coupling in the ocean-tide loading term.
-
-Templates that degrade the segment agreement, and whose two
-independent realizations disagree in sign, are treated as
-inconsistent with the data: no tidal correction is applied to the
-reported central value, and the larger of the two center shifts is
-carried as the time-varying-redshift uncertainty item
-$\uTidalE\times10^{-18}$.
-
-\subsection*{Within-segment tidal correlation analysis}
-
-The within-segment correlation analysis uses the
-same 1200-s triangular window as the ratio processing: the retained
-beat record of each segment and the 1-s tidal template are both
-window-averaged with a 1200-s triangular window at 600-s stride,
-demeaned, and fitted through the origin as
-$\mathrm{beat} = A\cdot\mathrm{tide}$, with the template sign
-corrected for the beat polarity so that a positive amplitude
-corresponds to the expected response $A = +1$; the amplitude, the
-Pearson correlation $r$ and its $p$ value are inferred from the
-non-overlapping 1200-s windows only, with the per-segment amplitude
-uncertainty obtained from the scatter of the non-overlapping
-residuals. Because the two models are correlated realizations that
-share the same beat record, their two significance values are not
-independent replications of the measurement. The combined response
-amplitudes are $\tidalAmpOldE$ (ETideLoad4.5) and $\tidalAmpNewE$
-(DE421+FES2022), as reported in the main text.
-
-The components are treated as independent
-and combined in quadrature, giving the total standard uncertainty
-$\uTotalE \times 10^{-18}$.
+The components of the uncertainty budget (Table~\ref{tab:budget})
+are treated as independent and combined in quadrature, giving the
+total standard uncertainty $\uTotalE \times 10^{-18}$.
