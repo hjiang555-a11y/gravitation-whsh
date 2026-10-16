@@ -129,7 +129,8 @@ def main() -> int:
         "old_empirical": [],
         "new_theory": [],
         "new_empirical": [],
-        "correction": [],
+        "old_correction": [],
+        "new_correction": [],
     }
     segment_times: list[np.ndarray] = []
     for segment in segments:
@@ -144,7 +145,8 @@ def main() -> int:
         series["old_empirical"].append(analyze_segment(segment, h_old_neg, EMPIRICAL).fluctuations)
         series["new_theory"].append(analyze_segment(segment, h_new_neg, THEORY).fluctuations)
         series["new_empirical"].append(analyze_segment(segment, h_new_neg, EMPIRICAL).fluctuations)
-        series["correction"].append(h_old_neg / s.F_1550)
+        series["old_correction"].append(h_old_neg / s.F_1550)
+        series["new_correction"].append(h_new_neg / s.F_1550)
 
     aligned_times = aligned_axis(segment_times)
     span_days = float((segment_times[-1][-1] - segment_times[0][0])
@@ -161,7 +163,7 @@ def main() -> int:
         writer = csv.writer(stream)
         writer.writerow(["series", "tau_s", "tau_days", "n_pairs", "sigma_y", "u_sigma"])
         for key in ("raw", "old_theory", "old_empirical",
-                    "new_theory", "new_empirical", "correction"):
+                    "new_theory", "new_empirical", "old_correction", "new_correction"):
             for point in curves[key]:
                 writer.writerow([
                     key, point["tau_s"], f"{point['tau_s'] / 86400:.6f}",
@@ -181,8 +183,9 @@ def main() -> int:
         f"expected response).\n",
         "| tau [s] | tau [d] | raw (A=0) | ETideLoad4.5 theory (A=+1) | "
         "ETideLoad4.5 empirical (A=+0.54) | DE421+FES2022 theory (A=+1) | "
-        "DE421+FES2022 empirical (A=+0.54) | correction h/F1550 | n_pairs |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "DE421+FES2022 empirical (A=+0.54) | correction ETideLoad4.5 h/F1550 | "
+        "correction DE421+FES2022 h/F1550 | n_pairs |",
+        "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for i, tau in enumerate(taus):
         def f(key):
@@ -193,7 +196,8 @@ def main() -> int:
         lines.append(
             f"| {tau} | {tau / 86400:.3f} | {f('raw')} | {f('old_theory')} | "
             f"{f('old_empirical')} | {f('new_theory')} | {f('new_empirical')} | "
-            f"{f('correction')} | {curves['raw'][i]['n_pairs']} |")
+            f"{f('old_correction')} | {f('new_correction')} | "
+            f"{curves['raw'][i]['n_pairs']} |")
     lines.append(
         "\n> `u_sigma` is the 1-sigma EDF (Riley & Howe) uncertainty on sigma_y. "
         "Gaps are removed, so the record is treated as contiguous; a tau longer "
@@ -210,7 +214,7 @@ def main() -> int:
     print(f"pure data span {n_total / 86400:.3f} d vs real elapsed {span_days:.2f} d; "
           f"tau up to {taus[-1]} s ({taus[-1] / 86400:.3f} d)")
     for key in ("raw", "old_theory", "old_empirical",
-                "new_theory", "new_empirical", "correction"):
+                "new_theory", "new_empirical", "old_correction", "new_correction"):
         p = curves[key][-1]
         sigma = "N/A" if p["sigma_y"] is None else f"{p['sigma_y']:.4e}"
         print(f"  {key:14s} sigma_y({p['tau_s']}s) = {sigma}  (n_pairs={p['n_pairs']})")
@@ -229,11 +233,12 @@ def write_figure(taus, curves) -> None:
         "old_empirical": ("ETideLoad4.5 empirical (A=+0.54)", "#2ca02c", "D", "--"),
         "new_theory": ("DE421+FES2022 theory (A=+1)", "#b22222", "^", "-"),
         "new_empirical": ("DE421+FES2022 empirical (A=+0.54)", "#e07b00", "v", "--"),
-        "correction": ("correction h/F1550", "#444444", ".", ":"),
+        "old_correction": ("correction, ETideLoad4.5 h/F1550", "#1f4e9c", ".", ":"),
+        "new_correction": ("correction, DE421+FES2022 h/F1550", "#b22222", ".", ":"),
     }
-    fig, ax = plt.subplots(figsize=(6.9, 4.0))
+    fig, ax = plt.subplots(figsize=(6.9, 4.2))
     for key in ("raw", "old_theory", "old_empirical",
-                "new_theory", "new_empirical", "correction"):
+                "new_theory", "new_empirical", "old_correction", "new_correction"):
         label, color, marker, linestyle = meta[key]
         pts = [p for p in curves[key] if p["sigma_y"] is not None]
         xs = [p["tau_s"] for p in pts]
