@@ -33,7 +33,6 @@ of kilometers, each terminated by a relay station carrying a
 narrow-linewidth laser, an erbium-doped fiber amplifier and a
 fiber-noise-cancellation loop; the added instability of the link is
 kept below the clock noise for averaging times beyond $100$\,s.
-Further subsystem details are given in Supplementary Section~7.
 
 Both ends use independent optical frequency combs, self-referenced
 and phase-locked to their local clock, to bridge the spectral gap
@@ -43,7 +42,7 @@ factor-of-two relations, $f_{\mathrm{comb}}^{1397} =
 \tfrac{1}{2}(1+a)\,f_{\mathrm{Sr}}$ and $f_{\mathrm{comb}}^{1156} =
 \tfrac{1}{2}(1+b)\,f_{\mathrm{Yb}}$, where $a$ and $b$ collect the Sr
 and Yb systematic corrections (density, lattice, second-order Zeeman
-and blackbody shifts; Supplementary Section~1). The observable is the
+and blackbody shifts). The observable is the
 out-of-loop beat between the received carrier and the local
 Yb-referenced comb, converted to fractional units with the transfer
 frequency $f_{1550} = \fFifteenTHz$\,THz. The static
@@ -157,24 +156,24 @@ displacement difference between the two sites, computed every
 \qty{30}{s} with the public software ETideLoad4.5, converted to an
 equivalent geopotential difference and then to a beat-frequency
 template $h = f_{1550}\,\Delta W/c^2$ with the same $f_{1550}$
-normalization as the beat record (Supplementary Section~6).
+normalization as the beat record. A second, independent template is
+built from the DE421 ephemerides and the FES2022 ocean-tide model on
+a \qty{90}{s} grid.
 
-To test how well the template fits the data, we repeated the ratio
+To test how well the templates fit the data, we repeated the ratio
 combination with the tide series applied before the inversion, at two
 fixed response amplitudes: the theoretical amplitude $A = +1$ and the
 historical amplitude $A = +0.54$ from the demeaned beat waveform of
-our earlier analysis of the same campaign (Supplementary
-Section~6). The fit degrades rather than improves: the reduced
-chi-square of the combination rises from \tidalChiRaw~to
-\tidalChiTheory~and \tidalChiEmp, and the Bayesian center moves by
-$-\tidalShiftEmpE\times10^{-18}$. A second, independent template,
-built from the DE421 ephemerides and the FES2022 ocean-tide model,
-degrades the fit likewise ($\chi^2_{\rm red} = \tidalChiAlt$) while
-moving the Bayesian center in the opposite direction, by
-$+\tidalShiftAltE\times10^{-18}$. Repeating the segment-mean
-correlation with the solid tide alone ($r = \tidalCorrSolid$ instead
-of \tidalCorrTotal) locates the dominant coupling in the ocean-tide
-loading term.
+our earlier analysis of the same campaign. Both templates degrade
+rather than improve the fit: the reduced chi-square of the
+combination rises from \tidalChiRaw~to \tidalChiTheory~and
+\tidalChiEmp~for the ETideLoad4.5 template (Bayesian center shift
+$-\tidalShiftEmpE\times10^{-18}$), and to \tidalChiAlt~for the
+DE421+FES2022 template, which moves the center in the opposite
+direction, by $+\tidalShiftAltE\times10^{-18}$. Repeating the
+segment-mean correlation with the solid tide alone
+($r = \tidalCorrSolid$ instead of \tidalCorrTotal) locates the
+dominant coupling in the ocean-tide loading term.
 
 Templates that degrade the segment agreement, and whose two
 independent realizations disagree in sign, are treated as
