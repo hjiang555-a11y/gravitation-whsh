@@ -53,6 +53,16 @@ clock comparison at \uTotalShort$\times10^{-18}$}
   \input{generated/segment_table}
 \end{table}
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figs/figSI_ratio_segments.png}
+  \caption{Per-segment ratio deviations $y_i$ ($\times10^{-18}$,
+  relative to the first segment) with their statistical
+  uncertainties, over the campaign. No systematic drift is
+  visible; the numerical values are in Table~\ref{tab:segments}.}
+  \label{fig:ratio-segments}
+\end{figure}
+
 \begin{table}[h]
   \centering
   \caption{Intermediate quantities of the per-segment ratio
@@ -121,6 +131,19 @@ predicts, so the tidal term is carried as an uncertainty.
   \label{tab:correlation}
   \input{generated/correlation_table}
 \end{table}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.95\linewidth]{figs/figSI_batch_forest.png}
+  \caption{Forest plot of the per-segment tidal response amplitudes
+  $A$ and their uncertainties (ETideLoad4.5 template, 1200-s
+  windowed, sign convention with the expected response at $A=+1$).
+  The gray band marks the precision-weighted combination
+  $\tidalAmpOldE$; no single segment is individually significant,
+  while the combination differs from zero at
+  $\tidalSigmaOldE\sigma$.}
+  \label{fig:forest}
+\end{figure}
 
 Environmental checks accompany this analysis. Surface air
 temperature records at the three cities along the link show a clear
@@ -229,10 +252,22 @@ $-2.3$ to $-3.5\times10^{-19}$), AC Stark ($a_{\rm AC}$, $+7.44$ or
 $+8.93\times10^{-18}$ by campaign period), second-order Zeeman
 ($a_{\rm SM}$, the dominant term), air refractive index
 ($a_{\rm air} = -6.7\times10^{-19}$), and blackbody radiation
-($a_{\rm BBR} = 0$). The first three are segment-dependent constants
-recorded in the campaign parameter file; the last two are fixed.
-Full per-segment values are reproduced in the frozen result layer
-referenced in Data availability.
+($a_{\rm BBR} = 0$). The full per-segment values are listed in
+Table~\ref{tab:shift-components}; the fixed chain constants are given
+above, and the Yb-side fixed shift is $b_{\rm Yb} = -1.7\times10^{-18}$
+with the static gravitational correction
+$\delta_g = \deltaGV$.
+
+\begin{table}[h]
+  \centering
+  \caption{Per-segment Sr systematic-shift components ($a_{\rm rou}$,
+  $a_{\rm AC}$, $a_{\rm SM}$, $a_{\rm air}$, $a_{\rm BBR}$) of the 16
+  segments analyzed in this work, as recorded in the campaign
+  parameter file; $a = a_{\rm rou} + a_{\rm AC} + a_{\rm SM} +
+  a_{\rm air} + a_{\rm BBR}$ enters the ratio inversion.}
+  \label{tab:shift-components}
+  \input{generated/shift_components_table}
+\end{table}
 
 \section{Statistical model and combination}
 
