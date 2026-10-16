@@ -250,7 +250,7 @@ def write_figure(taus, curves) -> None:
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlabel(r"$\tau$ [s]")
-    ax.set_ylabel(r"normalized stability of the Yb/Sr ratio, $\sigma_y(\tau)$")
+    ax.set_ylabel(r"Instability of the Yb/Sr ratio, $\sigma_y(\tau)$")
     ax.set_title("Spliced concatenated ratio stability, 16 segments, both tide models",
                  fontsize=9.5)
     ax.set_xlim(1e3, 4.2e5)
@@ -285,7 +285,7 @@ def write_figure(taus, curves) -> None:
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlabel(r"$\tau$ [s]")
-    ax.set_ylabel(r"normalized stability of the Yb/Sr ratio, $\sigma_y(\tau)$")
+    ax.set_ylabel(r"Instability of the Yb/Sr ratio, $\sigma_y(\tau)$")
     ax.set_title("Spliced concatenated ratio stability, 16 segments, "
                  "theory corrections only", fontsize=9.5)
     ax.set_xlim(1e3, 4.2e5)
@@ -315,7 +315,7 @@ def write_figure(taus, curves) -> None:
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlabel(r"$\tau$ (s)", fontsize=10)
-    ax.set_ylabel(r"normalized stability of the Yb/Sr ratio, $\sigma_y(\tau)$", fontsize=10)
+    ax.set_ylabel(r"Instability of the Yb/Sr ratio, $\sigma_y(\tau)$", fontsize=10)
     ax.set_xlim(1e3, 4.2e5)
     ax.set_ylim(2e-19, 2e-17)
     ax.tick_params(labelsize=9)
