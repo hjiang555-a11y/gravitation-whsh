@@ -573,6 +573,33 @@
       "positive in 12 out of 16"、"+0.58/+0.87"、图 4a "1.5σ"；
       Overleaf 已同步。
 
+47. **第四轮 Nature 严格评估修复（2026-10-16 第四十三轮，按指示：
+    "同意所有建议，执行修改"）**：
+    - **C1 符号一致性**：Methods 潮汐节历史幅度 A=−0.54 → **+0.54**
+      （与段内相关性极性改正统一）；中心位移表述翻转：ETideLoad4.5
+      理论/经验情景 **−1.46/−0.85**（原 +1.46/+0.85），DE421+FES2022
+      **+0.21**（原 −0.21）。Results §2.3 同步 "−0.85 versus +0.21"。
+      χ²_red 与"取较大者 0.85"结论不变（幅度绝对值不变）。
+    - **M1 因果边界**：Discussion/Results 的 "tidal redshift is
+      present" → "a signal at the tidal period is present"（避免对
+      混淆变量的强因果断言；两模型幅度差 50% 本身提示非模板成分）。
+    - **M2 历史幅度来源**：SI 潮汐节补一段——+0.54 来自同战役早期
+      1200-s 去均值波形拟合（±0.08），网格扫描残差相关性零点
+      A_fix≈+0.54 独立验证，海潮负荷主导；"carried as a fixed
+      historical value rather than a free parameter"。
+    - **M3 去重**：Results §2.3 只留事实（χ² 恶化、位移反号、0.85
+      入账），删除相关性分析句；Discussion 保留解释链（5σ、幅度小、
+      保守、beyond scope）。
+    - **MINOR**：2) Discussion 括注改 "(Methods; Supplementary
+      Figure~1)"；6) Methods 相关性小节首句去 "reported in the
+      Discussion"；7) Data availability "not redistributed" →
+      "available from the corresponding author upon reasonable
+      request"（Nature 数据政策）。
+    - 图 2 段号人工核对（MINOR 5）留待投稿包阶段（用户供图）。
+    - 验证：check.sh 104 宏 + 5 产物 + 两文档零 undefined；PDF 渲染
+      核对 "−0.85 vs +0.21"、"signal at the tidal period"；
+      Overleaf 已同步。
+
 46. **补充材料分层（2026-10-15 第四十二轮，按指示）**：
     - 用户裁定：P0 可执行（16 段口径，不引入 17 段/遗留信息）；
       P1 同意；P2 第二、三项可准备备用。执行后推送。

@@ -156,12 +156,12 @@ beat record.
 To test how well the template fits the data, we repeated the ratio
 combination with the tide series applied before the inversion, at two
 fixed response amplitudes: the theoretical amplitude $A = +1$ and the
-historical amplitude $A = -0.54$ obtained from the demeaned beat
+historical amplitude $A = +0.54$ obtained from the demeaned beat
 waveform in our earlier analysis of the same campaign. The fit
 degrades rather than improves: the reduced chi-square of the
 combination rises from $\tidalChiRaw$ to $\tidalChiTheory$ and
 $\tidalChiEmp$, respectively, and the Bayesian center moves by
-$\tidalShiftEmpE\times10^{-18}$. A second, independent tide template
+$-\tidalShiftEmpE\times10^{-18}$. A second, independent tide template
 was evaluated as a cross-check: the solid tide was computed from the
 DE421 ephemerides (Earth--Sun--Moon positions) with Love numbers, and
 the ocean-tide loading correction to the gravitational potential was
@@ -169,7 +169,7 @@ taken directly from the FES2022 global ocean-tide model, on a
 \qty{90}{s} Beijing-time grid. Its fixed-amplitude combination again
 degrades the fit ($\chi^2_{\rm red} = \tidalChiAlt$ at the historical
 amplitude) but moves the Bayesian center in the opposite direction,
-by $\tidalShiftAltE\times10^{-18}$. To separate the solid-tide and
+by $+\tidalShiftAltE\times10^{-18}$. To separate the solid-tide and
 ocean-loading contributions, we also repeated the segment-mean
 correlation with the solid tide alone: the Pearson correlation of the
 ratio deviations with the segment-mean full tide is
@@ -186,7 +186,7 @@ $\uTidalE\times10^{-18}$.
 
 \subsection*{Within-segment tidal correlation analysis}
 
-The within-segment correlation reported in the Discussion uses the
+The within-segment correlation analysis uses the
 same 1200-s triangular window as the ratio processing: the retained
 beat record of each segment and the 1-s tidal template are both
 window-averaged with a 1200-s triangular window at 600-s stride,
